@@ -3,6 +3,7 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { DonationForm } from "@/components/donation/DonationForm";
 import Link from "next/link";
 import { 
   HeartIcon,
@@ -427,21 +428,45 @@ export default function DonatePage() {
           </CardContent>
         </Card>
 
-        {/* Call to Action */}
+        {/* Donation Form */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-secondary-900 mb-4">
+              Make a Difference Today
+            </h2>
+            <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
+              Your support helps us continue sharing Persian culture, building incredible art, 
+              and creating transformative experiences for our community.
+            </p>
+          </div>
+          
+          <div className="max-w-2xl mx-auto">
+            <DonationForm 
+              campaigns={[
+                "Art & Installations",
+                "Camp Infrastructure", 
+                "Community Events",
+                "Transportation",
+                "Burning Man 2024"
+              ]}
+              onSuccess={(donationId) => {
+                console.log("Donation successful:", donationId);
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Additional Support Options */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-            Make a Difference Today
-          </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
-            Your support helps us continue sharing Persian culture, building incredible art, 
-            and creating transformative experiences for our community.
-          </p>
+          <h3 className="text-xl font-semibold text-secondary-900 mb-4">
+            Other Ways to Support
+          </h3>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg">
-              Donate Now
-            </Button>
             <Button variant="outline" size="lg" asChild>
               <Link href="/apply">Join Our Community</Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/events">Volunteer at Events</Link>
             </Button>
           </div>
         </div>

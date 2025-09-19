@@ -30,6 +30,9 @@ model Tenant {
   contentBlocks ContentBlock[]
   events        Event[]
   eventRSVPs    EventRSVP[]
+  payments      Payment[]
+  donations     Donation[]
+  subscriptions Subscription[]
   
   @@map("tenants")
 }
@@ -56,6 +59,9 @@ model User {
   uploadedMedia Media[]
   createdEvents Event[] @relation("EventCreator")
   eventRSVPs    EventRSVP[]
+  payments      Payment[]
+  donations     Donation[]
+  subscriptions Subscription[]
   
   @@unique([tenantId, email])
   @@map("users")
@@ -202,6 +208,7 @@ model Event {
   tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   creator      User        @relation("EventCreator", fields: [createdBy], references: [id])
   rsvps        EventRSVP[]
+  payments     Payment[]
   
   @@map("events")
 }
@@ -225,6 +232,88 @@ model EventRSVP {
   
   @@unique([eventId, userId])
   @@map("event_rsvps")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  tenantId        String
+  userId          String
+  amount          Int           // in cents
+  currency        String        @default("USD")
+  type            PaymentType
+  status          PaymentStatus @default(PENDING)
+  stripePaymentId String?       @unique
+  stripeCustomerId String?
+  metadata        Json?         // Additional payment data
+  description     String?
+  eventId         String?       // If payment is for event
+  donationId      String?      // If payment is a donation
+  subscriptionId  String?       // If payment is for subscription
+  refundedAmount  Int?          // Amount refunded in cents
+  failureReason   String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event           Event?        @relation(fields: [eventId], references: [id], onDelete: SetNull)
+  donation        Donation?     @relation(fields: [donationId], references: [id], onDelete: SetNull)
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  
+  @@map("payments")
+}
+
+model Donation {
+  id              String         @id @default(cuid())
+  tenantId        String
+  userId          String?        // null for anonymous donations
+  amount          Int            // in cents
+  currency        String         @default("USD")
+  type            DonationType   @default(ONE_TIME)
+  status          DonationStatus @default(PENDING)
+  campaign        String?        // Campaign or fund name
+  message         String?        // Donor message
+  isAnonymous     Boolean        @default(false)
+  metadata        Json?          // Additional donation data
+  taxReceiptSent  Boolean        @default(false)
+  acknowledgeSent Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  payment         Payment[]
+  
+  @@map("donations")
+}
+
+model Subscription {
+  id                 String             @id @default(cuid())
+  tenantId           String
+  userId             String
+  plan               String             // Plan identifier
+  amount             Int                // in cents per billing period
+  currency           String             @default("USD")
+  interval           BillingInterval    @default(MONTHLY)
+  status             SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String?          @unique
+  stripeCustomerId   String?
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelledAt        DateTime?
+  cancelReason       String?
+  metadata           Json?              // Additional subscription data
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  // Relations
+  tenant             Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments           Payment[]
+  
+  @@map("subscriptions")
 }
 
 enum TenantStatus {
@@ -313,4 +402,50 @@ enum RSVPStatus {
   DECLINED
   WAITLIST
   CANCELLED
+}
+
+enum PaymentType {
+  DONATION
+  EVENT_TICKET
+  SUBSCRIPTION
+  MERCHANDISE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  CANCELLED
+}
+
+enum DonationType {
+  ONE_TIME
+  RECURRING
+  CAMPAIGN
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum BillingInterval {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  PAUSED
+  TRIALING
+  INCOMPLETE
 }
