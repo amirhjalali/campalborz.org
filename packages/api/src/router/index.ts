@@ -5,6 +5,7 @@ import { organizationRouter } from "./organization";
 import { adminRouter } from "./admin";
 import { billingRouter } from "./billing";
 import { cmsRouter } from "./cms";
+import { membersRouter } from "./members";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -13,6 +14,7 @@ export const appRouter = router({
   admin: adminRouter,
   billing: billingRouter,
   cms: cmsRouter,
+  members: membersRouter,
 });
 
 export type AppRouter = typeof appRouter;
