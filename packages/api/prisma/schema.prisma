@@ -28,6 +28,8 @@ model Tenant {
   templates     Template[]
   media         Media[]
   contentBlocks ContentBlock[]
+  events        Event[]
+  eventRSVPs    EventRSVP[]
   
   @@map("tenants")
 }
@@ -52,6 +54,8 @@ model User {
   authoredPages Page[] @relation("PageAuthor")
   editedPages   Page[] @relation("PageEditor")
   uploadedMedia Media[]
+  createdEvents Event[] @relation("EventCreator")
+  eventRSVPs    EventRSVP[]
   
   @@unique([tenantId, email])
   @@map("users")
@@ -172,6 +176,57 @@ model ContentBlock {
   @@map("content_blocks")
 }
 
+model Event {
+  id           String      @id @default(cuid())
+  tenantId     String
+  title        String
+  description  String?
+  content      Json?       // Rich content for event details
+  type         EventType   @default(GENERAL)
+  category     String?     // Workshop, Social, Art Build, etc.
+  startDate    DateTime
+  endDate      DateTime?
+  location     String?
+  address      String?
+  maxAttendees Int?
+  price        Int?        // in cents, null for free
+  isPublic     Boolean     @default(true)
+  status       EventStatus @default(DRAFT)
+  metadata     Json?       // Additional event data
+  settings     Json?       // Event-specific settings
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  createdBy    String
+
+  // Relations
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator      User        @relation("EventCreator", fields: [createdBy], references: [id])
+  rsvps        EventRSVP[]
+  
+  @@map("events")
+}
+
+model EventRSVP {
+  id         String     @id @default(cuid())
+  tenantId   String
+  eventId    String
+  userId     String
+  status     RSVPStatus @default(PENDING)
+  response   String?    // Additional response/notes
+  attendees  Int        @default(1) // Number of people this RSVP covers
+  metadata   Json?      // Additional RSVP data
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  // Relations
+  tenant     Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  event      Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([eventId, userId])
+  @@map("event_rsvps")
+}
+
 enum TenantStatus {
   ACTIVE
   INACTIVE
@@ -229,4 +284,33 @@ enum ContentBlockType {
   CALENDAR
   MAP
   CUSTOM
+}
+
+enum EventType {
+  GENERAL
+  WORKSHOP
+  SOCIAL
+  ART_BUILD
+  FUNDRAISER
+  CULTURAL
+  MEETING
+  VOLUNTEER
+  EDUCATIONAL
+  ENTERTAINMENT
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  POSTPONED
+  COMPLETED
+}
+
+enum RSVPStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  WAITLIST
+  CANCELLED
 }

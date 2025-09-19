@@ -5,6 +5,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MemberManagement } from "@/components/admin/MemberManagement";
+import { EventManagement } from "@/components/admin/EventManagement";
 import { useTenant } from "@/hooks/useTenant";
 import { 
   UserGroupIcon,
@@ -214,6 +215,9 @@ export default function AdminPage() {
 
       case "members":
         return <MemberManagement tenantId={tenant.id} />;
+
+      case "events":
+        return <EventManagement tenantId={tenant.id} />;
 
       case "content":
         return (
