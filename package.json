@@ -1,0 +1,42 @@
+{
+  "name": "camp-management-platform",
+  "version": "1.0.0",
+  "description": "Multi-tenant camp management platform for Burning Man camps and festival organizations",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirhjalali/campalborz.org.git"
+  },
+  "keywords": [
+    "burning-man",
+    "camp-management",
+    "multi-tenant",
+    "saas",
+    "festival",
+    "community"
+  ],
+  "author": "Amir Jalali <amirhjalali@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amirhjalali/campalborz.org/issues"
+  },
+  "homepage": "https://github.com/amirhjalali/campalborz.org#readme",
+  "devDependencies": {
+    "@types/node": "^20.19.17",
+    "eslint": "^8.57.1",
+    "prettier": "^3.6.2",
+    "turbo": "^1.13.4",
+    "typescript": "^5.9.2"
+  }
+}
