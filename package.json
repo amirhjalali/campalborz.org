@@ -4,7 +4,8 @@
   "description": "Multi-tenant camp management platform for Burning Man camps and festival organizations",
   "main": "index.js",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "scripts"
   ],
   "scripts": {
     "dev": "turbo run dev",
@@ -12,7 +13,12 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "setup": "npm run setup:tenant",
+    "setup:tenant": "cd scripts && npm run setup-tenant",
+    "db:generate": "cd packages/api && npx prisma generate",
+    "db:migrate": "cd packages/api && npx prisma migrate dev",
+    "db:studio": "cd packages/api && npx prisma studio"
   },
   "repository": {
     "type": "git",
