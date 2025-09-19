@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { withCache, withTagInvalidation, CacheConfigs } from "../middleware/cache";
+import { CacheKeys, CacheTags } from "../services/cache";
 
 // Event schemas
 const EventCreateSchema = z.object({

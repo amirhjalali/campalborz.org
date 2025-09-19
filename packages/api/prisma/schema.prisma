@@ -34,6 +34,8 @@ model Tenant {
   donations     Donation[]
   subscriptions Subscription[]
   notifications Notification[]
+  apiKeys       ApiKey[]
+  backups       Backup[]
   
   @@map("tenants")
 }
@@ -65,6 +67,8 @@ model User {
   subscriptions Subscription[]
   sentNotifications Notification[] @relation("NotificationSender")
   receivedNotifications Notification[] @relation("NotificationRecipient")
+  createdApiKeys        ApiKey[] @relation("ApiKeyCreator")
+  createdBackups        Backup[] @relation("BackupCreator")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -503,9 +507,78 @@ enum NotificationChannel {
   PUSH
 }
 
+enum BackupType {
+  DATABASE
+  FILES
+  FULL
+}
+
+enum BackupStorageType {
+  LOCAL
+  S3
+  AZURE
+  GCP
+}
+
+enum BackupStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
 enum NotificationPriority {
   LOW
   NORMAL
   HIGH
   URGENT
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  keyHash     String   @unique // SHA256 hash of the actual key
+  permissions String[] // Array of permission strings
+  rateLimit   Int      @default(1000) // Requests per hour
+  isActive    Boolean  @default(true)
+  lastUsedAt  DateTime?
+  usageCount  Int      @default(0)
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String   // User ID who created this key
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User   @relation("ApiKeyCreator", fields: [createdBy], references: [id])
+
+  @@map("api_keys")
+}
+
+model Backup {
+  id          String       @id @default(cuid())
+  tenantId    String
+  type        BackupType
+  size        BigInt
+  compressed  Boolean      @default(false)
+  encrypted   Boolean      @default(false)
+  checksum    String
+  storagePath String
+  storageType BackupStorageType @default(LOCAL)
+  status      BackupStatus @default(PENDING)
+  error       String?
+  metadata    Json?
+  expiresAt   DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdBy   String
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User   @relation("BackupCreator", fields: [createdBy], references: [id])
+
+  @@map("backups")
 }

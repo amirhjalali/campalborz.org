@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/Button";
 import { MemberManagement } from "@/components/admin/MemberManagement";
 import { EventManagement } from "@/components/admin/EventManagement";
 import { DonationManagement } from "@/components/admin/DonationManagement";
+import MediaLibrary from "@/components/admin/MediaLibrary";
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 import { useTenant } from "@/hooks/useTenant";
 import { 
   UserGroupIcon,
@@ -51,10 +53,22 @@ const adminSections = [
     description: "Manage art portfolio and installations"
   },
   {
+    id: "media",
+    name: "Media Library",
+    icon: PhotoIcon,
+    description: "Manage uploaded files and media assets"
+  },
+  {
     id: "donations",
     name: "Donations",
     icon: CurrencyDollarIcon,
     description: "Track donations and financial metrics"
+  },
+  {
+    id: "analytics",
+    name: "Analytics",
+    icon: ChartBarIcon,
+    description: "View detailed analytics and insights"
   },
   {
     id: "settings",
@@ -222,6 +236,12 @@ export default function AdminPage() {
 
       case "donations":
         return <DonationManagement tenantId={tenant.id} />;
+
+      case "media":
+        return <MediaLibrary />;
+
+      case "analytics":
+        return <AnalyticsDashboard tenantId={tenant.id} />;
 
       case "content":
         return (

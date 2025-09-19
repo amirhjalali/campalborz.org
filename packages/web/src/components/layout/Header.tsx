@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTenant } from "@/hooks/useTenant";
 import { TenantLogo } from "@/components/ui/TenantLogo";
+import SearchBar from "@/components/search/SearchBar";
 
 interface NavItem {
   name: string;
@@ -52,6 +53,15 @@ export function Header({ navigation, className }: HeaderProps) {
             ))}
           </nav>
 
+          {/* Search Bar */}
+          <div className="hidden md:block flex-1 max-w-lg mx-6">
+            <SearchBar 
+              placeholder="Search..." 
+              className="w-full"
+              showFilters={false}
+            />
+          </div>
+
           {/* User menu and mobile menu button */}
           <div className="flex items-center">
             {/* User profile dropdown would go here */}
@@ -75,6 +85,15 @@ export function Header({ navigation, className }: HeaderProps) {
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-secondary-200 pt-4 pb-4">
+            {/* Mobile Search */}
+            <div className="px-3 pb-3 mb-3 border-b border-secondary-100">
+              <SearchBar 
+                placeholder="Search..." 
+                className="w-full"
+                showFilters={false}
+              />
+            </div>
+            
             <div className="space-y-1">
               {navigation.map((item) => (
                 <Link

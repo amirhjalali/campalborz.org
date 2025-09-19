@@ -9,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
+  asChild?: boolean;
   children: ReactNode;
 }
 
@@ -34,6 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isLoading = false,
       leftIcon,
       rightIcon,
+      asChild = false,
       className,
       disabled,
       children,
@@ -43,24 +45,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const isDisabled = disabled || isLoading;
 
+    const buttonClasses = clsx(
+      // Base styles
+      "inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200",
+      "focus:outline-none focus:ring-2 focus:ring-offset-2",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      
+      // Variant styles
+      variantClasses[variant],
+      
+      // Size styles
+      sizeClasses[size],
+      
+      // Custom classes
+      className
+    );
+
+    if (asChild) {
+      // Return children with button styles applied
+      return children;
+    }
+
     return (
       <button
         ref={ref}
-        className={clsx(
-          // Base styles
-          "inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200",
-          "focus:outline-none focus:ring-2 focus:ring-offset-2",
-          "disabled:opacity-50 disabled:cursor-not-allowed",
-          
-          // Variant styles
-          variantClasses[variant],
-          
-          // Size styles
-          sizeClasses[size],
-          
-          // Custom classes
-          className
-        )}
+        className={buttonClasses}
         disabled={isDisabled}
         {...props}
       >

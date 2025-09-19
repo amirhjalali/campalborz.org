@@ -1,116 +1,45 @@
-import { TRPCError } from "@trpc/server";
-import { Context } from "../context";
-import { PLANS } from "@camp-platform/shared";
+// Tenant validation middleware for public API
+import { Response, NextFunction } from 'express';
+import { AuthenticatedRequest } from './apiAuth';
 
-export function validateTenantFeature(feature: string) {
-  return async (ctx: Context) => {
-    if (!ctx.tenant) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Tenant context required",
-      });
+declare global {
+  namespace Express {
+    interface Request {
+      tenantId?: string;
     }
-
-    // Get tenant from database with settings
-    const tenant = await ctx.prisma.tenant.findUnique({
-      where: { id: ctx.tenant.id },
-    });
-
-    if (!tenant) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Tenant not found",
-      });
-    }
-
-    if (tenant.status !== "ACTIVE") {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "Tenant account is not active",
-      });
-    }
-
-    // Check if tenant has access to the feature
-    const settings = tenant.settings as any;
-    const hasFeature = settings?.features?.[feature] === true;
-
-    if (!hasFeature) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: `Feature '${feature}' is not available on your plan`,
-      });
-    }
-
-    return tenant;
-  };
+  }
 }
 
-export function validateTenantLimits(limitType: string, currentCount: number) {
-  return async (ctx: Context) => {
-    if (!ctx.tenant) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Tenant context required",
-      });
-    }
-
-    const tenant = await ctx.prisma.tenant.findUnique({
-      where: { id: ctx.tenant.id },
-    });
-
-    if (!tenant) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Tenant not found",
-      });
-    }
-
-    const settings = tenant.settings as any;
-    const limits = settings?.limits || {};
-    
-    let limit: number | null = null;
-    
-    switch (limitType) {
-      case "members":
-        limit = limits.maxMembers;
-        break;
-      case "events":
-        limit = limits.maxEvents;
-        break;
-      case "storage":
-        limit = limits.maxStorage;
-        break;
-    }
-
-    if (limit !== null && currentCount >= limit) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: `${limitType} limit reached (${limit}). Upgrade your plan for more capacity.`,
-      });
-    }
-
-    return tenant;
-  };
-}
-
-export async function getTenantSettings(ctx: Context) {
-  if (!ctx.tenant) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Tenant context required",
+export function validateTenant(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  if (!req.tenant) {
+    return res.status(500).json({
+      error: {
+        code: 'TENANT_CONTEXT_MISSING',
+        message: 'Tenant context is missing from the request.',
+      },
     });
   }
 
-  const tenant = await ctx.prisma.tenant.findUnique({
-    where: { id: ctx.tenant.id },
-  });
-
-  if (!tenant) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "Tenant not found",
+  // Check tenant plan limits
+  if (req.tenant.plan === 'STARTER' && req.path.includes('/analytics')) {
+    return res.status(403).json({
+      error: {
+        code: 'PLAN_LIMIT_EXCEEDED',
+        message: 'Analytics API access requires a Pro or Enterprise plan.',
+        upgrade: {
+          url: '/billing/upgrade',
+          plans: ['PRO', 'ENTERPRISE'],
+        },
+      },
     });
   }
 
-  return tenant.settings as any;
+  // Add tenant ID to all database queries through request context
+  req.tenantId = req.tenant.id;
+
+  next();
 }

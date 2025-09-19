@@ -9,6 +9,13 @@ import { membersRouter } from "./members";
 import { eventsRouter } from "./events";
 import { paymentsRouter } from "./payments";
 import { emailRouter } from "./email";
+import { notificationsRouter } from "./notifications";
+import { uploadRouter } from "./upload";
+import { searchRouter } from "./search";
+import { analyticsRouter } from "./analytics";
+import { apiKeysRouter } from "./apiKeys";
+import { cacheRouter } from "./cache";
+import { backupRouter } from "./backup";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -21,6 +28,13 @@ export const appRouter = router({
   events: eventsRouter,
   payments: paymentsRouter,
   email: emailRouter,
+  notifications: notificationsRouter,
+  upload: uploadRouter,
+  search: searchRouter,
+  analytics: analyticsRouter,
+  apiKeys: apiKeysRouter,
+  cache: cacheRouter,
+  backup: backupRouter,
 });
 
 export type AppRouter = typeof appRouter;
