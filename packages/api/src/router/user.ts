@@ -3,7 +3,8 @@ import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { CreateUserSchema } from "@camp-platform/shared";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { generateToken, requireAuth, requirePermission } from "../middleware/auth";
+import { validateTenantLimits } from "../middleware/tenant";
 
 export const userRouter = router({
   // Register a new user
@@ -100,15 +101,12 @@ export const userRouter = router({
       });
       
       // Generate JWT token
-      const token = jwt.sign(
-        { 
-          userId: user.id, 
-          tenantId: user.tenantId,
-          role: user.role,
-        },
-        process.env.JWT_SECRET!,
-        { expiresIn: "7d" }
-      );
+      const token = generateToken({
+        userId: user.id,
+        tenantId: user.tenantId,
+        role: user.role,
+        permissions: user.permissions,
+      });
       
       const { passwordHash: _, ...userWithoutPassword } = user;
       
