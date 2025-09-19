@@ -19,6 +19,7 @@ import { backupRouter } from "./backup";
 import { integrationsRouter } from "./integrations";
 import { securityRouter } from "./security";
 import { authRouter } from "./auth";
+import { realtimeRouter } from "./realtime";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -41,6 +42,7 @@ export const appRouter = router({
   integrations: integrationsRouter,
   security: securityRouter,
   auth: authRouter,
+  realtime: realtimeRouter,
 });
 
 export type AppRouter = typeof appRouter;

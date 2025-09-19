@@ -2,14 +2,17 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
+import { createServer } from "http";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { appRouter } from "./router";
 import { createContext } from "./context";
+import { RealtimeService } from "./services/realtime";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
 const port = process.env.PORT || 3001;
 
 // Security middleware
@@ -35,9 +38,16 @@ app.use(
   })
 );
 
+// Initialize realtime service
+const realtimeService = new RealtimeService(server);
+
 // Start server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`🚀 API server running on port ${port}`);
   console.log(`📊 Health check: http://localhost:${port}/health`);
   console.log(`🔧 tRPC endpoint: http://localhost:${port}/api/trpc`);
+  console.log(`⚡ WebSocket server ready for realtime features`);
 });
+
+// Export realtime service for use in other modules
+export { realtimeService };
