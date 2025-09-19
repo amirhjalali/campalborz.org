@@ -33,6 +33,7 @@ model Tenant {
   payments      Payment[]
   donations     Donation[]
   subscriptions Subscription[]
+  notifications Notification[]
   
   @@map("tenants")
 }
@@ -62,6 +63,8 @@ model User {
   payments      Payment[]
   donations     Donation[]
   subscriptions Subscription[]
+  sentNotifications Notification[] @relation("NotificationSender")
+  receivedNotifications Notification[] @relation("NotificationRecipient")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -316,6 +319,33 @@ model Subscription {
   @@map("subscriptions")
 }
 
+model Notification {
+  id          String             @id @default(cuid())
+  tenantId    String
+  senderId    String?            // null for system notifications
+  recipientId String
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?              // Additional notification data
+  isRead      Boolean            @default(false)
+  readAt      DateTime?
+  channel     NotificationChannel @default(IN_APP)
+  priority    NotificationPriority @default(NORMAL)
+  expiresAt   DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  sender      User?  @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  recipient   User   @relation("NotificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  
+  @@index([recipientId, isRead])
+  @@index([tenantId, createdAt])
+  @@map("notifications")
+}
+
 enum TenantStatus {
   ACTIVE
   INACTIVE
@@ -448,4 +478,34 @@ enum SubscriptionStatus {
   PAUSED
   TRIALING
   INCOMPLETE
+}
+
+enum NotificationType {
+  MEMBER_APPLICATION
+  MEMBER_APPROVED
+  MEMBER_REJECTED
+  EVENT_CREATED
+  EVENT_UPDATED
+  EVENT_CANCELLED
+  EVENT_RSVP
+  DONATION_RECEIVED
+  PAYMENT_FAILED
+  SYSTEM_ANNOUNCEMENT
+  REMINDER
+  WELCOME
+  ADMIN_MESSAGE
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }
