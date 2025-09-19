@@ -38,6 +38,7 @@ model Tenant {
   backups       Backup[]
   integrations  Integration[]
   webhookEvents WebhookEvent[]
+  auditLogs     AuditLog[]
   
   @@map("tenants")
 }
@@ -72,6 +73,7 @@ model User {
   createdApiKeys        ApiKey[] @relation("ApiKeyCreator")
   createdBackups        Backup[] @relation("BackupCreator")
   createdIntegrations   Integration[] @relation("IntegrationCreator")
+  auditLogs             AuditLog[]
   
   @@unique([tenantId, email])
   @@map("users")
@@ -541,6 +543,13 @@ enum IntegrationCategory {
   OTHER
 }
 
+enum AuditSeverity {
+  INFO
+  WARNING
+  ERROR
+  CRITICAL
+}
+
 enum NotificationPriority {
   LOW
   NORMAL
@@ -646,4 +655,28 @@ model WebhookEvent {
   integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
 
   @@map("webhook_events")
+}
+
+model AuditLog {
+  id         String         @id @default(cuid())
+  tenantId   String?
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  ip         String
+  userAgent  String
+  metadata   Json           @default("{}")
+  severity   AuditSeverity
+  timestamp  DateTime       @default(now())
+
+  // Relations
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, timestamp])
+  @@index([userId, timestamp])
+  @@index([action, timestamp])
+  @@index([severity, timestamp])
+  @@map("audit_logs")
 }

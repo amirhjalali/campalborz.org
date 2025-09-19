@@ -17,6 +17,7 @@ import { apiKeysRouter } from "./apiKeys";
 import { cacheRouter } from "./cache";
 import { backupRouter } from "./backup";
 import { integrationsRouter } from "./integrations";
+import { securityRouter } from "./security";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -37,6 +38,7 @@ export const appRouter = router({
   cache: cacheRouter,
   backup: backupRouter,
   integrations: integrationsRouter,
+  security: securityRouter,
 });
 
 export type AppRouter = typeof appRouter;
