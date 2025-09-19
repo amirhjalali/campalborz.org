@@ -36,6 +36,8 @@ model Tenant {
   notifications Notification[]
   apiKeys       ApiKey[]
   backups       Backup[]
+  integrations  Integration[]
+  webhookEvents WebhookEvent[]
   
   @@map("tenants")
 }
@@ -69,6 +71,7 @@ model User {
   receivedNotifications Notification[] @relation("NotificationRecipient")
   createdApiKeys        ApiKey[] @relation("ApiKeyCreator")
   createdBackups        Backup[] @relation("BackupCreator")
+  createdIntegrations   Integration[] @relation("IntegrationCreator")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -528,6 +531,16 @@ enum BackupStatus {
   EXPIRED
 }
 
+enum IntegrationCategory {
+  EMAIL
+  PAYMENT
+  ANALYTICS
+  SOCIAL
+  STORAGE
+  COMMUNICATION
+  OTHER
+}
+
 enum NotificationPriority {
   LOW
   NORMAL
@@ -581,4 +594,56 @@ model Backup {
   creator     User   @relation("BackupCreator", fields: [createdBy], references: [id])
 
   @@map("backups")
+}
+
+model Integration {
+  id          String             @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  category    IntegrationCategory
+  provider    String
+  enabled     Boolean            @default(true)
+  settings    Json               @default("{}")
+  credentials Json               // Encrypted credentials
+  webhookUrl  String?
+  webhookSecret String?
+  rateLimits  Json?
+  scopes      String[]
+  version     String             @default("1.0.0")
+  lastSyncAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  createdBy   String
+
+  // Relations
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User           @relation("IntegrationCreator", fields: [createdBy], references: [id])
+  webhookEvents WebhookEvent[]
+
+  @@map("integrations")
+}
+
+model WebhookEvent {
+  id            String      @id @default(cuid())
+  tenantId      String
+  integrationId String
+  event         String
+  payload       Json
+  headers       Json
+  signature     String?
+  verified      Boolean     @default(false)
+  processed     Boolean     @default(false)
+  error         String?
+  retryCount    Int         @default(0)
+  maxRetries    Int         @default(3)
+  nextRetryAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  integration Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@map("webhook_events")
 }
