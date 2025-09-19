@@ -52,9 +52,21 @@ model User {
   role        UserRole   @default(MEMBER)
   status      UserStatus @default(PENDING)
   permissions String[]
-  metadata    Json?
-  passwordHash String?
+  passwordHash String
+  emailVerified Boolean @default(false)
+  emailVerificationToken String?
+  emailVerificationExpiry DateTime?
+  emailVerifiedAt DateTime?
+  passwordResetToken String?
+  passwordResetExpiry DateTime?
+  passwordChangedAt DateTime?
   lastLoginAt DateTime?
+  lastLoginIp String?
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret String?
+  twoFactorBackupCodes Json?
+  inviteAcceptedAt DateTime?
+  metadata    Json?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 

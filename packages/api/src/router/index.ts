@@ -18,6 +18,7 @@ import { cacheRouter } from "./cache";
 import { backupRouter } from "./backup";
 import { integrationsRouter } from "./integrations";
 import { securityRouter } from "./security";
+import { authRouter } from "./auth";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -39,6 +40,7 @@ export const appRouter = router({
   backup: backupRouter,
   integrations: integrationsRouter,
   security: securityRouter,
+  auth: authRouter,
 });
 
 export type AppRouter = typeof appRouter;
