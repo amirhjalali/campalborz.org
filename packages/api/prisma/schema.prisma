@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  subdomain String   @unique
+  domain    String?  @unique
+  status    TenantStatus @default(ACTIVE)
+  plan      TenantPlan   @default(STARTER)
+  settings  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users         User[]
+  organizations Organization[]
+  
+  @@map("tenants")
+}
+
+model User {
+  id          String     @id @default(cuid())
+  tenantId    String
+  email       String
+  name        String
+  avatar      String?
+  role        UserRole   @default(MEMBER)
+  status      UserStatus @default(PENDING)
+  permissions String[]
+  metadata    Json?
+  passwordHash String?
+  lastLoginAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, email])
+  @@map("users")
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  type        OrgType  @default(CAMP)
+  description String?
+  logo        String?
+  website     String?
+  location    String?
+  settings    Json
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  tenant      Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@map("organizations")
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum TenantPlan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+  CUSTOM
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  TENANT_ADMIN
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum OrgType {
+  CAMP
+  FESTIVAL
+  COLLECTIVE
+  COMMUNITY
+  OTHER
+}

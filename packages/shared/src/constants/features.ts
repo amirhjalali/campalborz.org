@@ -1,0 +1,31 @@
+export const FEATURES = {
+  MEMBER_MANAGEMENT: "memberManagement",
+  EVENT_MANAGEMENT: "eventManagement",
+  TASK_MANAGEMENT: "taskManagement",
+  RESOURCE_MANAGEMENT: "resourceManagement",
+  PAYMENT_PROCESSING: "paymentProcessing",
+  CUSTOM_BRANDING: "customBranding",
+  API_ACCESS: "apiAccess",
+  ADVANCED_REPORTING: "advancedReporting",
+  EMAIL_INTEGRATION: "emailIntegration",
+  PRIORITY_SUPPORT: "prioritySupport",
+  SSO: "sso",
+  WEBHOOKS: "webhooks",
+  BASIC_REPORTING: "basicReporting",
+} as const;
+
+export const FEATURE_DESCRIPTIONS = {
+  [FEATURES.MEMBER_MANAGEMENT]: "Manage organization members, roles, and permissions",
+  [FEATURES.EVENT_MANAGEMENT]: "Create and manage events with RSVP functionality",
+  [FEATURES.TASK_MANAGEMENT]: "Assign and track tasks and projects",
+  [FEATURES.RESOURCE_MANAGEMENT]: "Manage equipment, supplies, and shared resources",
+  [FEATURES.PAYMENT_PROCESSING]: "Process payments and donations securely",
+  [FEATURES.CUSTOM_BRANDING]: "Customize colors, logos, and branding",
+  [FEATURES.API_ACCESS]: "Access platform data via REST API",
+  [FEATURES.ADVANCED_REPORTING]: "Detailed analytics and custom reports",
+  [FEATURES.EMAIL_INTEGRATION]: "Automated emails and newsletter integration",
+  [FEATURES.PRIORITY_SUPPORT]: "Priority customer support",
+  [FEATURES.SSO]: "Single Sign-On integration",
+  [FEATURES.WEBHOOKS]: "Real-time event notifications",
+  [FEATURES.BASIC_REPORTING]: "Basic reports and metrics",
+} as const;

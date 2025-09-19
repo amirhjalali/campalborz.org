@@ -1,0 +1,133 @@
+export const PERMISSIONS = {
+  // Super Admin (Platform)
+  PLATFORM_MANAGE: "platform:manage",
+  TENANT_CREATE: "tenant:create",
+  TENANT_DELETE: "tenant:delete",
+  TENANT_SUSPEND: "tenant:suspend",
+  
+  // Tenant Admin
+  TENANT_SETTINGS: "tenant:settings",
+  TENANT_BILLING: "tenant:billing",
+  TENANT_USERS: "tenant:users",
+  
+  // Organization Management
+  ORG_CREATE: "org:create",
+  ORG_UPDATE: "org:update",
+  ORG_DELETE: "org:delete",
+  ORG_SETTINGS: "org:settings",
+  
+  // Member Management
+  MEMBER_CREATE: "member:create",
+  MEMBER_UPDATE: "member:update",
+  MEMBER_DELETE: "member:delete",
+  MEMBER_VIEW: "member:view",
+  MEMBER_INVITE: "member:invite",
+  
+  // Event Management
+  EVENT_CREATE: "event:create",
+  EVENT_UPDATE: "event:update",
+  EVENT_DELETE: "event:delete",
+  EVENT_VIEW: "event:view",
+  EVENT_MANAGE: "event:manage",
+  
+  // Task Management
+  TASK_CREATE: "task:create",
+  TASK_UPDATE: "task:update",
+  TASK_DELETE: "task:delete",
+  TASK_ASSIGN: "task:assign",
+  TASK_VIEW: "task:view",
+  
+  // Resource Management
+  RESOURCE_CREATE: "resource:create",
+  RESOURCE_UPDATE: "resource:update",
+  RESOURCE_DELETE: "resource:delete",
+  RESOURCE_MANAGE: "resource:manage",
+  RESOURCE_VIEW: "resource:view",
+  
+  // Content Management
+  CONTENT_CREATE: "content:create",
+  CONTENT_UPDATE: "content:update",
+  CONTENT_DELETE: "content:delete",
+  CONTENT_PUBLISH: "content:publish",
+  
+  // Financial
+  PAYMENT_PROCESS: "payment:process",
+  PAYMENT_VIEW: "payment:view",
+  FINANCIAL_REPORTS: "financial:reports",
+  
+  // Reporting & Analytics
+  REPORTS_VIEW: "reports:view",
+  REPORTS_EXPORT: "reports:export",
+  ANALYTICS_VIEW: "analytics:view",
+} as const;
+
+export const ROLE_PERMISSIONS = {
+  super_admin: [
+    PERMISSIONS.PLATFORM_MANAGE,
+    PERMISSIONS.TENANT_CREATE,
+    PERMISSIONS.TENANT_DELETE,
+    PERMISSIONS.TENANT_SUSPEND,
+  ],
+  tenant_admin: [
+    PERMISSIONS.TENANT_SETTINGS,
+    PERMISSIONS.TENANT_BILLING,
+    PERMISSIONS.TENANT_USERS,
+    PERMISSIONS.ORG_CREATE,
+    PERMISSIONS.ORG_UPDATE,
+    PERMISSIONS.ORG_DELETE,
+    PERMISSIONS.ORG_SETTINGS,
+  ],
+  admin: [
+    PERMISSIONS.MEMBER_CREATE,
+    PERMISSIONS.MEMBER_UPDATE,
+    PERMISSIONS.MEMBER_DELETE,
+    PERMISSIONS.MEMBER_VIEW,
+    PERMISSIONS.MEMBER_INVITE,
+    PERMISSIONS.EVENT_CREATE,
+    PERMISSIONS.EVENT_UPDATE,
+    PERMISSIONS.EVENT_DELETE,
+    PERMISSIONS.EVENT_VIEW,
+    PERMISSIONS.EVENT_MANAGE,
+    PERMISSIONS.TASK_CREATE,
+    PERMISSIONS.TASK_UPDATE,
+    PERMISSIONS.TASK_DELETE,
+    PERMISSIONS.TASK_ASSIGN,
+    PERMISSIONS.TASK_VIEW,
+    PERMISSIONS.RESOURCE_CREATE,
+    PERMISSIONS.RESOURCE_UPDATE,
+    PERMISSIONS.RESOURCE_DELETE,
+    PERMISSIONS.RESOURCE_MANAGE,
+    PERMISSIONS.RESOURCE_VIEW,
+    PERMISSIONS.CONTENT_CREATE,
+    PERMISSIONS.CONTENT_UPDATE,
+    PERMISSIONS.CONTENT_DELETE,
+    PERMISSIONS.CONTENT_PUBLISH,
+    PERMISSIONS.PAYMENT_PROCESS,
+    PERMISSIONS.PAYMENT_VIEW,
+    PERMISSIONS.FINANCIAL_REPORTS,
+    PERMISSIONS.REPORTS_VIEW,
+    PERMISSIONS.REPORTS_EXPORT,
+    PERMISSIONS.ANALYTICS_VIEW,
+  ],
+  moderator: [
+    PERMISSIONS.MEMBER_VIEW,
+    PERMISSIONS.MEMBER_INVITE,
+    PERMISSIONS.EVENT_CREATE,
+    PERMISSIONS.EVENT_UPDATE,
+    PERMISSIONS.EVENT_VIEW,
+    PERMISSIONS.TASK_CREATE,
+    PERMISSIONS.TASK_UPDATE,
+    PERMISSIONS.TASK_ASSIGN,
+    PERMISSIONS.TASK_VIEW,
+    PERMISSIONS.RESOURCE_VIEW,
+    PERMISSIONS.CONTENT_CREATE,
+    PERMISSIONS.CONTENT_UPDATE,
+    PERMISSIONS.REPORTS_VIEW,
+  ],
+  member: [
+    PERMISSIONS.MEMBER_VIEW,
+    PERMISSIONS.EVENT_VIEW,
+    PERMISSIONS.TASK_VIEW,
+    PERMISSIONS.RESOURCE_VIEW,
+  ],
+} as const;
