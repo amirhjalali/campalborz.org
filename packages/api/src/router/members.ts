@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { router, protectedProcedure, publicProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure, adminProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { membersService } from "../services/members";
 
 // Member schemas
 const MemberProfileSchema = z.object({
@@ -418,4 +419,218 @@ export const membersRouter = router({
 
       return updatedUser;
     }),
+
+  // Advanced Member Portal Features
+  submitMembershipApplication: protectedProcedure
+    .input(z.object({
+      answers: z.record(z.any()),
+      references: z.array(z.object({
+        name: z.string(),
+        email: z.string(),
+        relationship: z.string()
+      })).optional()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return membersService.submitMembershipApplication(
+        ctx.user.id,
+        ctx.tenant.id,
+        input
+      );
+    }),
+
+  reviewMembershipApplication: adminProcedure
+    .input(z.object({
+      applicationId: z.string(),
+      decision: z.enum(['approved', 'rejected']),
+      notes: z.string().optional()
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return membersService.reviewMembershipApplication(
+        input.applicationId,
+        ctx.user.id,
+        ctx.tenant.id,
+        input.decision,
+        input.notes
+      );
+    }),
+
+  getMemberProfile: protectedProcedure
+    .input(z.object({
+      userId: z.string().optional()
+    }))
+    .query(async ({ ctx, input }) => {
+      const userId = input.userId || ctx.user.id;
+      return membersService.getMemberProfile(userId, ctx.tenant.id);
+    }),
+
+  searchMembers: protectedProcedure
+    .input(z.object({
+      searchTerm: z.string().optional(),
+      skills: z.array(z.string()).optional(),
+      interests: z.array(z.string()).optional(),
+      roles: z.array(z.enum(['MEMBER', 'ADMIN', 'LEAD', 'VOLUNTEER'])).optional(),
+      status: z.array(z.enum(['PENDING', 'ACTIVE', 'INACTIVE', 'SUSPENDED'])).optional(),
+      sortBy: z.enum(['name', 'joinDate', 'contributions']).optional(),
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(100).default(20)
+    }))
+    .query(async ({ ctx, input }) => {
+      return membersService.searchMembers(ctx.tenant.id, input);
+    }),
+
+  awardPoints: adminProcedure
+    .input(z.object({
+      userId: z.string(),
+      points: z.number().min(1),
+      reason: z.string(),
+      category: z.enum(['event', 'volunteer', 'donation', 'participation', 'other'])
+    }))
+    .mutation(async ({ ctx, input }) => {
+      return membersService.awardPoints(
+        input.userId,
+        ctx.tenant.id,
+        input.points,
+        input.reason,
+        input.category
+      );
+    }),
+
+  getMyPoints: protectedProcedure
+    .query(async ({ ctx }) => {
+      return membersService.getMemberPoints(
+        ctx.user.id,
+        ctx.tenant.id
+      );
+    }),
+
+  logVolunteerHours: protectedProcedure
+    .input(z.object({
+      eventId: z.string().optional(),
+      hours: z.number().min(0.5).max(24),
+      description: z.string(),
+      date: z.string().transform(str => new Date(str)),
+      category: z.enum(['setup', 'event', 'cleanup', 'maintenance', 'administration', 'other'])
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const volunteerLog = await ctx.prisma.volunteerLog.create({
+        data: {
+          userId: ctx.user.id,
+          tenantId: ctx.tenant.id,
+          eventId: input.eventId,
+          hours: input.hours,
+          description: input.description,
+          date: input.date,
+          category: input.category
+        }
+      });
+
+      await membersService.awardPoints(
+        ctx.user.id,
+        ctx.tenant.id,
+        Math.floor(input.hours * 10),
+        `Volunteer work: ${input.description}`,
+        'volunteer'
+      );
+
+      return volunteerLog;
+    }),
+
+  getVolunteerHistory: protectedProcedure
+    .input(z.object({
+      userId: z.string().optional(),
+      year: z.number().optional(),
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(50).default(20)
+    }))
+    .query(async ({ ctx, input }) => {
+      const userId = input.userId || ctx.user.id;
+      
+      const where = {
+        userId,
+        tenantId: ctx.tenant.id,
+        ...(input.year && {
+          date: {
+            gte: new Date(input.year, 0, 1),
+            lt: new Date(input.year + 1, 0, 1)
+          }
+        })
+      };
+
+      const [logs, total] = await Promise.all([
+        ctx.prisma.volunteerLog.findMany({
+          where,
+          include: {
+            event: {
+              select: { id: true, title: true, startDate: true }
+            }
+          },
+          orderBy: { date: 'desc' },
+          skip: (input.page - 1) * input.limit,
+          take: input.limit
+        }),
+        ctx.prisma.volunteerLog.count({ where })
+      ]);
+
+      const totalHours = await ctx.prisma.volunteerLog.aggregate({
+        where,
+        _sum: { hours: true }
+      });
+
+      return {
+        logs,
+        totalHours: totalHours._sum.hours || 0,
+        pagination: {
+          page: input.page,
+          limit: input.limit,
+          total,
+          pages: Math.ceil(total / input.limit)
+        }
+      };
+    }),
+
+  getPointsLeaderboard: protectedProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(100).default(10),
+      timeframe: z.enum(['all_time', 'year', 'month']).default('all_time')
+    }))
+    .query(async ({ ctx, input }) => {
+      const whereClause = {
+        tenantId: ctx.tenant.id,
+        ...(input.timeframe !== 'all_time' && {
+          awardedAt: {
+            gte: input.timeframe === 'year' 
+              ? new Date(new Date().getFullYear(), 0, 1)
+              : new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+          }
+        })
+      };
+
+      return ctx.prisma.memberPoints.groupBy({
+        by: ['userId'],
+        where: whereClause,
+        _sum: { points: true },
+        orderBy: { _sum: { points: 'desc' } },
+        take: input.limit
+      }).then(async (results) => {
+        const userIds = results.map(r => r.userId);
+        const users = await ctx.prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+            metadata: true
+          }
+        });
+
+        return results.map((result, index) => {
+          const user = users.find(u => u.id === result.userId);
+          return {
+            rank: index + 1,
+            user,
+            points: result._sum.points || 0
+          };
+        });
+      });
+    })
 });

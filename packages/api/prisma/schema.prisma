@@ -56,6 +56,12 @@ model Tenant {
   eventReminders  EventReminder[]
   eventFeedback   EventFeedback[]
   
+  // Member portal relationships
+  memberApplications MemberApplication[]
+  memberPoints    MemberPoints[]
+  volunteerLogs   VolunteerLog[]
+  memberBadges    MemberBadge[]
+  
   @@map("tenants")
 }
 
@@ -121,6 +127,13 @@ model User {
   eventWaitlists  EventWaitlist[] @relation("EventWaitlist")
   eventReminders  EventReminder[] @relation("EventReminders")
   eventFeedback   EventFeedback[] @relation("EventFeedback")
+  
+  // Member portal relationships
+  memberApplications MemberApplication[]
+  reviewedApplications MemberApplication[] @relation("ApplicationReviewer")
+  memberPoints    MemberPoints[]
+  volunteerLogs   VolunteerLog[]
+  badges          UserBadge[]
   
   @@unique([tenantId, email])
   @@map("users")
@@ -274,6 +287,7 @@ model Event {
   waitlists    EventWaitlist[]
   reminders    EventReminder[]
   feedback     EventFeedback[]
+  volunteerLogs VolunteerLog[]
   
   @@index([tenantId, startDate])
   @@index([tenantId, status])
@@ -1309,6 +1323,124 @@ model ContentTemplate {
   
   @@index([tenantId, contentTypeId])
   @@map("content_templates")
+}
+
+// Member Portal Models
+model MemberApplication {
+  id          String   @id @default(cuid())
+  userId      String
+  tenantId    String
+  answers     Json     // Application form answers
+  references  Json?    // Reference contacts
+  status      ApplicationStatus @default(PENDING)
+  reviewedBy  String?
+  reviewNotes String?
+  submittedAt DateTime @default(now())
+  reviewedAt  DateTime?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id])
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reviewer    User?    @relation("ApplicationReviewer", fields: [reviewedBy], references: [id])
+  
+  @@index([tenantId, status])
+  @@index([userId])
+  @@map("member_applications")
+}
+
+model MemberPoints {
+  id        String   @id @default(cuid())
+  userId    String
+  tenantId  String
+  points    Int
+  reason    String
+  category  PointCategory
+  metadata  Json?
+  awardedAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id])
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, awardedAt])
+  @@index([tenantId, category])
+  @@map("member_points")
+}
+
+model VolunteerLog {
+  id          String   @id @default(cuid())
+  userId      String
+  tenantId    String
+  eventId     String?
+  taskName    String
+  description String?
+  hours       Float
+  date        DateTime
+  verified    Boolean  @default(false)
+  verifiedBy  String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id])
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  event       Event?   @relation(fields: [eventId], references: [id])
+  
+  @@index([userId, date])
+  @@index([tenantId, verified])
+  @@map("volunteer_logs")
+}
+
+model MemberBadge {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  description String
+  icon        String   // Icon URL or identifier
+  criteria    Json     // Criteria for earning badge
+  points      Int      @default(0) // Points awarded with badge
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users       UserBadge[]
+  
+  @@unique([tenantId, name])
+  @@map("member_badges")
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+  
+  // Relations
+  user      User        @relation(fields: [userId], references: [id])
+  badge     MemberBadge @relation(fields: [badgeId], references: [id])
+  
+  @@unique([userId, badgeId])
+  @@map("user_badges")
+}
+
+// Member Portal Enums
+enum ApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum PointCategory {
+  EVENT
+  VOLUNTEER
+  DONATION
+  PARTICIPATION
+  ACHIEVEMENT
+  REFERRAL
+  OTHER
 }
 
 // CMS Enums
