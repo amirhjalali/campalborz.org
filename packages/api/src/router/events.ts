@@ -3,6 +3,8 @@ import { router, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { withCache, withTagInvalidation, CacheConfigs } from "../middleware/cache";
 import { CacheKeys, CacheTags } from "../services/cache";
+import { eventsService } from "../services/events";
+import { EventType, EventStatus, RSVPStatus, TicketStatus, SessionLevel, AttendeeStatus, SponsorLevel, ReminderType } from "@prisma/client";
 
 // Event schemas
 const EventCreateSchema = z.object({
@@ -640,4 +642,456 @@ export const eventsRouter = router({
 
       return rsvps;
     }),
+
+  // Advanced Event Management Features
+
+  // Create event with advanced features
+  createAdvanced: protectedProcedure
+    .input(z.object({
+      title: z.string().min(1),
+      description: z.string().optional(),
+      content: z.any().optional(),
+      type: z.nativeEnum(EventType).default(EventType.GENERAL),
+      category: z.string().optional(),
+      startDate: z.date(),
+      endDate: z.date().optional(),
+      location: z.string().optional(),
+      address: z.string().optional(),
+      virtualUrl: z.string().optional(),
+      maxAttendees: z.number().int().positive().optional(),
+      price: z.number().int().nonnegative().optional(),
+      currency: z.string().default('USD'),
+      isPublic: z.boolean().default(true),
+      requiresApproval: z.boolean().default(false),
+      allowGuestRSVPs: z.boolean().default(true),
+      tags: z.array(z.string()).optional(),
+      customFields: z.record(z.any()).optional(),
+      notifications: z.object({
+        sendReminders: z.boolean().default(true),
+        reminderTimes: z.array(z.number()).default([24, 2]),
+        sendWaitlistNotifications: z.boolean().default(true)
+      }).optional(),
+      ticketTypes: z.array(z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        price: z.number().int().nonnegative(),
+        quantity: z.number().int().positive(),
+        maxPerPerson: z.number().int().positive().default(1),
+        saleStartDate: z.date().optional(),
+        saleEndDate: z.date().optional()
+      })).optional()
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return await eventsService.createEvent(
+        ctx.user.tenantId,
+        ctx.user.id,
+        input
+      );
+    }),
+
+  // Search events with advanced filtering
+  search: publicProcedure
+    .input(z.object({
+      query: z.string().optional(),
+      type: z.nativeEnum(EventType).optional(),
+      category: z.string().optional(),
+      status: z.nativeEnum(EventStatus).optional(),
+      dateFrom: z.date().optional(),
+      dateTo: z.date().optional(),
+      location: z.string().optional(),
+      isPublic: z.boolean().optional(),
+      hasSpace: z.boolean().optional(),
+      priceRange: z.object({
+        min: z.number().optional(),
+        max: z.number().optional()
+      }).optional(),
+      page: z.number().min(1).default(1),
+      limit: z.number().min(1).max(100).default(20)
+    }))
+    .query(async ({ input, ctx }) => {
+      const { query, page, limit, ...filters } = input;
+      return await eventsService.searchEvents(
+        ctx.tenant?.id || '',
+        ctx.user?.id,
+        query,
+        filters,
+        page,
+        limit
+      );
+    }),
+
+  // Get detailed event with analytics
+  getDetailed: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return await eventsService.getEventById(
+        input.id,
+        ctx.tenant?.id || '',
+        ctx.user?.id
+      );
+    }),
+
+  // RSVP with advanced options
+  rsvpAdvanced: protectedProcedure
+    .input(z.object({
+      eventId: z.string(),
+      response: z.string().optional(),
+      attendees: z.number().int().positive().default(1),
+      dietaryRestrictions: z.array(z.string()).optional(),
+      accessibilityNeeds: z.string().optional(),
+      emergencyContact: z.object({
+        name: z.string(),
+        phone: z.string(),
+        relationship: z.string()
+      }).optional(),
+      customResponses: z.record(z.any()).optional()
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return await eventsService.createRSVP(
+        input.eventId,
+        ctx.user.tenantId,
+        ctx.user.id,
+        input
+      );
+    }),
+
+  // Update RSVP
+  updateRSVPAdvanced: protectedProcedure
+    .input(z.object({
+      rsvpId: z.string(),
+      status: z.nativeEnum(RSVPStatus).optional(),
+      response: z.string().optional(),
+      attendees: z.number().int().positive().optional(),
+      metadata: z.any().optional()
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { rsvpId, ...data } = input;
+      return await eventsService.updateRSVP(
+        rsvpId,
+        ctx.user.tenantId,
+        ctx.user.id,
+        data
+      );
+    }),
+
+  // Get event statistics
+  getStats: protectedProcedure
+    .input(z.object({
+      dateRange: z.object({
+        from: z.date(),
+        to: z.date()
+      }).optional()
+    }))
+    .query(async ({ input, ctx }) => {
+      return await eventsService.getEventStats(
+        ctx.user.tenantId,
+        input.dateRange
+      );
+    }),
+
+  // Get event analytics
+  getAnalytics: protectedProcedure
+    .input(z.object({ eventId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return await eventsService.getEventAnalytics(input.eventId);
+    }),
+
+  // Ticket Management
+  tickets: router({
+    // Create ticket type
+    createType: protectedProcedure
+      .input(z.object({
+        eventId: z.string(),
+        name: z.string(),
+        description: z.string().optional(),
+        price: z.number().int().nonnegative(),
+        quantity: z.number().int().positive(),
+        maxPerPerson: z.number().int().positive().default(1),
+        saleStartDate: z.date().optional(),
+        saleEndDate: z.date().optional()
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.eventTicketType.create({
+          data: {
+            ...input,
+            tenantId: ctx.user.tenantId
+          }
+        });
+      }),
+
+    // Purchase tickets
+    purchase: protectedProcedure
+      .input(z.object({
+        ticketTypeId: z.string(),
+        quantity: z.number().int().positive().max(10)
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const ticketType = await ctx.prisma.eventTicketType.findFirst({
+          where: { 
+            id: input.ticketTypeId,
+            tenantId: ctx.user.tenantId,
+            isActive: true
+          },
+          include: { event: true }
+        });
+
+        if (!ticketType) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Ticket type not found'
+          });
+        }
+
+        // Check availability
+        if (ticketType.sold + input.quantity > ticketType.quantity) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Not enough tickets available'
+          });
+        }
+
+        // Generate tickets
+        const tickets = [];
+        for (let i = 0; i < input.quantity; i++) {
+          const ticketNumber = `${ticketType.event.id.slice(-6)}-${Date.now()}-${i + 1}`;
+          tickets.push({
+            ticketTypeId: input.ticketTypeId,
+            userId: ctx.user.id,
+            tenantId: ctx.user.tenantId,
+            ticketNumber,
+            purchasePrice: ticketType.price,
+            qrCode: `https://api.campalborz.org/tickets/${ticketNumber}/qr`
+          });
+        }
+
+        await ctx.prisma.$transaction([
+          ctx.prisma.eventTicket.createMany({ data: tickets }),
+          ctx.prisma.eventTicketType.update({
+            where: { id: input.ticketTypeId },
+            data: { sold: { increment: input.quantity } }
+          })
+        ]);
+
+        return { success: true, ticketCount: input.quantity };
+      }),
+
+    // Check in ticket
+    checkIn: protectedProcedure
+      .input(z.object({
+        ticketNumber: z.string()
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const ticket = await ctx.prisma.eventTicket.findFirst({
+          where: { 
+            ticketNumber: input.ticketNumber,
+            tenantId: ctx.user.tenantId
+          },
+          include: {
+            ticketType: {
+              include: { event: true }
+            },
+            user: true
+          }
+        });
+
+        if (!ticket) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Ticket not found'
+          });
+        }
+
+        if (ticket.status !== TicketStatus.VALID) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: `Ticket is ${ticket.status.toLowerCase()}`
+          });
+        }
+
+        if (ticket.checkedInAt) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Ticket already checked in'
+          });
+        }
+
+        return await ctx.prisma.eventTicket.update({
+          where: { id: ticket.id },
+          data: {
+            status: TicketStatus.USED,
+            checkedInAt: new Date(),
+            checkedInBy: ctx.user.id
+          },
+          include: {
+            user: true,
+            ticketType: {
+              include: { event: true }
+            }
+          }
+        });
+      })
+  }),
+
+  // Session Management for multi-session events
+  sessions: router({
+    // Create session
+    create: protectedProcedure
+      .input(z.object({
+        eventId: z.string(),
+        title: z.string(),
+        description: z.string().optional(),
+        startTime: z.date(),
+        endTime: z.date(),
+        location: z.string().optional(),
+        maxAttendees: z.number().int().positive().optional(),
+        speakers: z.array(z.any()).optional(),
+        materials: z.array(z.string()).optional(),
+        level: z.nativeEnum(SessionLevel).default(SessionLevel.BEGINNER),
+        tags: z.array(z.string()).default([]),
+        isRequired: z.boolean().default(false)
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.eventSession.create({
+          data: {
+            ...input,
+            tenantId: ctx.user.tenantId
+          }
+        });
+      }),
+
+    // Register for session
+    register: protectedProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        notes: z.string().optional()
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.sessionAttendee.create({
+          data: {
+            sessionId: input.sessionId,
+            userId: ctx.user.id,
+            notes: input.notes
+          }
+        });
+      }),
+
+    // Submit session feedback
+    feedback: protectedProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        rating: z.number().int().min(1).max(5),
+        feedback: z.string().optional()
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.sessionAttendee.update({
+          where: {
+            sessionId_userId: {
+              sessionId: input.sessionId,
+              userId: ctx.user.id
+            }
+          },
+          data: {
+            rating: input.rating,
+            feedback: input.feedback,
+            status: AttendeeStatus.ATTENDED
+          }
+        });
+      })
+  }),
+
+  // Sponsor Management
+  sponsors: router({
+    // Add sponsor
+    add: protectedProcedure
+      .input(z.object({
+        eventId: z.string(),
+        name: z.string(),
+        logo: z.string().optional(),
+        website: z.string().optional(),
+        description: z.string().optional(),
+        level: z.nativeEnum(SponsorLevel).default(SponsorLevel.BRONZE),
+        amount: z.number().int().nonnegative().optional(),
+        benefits: z.array(z.string()).optional()
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.eventSponsor.create({
+          data: {
+            ...input,
+            tenantId: ctx.user.tenantId,
+            benefits: input.benefits || []
+          }
+        });
+      }),
+
+    // List sponsors for event
+    list: publicProcedure
+      .input(z.object({ eventId: z.string() }))
+      .query(async ({ input, ctx }) => {
+        return await ctx.prisma.eventSponsor.findMany({
+          where: {
+            eventId: input.eventId,
+            isActive: true
+          },
+          orderBy: [
+            { level: 'asc' },
+            { createdAt: 'asc' }
+          ]
+        });
+      })
+  }),
+
+  // Event Feedback
+  feedback: router({
+    // Submit feedback
+    submit: protectedProcedure
+      .input(z.object({
+        eventId: z.string(),
+        rating: z.number().int().min(1).max(5),
+        feedback: z.string().optional(),
+        categories: z.record(z.number().int().min(1).max(5)).optional(),
+        wouldRecommend: z.boolean().optional(),
+        suggestions: z.string().optional(),
+        isAnonymous: z.boolean().default(false)
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return await ctx.prisma.eventFeedback.create({
+          data: {
+            ...input,
+            tenantId: ctx.user.tenantId,
+            userId: ctx.user.id
+          }
+        });
+      }),
+
+    // Get feedback for event (admin only)
+    getForEvent: protectedProcedure
+      .input(z.object({ 
+        eventId: z.string(),
+        includeAnonymous: z.boolean().default(true)
+      }))
+      .query(async ({ input, ctx }) => {
+        // Check admin permissions
+        if (!['ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'].includes(ctx.user.role)) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Admin access required'
+          });
+        }
+
+        return await ctx.prisma.eventFeedback.findMany({
+          where: {
+            eventId: input.eventId,
+            tenantId: ctx.user.tenantId
+          },
+          include: {
+            user: {
+              select: input.includeAnonymous ? 
+                { id: true, name: true } : 
+                { id: true, name: true }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        });
+      })
+  })
 });

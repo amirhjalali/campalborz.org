@@ -47,6 +47,15 @@ model Tenant {
   tags            Tag[]
   contentTemplates ContentTemplate[]
   
+  // Event management relationships
+  eventTicketTypes EventTicketType[]
+  eventTickets    EventTicket[]
+  eventSessions   EventSession[]
+  eventSponsors   EventSponsor[]
+  eventWaitlists  EventWaitlist[]
+  eventReminders  EventReminder[]
+  eventFeedback   EventFeedback[]
+  
   @@map("tenants")
 }
 
@@ -104,6 +113,14 @@ model User {
   comments        Comment[] @relation("CommentAuthor")
   moderatedComments Comment[] @relation("CommentModerator")
   contentTemplates ContentTemplate[] @relation("TemplateCreator")
+  
+  // Event management relationships
+  eventTickets    EventTicket[] @relation("UserTickets")
+  checkedInTickets EventTicket[] @relation("TicketCheckedInBy")
+  sessionAttendees SessionAttendee[] @relation("SessionAttendee")
+  eventWaitlists  EventWaitlist[] @relation("EventWaitlist")
+  eventReminders  EventReminder[] @relation("EventReminders")
+  eventFeedback   EventFeedback[] @relation("EventFeedback")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -251,8 +268,248 @@ model Event {
   creator      User        @relation("EventCreator", fields: [createdBy], references: [id])
   rsvps        EventRSVP[]
   payments     Payment[]
+  ticketTypes  EventTicketType[]
+  sessions     EventSession[]
+  sponsors     EventSponsor[]
+  waitlists    EventWaitlist[]
+  reminders    EventReminder[]
+  feedback     EventFeedback[]
   
+  @@index([tenantId, startDate])
+  @@index([tenantId, status])
+  @@index([type, startDate])
   @@map("events")
+}
+
+model EventTicketType {
+  id            String   @id @default(cuid())
+  eventId       String
+  tenantId      String
+  name          String
+  description   String?
+  price         Int      // in cents
+  quantity      Int      // Total tickets available
+  sold          Int      @default(0)
+  maxPerPerson  Int      @default(1)
+  saleStartDate DateTime?
+  saleEndDate   DateTime?
+  isActive      Boolean  @default(true)
+  metadata      Json?    // Additional ticket data
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  event         Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tickets       EventTicket[]
+
+  @@index([eventId, isActive])
+  @@map("event_ticket_types")
+}
+
+model EventTicket {
+  id            String   @id @default(cuid())
+  ticketTypeId  String
+  userId        String
+  tenantId      String
+  ticketNumber  String   @unique // Generated ticket number
+  status        TicketStatus @default(VALID)
+  purchasePrice Int      // Price paid in cents
+  qrCode        String?  // QR code for check-in
+  checkedInAt   DateTime?
+  checkedInBy   String?
+  metadata      Json?    // Additional ticket data
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  ticketType    EventTicketType @relation(fields: [ticketTypeId], references: [id], onDelete: Cascade)
+  user          User            @relation("UserTickets", fields: [userId], references: [id])
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  checkedInByUser User?         @relation("TicketCheckedInBy", fields: [checkedInBy], references: [id])
+
+  @@index([userId, status])
+  @@index([ticketTypeId, status])
+  @@map("event_tickets")
+}
+
+model EventSession {
+  id          String   @id @default(cuid())
+  eventId     String
+  tenantId    String
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  location    String?
+  maxAttendees Int?
+  speakers    Json?    // Array of speaker information
+  materials   Json?    // Required materials or preparation
+  level       SessionLevel @default(BEGINNER)
+  tags        String[]
+  isRequired  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  event       Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tenant      Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  attendees   SessionAttendee[]
+
+  @@index([eventId, startTime])
+  @@map("event_sessions")
+}
+
+model SessionAttendee {
+  id        String      @id @default(cuid())
+  sessionId String
+  userId    String
+  status    AttendeeStatus @default(REGISTERED)
+  notes     String?
+  rating    Int?        // 1-5 rating after session
+  feedback  String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  session   EventSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User         @relation("SessionAttendee", fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@map("session_attendees")
+}
+
+model EventSponsor {
+  id          String       @id @default(cuid())
+  eventId     String
+  tenantId    String
+  name        String
+  logo        String?
+  website     String?
+  description String?
+  level       SponsorLevel @default(BRONZE)
+  amount      Int?         // Sponsorship amount in cents
+  benefits    Json?        // Array of sponsor benefits
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, level])
+  @@map("event_sponsors")
+}
+
+model EventWaitlist {
+  id          String   @id @default(cuid())
+  eventId     String
+  userId      String
+  tenantId    String
+  position    Int      // Position in waitlist
+  notified    Boolean  @default(false)
+  expiresAt   DateTime?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User     @relation("EventWaitlist", fields: [userId], references: [id])
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, position])
+  @@map("event_waitlists")
+}
+
+model EventReminder {
+  id        String    @id @default(cuid())
+  eventId   String
+  userId    String
+  tenantId  String
+  type      ReminderType
+  sendAt    DateTime
+  sent      Boolean   @default(false)
+  sentAt    DateTime?
+  method    NotificationChannel @default(EMAIL)
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  // Relations
+  event     Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User      @relation("EventReminders", fields: [userId], references: [id])
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([sendAt, sent])
+  @@index([eventId, type])
+  @@map("event_reminders")
+}
+
+model EventFeedback {
+  id          String   @id @default(cuid())
+  eventId     String
+  userId      String
+  tenantId    String
+  rating      Int      // 1-5 overall rating
+  feedback    String?
+  categories  Json?    // Ratings for different aspects
+  wouldRecommend Boolean?
+  suggestions String?
+  isAnonymous Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User     @relation("EventFeedback", fields: [userId], references: [id])
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId, rating])
+  @@map("event_feedback")
+}
+
+// Event-related Enums
+enum TicketStatus {
+  VALID
+  USED
+  CANCELLED
+  REFUNDED
+  TRANSFERRED
+}
+
+enum SessionLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  ALL_LEVELS
+}
+
+enum AttendeeStatus {
+  REGISTERED
+  CONFIRMED
+  ATTENDED
+  NO_SHOW
+  CANCELLED
+}
+
+enum SponsorLevel {
+  TITLE
+  PLATINUM
+  GOLD
+  SILVER
+  BRONZE
+  SUPPORTER
+}
+
+enum ReminderType {
+  EVENT_REMINDER
+  RSVP_REMINDER
+  FEEDBACK_REQUEST
+  FOLLOW_UP
+  CUSTOM
 }
 
 model EventRSVP {
