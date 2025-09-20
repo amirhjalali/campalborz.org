@@ -18,6 +18,8 @@ model Tenant {
   status    TenantStatus @default(ACTIVE)
   plan      TenantPlan   @default(STARTER)
   settings  Json
+  defaultLanguage String           @default("en")
+  supportedLanguages String[]      @default(["en"])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1465,4 +1467,115 @@ enum CommentStatus {
   APPROVED
   REJECTED
   SPAM
+}
+
+// Internationalization Models
+
+model Language {
+  id        String   @id @default(cuid())
+  code      String   @unique // ISO 639-1 code (e.g., "en", "es", "fa")
+  name      String   // English name (e.g., "English", "Spanish", "Persian")
+  nativeName String  // Native name (e.g., "English", "Español", "فارسی")
+  direction String   @default("ltr") // "ltr" or "rtl"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  translations Translation[]
+  tenantLanguages TenantLanguage[]
+
+  @@map("languages")
+}
+
+model TenantLanguage {
+  id         String   @id @default(cuid())
+  tenantId   String
+  languageId String
+  isDefault  Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  // Relations
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  language Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, languageId])
+  @@map("tenant_languages")
+}
+
+model TranslationKey {
+  id          String   @id @default(cuid())
+  tenantId    String?  // null for global keys
+  namespace   String   // e.g., "common", "navigation", "events"
+  key         String   // e.g., "login", "submit", "event.title"
+  description String?  // Context for translators
+  isPlural    Boolean  @default(false)
+  metadata    Json?    // Additional context (character limits, etc.)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  tenant       Tenant?       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  translations Translation[]
+
+  @@unique([tenantId, namespace, key])
+  @@index([namespace, key])
+  @@map("translation_keys")
+}
+
+model Translation {
+  id              String            @id @default(cuid())
+  translationKeyId String
+  languageId      String
+  value           String
+  pluralValues    Json?             // For plural forms
+  status          TranslationStatus @default(PENDING)
+  translatedBy    String?
+  reviewedBy      String?
+  translatedAt    DateTime?
+  reviewedAt      DateTime?
+  version         Int               @default(1)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  translationKey TranslationKey @relation(fields: [translationKeyId], references: [id], onDelete: Cascade)
+  language       Language       @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  translator     User?          @relation("Translator", fields: [translatedBy], references: [id], onDelete: SetNull)
+  reviewer       User?          @relation("Reviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@unique([translationKeyId, languageId])
+  @@index([languageId, status])
+  @@map("translations")
+}
+
+model ContentTranslation {
+  id           String   @id @default(cuid())
+  tenantId     String
+  contentType  String   // "event", "page", "content", etc.
+  contentId    String   // ID of the content being translated
+  languageId   String
+  fieldName    String   // Which field is being translated
+  originalValue String  // Original value in default language
+  translatedValue String // Translated value
+  status       TranslationStatus @default(PENDING)
+  translatedBy String?
+  reviewedBy   String?
+  translatedAt DateTime?
+  reviewedAt   DateTime?
+  version      Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  language   Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
+  translator User?    @relation("ContentTranslator", fields: [translatedBy], references: [id], onDelete: SetNull)
+  reviewer   User?    @relation("ContentReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, contentType, contentId, languageId, fieldName])
+  @@index([contentType, contentId])
+  @@index([languageId, status])
+  @@map("content_translations")
 }

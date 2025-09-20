@@ -21,6 +21,7 @@ import { securityRouter } from "./security";
 import { authRouter } from "./auth";
 import { realtimeRouter } from "./realtime";
 import { donationsRouter } from "./donations";
+import { i18nRouter } from "./i18n";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -45,6 +46,7 @@ export const appRouter = router({
   auth: authRouter,
   realtime: realtimeRouter,
   donations: donationsRouter,
+  i18n: i18nRouter,
 });
 
 export type AppRouter = typeof appRouter;
