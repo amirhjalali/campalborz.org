@@ -64,6 +64,82 @@ model Tenant {
   volunteerLogs   VolunteerLog[]
   memberBadges    MemberBadge[]
   
+  // Internationalization relationships
+  tenantLanguages TenantLanguage[]
+  translationKeys TranslationKey[]
+  contentTranslations ContentTranslation[]
+  
+  // Communication Hub relationships
+  communicationChannels CommunicationChannel[]
+  channelMembers ChannelMember[]
+  messages Message[]
+  messageThreads MessageThread[]
+  messageReactions MessageReaction[]
+  messageMentions MessageMention[]
+  channelInvitations ChannelInvitation[]
+  directMessages DirectMessage[]
+  dmReactions DMReaction[]
+  announcements Announcement[]
+  announcementRecipients AnnouncementRecipient[]
+  forums Forum[]
+  forumCategories ForumCategory[]
+  forumTopics ForumTopic[]
+  forumPosts ForumPost[]
+  forumModerators ForumModerator[]
+  
+  // Advanced Search relationships
+  searchIndices SearchIndex[]
+  searchQueries SearchQuery[]
+  searchSuggestions SearchSuggestion[]
+  savedSearches SavedSearch[]
+  searchFacets SearchFacet[]
+  searchResults SearchResult[]
+  
+  // Push Notification relationships
+  pushDevices PushDevice[]
+  pushNotifications PushNotification[]
+  notificationTemplates NotificationTemplate[]
+  notificationPreferences NotificationPreference[]
+  notificationCampaigns NotificationCampaign[]
+  notificationAnalytics NotificationAnalytics[]
+  
+  // Data Export/Import relationships
+  dataExports DataExport[]
+  dataImports DataImport[]
+  dataTemplates DataTemplate[]
+  dataSyncs DataSync[]
+  dataBackups DataBackup[]
+  
+  // AI/ML Features relationships
+  aiModels AIModel[]
+  aiPredictions AIPrediction[]
+  aiInsights AIInsight[]
+  recommendationEngines RecommendationEngine[]
+  chatSessions ChatSession[]
+  contentAnalyses ContentAnalysis[]
+  automationRules AutomationRule[]
+  
+  // Advanced Analytics relationships
+  analyticsDashboards AnalyticsDashboard[]
+  analyticsMetrics AnalyticsMetric[]
+  analyticsQueries AnalyticsQuery[]
+  analyticsAlerts AnalyticsAlert[]
+  dataCubes DataCube[]
+  cohortAnalyses CohortAnalysis[]
+  funnelAnalyses FunnelAnalysis[]
+  retentionAnalyses RetentionAnalysis[]
+  segmentAnalyses SegmentAnalysis[]
+  
+  // Performance Monitoring relationships
+  performanceMetrics PerformanceMetric[]
+  performanceTraces PerformanceTrace[]
+  performanceAlerts PerformanceAlert[]
+  performanceAlertTriggers PerformanceAlertTrigger[]
+  systemHealthChecks SystemHealthCheck[]
+  performanceProfiles PerformanceProfile[]
+  resourceUsages ResourceUsage[]
+  performanceBenchmarks PerformanceBenchmark[]
+  
   @@map("tenants")
 }
 
@@ -136,6 +212,71 @@ model User {
   memberPoints    MemberPoints[]
   volunteerLogs   VolunteerLog[]
   badges          UserBadge[]
+  
+  // Performance Monitoring relationships
+  createdPerformanceAlerts PerformanceAlert[]
+  createdPerformanceProfiles PerformanceProfile[]
+  createdPerformanceBenchmarks PerformanceBenchmark[]
+  
+  // Advanced Analytics relationships
+  createdAnalyticsDashboards AnalyticsDashboard[]
+  createdAnalyticsMetrics AnalyticsMetric[]
+  createdAnalyticsQueries AnalyticsQuery[]
+  createdAnalyticsAlerts AnalyticsAlert[]
+  createdCohortAnalyses CohortAnalysis[]
+  createdFunnelAnalyses FunnelAnalysis[]
+  createdRetentionAnalyses RetentionAnalysis[]
+  createdSegmentAnalyses SegmentAnalysis[]
+  
+  // AI/ML Features relationships
+  createdAIModels AIModel[]
+  createdRecommendationEngines RecommendationEngine[]
+  createdChatSessions ChatSession[]
+  createdAutomationRules AutomationRule[]
+  
+  // Data Export/Import relationships
+  createdDataExports DataExport[]
+  createdDataImports DataImport[]
+  createdDataTemplates DataTemplate[]
+  createdDataSyncs DataSync[]
+  createdDataBackups DataBackup[]
+  
+  // Push Notification relationships
+  createdNotificationTemplates NotificationTemplate[]
+  createdNotificationCampaigns NotificationCampaign[]
+  pushDevices PushDevice[]
+  notificationPreferences NotificationPreference[]
+  
+  // Advanced Search relationships
+  createdSearchIndices SearchIndex[]
+  savedSearches SavedSearch[]
+  
+  // Communication Hub relationships
+  createdChannels CommunicationChannel[] @relation("ChannelCreator")
+  channelMemberships ChannelMember[] @relation("ChannelMembers")
+  authoredMessages Message[] @relation("MessageAuthor")
+  pinnedMessages Message[] @relation("MessagePinner")
+  createdThreads MessageThread[] @relation("ThreadCreator")
+  lockedThreads MessageThread[] @relation("ThreadLocker")
+  messageReactions MessageReaction[]
+  messageMentions MessageMention[]
+  sentChannelInvitations ChannelInvitation[] @relation("InvitationSender")
+  receivedChannelInvitations ChannelInvitation[] @relation("InvitationRecipient")
+  sentDirectMessages DirectMessage[] @relation("DMSender")
+  receivedDirectMessages DirectMessage[] @relation("DMRecipient")
+  dmReactions DMReaction[]
+  createdAnnouncements Announcement[]
+  announcementRecipients AnnouncementRecipient[]
+  createdForums Forum[]
+  forumModerators ForumModerator[]
+  createdForumTopics ForumTopic[]
+  authoredForumPosts ForumPost[]
+  
+  // Internationalization relationships
+  translations Translation[] @relation("Translator")
+  reviewedTranslations Translation[] @relation("Reviewer")
+  contentTranslations ContentTranslation[] @relation("ContentTranslator")
+  reviewedContentTranslations ContentTranslation[] @relation("ContentReviewer")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -3411,4 +3552,226 @@ enum PeriodType {
   MONTH
   QUARTER
   YEAR
+}
+
+// Performance Monitoring Models
+model PerformanceMetric {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          PerformanceMetricType
+  value         Float
+  unit          String
+  tags          Json                @default("{}")
+  metadata      Json                @default("{}")
+  timestamp     DateTime            @default(now())
+  source        String
+  environment   String              @default("production")
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  traces        PerformanceTrace[]
+
+  @@index([tenantId, type, timestamp])
+  @@index([tenantId, name, timestamp])
+  @@map("performance_metrics")
+}
+
+model PerformanceTrace {
+  id            String              @id @default(cuid())
+  tenantId      String
+  traceId       String
+  spanId        String
+  parentSpanId  String?
+  operationName String
+  startTime     DateTime
+  endTime       DateTime
+  duration      Float
+  status        TraceStatus
+  tags          Json                @default("{}")
+  logs          Json                @default("[]")
+  errors        Json                @default("[]")
+  metricId      String?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  metric        PerformanceMetric?  @relation(fields: [metricId], references: [id])
+
+  @@index([tenantId, traceId])
+  @@index([tenantId, operationName, startTime])
+  @@map("performance_traces")
+}
+
+model PerformanceAlert {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  metricType    PerformanceMetricType
+  condition     Json
+  threshold     Float
+  severity      AlertSeverity
+  isActive      Boolean             @default(true)
+  lastTriggered DateTime?
+  config        Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+  triggers      PerformanceAlertTrigger[]
+
+  @@map("performance_alerts")
+}
+
+model PerformanceAlertTrigger {
+  id            String              @id @default(cuid())
+  tenantId      String
+  alertId       String
+  metricValue   Float
+  threshold     Float
+  severity      AlertSeverity
+  message       String
+  metadata      Json                @default("{}")
+  resolvedAt    DateTime?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  alert         PerformanceAlert    @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@map("performance_alert_triggers")
+}
+
+model SystemHealthCheck {
+  id            String              @id @default(cuid())
+  tenantId      String
+  service       String
+  endpoint      String
+  status        HealthStatus
+  responseTime  Float
+  statusCode    Int?
+  message       String?
+  metadata      Json                @default("{}")
+  checkedAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, service, checkedAt])
+  @@map("system_health_checks")
+}
+
+model PerformanceProfile {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          ProfileType
+  data          Json
+  duration      Float
+  metadata      Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+
+  @@map("performance_profiles")
+}
+
+model ResourceUsage {
+  id            String              @id @default(cuid())
+  tenantId      String
+  resourceType  ResourceType
+  usage         Float
+  limit         Float?
+  unit          String
+  metadata      Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, resourceType, timestamp])
+  @@map("resource_usage")
+}
+
+model PerformanceBenchmark {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          BenchmarkType
+  config        Json                @default("{}")
+  results       Json                @default("{}")
+  baseline      Json?
+  score         Float?
+  passed        Boolean             @default(false)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+
+  @@map("performance_benchmarks")
+}
+
+enum PerformanceMetricType {
+  response_time
+  throughput
+  error_rate
+  cpu_usage
+  memory_usage
+  disk_usage
+  network_io
+  database_query_time
+  cache_hit_rate
+  queue_size
+  connection_pool_usage
+  gc_time
+  heap_usage
+  thread_count
+  custom
+}
+
+enum TraceStatus {
+  ok
+  error
+  timeout
+  cancelled
+}
+
+enum HealthStatus {
+  healthy
+  degraded
+  unhealthy
+  unknown
+}
+
+enum ProfileType {
+  cpu
+  memory
+  heap
+  flame_graph
+  call_stack
+  allocation
+}
+
+enum ResourceType {
+  cpu
+  memory
+  disk
+  network
+  database_connections
+  cache_memory
+  queue_size
+  thread_pool
+  file_descriptors
+  custom
+}
+
+enum BenchmarkType {
+  load_test
+  stress_test
+  spike_test
+  volume_test
+  endurance_test
+  scalability_test
+  performance_regression
+  custom
 }
