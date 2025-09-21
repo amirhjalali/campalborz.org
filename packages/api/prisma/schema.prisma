@@ -151,6 +151,17 @@ model Tenant {
   workflowVariables WorkflowVariable[]
   workflowLogs WorkflowLog[]
   
+  // Advanced Security relationships
+  securityPolicies SecurityPolicy[]
+  securityViolations SecurityViolation[]
+  securityScans SecurityScan[]
+  securityIncidents SecurityIncident[]
+  securityAlerts SecurityAlert[]
+  securityAuditLogs SecurityAuditLog[]
+  threatIntelligence ThreatIntelligence[]
+  securityBaselines SecurityBaseline[]
+  securityConfigurations SecurityConfiguration[]
+  
   @@map("tenants")
 }
 
@@ -292,6 +303,19 @@ model User {
   // Workflow Automation relationships
   createdWorkflows Workflow[]
   createdWorkflowTemplates WorkflowTemplate[]
+  
+  // Advanced Security relationships
+  createdSecurityPolicies SecurityPolicy[]
+  securityViolations SecurityViolation[]
+  resolvedViolations SecurityViolation[] @relation("ViolationResolver")
+  scheduledSecurityScans SecurityScan[] @relation("SecurityScanScheduler")
+  assignedIncidents SecurityIncident[] @relation("IncidentAssignee")
+  reportedIncidents SecurityIncident[] @relation("IncidentReporter")
+  acknowledgedAlerts SecurityAlert[] @relation("AlertAcknowledger")
+  resolvedAlerts SecurityAlert[] @relation("AlertResolver")
+  securityAuditLogs SecurityAuditLog[] @relation("SecurityAuditUser")
+  createdBaselines SecurityBaseline[] @relation("BaselineCreator")
+  modifiedConfigurations SecurityConfiguration[] @relation("ConfigModifier")
   
   @@unique([tenantId, email])
   @@map("users")
@@ -4078,4 +4102,353 @@ enum LogLevel {
   warn
   error
   fatal
+}
+
+// Advanced Security Models
+model SecurityPolicy {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  policyType    SecurityPolicyType
+  rules         Json                @default("[]")
+  isActive      Boolean             @default(true)
+  severity      SecuritySeverity
+  actions       Json                @default("[]")
+  exemptions    Json                @default("[]")
+  metadata      Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+  violations    SecurityViolation[]
+
+  @@index([tenantId, policyType])
+  @@index([tenantId, isActive])
+  @@map("security_policies")
+}
+
+model SecurityViolation {
+  id            String              @id @default(cuid())
+  tenantId      String
+  policyId      String
+  userId        String?
+  violationType ViolationType
+  severity      SecuritySeverity
+  description   String
+  details       Json                @default("{}")
+  ipAddress     String?
+  userAgent     String?
+  endpoint      String?
+  resolved      Boolean             @default(false)
+  resolvedBy    String?
+  resolvedAt    DateTime?
+  actions       Json                @default("[]")
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policy        SecurityPolicy      @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  user          User?               @relation(fields: [userId], references: [id])
+  resolver      User?               @relation("ViolationResolver", fields: [resolvedBy], references: [id])
+
+  @@index([tenantId, severity])
+  @@index([tenantId, resolved])
+  @@index([tenantId, createdAt])
+  @@map("security_violations")
+}
+
+model SecurityScan {
+  id            String              @id @default(cuid())
+  tenantId      String
+  scanType      SecurityScanType
+  target        String              // URL, IP, service name, etc.
+  status        ScanStatus
+  startedAt     DateTime            @default(now())
+  completedAt   DateTime?
+  duration      Int?                // Duration in milliseconds
+  findings      Json                @default("[]")
+  summary       Json                @default("{}")
+  config        Json                @default("{}")
+  scheduledBy   String?
+  metadata      Json                @default("{}")
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  scheduler     User?               @relation("SecurityScanScheduler", fields: [scheduledBy], references: [id])
+
+  @@index([tenantId, scanType])
+  @@index([tenantId, status])
+  @@index([tenantId, startedAt])
+  @@map("security_scans")
+}
+
+model SecurityIncident {
+  id            String              @id @default(cuid())
+  tenantId      String
+  title         String
+  description   String
+  incidentType  IncidentType
+  severity      SecuritySeverity
+  status        IncidentStatus
+  assignedTo    String?
+  reportedBy    String
+  affectedUsers Json                @default("[]")
+  affectedSystems Json              @default("[]")
+  timeline      Json                @default("[]")
+  evidence      Json                @default("[]")
+  response      Json                @default("{}")
+  resolution    String?
+  lessons       String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  resolvedAt    DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assignee      User?               @relation("IncidentAssignee", fields: [assignedTo], references: [id])
+  reporter      User                @relation("IncidentReporter", fields: [reportedBy], references: [id])
+
+  @@index([tenantId, severity])
+  @@index([tenantId, status])
+  @@index([tenantId, createdAt])
+  @@map("security_incidents")
+}
+
+model SecurityAlert {
+  id            String              @id @default(cuid())
+  tenantId      String
+  alertType     AlertType
+  title         String
+  message       String
+  severity      SecuritySeverity
+  source        String              // System component that generated the alert
+  metadata      Json                @default("{}")
+  acknowledged  Boolean             @default(false)
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  resolved      Boolean             @default(false)
+  resolvedBy    String?
+  resolvedAt    DateTime?
+  escalated     Boolean             @default(false)
+  escalatedAt   DateTime?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  acknowledger  User?               @relation("AlertAcknowledger", fields: [acknowledgedBy], references: [id])
+  resolver      User?               @relation("AlertResolver", fields: [resolvedBy], references: [id])
+
+  @@index([tenantId, severity])
+  @@index([tenantId, acknowledged])
+  @@index([tenantId, resolved])
+  @@index([tenantId, createdAt])
+  @@map("security_alerts")
+}
+
+model SecurityAuditLog {
+  id            String              @id @default(cuid())
+  tenantId      String
+  userId        String?
+  action        String
+  resource      String
+  resourceId    String?
+  outcome       AuditOutcome
+  details       Json                @default("{}")
+  ipAddress     String?
+  userAgent     String?
+  sessionId     String?
+  riskScore     Float?
+  metadata      Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user          User?               @relation("SecurityAuditUser", fields: [userId], references: [id])
+
+  @@index([tenantId, action])
+  @@index([tenantId, userId])
+  @@index([tenantId, timestamp])
+  @@index([tenantId, riskScore])
+  @@map("security_audit_logs")
+}
+
+model ThreatIntelligence {
+  id            String              @id @default(cuid())
+  tenantId      String
+  threatType    ThreatType
+  source        String              // IP, domain, hash, etc.
+  confidence    Float               // 0.0 to 1.0
+  severity      SecuritySeverity
+  description   String
+  indicators    Json                @default("[]")
+  references    Json                @default("[]")
+  tags          Json                @default("[]")
+  isActive      Boolean             @default(true)
+  lastSeen      DateTime?
+  firstSeen     DateTime            @default(now())
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, threatType])
+  @@index([tenantId, severity])
+  @@index([tenantId, isActive])
+  @@map("threat_intelligence")
+}
+
+model SecurityBaseline {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  framework     String              // CIS, NIST, ISO27001, etc.
+  version       String
+  controls      Json                @default("[]")
+  compliance    Float               // Compliance percentage
+  lastAssessed  DateTime?
+  nextAssessment DateTime?
+  findings      Json                @default("[]")
+  remediation   Json                @default("[]")
+  isActive      Boolean             @default(true)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("BaselineCreator", fields: [createdBy], references: [id])
+
+  @@index([tenantId, framework])
+  @@index([tenantId, compliance])
+  @@map("security_baselines")
+}
+
+model SecurityConfiguration {
+  id            String              @id @default(cuid())
+  tenantId      String
+  category      String              // authentication, encryption, access_control, etc.
+  setting       String
+  value         String
+  isEnabled     Boolean             @default(true)
+  riskLevel     SecuritySeverity?
+  description   String?
+  compliance    Json                @default("[]")
+  lastModified  DateTime            @default(now())
+  modifiedBy    String
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  modifier      User                @relation("ConfigModifier", fields: [modifiedBy], references: [id])
+
+  @@unique([tenantId, category, setting])
+  @@index([tenantId, category])
+  @@map("security_configurations")
+}
+
+enum SecurityPolicyType {
+  access_control
+  data_protection
+  authentication
+  authorization
+  encryption
+  network_security
+  compliance
+  privacy
+  incident_response
+  vulnerability_management
+  threat_detection
+  custom
+}
+
+enum SecuritySeverity {
+  low
+  medium
+  high
+  critical
+}
+
+enum ViolationType {
+  policy_violation
+  access_denied
+  suspicious_activity
+  data_breach
+  unauthorized_access
+  privilege_escalation
+  malware_detection
+  network_intrusion
+  compliance_violation
+  custom
+}
+
+enum SecurityScanType {
+  vulnerability_scan
+  penetration_test
+  compliance_audit
+  code_analysis
+  dependency_check
+  network_scan
+  web_app_scan
+  infrastructure_scan
+  custom
+}
+
+enum ScanStatus {
+  queued
+  running
+  completed
+  failed
+  cancelled
+}
+
+enum IncidentType {
+  data_breach
+  malware_infection
+  unauthorized_access
+  denial_of_service
+  phishing_attack
+  insider_threat
+  system_compromise
+  compliance_violation
+  privacy_violation
+  other
+}
+
+enum IncidentStatus {
+  reported
+  investigating
+  contained
+  eradicated
+  recovered
+  closed
+}
+
+enum AlertType {
+  intrusion_detection
+  malware_detection
+  anomaly_detection
+  policy_violation
+  system_failure
+  compliance_alert
+  threat_intelligence
+  custom
+}
+
+enum AuditOutcome {
+  success
+  failure
+  denied
+  warning
+  error
+}
+
+enum ThreatType {
+  malware
+  phishing
+  botnet
+  c2_server
+  malicious_ip
+  suspicious_domain
+  vulnerability
+  exploit
+  indicator
+  custom
 }
