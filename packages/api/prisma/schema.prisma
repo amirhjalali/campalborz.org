@@ -3020,3 +3020,395 @@ enum ExecutionStatus {
   FAILED
   SKIPPED
 }
+
+// Advanced Analytics Models
+model AnalyticsDashboard {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  layout      Json      @default("{}")
+  config      Json      @default("{}")
+  isPublic    Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  tags        Json      @default("[]")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User           @relation("DashboardCreator", fields: [createdBy], references: [id])
+  widgets     AnalyticsWidget[]
+  shares      DashboardShare[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@map("analytics_dashboards")
+}
+
+model AnalyticsWidget {
+  id            String    @id @default(cuid())
+  dashboardId   String
+  name          String
+  type          WidgetType
+  config        Json      @default("{}")
+  position      Json      @default("{}")
+  size          Json      @default("{}")
+  dataSource    Json      @default("{}")
+  refreshRate   Int       @default(300) // seconds
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  dashboard     AnalyticsDashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+
+  @@index([dashboardId, isActive])
+  @@map("analytics_widgets")
+}
+
+model DashboardShare {
+  id          String      @id @default(cuid())
+  dashboardId String
+  sharedWith  String?     // userId
+  shareToken  String?     @unique
+  permissions Json        @default("{}")
+  expiresAt   DateTime?
+  isActive    Boolean     @default(true)
+  createdBy   String
+  createdAt   DateTime    @default(now())
+
+  dashboard   AnalyticsDashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  creator     User              @relation("ShareCreator", fields: [createdBy], references: [id])
+  user        User?             @relation("ShareRecipient", fields: [sharedWith], references: [id], onDelete: SetNull)
+
+  @@index([dashboardId, isActive])
+  @@index([shareToken])
+  @@map("dashboard_shares")
+}
+
+model AnalyticsMetric {
+  id          String      @id @default(cuid())
+  tenantId    String
+  name        String
+  displayName String
+  description String?
+  category    String
+  type        MetricType
+  formula     String
+  unit        String?
+  format      String?
+  tags        Json        @default("[]")
+  isActive    Boolean     @default(true)
+  metadata    Json        @default("{}")
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User        @relation("MetricCreator", fields: [createdBy], references: [id])
+  values      MetricValue[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, category, isActive])
+  @@map("analytics_metrics")
+}
+
+model MetricValue {
+  id        String   @id @default(cuid())
+  metricId  String
+  value     Float
+  dimensions Json    @default("{}")
+  timestamp DateTime
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  metric    AnalyticsMetric @relation(fields: [metricId], references: [id], onDelete: Cascade)
+
+  @@index([metricId, timestamp])
+  @@index([timestamp])
+  @@map("metric_values")
+}
+
+model AnalyticsQuery {
+  id          String      @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  query       String      @db.Text
+  type        QueryType   
+  parameters  Json        @default("{}")
+  schedule    String?     // Cron expression
+  isActive    Boolean     @default(true)
+  lastRun     DateTime?
+  nextRun     DateTime?
+  metadata    Json        @default("{}")
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User        @relation("QueryCreator", fields: [createdBy], references: [id])
+  executions  QueryExecution[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@index([nextRun])
+  @@map("analytics_queries")
+}
+
+model QueryExecution {
+  id          String        @id @default(cuid())
+  queryId     String
+  status      ExecutionStatus @default(RUNNING)
+  results     Json?
+  resultCount Int?
+  executionTime Float?
+  startedAt   DateTime      @default(now())
+  completedAt DateTime?
+  error       String?
+  metadata    Json          @default("{}")
+
+  query       AnalyticsQuery @relation(fields: [queryId], references: [id], onDelete: Cascade)
+
+  @@index([queryId, status])
+  @@index([startedAt])
+  @@map("query_executions")
+}
+
+model AnalyticsAlert {
+  id          String       @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  metricId    String?
+  condition   Json         // Alert condition
+  threshold   Float?
+  isActive    Boolean      @default(true)
+  severity    AlertSeverity @default(MEDIUM)
+  channels    Json         @default("[]") // Notification channels
+  lastTriggered DateTime?
+  triggerCount Int         @default(0)
+  metadata    Json         @default("{}")
+  createdBy   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  metric      AnalyticsMetric? @relation(fields: [metricId], references: [id], onDelete: SetNull)
+  creator     User         @relation("AlertCreator", fields: [createdBy], references: [id])
+  triggers    AlertTrigger[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@map("analytics_alerts")
+}
+
+model AlertTrigger {
+  id          String       @id @default(cuid())
+  alertId     String
+  metricValue Float
+  threshold   Float
+  condition   String
+  triggeredAt DateTime     @default(now())
+  resolved    Boolean      @default(false)
+  resolvedAt  DateTime?
+  metadata    Json         @default("{}")
+
+  alert       AnalyticsAlert @relation(fields: [alertId], references: [id], onDelete: Cascade)
+
+  @@index([alertId, triggeredAt])
+  @@index([triggeredAt, resolved])
+  @@map("alert_triggers")
+}
+
+model DataCube {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  schema      Json      // Cube schema definition
+  dimensions  Json      @default("[]")
+  measures    Json      @default("[]")
+  filters     Json      @default("{}")
+  isActive    Boolean   @default(true)
+  lastBuilt   DateTime?
+  metadata    Json      @default("{}")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User      @relation("CubeCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@map("data_cubes")
+}
+
+model CohortAnalysis {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  cohortType  CohortType
+  dateColumn  String
+  valueColumn String?
+  groupBy     Json      @default("[]")
+  filters     Json      @default("{}")
+  periods     Int       @default(12)
+  periodType  PeriodType @default(MONTH)
+  results     Json?
+  isActive    Boolean   @default(true)
+  lastRun     DateTime?
+  metadata    Json      @default("{}")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User      @relation("CohortCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, cohortType])
+  @@map("cohort_analyses")
+}
+
+model FunnelAnalysis {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  steps       Json      // Funnel steps definition
+  timeWindow  Int       @default(30) // days
+  filters     Json      @default("{}")
+  results     Json?
+  conversionRate Float?
+  isActive    Boolean   @default(true)
+  lastRun     DateTime?
+  metadata    Json      @default("{}")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User      @relation("FunnelCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@map("funnel_analyses")
+}
+
+model RetentionAnalysis {
+  id            String    @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  entityType    String    // 'user', 'member', etc.
+  startEvent    Json      // Initial event definition
+  returnEvent   Json      // Return event definition
+  timeWindows   Json      @default("[]") // Retention periods
+  filters       Json      @default("{}")
+  results       Json?
+  retentionRate Float?
+  isActive      Boolean   @default(true)
+  lastRun       DateTime?
+  metadata      Json      @default("{}")
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User      @relation("RetentionCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, entityType])
+  @@map("retention_analyses")
+}
+
+model SegmentAnalysis {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  entityType  String
+  criteria    Json      // Segmentation criteria
+  metrics     Json      @default("[]")
+  results     Json?
+  segments    Json?
+  isActive    Boolean   @default(true)
+  lastRun     DateTime?
+  metadata    Json      @default("{}")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User      @relation("SegmentCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name])
+  @@index([tenantId, entityType])
+  @@map("segment_analyses")
+}
+
+enum WidgetType {
+  LINE_CHART
+  BAR_CHART
+  PIE_CHART
+  DONUT_CHART
+  AREA_CHART
+  SCATTER_PLOT
+  HEATMAP
+  TABLE
+  METRIC
+  GAUGE
+  FUNNEL
+  COHORT
+  MAP
+  TREEMAP
+  SANKEY
+  WATERFALL
+}
+
+enum MetricType {
+  COUNT
+  SUM
+  AVG
+  MIN
+  MAX
+  DISTINCT_COUNT
+  RATIO
+  PERCENTAGE
+  GROWTH_RATE
+  CUSTOM
+}
+
+enum QueryType {
+  SQL
+  AGGREGATION
+  TIME_SERIES
+  COHORT
+  FUNNEL
+  RETENTION
+  SEGMENT
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum CohortType {
+  ACQUISITION
+  BEHAVIORAL
+  REVENUE
+}
+
+enum PeriodType {
+  DAY
+  WEEK
+  MONTH
+  QUARTER
+  YEAR
+}

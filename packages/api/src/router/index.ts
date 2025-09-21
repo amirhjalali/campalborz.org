@@ -31,6 +31,7 @@ import { advancedSearchRouter } from "./advancedSearch";
 import { pushNotificationsRouter } from "./pushNotifications";
 import { dataExportImportRouter } from "./dataExportImport";
 import { aiFeaturesRouter } from "./aiFeatures";
+import { advancedAnalyticsRouter } from "./advancedAnalytics";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -65,6 +66,7 @@ export const appRouter = router({
   pushNotifications: pushNotificationsRouter,
   dataExportImport: dataExportImportRouter,
   aiFeatures: aiFeaturesRouter,
+  advancedAnalytics: advancedAnalyticsRouter,
 });
 
 export type AppRouter = typeof appRouter;
