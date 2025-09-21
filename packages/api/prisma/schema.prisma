@@ -1579,3 +1579,439 @@ model ContentTranslation {
   @@index([languageId, status])
   @@map("content_translations")
 }
+
+// Communication Hub Models
+model CommunicationChannel {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  type        ChannelType
+  isPublic    Boolean  @default(true)
+  isArchived  Boolean  @default(false)
+  settings    Json     @default("{}")
+  metadata    Json     @default("{}")
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenantId    String
+
+  tenant      Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User               @relation("ChannelCreator", fields: [createdBy], references: [id])
+  members     ChannelMember[]
+  messages    Message[]
+  threads     MessageThread[]
+  invitations ChannelInvitation[]
+
+  @@index([tenantId, type])
+  @@index([tenantId, isPublic])
+  @@map("communication_channels")
+}
+
+model ChannelMember {
+  id           String         @id @default(cuid())
+  channelId    String
+  userId       String
+  role         ChannelRole    @default(MEMBER)
+  permissions  Json           @default("{}")
+  joinedAt     DateTime       @default(now())
+  lastReadAt   DateTime?
+  isMuted      Boolean        @default(false)
+  isOnline     Boolean        @default(false)
+  lastSeenAt   DateTime?
+  tenantId     String
+
+  channel      CommunicationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user         User                 @relation("ChannelMembers", fields: [userId], references: [id])
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, userId])
+  @@index([tenantId, userId])
+  @@map("channel_members")
+}
+
+model Message {
+  id           String        @id @default(cuid())
+  channelId    String
+  threadId     String?
+  authorId     String
+  content      String
+  contentType  MessageContentType   @default(TEXT)
+  attachments  Json          @default("[]")
+  metadata     Json          @default("{}")
+  isEdited     Boolean       @default(false)
+  editedAt     DateTime?
+  isDeleted    Boolean       @default(false)
+  deletedAt    DateTime?
+  isPinned     Boolean       @default(false)
+  pinnedAt     DateTime?
+  pinnedBy     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tenantId     String
+
+  channel      CommunicationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  thread       MessageThread?       @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  author       User                 @relation("MessageAuthor", fields: [authorId], references: [id])
+  pinner       User?                @relation("MessagePinner", fields: [pinnedBy], references: [id])
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reactions    MessageReaction[]
+  mentions     MessageMention[]
+  replies      Message[]            @relation("MessageReplies")
+  parent       Message?             @relation("MessageReplies", fields: [threadId], references: [id])
+
+  @@index([tenantId, channelId, createdAt])
+  @@index([tenantId, authorId])
+  @@index([tenantId, threadId])
+  @@map("messages")
+}
+
+model MessageThread {
+  id          String   @id @default(cuid())
+  channelId   String
+  rootMessageId String?
+  title       String?
+  isLocked    Boolean  @default(false)
+  lockedBy    String?
+  lockedAt    DateTime?
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenantId    String
+
+  channel     CommunicationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  creator     User                 @relation("ThreadCreator", fields: [createdBy], references: [id])
+  locker      User?                @relation("ThreadLocker", fields: [lockedBy], references: [id])
+  tenant      Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  messages    Message[]
+
+  @@index([tenantId, channelId])
+  @@map("message_threads")
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  tenantId  String
+
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User    @relation("MessageReactions", fields: [userId], references: [id])
+  tenant    Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@index([tenantId, messageId])
+  @@map("message_reactions")
+}
+
+model MessageMention {
+  id          String   @id @default(cuid())
+  messageId   String
+  mentionedId String
+  type        MentionType
+  createdAt   DateTime @default(now())
+  tenantId    String
+
+  message     Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  mentioned   User    @relation("MessageMentions", fields: [mentionedId], references: [id])
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, mentionedId, type])
+  @@index([tenantId, mentionedId])
+  @@map("message_mentions")
+}
+
+model ChannelInvitation {
+  id         String            @id @default(cuid())
+  channelId  String
+  invitedBy  String
+  invitedEmail String?
+  invitedUserId String?
+  role       ChannelRole       @default(MEMBER)
+  status     InvitationStatus  @default(PENDING)
+  token      String            @unique
+  expiresAt  DateTime
+  respondedAt DateTime?
+  createdAt  DateTime          @default(now())
+  tenantId   String
+
+  channel    CommunicationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  inviter    User                 @relation("ChannelInviter", fields: [invitedBy], references: [id])
+  invitee    User?                @relation("ChannelInvitee", fields: [invitedUserId], references: [id])
+  tenant     Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([token])
+  @@map("channel_invitations")
+}
+
+model DirectMessage {
+  id           String        @id @default(cuid())
+  senderId     String
+  recipientId  String
+  content      String
+  contentType  MessageContentType   @default(TEXT)
+  attachments  Json          @default("[]")
+  isRead       Boolean       @default(false)
+  readAt       DateTime?
+  isEdited     Boolean       @default(false)
+  editedAt     DateTime?
+  isDeleted    Boolean       @default(false)
+  deletedAt    DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  tenantId     String
+
+  sender       User          @relation("DMSender", fields: [senderId], references: [id])
+  recipient    User          @relation("DMRecipient", fields: [recipientId], references: [id])
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reactions    DMReaction[]
+
+  @@index([tenantId, senderId, recipientId])
+  @@index([tenantId, recipientId, isRead])
+  @@map("direct_messages")
+}
+
+model DMReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  tenantId  String
+
+  message   DirectMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User          @relation("DMReactions", fields: [userId], references: [id])
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@index([tenantId, messageId])
+  @@map("dm_reactions")
+}
+
+model Announcement {
+  id          String           @id @default(cuid())
+  title       String
+  content     String
+  contentType MessageContentType      @default(TEXT)
+  priority    AnnouncementPriority @default(NORMAL)
+  isPublished Boolean          @default(false)
+  publishedAt DateTime?
+  expiresAt   DateTime?
+  targetAudience Json          @default("{}")
+  attachments Json             @default("[]")
+  metadata    Json             @default("{}")
+  createdBy   String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  tenantId    String
+
+  creator     User                    @relation("AnnouncementCreator", fields: [createdBy], references: [id])
+  tenant      Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipients  AnnouncementRecipient[]
+
+  @@index([tenantId, isPublished, publishedAt])
+  @@index([tenantId, priority])
+  @@map("announcements")
+}
+
+model AnnouncementRecipient {
+  id               String       @id @default(cuid())
+  announcementId   String
+  userId           String
+  isRead           Boolean      @default(false)
+  readAt           DateTime?
+  isDismissed      Boolean      @default(false)
+  dismissedAt      DateTime?
+  deliveryMethod   String       // 'in_app', 'email', 'push'
+  deliveredAt      DateTime?
+  createdAt        DateTime     @default(now())
+  tenantId         String
+
+  announcement     Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user             User         @relation("AnnouncementRecipients", fields: [userId], references: [id])
+  tenant           Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, userId])
+  @@index([tenantId, userId, isRead])
+  @@map("announcement_recipients")
+}
+
+model Forum {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  slug        String
+  isPublic    Boolean  @default(true)
+  isModerated Boolean  @default(true)
+  settings    Json     @default("{}")
+  metadata    Json     @default("{}")
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenantId    String
+
+  creator     User         @relation("ForumCreator", fields: [createdBy], references: [id])
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  categories  ForumCategory[]
+  moderators  ForumModerator[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isPublic])
+  @@map("forums")
+}
+
+model ForumCategory {
+  id          String   @id @default(cuid())
+  forumId     String
+  name        String
+  description String?
+  slug        String
+  sortOrder   Int      @default(0)
+  isLocked    Boolean  @default(false)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenantId    String
+
+  forum       Forum        @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  topics      ForumTopic[]
+
+  @@unique([forumId, slug])
+  @@index([tenantId, forumId, sortOrder])
+  @@map("forum_categories")
+}
+
+model ForumTopic {
+  id          String      @id @default(cuid())
+  categoryId  String
+  title       String
+  content     String
+  contentType MessageContentType @default(TEXT)
+  isSticky    Boolean     @default(false)
+  isLocked    Boolean     @default(false)
+  isPinned    Boolean     @default(false)
+  views       Int         @default(0)
+  tags        Json        @default("[]")
+  metadata    Json        @default("{}")
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  tenantId    String
+
+  category    ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  creator     User          @relation("TopicCreator", fields: [createdBy], references: [id])
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  posts       ForumPost[]
+
+  @@index([tenantId, categoryId, isSticky, isPinned, updatedAt])
+  @@index([tenantId, createdBy])
+  @@map("forum_topics")
+}
+
+model ForumPost {
+  id          String      @id @default(cuid())
+  topicId     String
+  parentId    String?
+  content     String
+  contentType MessageContentType @default(TEXT)
+  isEdited    Boolean     @default(false)
+  editedAt    DateTime?
+  isDeleted   Boolean     @default(false)
+  deletedAt   DateTime?
+  metadata    Json        @default("{}")
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  tenantId    String
+
+  topic       ForumTopic   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  parent      ForumPost?   @relation("PostReplies", fields: [parentId], references: [id])
+  replies     ForumPost[]  @relation("PostReplies")
+  creator     User         @relation("PostCreator", fields: [createdBy], references: [id])
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, topicId, createdAt])
+  @@index([tenantId, createdBy])
+  @@map("forum_posts")
+}
+
+model ForumModerator {
+  id        String   @id @default(cuid())
+  forumId   String
+  userId    String
+  role      ModeratorRole @default(MODERATOR)
+  createdAt DateTime @default(now())
+  tenantId  String
+
+  forum     Forum    @relation(fields: [forumId], references: [id], onDelete: Cascade)
+  user      User     @relation("ForumModerators", fields: [userId], references: [id])
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([forumId, userId])
+  @@index([tenantId, userId])
+  @@map("forum_moderators")
+}
+
+enum ChannelType {
+  TEXT
+  VOICE
+  VIDEO
+  ANNOUNCEMENT
+  PRIVATE
+  PROJECT
+  GENERAL
+}
+
+enum ChannelRole {
+  OWNER
+  ADMIN
+  MODERATOR
+  MEMBER
+  GUEST
+}
+
+enum MessageContentType {
+  TEXT
+  MARKDOWN
+  HTML
+  IMAGE
+  VIDEO
+  AUDIO
+  FILE
+  LINK
+  POLL
+  EVENT
+}
+
+enum MentionType {
+  USER
+  CHANNEL
+  ROLE
+  EVERYONE
+  HERE
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  REVOKED
+}
+
+enum AnnouncementPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+  CRITICAL
+}
+
+enum ModeratorRole {
+  MODERATOR
+  ADMIN
+  SUPER_ADMIN
+}
