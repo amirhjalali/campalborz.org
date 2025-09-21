@@ -33,6 +33,7 @@ import { dataExportImportRouter } from "./dataExportImport";
 import { aiFeaturesRouter } from "./aiFeatures";
 import { advancedAnalyticsRouter } from "./advancedAnalytics";
 import { performanceMonitoringRouter } from "./performanceMonitoring";
+import { workflowAutomationRouter } from "./workflowAutomation";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -69,6 +70,7 @@ export const appRouter = router({
   aiFeatures: aiFeaturesRouter,
   advancedAnalytics: advancedAnalyticsRouter,
   performanceMonitoring: performanceMonitoringRouter,
+  workflowAutomation: workflowAutomationRouter,
 });
 
 export type AppRouter = typeof appRouter;

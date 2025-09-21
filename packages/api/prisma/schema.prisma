@@ -140,6 +140,17 @@ model Tenant {
   resourceUsages ResourceUsage[]
   performanceBenchmarks PerformanceBenchmark[]
   
+  // Workflow Automation relationships
+  workflows Workflow[]
+  workflowSteps WorkflowStep[]
+  workflowExecutions WorkflowExecution[]
+  workflowStepExecutions WorkflowStepExecution[]
+  workflowSchedules WorkflowSchedule[]
+  workflowTemplates WorkflowTemplate[]
+  workflowWebhooks WorkflowWebhook[]
+  workflowVariables WorkflowVariable[]
+  workflowLogs WorkflowLog[]
+  
   @@map("tenants")
 }
 
@@ -277,6 +288,10 @@ model User {
   reviewedTranslations Translation[] @relation("Reviewer")
   contentTranslations ContentTranslation[] @relation("ContentTranslator")
   reviewedContentTranslations ContentTranslation[] @relation("ContentReviewer")
+  
+  // Workflow Automation relationships
+  createdWorkflows Workflow[]
+  createdWorkflowTemplates WorkflowTemplate[]
   
   @@unique([tenantId, email])
   @@map("users")
@@ -3774,4 +3789,293 @@ enum BenchmarkType {
   scalability_test
   performance_regression
   custom
+}
+
+// Workflow Automation Models
+model Workflow {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  trigger       WorkflowTrigger
+  triggerConfig Json                @default("{}")
+  isActive      Boolean             @default(true)
+  version       Int                 @default(1)
+  tags          Json                @default("[]")
+  metadata      Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+  steps         WorkflowStep[]
+  executions    WorkflowExecution[]
+  schedules     WorkflowSchedule[]
+  webhooks      WorkflowWebhook[]
+  variables     WorkflowVariable[]
+  logs          WorkflowLog[]
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, trigger])
+  @@map("workflows")
+}
+
+model WorkflowStep {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String
+  name          String
+  type          WorkflowStepType
+  action        WorkflowAction
+  config        Json                @default("{}")
+  position      Int
+  condition     Json?               // Conditional logic
+  retryConfig   Json?               // Retry configuration
+  timeout       Int?                // Timeout in seconds
+  isActive      Boolean             @default(true)
+  dependencies  Json                @default("[]") // Step dependencies
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  executions    WorkflowStepExecution[]
+
+  @@index([tenantId, workflowId, position])
+  @@map("workflow_steps")
+}
+
+model WorkflowExecution {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String
+  status        WorkflowExecutionStatus
+  triggerData   Json                @default("{}")
+  context       Json                @default("{}")
+  startedAt     DateTime            @default(now())
+  completedAt   DateTime?
+  duration      Int?                // Duration in milliseconds
+  error         String?
+  metadata      Json                @default("{}")
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  stepExecutions WorkflowStepExecution[]
+  logs          WorkflowLog[]
+
+  @@index([tenantId, workflowId, startedAt])
+  @@index([tenantId, status])
+  @@map("workflow_executions")
+}
+
+model WorkflowStepExecution {
+  id            String              @id @default(cuid())
+  tenantId      String
+  executionId   String
+  stepId        String
+  status        WorkflowStepStatus
+  input         Json                @default("{}")
+  output        Json                @default("{}")
+  startedAt     DateTime            @default(now())
+  completedAt   DateTime?
+  duration      Int?                // Duration in milliseconds
+  attempts      Int                 @default(1)
+  error         String?
+  metadata      Json                @default("{}")
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  execution     WorkflowExecution   @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  step          WorkflowStep        @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, executionId])
+  @@index([tenantId, stepId])
+  @@map("workflow_step_executions")
+}
+
+model WorkflowSchedule {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String
+  name          String
+  cronExpression String
+  timezone      String              @default("UTC")
+  isActive      Boolean             @default(true)
+  nextRunAt     DateTime?
+  lastRunAt     DateTime?
+  config        Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, workflowId])
+  @@index([nextRunAt])
+  @@map("workflow_schedules")
+}
+
+model WorkflowTemplate {
+  id            String              @id @default(cuid())
+  tenantId      String?             // null for global templates
+  name          String
+  description   String?
+  category      String
+  template      Json                // Workflow template structure
+  config        Json                @default("{}")
+  isPublic      Boolean             @default(false)
+  downloadCount Int                 @default(0)
+  rating        Float?
+  tags          Json                @default("[]")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant?             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation(fields: [createdBy], references: [id])
+
+  @@index([tenantId, category])
+  @@index([isPublic, category])
+  @@map("workflow_templates")
+}
+
+model WorkflowWebhook {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String
+  url           String              @unique
+  secret        String?
+  isActive      Boolean             @default(true)
+  config        Json                @default("{}")
+  lastTriggered DateTime?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, workflowId])
+  @@map("workflow_webhooks")
+}
+
+model WorkflowVariable {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String?             // null for global variables
+  name          String
+  value         String
+  type          VariableType
+  isSecret      Boolean             @default(false)
+  description   String?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow?           @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, workflowId, name])
+  @@index([tenantId, workflowId])
+  @@map("workflow_variables")
+}
+
+model WorkflowLog {
+  id            String              @id @default(cuid())
+  tenantId      String
+  workflowId    String
+  executionId   String?
+  level         LogLevel
+  message       String
+  data          Json?
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  workflow      Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  execution     WorkflowExecution?  @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, workflowId, timestamp])
+  @@index([tenantId, executionId])
+  @@map("workflow_logs")
+}
+
+enum WorkflowTrigger {
+  manual
+  schedule
+  webhook
+  event
+  api_call
+  file_upload
+  database_change
+  email_received
+  form_submission
+  timer
+  conditional
+}
+
+enum WorkflowStepType {
+  action
+  condition
+  loop
+  parallel
+  delay
+  approval
+  notification
+  integration
+  custom
+}
+
+enum WorkflowAction {
+  send_email
+  send_notification
+  create_record
+  update_record
+  delete_record
+  call_api
+  run_script
+  generate_report
+  process_file
+  send_webhook
+  create_user
+  update_user
+  assign_role
+  trigger_workflow
+  wait_for_approval
+  calculate_value
+  transform_data
+  validate_data
+  backup_data
+  archive_data
+  custom_function
+}
+
+enum WorkflowExecutionStatus {
+  pending
+  running
+  completed
+  failed
+  cancelled
+  paused
+}
+
+enum WorkflowStepStatus {
+  pending
+  running
+  completed
+  failed
+  skipped
+  retrying
+}
+
+enum VariableType {
+  string
+  number
+  boolean
+  json
+  secret
+  file
+  reference
+}
+
+enum LogLevel {
+  debug
+  info
+  warn
+  error
+  fatal
 }
