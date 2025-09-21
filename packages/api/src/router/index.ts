@@ -29,6 +29,7 @@ import { reportingRouter } from "./reporting";
 import { communicationRouter } from "./communication";
 import { advancedSearchRouter } from "./advancedSearch";
 import { pushNotificationsRouter } from "./pushNotifications";
+import { dataExportImportRouter } from "./dataExportImport";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -61,6 +62,7 @@ export const appRouter = router({
   communication: communicationRouter,
   advancedSearch: advancedSearchRouter,
   pushNotifications: pushNotificationsRouter,
+  dataExportImport: dataExportImportRouter,
 });
 
 export type AppRouter = typeof appRouter;

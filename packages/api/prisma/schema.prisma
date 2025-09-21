@@ -2376,3 +2376,299 @@ enum CampaignStatus {
   CANCELLED
   COMPLETED
 }
+
+// Data Export/Import Models
+model DataExport {
+  id            String       @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  exportType    ExportType
+  format        ExportFormat
+  entityTypes   Json         @default("[]")
+  filters       Json         @default("{}")
+  fields        Json         @default("[]")
+  status        ExportStatus @default(PENDING)
+  fileUrl       String?
+  fileSize      BigInt?
+  recordCount   Int?
+  progress      Float        @default(0)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  expiresAt     DateTime?
+  error         String?
+  metadata      Json         @default("{}")
+  createdBy     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User         @relation("ExportCreator", fields: [createdBy], references: [id])
+
+  @@index([tenantId, status])
+  @@index([tenantId, createdBy])
+  @@index([expiresAt])
+  @@map("data_exports")
+}
+
+model DataImport {
+  id            String       @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  importType    ImportType
+  format        ImportFormat
+  entityType    String
+  mapping       Json         @default("{}")
+  validation    Json         @default("{}")
+  options       Json         @default("{}")
+  status        ImportStatus @default(PENDING)
+  fileUrl       String
+  fileName      String
+  fileSize      BigInt
+  totalRecords  Int?
+  processedRecords Int       @default(0)
+  successfulRecords Int      @default(0)
+  failedRecords Int          @default(0)
+  progress      Float        @default(0)
+  startedAt     DateTime?
+  completedAt   DateTime?
+  error         String?
+  validationReport Json?
+  metadata      Json         @default("{}")
+  createdBy     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User         @relation("ImportCreator", fields: [createdBy], references: [id])
+  logs          ImportLog[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, createdBy])
+  @@map("data_imports")
+}
+
+model ImportLog {
+  id         String     @id @default(cuid())
+  importId   String
+  level      LogLevel   @default(INFO)
+  message    String
+  rowNumber  Int?
+  fieldName  String?
+  data       Json?
+  createdAt  DateTime   @default(now())
+
+  import     DataImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+
+  @@index([importId, level])
+  @@index([importId, createdAt])
+  @@map("import_logs")
+}
+
+model DataTemplate {
+  id          String       @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  type        TemplateType
+  entityType  String
+  format      ExportFormat
+  fields      Json         @default("[]")
+  filters     Json         @default("{}")
+  mapping     Json         @default("{}")
+  isPublic    Boolean      @default(false)
+  isActive    Boolean      @default(true)
+  metadata    Json         @default("{}")
+  createdBy   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User         @relation("TemplateCreator", fields: [createdBy], references: [id])
+
+  @@unique([tenantId, name, type])
+  @@index([tenantId, entityType, isActive])
+  @@map("data_templates")
+}
+
+model DataSync {
+  id            String     @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  sourceType    SyncSourceType
+  targetType    SyncTargetType
+  sourceConfig  Json       @default("{}")
+  targetConfig  Json       @default("{}")
+  mapping       Json       @default("{}")
+  schedule      String?    // Cron expression
+  isActive      Boolean    @default(true)
+  lastRunAt     DateTime?
+  nextRunAt     DateTime?
+  status        SyncStatus @default(IDLE)
+  metadata      Json       @default("{}")
+  createdBy     String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  tenant        Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User       @relation("SyncCreator", fields: [createdBy], references: [id])
+  runs          SyncRun[]
+
+  @@index([tenantId, isActive])
+  @@index([nextRunAt])
+  @@map("data_syncs")
+}
+
+model SyncRun {
+  id              String     @id @default(cuid())
+  syncId          String
+  status          SyncRunStatus @default(RUNNING)
+  startedAt       DateTime   @default(now())
+  completedAt     DateTime?
+  recordsRead     Int        @default(0)
+  recordsWritten  Int        @default(0)
+  recordsSkipped  Int        @default(0)
+  recordsFailed   Int        @default(0)
+  error           String?
+  logs            Json       @default("[]")
+  metadata        Json       @default("{}")
+
+  sync            DataSync   @relation(fields: [syncId], references: [id], onDelete: Cascade)
+
+  @@index([syncId, startedAt])
+  @@map("sync_runs")
+}
+
+model DataBackup {
+  id          String       @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  backupType  BackupType
+  status      BackupStatus @default(PENDING)
+  fileUrl     String?
+  fileSize    BigInt?
+  entityTypes Json         @default("[]")
+  compression Boolean      @default(true)
+  encryption  Boolean      @default(true)
+  startedAt   DateTime?
+  completedAt DateTime?
+  expiresAt   DateTime?
+  error       String?
+  metadata    Json         @default("{}")
+  createdBy   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User         @relation("BackupCreator", fields: [createdBy], references: [id])
+
+  @@index([tenantId, backupType])
+  @@index([tenantId, status])
+  @@index([expiresAt])
+  @@map("data_backups")
+}
+
+enum ExportType {
+  FULL
+  INCREMENTAL
+  FILTERED
+  CUSTOM
+}
+
+enum ExportFormat {
+  CSV
+  JSON
+  XLSX
+  XML
+  PDF
+  SQL
+}
+
+enum ExportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  EXPIRED
+}
+
+enum ImportType {
+  CREATE
+  UPDATE
+  UPSERT
+  DELETE
+}
+
+enum ImportFormat {
+  CSV
+  JSON
+  XLSX
+  XML
+}
+
+enum ImportStatus {
+  PENDING
+  VALIDATING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+}
+
+enum TemplateType {
+  EXPORT
+  IMPORT
+}
+
+enum SyncSourceType {
+  DATABASE
+  API
+  FILE
+  WEBHOOK
+}
+
+enum SyncTargetType {
+  DATABASE
+  API
+  FILE
+  EMAIL
+}
+
+enum SyncStatus {
+  IDLE
+  RUNNING
+  ERROR
+  DISABLED
+}
+
+enum SyncRunStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  SELECTIVE
+}
+
+enum BackupStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
