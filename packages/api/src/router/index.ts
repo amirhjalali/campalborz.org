@@ -25,6 +25,7 @@ import { i18nRouter } from "./i18n";
 import { documentationRouter } from "./documentation";
 import { testingRouter } from "./testing";
 import { devopsRouter } from "./devops";
+import { reportingRouter } from "./reporting";
 
 export const appRouter = router({
   tenant: tenantRouter,
@@ -53,6 +54,7 @@ export const appRouter = router({
   documentation: documentationRouter,
   testing: testingRouter,
   devops: devopsRouter,
+  reporting: reportingRouter,
 });
 
 export type AppRouter = typeof appRouter;
