@@ -2155,3 +2155,224 @@ enum FacetType {
   RANGE
   LOCATION
 }
+
+// Mobile Push Notification Models
+model PushDevice {
+  id           String   @id @default(cuid())
+  userId       String
+  tenantId     String
+  deviceToken  String   @unique
+  platform     Platform
+  deviceName   String?
+  appVersion   String?
+  osVersion    String?
+  isActive     Boolean  @default(true)
+  lastUsed     DateTime @default(now())
+  metadata     Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user         User               @relation("UserDevices", fields: [userId], references: [id], onDelete: Cascade)
+  tenant       Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  notifications PushNotification[]
+
+  @@index([userId, tenantId])
+  @@index([platform, isActive])
+  @@map("push_devices")
+}
+
+model PushNotification {
+  id            String   @id @default(cuid())
+  tenantId      String
+  title         String
+  body          String
+  data          Json     @default("{}")
+  imageUrl      String?
+  clickAction   String?
+  badge         Int?
+  sound         String?
+  priority      NotificationPriority @default(NORMAL)
+  category      String?
+  tags          Json     @default("[]")
+  scheduledFor  DateTime?
+  expiresAt     DateTime?
+  createdBy     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User?                @relation("NotificationCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  deliveries    NotificationDelivery[]
+  template      NotificationTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  templateId    String?
+
+  @@index([tenantId, scheduledFor])
+  @@index([tenantId, priority])
+  @@index([tenantId, category])
+  @@map("push_notifications")
+}
+
+model NotificationDelivery {
+  id              String   @id @default(cuid())
+  notificationId  String
+  deviceId        String
+  status          DeliveryStatus @default(PENDING)
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  failedAt        DateTime?
+  clickedAt       DateTime?
+  error           String?
+  retryCount      Int      @default(0)
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  notification    PushNotification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  device          PushDevice       @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([notificationId])
+  @@index([deviceId, status])
+  @@index([status, sentAt])
+  @@map("notification_deliveries")
+}
+
+model NotificationTemplate {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  title       String
+  body        String
+  data        Json     @default("{}")
+  imageUrl    String?
+  clickAction String?
+  sound       String?
+  category    String?
+  variables   Json     @default("[]")
+  isActive    Boolean  @default(true)
+  metadata    Json     @default("{}")
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant        Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User               @relation("TemplateCreator", fields: [createdBy], references: [id])
+  notifications PushNotification[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, isActive])
+  @@map("notification_templates")
+}
+
+model NotificationPreference {
+  id          String   @id @default(cuid())
+  userId      String
+  tenantId    String
+  category    String
+  isEnabled   Boolean  @default(true)
+  priority    NotificationPriority @default(NORMAL)
+  quietHours  Json?    // { start: "22:00", end: "08:00", timezone: "UTC" }
+  frequency   NotificationFrequency @default(IMMEDIATE)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation("NotificationPreferences", fields: [userId], references: [id], onDelete: Cascade)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId, category])
+  @@index([tenantId, category])
+  @@map("notification_preferences")
+}
+
+model NotificationCampaign {
+  id            String   @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  templateId    String
+  targetAudience Json    @default("{}")
+  scheduledFor  DateTime?
+  status        CampaignStatus @default(DRAFT)
+  totalTargets  Int      @default(0)
+  sentCount     Int      @default(0)
+  deliveredCount Int     @default(0)
+  clickedCount  Int      @default(0)
+  failedCount   Int      @default(0)
+  metadata      Json     @default("{}")
+  createdBy     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  template      NotificationTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  creator       User                 @relation("CampaignCreator", fields: [createdBy], references: [id])
+
+  @@index([tenantId, status])
+  @@index([tenantId, scheduledFor])
+  @@map("notification_campaigns")
+}
+
+model NotificationAnalytics {
+  id            String   @id @default(cuid())
+  tenantId      String
+  date          DateTime
+  category      String?
+  platform      Platform?
+  totalSent     Int      @default(0)
+  totalDelivered Int     @default(0)
+  totalClicked  Int      @default(0)
+  totalFailed   Int      @default(0)
+  deliveryRate  Float    @default(0)
+  clickRate     Float    @default(0)
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, date, category, platform])
+  @@index([tenantId, date])
+  @@map("notification_analytics")
+}
+
+enum Platform {
+  IOS
+  ANDROID
+  WEB
+  DESKTOP
+}
+
+enum NotificationPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  CLICKED
+  EXPIRED
+}
+
+enum NotificationFrequency {
+  IMMEDIATE
+  HOURLY
+  DAILY
+  WEEKLY
+  NEVER
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  PAUSED
+  CANCELLED
+  COMPLETED
+}
