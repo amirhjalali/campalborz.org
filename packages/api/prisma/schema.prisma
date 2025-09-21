@@ -2672,3 +2672,351 @@ enum BackupStatus {
   FAILED
   EXPIRED
 }
+
+// AI/ML Features Models
+model AIModel {
+  id          String    @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  type        ModelType
+  provider    AIProvider
+  config      Json      @default("{}")
+  version     String    @default("1.0.0")
+  status      ModelStatus @default(TRAINING)
+  accuracy    Float?
+  isActive    Boolean   @default(true)
+  trainedAt   DateTime?
+  deployedAt  DateTime?
+  metadata    Json      @default("{}")
+  createdBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User        @relation("ModelCreator", fields: [createdBy], references: [id])
+  predictions AIPrediction[]
+  trainingSessions TrainingSession[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, type, status])
+  @@map("ai_models")
+}
+
+model AIPrediction {
+  id          String      @id @default(cuid())
+  tenantId    String
+  modelId     String
+  entityType  String      // 'user', 'event', 'donation', etc.
+  entityId    String
+  inputData   Json
+  outputData  Json
+  confidence  Float?
+  status      PredictionStatus @default(PENDING)
+  executedAt  DateTime?
+  error       String?
+  metadata    Json        @default("{}")
+  createdAt   DateTime    @default(now())
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model       AIModel     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, modelId, status])
+  @@index([tenantId, entityType, entityId])
+  @@map("ai_predictions")
+}
+
+model TrainingSession {
+  id            String          @id @default(cuid())
+  modelId       String
+  datasetSize   Int
+  trainingData  Json?
+  parameters    Json            @default("{}")
+  status        TrainingStatus  @default(RUNNING)
+  progress      Float           @default(0)
+  accuracy      Float?
+  loss          Float?
+  epochs        Int?
+  startedAt     DateTime        @default(now())
+  completedAt   DateTime?
+  error         String?
+  logs          Json            @default("[]")
+  metadata      Json            @default("{}")
+
+  model         AIModel         @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@index([modelId, status])
+  @@map("training_sessions")
+}
+
+model AIInsight {
+  id          String      @id @default(cuid())
+  tenantId    String
+  type        InsightType
+  title       String
+  description String
+  data        Json
+  priority    InsightPriority @default(MEDIUM)
+  category    String?
+  entityType  String?
+  entityId    String?
+  isRead      Boolean     @default(false)
+  readAt      DateTime?
+  readBy      String?
+  validUntil  DateTime?
+  metadata    Json        @default("{}")
+  createdAt   DateTime    @default(now())
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reader      User?       @relation("InsightReader", fields: [readBy], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, type, isRead])
+  @@index([tenantId, priority, createdAt])
+  @@map("ai_insights")
+}
+
+model RecommendationEngine {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  type          RecommendationType
+  algorithm     String
+  config        Json                @default("{}")
+  isActive      Boolean             @default(true)
+  lastTrainedAt DateTime?
+  accuracy      Float?
+  metadata      Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("EngineCreator", fields: [createdBy], references: [id])
+  recommendations Recommendation[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId, type, isActive])
+  @@map("recommendation_engines")
+}
+
+model Recommendation {
+  id          String              @id @default(cuid())
+  engineId    String
+  userId      String
+  itemType    String              // 'event', 'content', 'user', etc.
+  itemId      String
+  score       Float
+  reason      String?
+  isClicked   Boolean             @default(false)
+  clickedAt   DateTime?
+  isDismissed Boolean             @default(false)
+  dismissedAt DateTime?
+  expiresAt   DateTime?
+  metadata    Json                @default("{}")
+  createdAt   DateTime            @default(now())
+
+  engine      RecommendationEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+  user        User                @relation("UserRecommendations", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([engineId, userId])
+  @@index([userId, itemType, isClicked])
+  @@map("recommendations")
+}
+
+model ChatSession {
+  id          String        @id @default(cuid())
+  tenantId    String
+  userId      String?
+  sessionId   String        @unique
+  title       String?
+  context     Json          @default("{}")
+  isActive    Boolean       @default(true)
+  endedAt     DateTime?
+  metadata    Json          @default("{}")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user        User?         @relation("ChatSessions", fields: [userId], references: [id], onDelete: SetNull)
+  messages    ChatMessage[]
+
+  @@index([tenantId, userId])
+  @@index([sessionId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id          String      @id @default(cuid())
+  sessionId   String
+  role        MessageRole
+  content     String      @db.Text
+  metadata    Json        @default("{}")
+  tokens      Int?
+  createdAt   DateTime    @default(now())
+
+  session     ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
+
+model ContentAnalysis {
+  id            String          @id @default(cuid())
+  tenantId      String
+  entityType    String
+  entityId      String
+  analysisType  AnalysisType
+  results       Json
+  confidence    Float?
+  status        AnalysisStatus  @default(PENDING)
+  executedAt    DateTime?
+  error         String?
+  metadata      Json            @default("{}")
+  createdAt     DateTime        @default(now())
+
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, analysisType, status])
+  @@map("content_analysis")
+}
+
+model AutomationRule {
+  id          String          @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  trigger     Json            // Trigger conditions
+  actions     Json            // Actions to execute
+  isActive    Boolean         @default(true)
+  lastRun     DateTime?
+  runCount    Int             @default(0)
+  successCount Int            @default(0)
+  failCount   Int             @default(0)
+  metadata    Json            @default("{}")
+  createdBy   String
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  tenant      Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator     User            @relation("RuleCreator", fields: [createdBy], references: [id])
+  executions  RuleExecution[]
+
+  @@index([tenantId, isActive])
+  @@map("automation_rules")
+}
+
+model RuleExecution {
+  id          String           @id @default(cuid())
+  ruleId      String
+  triggerData Json
+  status      ExecutionStatus  @default(RUNNING)
+  results     Json?
+  startedAt   DateTime         @default(now())
+  completedAt DateTime?
+  error       String?
+  metadata    Json             @default("{}")
+
+  rule        AutomationRule   @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId, status])
+  @@map("rule_executions")
+}
+
+enum ModelType {
+  CLASSIFICATION
+  REGRESSION
+  CLUSTERING
+  RECOMMENDATION
+  NLP
+  COMPUTER_VISION
+  TIME_SERIES
+  ANOMALY_DETECTION
+}
+
+enum AIProvider {
+  OPENAI
+  ANTHROPIC
+  HUGGING_FACE
+  GOOGLE
+  AWS
+  AZURE
+  CUSTOM
+}
+
+enum ModelStatus {
+  TRAINING
+  TRAINED
+  DEPLOYED
+  FAILED
+  DEPRECATED
+}
+
+enum PredictionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum TrainingStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum InsightType {
+  TREND
+  ANOMALY
+  PREDICTION
+  RECOMMENDATION
+  ALERT
+  OPPORTUNITY
+}
+
+enum InsightPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RecommendationType {
+  CONTENT_BASED
+  COLLABORATIVE
+  HYBRID
+  POPULARITY
+  TRENDING
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum AnalysisType {
+  SENTIMENT
+  EMOTION
+  TOPIC
+  LANGUAGE
+  TOXICITY
+  READABILITY
+  KEYWORDS
+  ENTITIES
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ExecutionStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+  SKIPPED
+}
