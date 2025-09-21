@@ -2015,3 +2015,143 @@ enum ModeratorRole {
   ADMIN
   SUPER_ADMIN
 }
+
+// Advanced Search Models
+model SearchIndex {
+  id          String   @id @default(cuid())
+  entityType  String   // 'user', 'event', 'content', 'forum_post', etc.
+  entityId    String
+  tenantId    String
+  title       String
+  content     String   @db.Text
+  metadata    Json     @default("{}")
+  tags        Json     @default("[]")
+  searchText  String   @db.Text // Preprocessed search text
+  categories  Json     @default("[]")
+  status      String   @default("active")
+  popularity  Float    @default(0.0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, entityType])
+  @@index([tenantId, searchText])
+  @@index([tenantId, status])
+  @@fulltext([title, content, searchText])
+  @@map("search_indexes")
+}
+
+model SearchQuery {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String?
+  query       String
+  filters     Json     @default("{}")
+  results     Int      @default(0)
+  executionTime Float  @default(0.0)
+  ipAddress   String?
+  userAgent   String?
+  sessionId   String?
+  createdAt   DateTime @default(now())
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user        User?    @relation("SearchQueries", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, userId])
+  @@index([tenantId, createdAt])
+  @@map("search_queries")
+}
+
+model SearchSuggestion {
+  id          String   @id @default(cuid())
+  tenantId    String
+  suggestion  String
+  category    String?
+  popularity  Int      @default(0)
+  isActive    Boolean  @default(true)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, suggestion])
+  @@index([tenantId, category, popularity])
+  @@map("search_suggestions")
+}
+
+model SavedSearch {
+  id          String   @id @default(cuid())
+  tenantId    String
+  userId      String
+  name        String
+  query       String
+  filters     Json     @default("{}")
+  isPublic    Boolean  @default(false)
+  description String?
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user        User     @relation("SavedSearches", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId])
+  @@index([tenantId, isPublic])
+  @@map("saved_searches")
+}
+
+model SearchFacet {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  type        FacetType
+  entityType  String
+  fieldPath   String
+  displayName String
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, name])
+  @@index([tenantId, entityType, isActive])
+  @@map("search_facets")
+}
+
+model SearchResult {
+  id            String   @id @default(cuid())
+  tenantId      String
+  queryId       String?
+  entityType    String
+  entityId      String
+  title         String
+  snippet       String?
+  score         Float    @default(0.0)
+  rank          Int
+  metadata      Json     @default("{}")
+  clickedAt     DateTime?
+  createdAt     DateTime @default(now())
+
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  query         SearchQuery?  @relation(fields: [queryId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, queryId])
+  @@index([tenantId, entityType, score])
+  @@map("search_results")
+}
+
+enum FacetType {
+  TEXT
+  NUMBER
+  DATE
+  BOOLEAN
+  CATEGORY
+  TAG
+  RANGE
+  LOCATION
+}
