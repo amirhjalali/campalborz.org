@@ -22,7 +22,11 @@
       "Bash(curl:*)",
       "Bash(npx tsx:*)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:www.instagram.com)",
+      "WebFetch(domain:ethereum.org)",
+      "Bash(npx create-next-app:*)"
     ],
     "deny": [],
     "ask": []

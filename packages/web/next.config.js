@@ -1,16 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   transpilePackages: ["@camp-platform/shared"],
-  experimental: {
-    appDir: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.instagram.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cdninstagram.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
   },
   async rewrites() {
     return [
       {
         source: '/api/trpc/:path*',
-        destination: 'http://localhost:3001/api/trpc/:path*',
+        destination: 'http://localhost:3005/api/trpc/:path*',
       },
     ];
   },

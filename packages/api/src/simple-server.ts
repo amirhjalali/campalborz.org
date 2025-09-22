@@ -19,6 +19,117 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+// Root welcome page
+app.get('/', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Camp Alborz API</title>
+      <style>
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          max-width: 800px;
+          margin: 50px auto;
+          padding: 20px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          min-height: 100vh;
+        }
+        .container {
+          background: white;
+          border-radius: 10px;
+          padding: 40px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+          color: #333;
+          border-bottom: 3px solid #667eea;
+          padding-bottom: 10px;
+        }
+        .endpoints {
+          background: #f7f7f7;
+          padding: 20px;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+        .endpoint {
+          margin: 10px 0;
+          padding: 10px;
+          background: white;
+          border-left: 4px solid #667eea;
+        }
+        code {
+          background: #f0f0f0;
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+        }
+        .status {
+          display: inline-block;
+          padding: 5px 15px;
+          background: #10b981;
+          color: white;
+          border-radius: 20px;
+          font-weight: bold;
+        }
+        a {
+          color: #667eea;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>🏕️ Camp Alborz API Server</h1>
+        <p><span class="status">RUNNING</span> on port ${PORT}</p>
+        
+        <h2>Available Endpoints</h2>
+        <div class="endpoints">
+          <div class="endpoint">
+            <strong>GET</strong> <code><a href="/health">/health</a></code> - Health check endpoint
+          </div>
+          <div class="endpoint">
+            <strong>GET</strong> <code><a href="/api">/api</a></code> - API information (JSON)
+          </div>
+          <div class="endpoint">
+            <strong>GET</strong> <code><a href="/api/tenants">/api/tenants</a></code> - List all tenants
+          </div>
+          <div class="endpoint">
+            <strong>POST</strong> <code>/api/tenants</code> - Create a new tenant
+          </div>
+          <div class="endpoint">
+            <strong>POST</strong> <code>/api/seed</code> - Seed initial data (already done)
+          </div>
+        </div>
+        
+        <h2>Test Credentials</h2>
+        <div class="endpoints">
+          <p><strong>Email:</strong> admin@campalborz.org</p>
+          <p><strong>Password:</strong> admin123</p>
+        </div>
+        
+        <h2>Quick Links</h2>
+        <ul>
+          <li><a href="/health">Check API Health</a></li>
+          <li><a href="/api">View API Info (JSON)</a></li>
+          <li><a href="/api/tenants">View Tenants</a></li>
+          <li><a href="http://localhost:5555" target="_blank">Prisma Studio</a> (run: npm run db:studio)</li>
+        </ul>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #e0e0e0;">
+        <p style="text-align: center; color: #666;">
+          Camp Alborz - Burning Man Theme Camp<br>
+          <small>API Version 1.0.0</small>
+        </p>
+      </div>
+    </body>
+    </html>
+  `);
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({
