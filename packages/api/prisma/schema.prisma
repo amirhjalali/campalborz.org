@@ -5681,4 +5681,1688 @@ enum TimesheetStatus {
   submitted
   approved
   rejected
+}// Schema for Steps 66-75 - Enterprise & Scale Features
+
+// Step 66: Multi-Cloud Support Models
+model CloudProvider {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          CloudProviderType
+  region        String
+  credentials   Json                // Encrypted
+  config        Json                @default("{}")
+  status        CloudStatus
+  isDefault     Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  deployments   CloudDeployment[]
+  resources     CloudResource[]
+
+  @@map("cloud_providers")
+}
+
+model CloudDeployment {
+  id            String              @id @default(cuid())
+  tenantId      String
+  providerId    String
+  name          String
+  type          DeploymentType
+  config        Json
+  status        DeploymentStatus
+  resources     Json                @default("[]")
+  cost          Float?
+  deployedBy    String
+  deployedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider      CloudProvider       @relation(fields: [providerId], references: [id])
+  deployer      User                @relation("CloudDeployer", fields: [deployedBy], references: [id])
+
+  @@map("cloud_deployments")
+}
+
+model CloudResource {
+  id            String              @id @default(cuid())
+  tenantId      String
+  providerId    String
+  resourceId    String              @unique
+  type          String
+  name          String
+  status        ResourceStatus
+  metadata      Json                @default("{}")
+  cost          Float?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider      CloudProvider       @relation(fields: [providerId], references: [id])
+
+  @@map("cloud_resources")
+}
+
+// Step 67: Disaster Recovery System Models
+model DisasterRecoveryPlan {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  rpo           Int                 // Recovery Point Objective (minutes)
+  rto           Int                 // Recovery Time Objective (minutes)
+  strategy      RecoveryStrategy
+  resources     Json                @default("[]")
+  procedures    Json                @default("[]")
+  isActive      Boolean             @default(true)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("DRPlanCreator", fields: [createdBy], references: [id])
+  backups       DisasterRecoveryBackup[]
+  drills        DisasterRecoveryDrill[]
+
+  @@map("disaster_recovery_plans")
+}
+
+model DisasterRecoveryBackup {
+  id            String              @id @default(cuid())
+  tenantId      String
+  planId        String
+  type          BackupType
+  location      String
+  size          BigInt
+  status        BackupStatus
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  expiresAt     DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan          DisasterRecoveryPlan @relation(fields: [planId], references: [id])
+
+  @@map("disaster_recovery_backups")
+}
+
+model DisasterRecoveryDrill {
+  id            String              @id @default(cuid())
+  tenantId      String
+  planId        String
+  type          DrillType
+  status        DrillStatus
+  results       Json                @default("{}")
+  startedBy     String
+  startedAt     DateTime            @default(now())
+  completedAt   DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan          DisasterRecoveryPlan @relation(fields: [planId], references: [id])
+  initiator     User                @relation("DrillInitiator", fields: [startedBy], references: [id])
+
+  @@map("disaster_recovery_drills")
+}
+
+// Step 68: Load Balancing & CDN Models
+model LoadBalancer {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          LoadBalancerType
+  algorithm     LoadBalancerAlgorithm
+  healthCheck   Json                @default("{}")
+  targets       Json                @default("[]")
+  status        LoadBalancerStatus
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rules         LoadBalancerRule[]
+  metrics       LoadBalancerMetric[]
+
+  @@map("load_balancers")
+}
+
+model LoadBalancerRule {
+  id            String              @id @default(cuid())
+  tenantId      String
+  balancerId    String
+  priority      Int
+  condition     Json
+  action        Json
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  balancer      LoadBalancer        @relation(fields: [balancerId], references: [id])
+
+  @@map("load_balancer_rules")
+}
+
+model LoadBalancerMetric {
+  id            String              @id @default(cuid())
+  tenantId      String
+  balancerId    String
+  requests      BigInt
+  bytesIn       BigInt
+  bytesOut      BigInt
+  errors        Int
+  latencyP50    Float
+  latencyP95    Float
+  latencyP99    Float
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  balancer      LoadBalancer        @relation(fields: [balancerId], references: [id])
+
+  @@index([tenantId, balancerId, timestamp])
+  @@map("load_balancer_metrics")
+}
+
+model CDNDistribution {
+  id            String              @id @default(cuid())
+  tenantId      String
+  domain        String              @unique
+  origin        String
+  status        CDNStatus
+  config        Json                @default("{}")
+  locations     Json                @default("[]")
+  cacheSettings Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  metrics       CDNMetric[]
+
+  @@map("cdn_distributions")
+}
+
+model CDNMetric {
+  id            String              @id @default(cuid())
+  tenantId      String
+  distributionId String
+  requests      BigInt
+  hits          BigInt
+  misses        BigInt
+  bandwidth     BigInt
+  errors        Int
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  distribution  CDNDistribution     @relation(fields: [distributionId], references: [id])
+
+  @@index([tenantId, distributionId, timestamp])
+  @@map("cdn_metrics")
+}
+
+// Step 69: API Gateway Models
+model APIGateway {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  version       String
+  basePath      String
+  status        GatewayStatus
+  config        Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  routes        APIRoute[]
+  policies      APIPolicy[]
+  keys          APIKey[]
+
+  @@map("api_gateways")
+}
+
+model APIRoute {
+  id            String              @id @default(cuid())
+  tenantId      String
+  gatewayId     String
+  path          String
+  method        HttpMethod
+  backend       String
+  timeout       Int                 @default(30000)
+  rateLimit     Json?
+  auth          Json?
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  gateway       APIGateway          @relation(fields: [gatewayId], references: [id])
+
+  @@unique([gatewayId, path, method])
+  @@map("api_routes")
+}
+
+model APIPolicy {
+  id            String              @id @default(cuid())
+  tenantId      String
+  gatewayId     String
+  name          String
+  type          PolicyType
+  rules         Json
+  priority      Int
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  gateway       APIGateway          @relation(fields: [gatewayId], references: [id])
+
+  @@map("api_policies")
+}
+
+model APIKey {
+  id            String              @id @default(cuid())
+  tenantId      String
+  gatewayId     String
+  key           String              @unique
+  name          String
+  permissions   Json                @default("[]")
+  rateLimit     Json?
+  expiresAt     DateTime?
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  gateway       APIGateway          @relation(fields: [gatewayId], references: [id])
+  usage         APIUsage[]
+
+  @@map("api_keys")
+}
+
+model APIUsage {
+  id            String              @id @default(cuid())
+  tenantId      String
+  keyId         String
+  endpoint      String
+  method        String
+  statusCode    Int
+  responseTime  Int
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  apiKey        APIKey              @relation(fields: [keyId], references: [id])
+
+  @@index([tenantId, keyId, timestamp])
+  @@map("api_usage")
+}
+
+// Step 70: Service Mesh Models
+model ServiceMesh {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          MeshType
+  config        Json                @default("{}")
+  status        MeshStatus
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  services      MeshService[]
+  policies      MeshPolicy[]
+
+  @@map("service_meshes")
+}
+
+model MeshService {
+  id            String              @id @default(cuid())
+  tenantId      String
+  meshId        String
+  name          String
+  namespace     String
+  version       String
+  endpoints     Json                @default("[]")
+  health        ServiceHealth
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  mesh          ServiceMesh         @relation(fields: [meshId], references: [id])
+  traffic       MeshTraffic[]
+
+  @@map("mesh_services")
+}
+
+model MeshPolicy {
+  id            String              @id @default(cuid())
+  tenantId      String
+  meshId        String
+  name          String
+  type          MeshPolicyType
+  rules         Json
+  targets       Json                @default("[]")
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  mesh          ServiceMesh         @relation(fields: [meshId], references: [id])
+
+  @@map("mesh_policies")
+}
+
+model MeshTraffic {
+  id            String              @id @default(cuid())
+  tenantId      String
+  serviceId     String
+  source        String
+  destination   String
+  requests      BigInt
+  errors        Int
+  latencyP50    Float
+  latencyP95    Float
+  latencyP99    Float
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  service       MeshService         @relation(fields: [serviceId], references: [id])
+
+  @@index([tenantId, serviceId, timestamp])
+  @@map("mesh_traffic")
+}
+
+// Step 71: Observability Platform Models
+model ObservabilityDashboard {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  panels        Json                @default("[]")
+  variables     Json                @default("[]")
+  refresh       Int                 @default(60)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("ObsDashboardCreator", fields: [createdBy], references: [id])
+  alerts        ObservabilityAlert[]
+
+  @@map("observability_dashboards")
+}
+
+model ObservabilityMetric {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          MetricType
+  value         Float
+  tags          Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, name, timestamp])
+  @@map("observability_metrics")
+}
+
+model ObservabilityTrace {
+  id            String              @id @default(cuid())
+  tenantId      String
+  traceId       String              @unique
+  serviceName   String
+  operationName String
+  duration      Int
+  tags          Json                @default("{}")
+  logs          Json                @default("[]")
+  status        TraceStatus
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  spans         ObservabilitySpan[]
+
+  @@index([tenantId, serviceName, timestamp])
+  @@map("observability_traces")
+}
+
+model ObservabilitySpan {
+  id            String              @id @default(cuid())
+  tenantId      String
+  traceId       String
+  spanId        String              @unique
+  parentSpanId  String?
+  operationName String
+  serviceName   String
+  duration      Int
+  tags          Json                @default("{}")
+  logs          Json                @default("[]")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trace         ObservabilityTrace  @relation(fields: [traceId], references: [id])
+
+  @@map("observability_spans")
+}
+
+model ObservabilityLog {
+  id            String              @id @default(cuid())
+  tenantId      String
+  level         LogLevel
+  message       String
+  service       String
+  metadata      Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, service, timestamp])
+  @@index([tenantId, level, timestamp])
+  @@map("observability_logs")
+}
+
+model ObservabilityAlert {
+  id            String              @id @default(cuid())
+  tenantId      String
+  dashboardId   String?
+  name          String
+  condition     Json
+  threshold     Float
+  severity      AlertSeverity
+  status        AlertStatus
+  notifications Json                @default("[]")
+  lastTriggered DateTime?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  dashboard     ObservabilityDashboard? @relation(fields: [dashboardId], references: [id])
+
+  @@map("observability_alerts")
+}
+
+// Step 72: Cost Management Models
+model CostCenter {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  code          String              @unique
+  budget        Float
+  currency      String              @default("USD")
+  ownerId       String
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  owner         User                @relation("CostCenterOwner", fields: [ownerId], references: [id])
+  allocations   CostAllocation[]
+  budgets       CostBudget[]
+
+  @@map("cost_centers")
+}
+
+model CostAllocation {
+  id            String              @id @default(cuid())
+  tenantId      String
+  costCenterId  String
+  resourceType  String
+  resourceId    String
+  amount        Float
+  currency      String              @default("USD")
+  period        DateTime
+  tags          Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  costCenter    CostCenter          @relation(fields: [costCenterId], references: [id])
+
+  @@index([tenantId, costCenterId, period])
+  @@map("cost_allocations")
+}
+
+model CostBudget {
+  id            String              @id @default(cuid())
+  tenantId      String
+  costCenterId  String
+  amount        Float
+  period        BudgetPeriod
+  alertThreshold Float              @default(80)
+  status        BudgetStatus
+  startDate     DateTime
+  endDate       DateTime
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  costCenter    CostCenter          @relation(fields: [costCenterId], references: [id])
+  alerts        CostAlert[]
+
+  @@map("cost_budgets")
+}
+
+model CostAlert {
+  id            String              @id @default(cuid())
+  tenantId      String
+  budgetId      String
+  type          CostAlertType
+  threshold     Float
+  currentSpend  Float
+  message       String
+  status        AlertStatus
+  createdAt     DateTime            @default(now())
+  acknowledgedAt DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  budget        CostBudget          @relation(fields: [budgetId], references: [id])
+
+  @@map("cost_alerts")
+}
+
+// Step 73: License Management Models
+model SoftwareLicense {
+  id            String              @id @default(cuid())
+  tenantId      String
+  vendor        String
+  product       String
+  version       String?
+  licenseKey    String?             // Encrypted
+  type          LicenseType
+  seats         Int?
+  expiresAt     DateTime?
+  cost          Float?
+  status        LicenseStatus
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assignments   LicenseAssignment[]
+  usage         LicenseUsage[]
+
+  @@map("software_licenses")
+}
+
+model LicenseAssignment {
+  id            String              @id @default(cuid())
+  tenantId      String
+  licenseId     String
+  userId        String?
+  deviceId      String?
+  assignedAt    DateTime            @default(now())
+  revokedAt     DateTime?
+  status        AssignmentStatus
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  license       SoftwareLicense     @relation(fields: [licenseId], references: [id])
+  user          User?               @relation("LicenseUser", fields: [userId], references: [id])
+
+  @@map("license_assignments")
+}
+
+model LicenseUsage {
+  id            String              @id @default(cuid())
+  tenantId      String
+  licenseId     String
+  usedSeats     Int
+  totalSeats    Int
+  utilizationRate Float
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  license       SoftwareLicense     @relation(fields: [licenseId], references: [id])
+
+  @@index([tenantId, licenseId, timestamp])
+  @@map("license_usage")
+}
+
+// Step 74: Audit & Compliance Reporting Models
+model AuditReport {
+  id            String              @id @default(cuid())
+  tenantId      String
+  type          AuditReportType
+  period        Json                // {start: Date, end: Date}
+  scope         Json                @default("[]")
+  findings      Json                @default("[]")
+  recommendations Json             @default("[]")
+  status        ReportStatus
+  generatedBy   String
+  generatedAt   DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  generator     User                @relation("ReportGenerator", fields: [generatedBy], references: [id])
+  evidence      AuditEvidence[]
+
+  @@map("audit_reports")
+}
+
+model AuditEvidence {
+  id            String              @id @default(cuid())
+  tenantId      String
+  reportId      String
+  type          EvidenceType
+  description   String
+  data          Json
+  source        String
+  collectedAt   DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  report        AuditReport         @relation(fields: [reportId], references: [id])
+
+  @@map("audit_evidence")
+}
+
+model ComplianceReport {
+  id            String              @id @default(cuid())
+  tenantId      String
+  framework     String
+  version       String
+  assessmentDate DateTime
+  score         Float
+  status        ComplianceReportStatus
+  gaps          Json                @default("[]")
+  controls      Json                @default("[]")
+  certifications Json              @default("[]")
+  nextReview    DateTime?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("compliance_reports")
+}
+
+// Step 75: Enterprise SSO Models
+model SSOProvider {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  type          SSOProviderType
+  config        Json                // Encrypted config
+  metadata      Json                @default("{}")
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  connections   SSOConnection[]
+  sessions      SSOSession[]
+
+  @@map("sso_providers")
+}
+
+model SSOConnection {
+  id            String              @id @default(cuid())
+  tenantId      String
+  providerId    String
+  domain        String
+  config        Json                // Connection-specific config
+  status        ConnectionStatus
+  lastSync      DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider      SSOProvider         @relation(fields: [providerId], references: [id])
+  mappings      SSOUserMapping[]
+
+  @@unique([tenantId, domain])
+  @@map("sso_connections")
+}
+
+model SSOUserMapping {
+  id            String              @id @default(cuid())
+  tenantId      String
+  connectionId  String
+  externalId    String              // ID in external system
+  userId        String
+  attributes    Json                @default("{}")
+  lastLogin     DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  connection    SSOConnection       @relation(fields: [connectionId], references: [id])
+  user          User                @relation("SSOUser", fields: [userId], references: [id])
+
+  @@unique([connectionId, externalId])
+  @@map("sso_user_mappings")
+}
+
+model SSOSession {
+  id            String              @id @default(cuid())
+  tenantId      String
+  providerId    String
+  userId        String
+  sessionToken  String              @unique
+  idToken       String?             // Encrypted
+  refreshToken  String?             // Encrypted
+  expiresAt     DateTime
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider      SSOProvider         @relation(fields: [providerId], references: [id])
+  user          User                @relation("SSOSession", fields: [userId], references: [id])
+
+  @@map("sso_sessions")
+}
+
+// Enums for steps 66-75
+enum CloudProviderType {
+  aws
+  azure
+  gcp
+  alibaba
+  oracle
+  ibm
+  digitalocean
+  linode
+}
+
+enum CloudStatus {
+  active
+  inactive
+  configuring
+  error
+}
+
+enum DeploymentType {
+  compute
+  storage
+  database
+  network
+  container
+  serverless
+}
+
+enum DeploymentStatus {
+  pending
+  deploying
+  active
+  failed
+  terminated
+}
+
+enum ResourceStatus {
+  provisioning
+  running
+  stopped
+  terminated
+  error
+}
+
+enum RecoveryStrategy {
+  backup_restore
+  pilot_light
+  warm_standby
+  multi_site
+}
+
+enum BackupType {
+  full
+  incremental
+  differential
+  snapshot
+}
+
+enum BackupStatus {
+  pending
+  running
+  completed
+  failed
+  expired
+}
+
+enum DrillType {
+  tabletop
+  partial
+  full
+  surprise
+}
+
+enum DrillStatus {
+  planned
+  running
+  completed
+  failed
+  cancelled
+}
+
+enum LoadBalancerType {
+  application
+  network
+  classic
+  global
+}
+
+enum LoadBalancerAlgorithm {
+  round_robin
+  least_connections
+  ip_hash
+  weighted
+  random
+}
+
+enum LoadBalancerStatus {
+  provisioning
+  active
+  updating
+  deleting
+  error
+}
+
+enum CDNStatus {
+  deploying
+  active
+  updating
+  disabled
+  error
+}
+
+enum GatewayStatus {
+  active
+  inactive
+  deploying
+  updating
+  error
+}
+
+enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+  HEAD
+  OPTIONS
+}
+
+enum PolicyType {
+  rate_limit
+  auth
+  cors
+  transform
+  cache
+  circuit_breaker
+}
+
+enum MeshType {
+  istio
+  linkerd
+  consul
+  kuma
+  traefik
+}
+
+enum MeshStatus {
+  initializing
+  active
+  updating
+  degraded
+  error
+}
+
+enum ServiceHealth {
+  healthy
+  degraded
+  unhealthy
+  unknown
+}
+
+enum MeshPolicyType {
+  traffic
+  security
+  observability
+  resilience
+}
+
+enum MetricType {
+  counter
+  gauge
+  histogram
+  summary
+}
+
+enum TraceStatus {
+  ok
+  error
+  timeout
+}
+
+enum LogLevel {
+  trace
+  debug
+  info
+  warn
+  error
+  fatal
+}
+
+enum AlertSeverity {
+  low
+  medium
+  high
+  critical
+}
+
+enum AlertStatus {
+  active
+  acknowledged
+  resolved
+  suppressed
+}
+
+enum BudgetPeriod {
+  monthly
+  quarterly
+  yearly
+  custom
+}
+
+enum BudgetStatus {
+  active
+  exceeded
+  warning
+  inactive
+}
+
+enum CostAlertType {
+  threshold
+  forecast
+  anomaly
+  trend
+}
+
+enum LicenseType {
+  perpetual
+  subscription
+  concurrent
+  named_user
+  site
+  trial
+}
+
+enum LicenseStatus {
+  active
+  expired
+  suspended
+  revoked
+}
+
+enum AssignmentStatus {
+  active
+  revoked
+  pending
+  expired
+}
+
+enum AuditReportType {
+  security
+  compliance
+  financial
+  operational
+  access
+}
+
+enum ReportStatus {
+  draft
+  reviewing
+  final
+  archived
+}
+
+enum EvidenceType {
+  log
+  screenshot
+  document
+  config
+  metric
+}
+
+enum ComplianceReportStatus {
+  compliant
+  partial
+  non_compliant
+  pending_review
+}
+
+enum SSOProviderType {
+  saml
+  oidc
+  oauth2
+  ldap
+  active_directory
+}
+
+enum ConnectionStatus {
+  connected
+  disconnected
+  error
+  syncing
+}// Schema for Steps 76-80 - Innovation & Future Features
+
+// Step 76: Quantum Computing Integration Models
+model QuantumCircuit {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  qubits        Int
+  gates         Json                @default("[]")
+  parameters    Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("QuantumCreator", fields: [createdBy], references: [id])
+  jobs          QuantumJob[]
+  results       QuantumResult[]
+
+  @@map("quantum_circuits")
+}
+
+model QuantumJob {
+  id            String              @id @default(cuid())
+  tenantId      String
+  circuitId     String
+  backend       String              // IBM, Google, AWS Braket, etc.
+  shots         Int                 @default(1024)
+  status        QuantumJobStatus
+  submittedBy   String
+  submittedAt   DateTime            @default(now())
+  completedAt   DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  circuit       QuantumCircuit      @relation(fields: [circuitId], references: [id])
+  submitter     User                @relation("QuantumSubmitter", fields: [submittedBy], references: [id])
+
+  @@map("quantum_jobs")
+}
+
+model QuantumResult {
+  id            String              @id @default(cuid())
+  tenantId      String
+  circuitId     String
+  jobId         String?
+  measurements  Json                // Quantum measurement results
+  probabilities Json                // Probability distributions
+  fidelity      Float?
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  circuit       QuantumCircuit      @relation(fields: [circuitId], references: [id])
+
+  @@map("quantum_results")
+}
+
+// Step 77: Web3 Integration Models
+model Web3Wallet {
+  id            String              @id @default(cuid())
+  tenantId      String
+  address       String              @unique
+  chainId       Int
+  network       String
+  balance       String              // BigInt as string
+  nonce         Int                 @default(0)
+  privateKey    String?             // Encrypted, optional for external wallets
+  isExternal    Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transactions  Web3Transaction[]
+  tokens        Web3Token[]
+  nfts          Web3NFT[]
+
+  @@map("web3_wallets")
+}
+
+model Web3Transaction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  txHash        String              @unique
+  fromAddress   String
+  toAddress     String
+  value         String              // BigInt as string
+  gasPrice      String
+  gasUsed       String
+  status        Web3TxStatus
+  blockNumber   BigInt?
+  data          String?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@map("web3_transactions")
+}
+
+model Web3Token {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  contractAddress String
+  symbol        String
+  decimals      Int
+  balance       String              // BigInt as string
+  metadata      Json                @default("{}")
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@unique([walletId, contractAddress])
+  @@map("web3_tokens")
+}
+
+model Web3NFT {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  contractAddress String
+  tokenId       String
+  tokenUri      String?
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@unique([contractAddress, tokenId])
+  @@map("web3_nfts")
+}
+
+model Web3SmartContract {
+  id            String              @id @default(cuid())
+  tenantId      String
+  address       String              @unique
+  name          String
+  abi           Json
+  bytecode      String?
+  sourceCode    String?
+  compiler      String?
+  network       String
+  deployedBy    String
+  deployedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  deployer      User                @relation("Web3Deployer", fields: [deployedBy], references: [id])
+  interactions  Web3ContractInteraction[]
+
+  @@map("web3_smart_contracts")
+}
+
+model Web3ContractInteraction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  contractId    String
+  method        String
+  parameters    Json
+  result        Json?
+  txHash        String?
+  calledBy      String
+  calledAt      DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contract      Web3SmartContract   @relation(fields: [contractId], references: [id])
+  caller        User                @relation("Web3Caller", fields: [calledBy], references: [id])
+
+  @@map("web3_contract_interactions")
+}
+
+// Step 78: Metaverse Support Models
+model MetaverseWorld {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  platform      MetaversePlatform
+  worldId       String              // Platform-specific world ID
+  coordinates   Json                // 3D coordinates
+  size          Json                // Dimensions
+  capacity      Int
+  isPublic      Boolean             @default(true)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("WorldCreator", fields: [createdBy], references: [id])
+  avatars       MetaverseAvatar[]
+  assets        MetaverseAsset[]
+  events        MetaverseEvent[]
+
+  @@map("metaverse_worlds")
+}
+
+model MetaverseAvatar {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  userId        String
+  name          String
+  modelUrl      String
+  position      Json                // 3D position
+  rotation      Json                // 3D rotation
+  customization Json                @default("{}")
+  status        AvatarStatus
+  lastSeen      DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+  user          User                @relation("MetaverseUser", fields: [userId], references: [id])
+  interactions  MetaverseInteraction[]
+
+  @@map("metaverse_avatars")
+}
+
+model MetaverseAsset {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  type          MetaAssetType
+  name          String
+  modelUrl      String
+  position      Json                // 3D position
+  scale         Json                // 3D scale
+  properties    Json                @default("{}")
+  isInteractive Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+
+  @@map("metaverse_assets")
+}
+
+model MetaverseEvent {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  name          String
+  description   String?
+  startTime     DateTime
+  endTime       DateTime
+  maxAttendees  Int?
+  isRecorded    Boolean             @default(false)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+  organizer     User                @relation("MetaEventOrganizer", fields: [createdBy], references: [id])
+
+  @@map("metaverse_events")
+}
+
+model MetaverseInteraction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  avatarId      String
+  type          InteractionType
+  targetId      String?             // ID of target avatar or asset
+  data          Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  avatar        MetaverseAvatar     @relation(fields: [avatarId], references: [id])
+
+  @@map("metaverse_interactions")
+}
+
+// Step 79: Carbon Footprint Tracking Models
+model CarbonFootprint {
+  id            String              @id @default(cuid())
+  tenantId      String
+  period        DateTime
+  scope1        Float               // Direct emissions
+  scope2        Float               // Indirect emissions from energy
+  scope3        Float               // Other indirect emissions
+  total         Float
+  unit          String              @default("tCO2e")
+  calculatedBy  String
+  calculatedAt  DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  calculator    User                @relation("CarbonCalculator", fields: [calculatedBy], references: [id])
+  activities    CarbonActivity[]
+  offsets       CarbonOffset[]
+
+  @@map("carbon_footprints")
+}
+
+model CarbonActivity {
+  id            String              @id @default(cuid())
+  tenantId      String
+  footprintId   String
+  category      CarbonCategory
+  activity      String
+  quantity      Float
+  unit          String
+  emissionFactor Float
+  emissions     Float
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  footprint     CarbonFootprint     @relation(fields: [footprintId], references: [id])
+
+  @@map("carbon_activities")
+}
+
+model CarbonOffset {
+  id            String              @id @default(cuid())
+  tenantId      String
+  footprintId   String
+  type          OffsetType
+  provider      String
+  amount        Float
+  unit          String              @default("tCO2e")
+  certificateId String?
+  verificationUrl String?
+  purchasedAt   DateTime            @default(now())
+  expiresAt     DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  footprint     CarbonFootprint     @relation(fields: [footprintId], references: [id])
+
+  @@map("carbon_offsets")
+}
+
+model SustainabilityGoal {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  target        Float
+  unit          String
+  baseline      Float
+  baselineYear  Int
+  targetYear    Int
+  category      GoalCategory
+  status        GoalStatus
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("GoalCreator", fields: [createdBy], references: [id])
+  progress      SustainabilityProgress[]
+
+  @@map("sustainability_goals")
+}
+
+model SustainabilityProgress {
+  id            String              @id @default(cuid())
+  tenantId      String
+  goalId        String
+  period        DateTime
+  value         Float
+  percentComplete Float
+  notes         String?
+  recordedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  goal          SustainabilityGoal  @relation(fields: [goalId], references: [id])
+
+  @@map("sustainability_progress")
+}
+
+// Step 80: AI Governance Platform Models
+model AIGovernancePolicy {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  version       String
+  scope         Json                @default("[]")
+  principles    Json                @default("[]")
+  requirements  Json                @default("[]")
+  status        PolicyStatus
+  approvedBy    String?
+  approvedAt    DateTime?
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("AIPolicyCreator", fields: [createdBy], references: [id])
+  approver      User?               @relation("AIPolicyApprover", fields: [approvedBy], references: [id])
+  reviews       AIModelReview[]
+  audits        AIAudit[]
+
+  @@map("ai_governance_policies")
+}
+
+model AIModelRegistry {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String              @unique
+  name          String
+  version       String
+  type          AIModelType
+  framework     String
+  purpose       String
+  riskLevel     RiskLevel
+  metadata      Json                @default("{}")
+  registeredBy  String
+  registeredAt  DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  registrar     User                @relation("AIRegistrar", fields: [registeredBy], references: [id])
+  reviews       AIModelReview[]
+  monitoring    AIModelMonitoring[]
+
+  @@map("ai_model_registry")
+}
+
+model AIModelReview {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String
+  policyId      String
+  reviewType    ReviewType
+  status        ReviewStatus
+  findings      Json                @default("[]")
+  recommendations Json             @default("[]")
+  score         Float?
+  reviewedBy    String
+  reviewedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model         AIModelRegistry     @relation(fields: [modelId], references: [id])
+  policy        AIGovernancePolicy  @relation(fields: [policyId], references: [id])
+  reviewer      User                @relation("AIReviewer", fields: [reviewedBy], references: [id])
+
+  @@map("ai_model_reviews")
+}
+
+model AIModelMonitoring {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String
+  metric        String
+  value         Float
+  threshold     Float?
+  status        MonitoringStatus
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model         AIModelRegistry     @relation(fields: [modelId], references: [id])
+
+  @@index([tenantId, modelId, timestamp])
+  @@map("ai_model_monitoring")
+}
+
+model AIAudit {
+  id            String              @id @default(cuid())
+  tenantId      String
+  policyId      String
+  auditType     AIAuditType
+  scope         Json                @default("[]")
+  findings      Json                @default("[]")
+  compliance    Float
+  recommendations Json             @default("[]")
+  auditedBy     String
+  auditedAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policy        AIGovernancePolicy  @relation(fields: [policyId], references: [id])
+  auditor       User                @relation("AIAuditor", fields: [auditedBy], references: [id])
+
+  @@map("ai_audits")
+}
+
+model AIEthicsBoard {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  charter       String
+  members       Json                @default("[]")
+  meetingSchedule Json              @default("{}")
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  decisions     AIEthicsDecision[]
+
+  @@map("ai_ethics_boards")
+}
+
+model AIEthicsDecision {
+  id            String              @id @default(cuid())
+  tenantId      String
+  boardId       String
+  topic         String
+  decision      String
+  rationale     String
+  votes         Json                @default("{}")
+  impact        Json                @default("[]")
+  decidedAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  board         AIEthicsBoard       @relation(fields: [boardId], references: [id])
+
+  @@map("ai_ethics_decisions")
+}
+
+// Enums for steps 76-80
+enum QuantumJobStatus {
+  queued
+  running
+  completed
+  failed
+  cancelled
+}
+
+enum Web3TxStatus {
+  pending
+  confirmed
+  failed
+  dropped
+}
+
+enum MetaversePlatform {
+  decentraland
+  sandbox
+  horizonworlds
+  roblox
+  fortnite
+  vrchat
+  spatial
+  custom
+}
+
+enum AvatarStatus {
+  online
+  idle
+  offline
+}
+
+enum MetaAssetType {
+  building
+  furniture
+  vehicle
+  decoration
+  interactive
+  nft
+}
+
+enum InteractionType {
+  chat
+  gesture
+  trade
+  collaborate
+  play
+}
+
+enum CarbonCategory {
+  energy
+  transport
+  waste
+  water
+  supply_chain
+  travel
+  digital
+}
+
+enum OffsetType {
+  renewable_energy
+  reforestation
+  carbon_capture
+  verified_credits
+}
+
+enum GoalCategory {
+  emissions
+  energy
+  waste
+  water
+  biodiversity
+  social
+}
+
+enum GoalStatus {
+  on_track
+  at_risk
+  behind
+  achieved
+}
+
+enum PolicyStatus {
+  draft
+  review
+  approved
+  active
+  archived
+}
+
+enum AIModelType {
+  classification
+  regression
+  nlp
+  computer_vision
+  reinforcement
+  generative
+  hybrid
+}
+
+enum RiskLevel {
+  low
+  medium
+  high
+  critical
+}
+
+enum ReviewType {
+  fairness
+  transparency
+  privacy
+  security
+  performance
+  compliance
+}
+
+enum ReviewStatus {
+  pending
+  in_progress
+  completed
+  escalated
+}
+
+enum MonitoringStatus {
+  normal
+  warning
+  alert
+  critical
+}
+
+enum AIAuditType {
+  compliance
+  ethics
+  technical
+  operational
 }

@@ -1,0 +1,641 @@
+// Schema for Steps 76-80 - Innovation & Future Features
+
+// Step 76: Quantum Computing Integration Models
+model QuantumCircuit {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  description   String?
+  qubits        Int
+  gates         Json                @default("[]")
+  parameters    Json                @default("{}")
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("QuantumCreator", fields: [createdBy], references: [id])
+  jobs          QuantumJob[]
+  results       QuantumResult[]
+
+  @@map("quantum_circuits")
+}
+
+model QuantumJob {
+  id            String              @id @default(cuid())
+  tenantId      String
+  circuitId     String
+  backend       String              // IBM, Google, AWS Braket, etc.
+  shots         Int                 @default(1024)
+  status        QuantumJobStatus
+  submittedBy   String
+  submittedAt   DateTime            @default(now())
+  completedAt   DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  circuit       QuantumCircuit      @relation(fields: [circuitId], references: [id])
+  submitter     User                @relation("QuantumSubmitter", fields: [submittedBy], references: [id])
+
+  @@map("quantum_jobs")
+}
+
+model QuantumResult {
+  id            String              @id @default(cuid())
+  tenantId      String
+  circuitId     String
+  jobId         String?
+  measurements  Json                // Quantum measurement results
+  probabilities Json                // Probability distributions
+  fidelity      Float?
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  circuit       QuantumCircuit      @relation(fields: [circuitId], references: [id])
+
+  @@map("quantum_results")
+}
+
+// Step 77: Web3 Integration Models
+model Web3Wallet {
+  id            String              @id @default(cuid())
+  tenantId      String
+  address       String              @unique
+  chainId       Int
+  network       String
+  balance       String              // BigInt as string
+  nonce         Int                 @default(0)
+  privateKey    String?             // Encrypted, optional for external wallets
+  isExternal    Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transactions  Web3Transaction[]
+  tokens        Web3Token[]
+  nfts          Web3NFT[]
+
+  @@map("web3_wallets")
+}
+
+model Web3Transaction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  txHash        String              @unique
+  fromAddress   String
+  toAddress     String
+  value         String              // BigInt as string
+  gasPrice      String
+  gasUsed       String
+  status        Web3TxStatus
+  blockNumber   BigInt?
+  data          String?
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@map("web3_transactions")
+}
+
+model Web3Token {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  contractAddress String
+  symbol        String
+  decimals      Int
+  balance       String              // BigInt as string
+  metadata      Json                @default("{}")
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@unique([walletId, contractAddress])
+  @@map("web3_tokens")
+}
+
+model Web3NFT {
+  id            String              @id @default(cuid())
+  tenantId      String
+  walletId      String
+  contractAddress String
+  tokenId       String
+  tokenUri      String?
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  wallet        Web3Wallet          @relation(fields: [walletId], references: [id])
+
+  @@unique([contractAddress, tokenId])
+  @@map("web3_nfts")
+}
+
+model Web3SmartContract {
+  id            String              @id @default(cuid())
+  tenantId      String
+  address       String              @unique
+  name          String
+  abi           Json
+  bytecode      String?
+  sourceCode    String?
+  compiler      String?
+  network       String
+  deployedBy    String
+  deployedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  deployer      User                @relation("Web3Deployer", fields: [deployedBy], references: [id])
+  interactions  Web3ContractInteraction[]
+
+  @@map("web3_smart_contracts")
+}
+
+model Web3ContractInteraction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  contractId    String
+  method        String
+  parameters    Json
+  result        Json?
+  txHash        String?
+  calledBy      String
+  calledAt      DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contract      Web3SmartContract   @relation(fields: [contractId], references: [id])
+  caller        User                @relation("Web3Caller", fields: [calledBy], references: [id])
+
+  @@map("web3_contract_interactions")
+}
+
+// Step 78: Metaverse Support Models
+model MetaverseWorld {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  platform      MetaversePlatform
+  worldId       String              // Platform-specific world ID
+  coordinates   Json                // 3D coordinates
+  size          Json                // Dimensions
+  capacity      Int
+  isPublic      Boolean             @default(true)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("WorldCreator", fields: [createdBy], references: [id])
+  avatars       MetaverseAvatar[]
+  assets        MetaverseAsset[]
+  events        MetaverseEvent[]
+
+  @@map("metaverse_worlds")
+}
+
+model MetaverseAvatar {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  userId        String
+  name          String
+  modelUrl      String
+  position      Json                // 3D position
+  rotation      Json                // 3D rotation
+  customization Json                @default("{}")
+  status        AvatarStatus
+  lastSeen      DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+  user          User                @relation("MetaverseUser", fields: [userId], references: [id])
+  interactions  MetaverseInteraction[]
+
+  @@map("metaverse_avatars")
+}
+
+model MetaverseAsset {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  type          MetaAssetType
+  name          String
+  modelUrl      String
+  position      Json                // 3D position
+  scale         Json                // 3D scale
+  properties    Json                @default("{}")
+  isInteractive Boolean             @default(false)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+
+  @@map("metaverse_assets")
+}
+
+model MetaverseEvent {
+  id            String              @id @default(cuid())
+  tenantId      String
+  worldId       String
+  name          String
+  description   String?
+  startTime     DateTime
+  endTime       DateTime
+  maxAttendees  Int?
+  isRecorded    Boolean             @default(false)
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  world         MetaverseWorld      @relation(fields: [worldId], references: [id])
+  organizer     User                @relation("MetaEventOrganizer", fields: [createdBy], references: [id])
+
+  @@map("metaverse_events")
+}
+
+model MetaverseInteraction {
+  id            String              @id @default(cuid())
+  tenantId      String
+  avatarId      String
+  type          InteractionType
+  targetId      String?             // ID of target avatar or asset
+  data          Json                @default("{}")
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  avatar        MetaverseAvatar     @relation(fields: [avatarId], references: [id])
+
+  @@map("metaverse_interactions")
+}
+
+// Step 79: Carbon Footprint Tracking Models
+model CarbonFootprint {
+  id            String              @id @default(cuid())
+  tenantId      String
+  period        DateTime
+  scope1        Float               // Direct emissions
+  scope2        Float               // Indirect emissions from energy
+  scope3        Float               // Other indirect emissions
+  total         Float
+  unit          String              @default("tCO2e")
+  calculatedBy  String
+  calculatedAt  DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  calculator    User                @relation("CarbonCalculator", fields: [calculatedBy], references: [id])
+  activities    CarbonActivity[]
+  offsets       CarbonOffset[]
+
+  @@map("carbon_footprints")
+}
+
+model CarbonActivity {
+  id            String              @id @default(cuid())
+  tenantId      String
+  footprintId   String
+  category      CarbonCategory
+  activity      String
+  quantity      Float
+  unit          String
+  emissionFactor Float
+  emissions     Float
+  metadata      Json                @default("{}")
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  footprint     CarbonFootprint     @relation(fields: [footprintId], references: [id])
+
+  @@map("carbon_activities")
+}
+
+model CarbonOffset {
+  id            String              @id @default(cuid())
+  tenantId      String
+  footprintId   String
+  type          OffsetType
+  provider      String
+  amount        Float
+  unit          String              @default("tCO2e")
+  certificateId String?
+  verificationUrl String?
+  purchasedAt   DateTime            @default(now())
+  expiresAt     DateTime?
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  footprint     CarbonFootprint     @relation(fields: [footprintId], references: [id])
+
+  @@map("carbon_offsets")
+}
+
+model SustainabilityGoal {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  target        Float
+  unit          String
+  baseline      Float
+  baselineYear  Int
+  targetYear    Int
+  category      GoalCategory
+  status        GoalStatus
+  createdBy     String
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("GoalCreator", fields: [createdBy], references: [id])
+  progress      SustainabilityProgress[]
+
+  @@map("sustainability_goals")
+}
+
+model SustainabilityProgress {
+  id            String              @id @default(cuid())
+  tenantId      String
+  goalId        String
+  period        DateTime
+  value         Float
+  percentComplete Float
+  notes         String?
+  recordedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  goal          SustainabilityGoal  @relation(fields: [goalId], references: [id])
+
+  @@map("sustainability_progress")
+}
+
+// Step 80: AI Governance Platform Models
+model AIGovernancePolicy {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  version       String
+  scope         Json                @default("[]")
+  principles    Json                @default("[]")
+  requirements  Json                @default("[]")
+  status        PolicyStatus
+  approvedBy    String?
+  approvedAt    DateTime?
+  createdBy     String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  creator       User                @relation("AIPolicyCreator", fields: [createdBy], references: [id])
+  approver      User?               @relation("AIPolicyApprover", fields: [approvedBy], references: [id])
+  reviews       AIModelReview[]
+  audits        AIAudit[]
+
+  @@map("ai_governance_policies")
+}
+
+model AIModelRegistry {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String              @unique
+  name          String
+  version       String
+  type          AIModelType
+  framework     String
+  purpose       String
+  riskLevel     RiskLevel
+  metadata      Json                @default("{}")
+  registeredBy  String
+  registeredAt  DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  registrar     User                @relation("AIRegistrar", fields: [registeredBy], references: [id])
+  reviews       AIModelReview[]
+  monitoring    AIModelMonitoring[]
+
+  @@map("ai_model_registry")
+}
+
+model AIModelReview {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String
+  policyId      String
+  reviewType    ReviewType
+  status        ReviewStatus
+  findings      Json                @default("[]")
+  recommendations Json             @default("[]")
+  score         Float?
+  reviewedBy    String
+  reviewedAt    DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model         AIModelRegistry     @relation(fields: [modelId], references: [id])
+  policy        AIGovernancePolicy  @relation(fields: [policyId], references: [id])
+  reviewer      User                @relation("AIReviewer", fields: [reviewedBy], references: [id])
+
+  @@map("ai_model_reviews")
+}
+
+model AIModelMonitoring {
+  id            String              @id @default(cuid())
+  tenantId      String
+  modelId       String
+  metric        String
+  value         Float
+  threshold     Float?
+  status        MonitoringStatus
+  timestamp     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model         AIModelRegistry     @relation(fields: [modelId], references: [id])
+
+  @@index([tenantId, modelId, timestamp])
+  @@map("ai_model_monitoring")
+}
+
+model AIAudit {
+  id            String              @id @default(cuid())
+  tenantId      String
+  policyId      String
+  auditType     AIAuditType
+  scope         Json                @default("[]")
+  findings      Json                @default("[]")
+  compliance    Float
+  recommendations Json             @default("[]")
+  auditedBy     String
+  auditedAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policy        AIGovernancePolicy  @relation(fields: [policyId], references: [id])
+  auditor       User                @relation("AIAuditor", fields: [auditedBy], references: [id])
+
+  @@map("ai_audits")
+}
+
+model AIEthicsBoard {
+  id            String              @id @default(cuid())
+  tenantId      String
+  name          String
+  charter       String
+  members       Json                @default("[]")
+  meetingSchedule Json              @default("{}")
+  isActive      Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  decisions     AIEthicsDecision[]
+
+  @@map("ai_ethics_boards")
+}
+
+model AIEthicsDecision {
+  id            String              @id @default(cuid())
+  tenantId      String
+  boardId       String
+  topic         String
+  decision      String
+  rationale     String
+  votes         Json                @default("{}")
+  impact        Json                @default("[]")
+  decidedAt     DateTime            @default(now())
+
+  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  board         AIEthicsBoard       @relation(fields: [boardId], references: [id])
+
+  @@map("ai_ethics_decisions")
+}
+
+// Enums for steps 76-80
+enum QuantumJobStatus {
+  queued
+  running
+  completed
+  failed
+  cancelled
+}
+
+enum Web3TxStatus {
+  pending
+  confirmed
+  failed
+  dropped
+}
+
+enum MetaversePlatform {
+  decentraland
+  sandbox
+  horizonworlds
+  roblox
+  fortnite
+  vrchat
+  spatial
+  custom
+}
+
+enum AvatarStatus {
+  online
+  idle
+  offline
+}
+
+enum MetaAssetType {
+  building
+  furniture
+  vehicle
+  decoration
+  interactive
+  nft
+}
+
+enum InteractionType {
+  chat
+  gesture
+  trade
+  collaborate
+  play
+}
+
+enum CarbonCategory {
+  energy
+  transport
+  waste
+  water
+  supply_chain
+  travel
+  digital
+}
+
+enum OffsetType {
+  renewable_energy
+  reforestation
+  carbon_capture
+  verified_credits
+}
+
+enum GoalCategory {
+  emissions
+  energy
+  waste
+  water
+  biodiversity
+  social
+}
+
+enum GoalStatus {
+  on_track
+  at_risk
+  behind
+  achieved
+}
+
+enum PolicyStatus {
+  draft
+  review
+  approved
+  active
+  archived
+}
+
+enum AIModelType {
+  classification
+  regression
+  nlp
+  computer_vision
+  reinforcement
+  generative
+  hybrid
+}
+
+enum RiskLevel {
+  low
+  medium
+  high
+  critical
+}
+
+enum ReviewType {
+  fairness
+  transparency
+  privacy
+  security
+  performance
+  compliance
+}
+
+enum ReviewStatus {
+  pending
+  in_progress
+  completed
+  escalated
+}
+
+enum MonitoringStatus {
+  normal
+  warning
+  alert
+  critical
+}
+
+enum AIAuditType {
+  compliance
+  ethics
+  technical
+  operational
+}
