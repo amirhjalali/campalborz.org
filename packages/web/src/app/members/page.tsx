@@ -1,44 +1,45 @@
 "use client";
 
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { 
-  UserIcon,
-  HeartIcon,
-  AcademicCapIcon,
-  WrenchScrewdriverIcon,
-  MusicalNoteIcon,
-  PaintBrushIcon
-} from "@heroicons/react/24/outline";
+  User,
+  Heart,
+  GraduationCap,
+  Wrench,
+  Music,
+  Palette
+} from "lucide-react";
 
 const memberTypes = [
   {
     title: "Core Members",
     description: "Long-term camp family who help with year-round planning",
-    icon: HeartIcon,
+    icon: Heart,
     count: 15,
     color: "bg-red-100 text-red-600"
   },
   {
     title: "Active Members",
     description: "Regular participants who contribute to camp activities",
-    icon: UserIcon,
+    icon: User,
     count: 25,
     color: "bg-blue-100 text-blue-600"
   },
   {
     title: "Artists & Makers",
     description: "Creative minds behind our installations and workshops",
-    icon: PaintBrushIcon,
+    icon: Palette,
     count: 12,
     color: "bg-purple-100 text-purple-600"
   },
   {
     title: "Technical Crew",
     description: "Engineers and builders who make the magic happen",
-    icon: WrenchScrewdriverIcon,
+    icon: Wrench,
     count: 8,
     color: "bg-green-100 text-green-600"
   }
@@ -77,18 +78,35 @@ const spotlightMembers = [
 
 export default function MembersPage() {
   return (
-    <MainLayout>
-      <div className="py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-saffron">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-desert-gold bg-clip-text text-transparent"
+          >
             Our Camp Family
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed"
+          >
             Meet the amazing people who make Camp Alborz a vibrant community of 
             creators, builders, and culture enthusiasts
-          </p>
+          </motion.p>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Member Types Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -129,7 +147,7 @@ export default function MembersPage() {
                 <CardHeader>
                   <div className="flex items-start">
                     <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mr-4">
-                      <UserIcon className="h-8 w-8 text-primary-600" />
+                      <User className="h-8 w-8 text-primary-600" />
                     </div>
                     <div>
                       <CardTitle>{member.name}</CardTitle>
@@ -168,7 +186,7 @@ export default function MembersPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <PaintBrushIcon className="h-5 w-5 text-primary-600" />
+                  <Palette className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Art & Installations</h4>
@@ -178,7 +196,7 @@ export default function MembersPage() {
 
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <MusicalNoteIcon className="h-5 w-5 text-primary-600" />
+                  <Music className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Music & Performance</h4>
@@ -188,7 +206,7 @@ export default function MembersPage() {
 
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <WrenchScrewdriverIcon className="h-5 w-5 text-primary-600" />
+                  <Wrench className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Infrastructure</h4>
@@ -198,7 +216,7 @@ export default function MembersPage() {
 
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <AcademicCapIcon className="h-5 w-5 text-primary-600" />
+                  <GraduationCap className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Education & Workshops</h4>
@@ -208,7 +226,7 @@ export default function MembersPage() {
 
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <HeartIcon className="h-5 w-5 text-primary-600" />
+                  <Heart className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Community Building</h4>
@@ -218,7 +236,7 @@ export default function MembersPage() {
 
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <UserIcon className="h-5 w-5 text-primary-600" />
+                  <User className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-1">Mentorship</h4>
@@ -261,24 +279,34 @@ export default function MembersPage() {
         </Card>
 
         {/* Call to Action */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center bg-gradient-to-r from-persian-purple/5 to-saffron/5 rounded-2xl p-12"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-6">
             Ready to Join Our Family?
           </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             We're always looking for passionate individuals who want to contribute 
             to our community and share in the Camp Alborz experience.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/apply">Apply for Membership</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/events">Attend an Event</Link>
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Link href="/apply">Apply for Membership</Link>
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Link href="/events">Attend an Event</Link>
+              </Button>
+            </motion.div>
           </div>
+        </motion.div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

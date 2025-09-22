@@ -1,20 +1,21 @@
 "use client";
 
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { DonationForm } from "@/components/donation/DonationForm";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { 
-  HeartIcon,
-  CurrencyDollarIcon,
-  TruckIcon,
-  WrenchScrewdriverIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  CheckCircleIcon,
-  GiftIcon
-} from "@heroicons/react/24/outline";
+  Heart,
+  DollarSign,
+  Truck,
+  Wrench,
+  Users,
+  BarChart3,
+  CheckCircle,
+  Gift
+} from "lucide-react";
 
 const donationTiers = [
   {
@@ -61,7 +62,7 @@ const fundingPriorities = [
     amount: 12250,
     goal: 35000,
     description: "Materials and tools for our 2024 art projects",
-    icon: WrenchScrewdriverIcon,
+    icon: Wrench,
     color: "bg-orange-500"
   },
   {
@@ -70,7 +71,7 @@ const fundingPriorities = [
     amount: 9800,
     goal: 35000,
     description: "Shade structures, lighting, and camp facilities",
-    icon: TruckIcon,
+    icon: Truck,
     color: "bg-blue-500"
   },
   {
@@ -79,7 +80,7 @@ const fundingPriorities = [
     amount: 7000,
     goal: 35000,
     description: "Workshops, cultural events, and education",
-    icon: UserGroupIcon,
+    icon: Users,
     color: "bg-green-500"
   },
   {
@@ -88,7 +89,7 @@ const fundingPriorities = [
     amount: 5950,
     goal: 35000,
     description: "Unexpected costs and contingency planning",
-    icon: HeartIcon,
+    icon: Heart,
     color: "bg-purple-500"
   }
 ];
@@ -97,7 +98,7 @@ const impactStats = [
   {
     number: "$45,000",
     label: "Raised in 2023",
-    icon: CurrencyDollarIcon
+    icon: DollarSign
   },
   {
     number: "125",
@@ -153,43 +154,60 @@ const otherWaysToHelp = [
   {
     title: "Sponsor a Workshop",
     description: "Fund specific cultural or artistic workshops",
-    icon: GiftIcon,
+    icon: Gift,
     amount: "$200-500"
   },
   {
     title: "Adopt an Art Project",
     description: "Fully sponsor a community art installation",
-    icon: WrenchScrewdriverIcon,
+    icon: Wrench,
     amount: "$1,000-3,000"
   },
   {
     title: "Corporate Sponsorship",
     description: "Partner with us for larger initiatives",
-    icon: ChartBarIcon,
+    icon: BarChart3,
     amount: "$2,500+"
   },
   {
     title: "In-Kind Donations",
     description: "Donate materials, tools, or services",
-    icon: TruckIcon,
+    icon: Truck,
     amount: "Various"
   }
 ];
 
 export default function DonatePage() {
   return (
-    <MainLayout>
-      <div className="py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-desert-gold via-saffron to-persian-purple">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-midnight bg-clip-text text-transparent"
+          >
             Support Camp Alborz
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed"
+          >
             Help us create transformative experiences, build beautiful art, 
             and share Persian culture with the Burning Man community
-          </p>
+          </motion.p>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Impact Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -244,7 +262,7 @@ export default function DonatePage() {
                   <ul className="space-y-2 mb-6">
                     {tier.perks.map((perk, index) => (
                       <li key={index} className="flex items-center text-sm text-secondary-700">
-                        <CheckCircleIcon className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
                         {perk}
                       </li>
                     ))}
@@ -385,7 +403,7 @@ export default function DonatePage() {
           <CardContent>
             <div className="text-center">
               <div className="bg-secondary-50 rounded-lg p-8">
-                <HeartIcon className="h-12 w-12 text-primary-600 mx-auto mb-4" />
+                <Heart className="h-12 w-12 text-primary-600 mx-auto mb-4" />
                 <h4 className="font-semibold text-secondary-900 mb-2">Cultural Ambassadors ($500+)</h4>
                 <p className="text-secondary-600 mb-6">
                   Special thanks to our major donors who enable our largest initiatives
@@ -413,7 +431,7 @@ export default function DonatePage() {
           <CardContent>
             <div className="bg-blue-50 rounded-lg p-6">
               <div className="flex items-start">
-                <CheckCircleIcon className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
+                <CheckCircle className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
                 <div>
                   <p className="text-secondary-700 mb-2">
                     <strong>Camp Alborz is a registered 501(c)(3) non-profit organization.</strong> 
@@ -457,20 +475,33 @@ export default function DonatePage() {
         </div>
 
         {/* Additional Support Options */}
-        <div className="text-center">
-          <h3 className="text-xl font-semibold text-secondary-900 mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center bg-gradient-to-r from-persian-purple/5 to-desert-gold/5 rounded-2xl p-12"
+        >
+          <h3 className="text-3xl font-bold text-midnight mb-6">
             Other Ways to Support
           </h3>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/apply">Join Our Community</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/events">Volunteer at Events</Link>
-            </Button>
+          <p className="text-lg text-neutral-600 mb-8 max-w-2xl mx-auto">
+            Beyond donations, you can support our mission by joining our community and volunteering
+          </p>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Link href="/apply">Join Our Community</Link>
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Link href="/events">Volunteer at Events</Link>
+              </Button>
+            </motion.div>
           </div>
+        </motion.div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

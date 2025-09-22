@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { motion } from "framer-motion";
 
 export default function ApplyPage() {
   const [formData, setFormData] = useState({
@@ -32,17 +33,34 @@ export default function ApplyPage() {
   };
 
   return (
-    <MainLayout>
-      <div className="py-12 max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-secondary-900 mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-saffron via-desert-gold to-persian-purple">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-4xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-midnight bg-clip-text text-transparent"
+          >
             Join Camp Alborz
-          </h1>
-          <p className="text-lg text-secondary-600">
-            We&apos;re excited to learn about you and how you&apos;d like to contribute to our community
-          </p>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed"
+          >
+            We're excited to learn about you and how you'd like to contribute to our community
+          </motion.p>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Application Form */}
         <Card>
@@ -175,11 +193,17 @@ export default function ApplyPage() {
 
               {/* Submit Button */}
               <div className="pt-4">
-                <Button type="submit" size="lg" className="w-full">
-                  Submit Application
-                </Button>
-                <p className="text-sm text-secondary-600 mt-2 text-center">
-                  We&apos;ll review your application and get back to you within a week
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg"
+                  >
+                    Submit Application
+                  </Button>
+                </motion.div>
+                <p className="text-sm text-neutral-600 mt-4 text-center">
+                  We'll review your application and get back to you within a week
                 </p>
               </div>
             </form>
@@ -223,7 +247,8 @@ export default function ApplyPage() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

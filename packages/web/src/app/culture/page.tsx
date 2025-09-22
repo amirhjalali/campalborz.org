@@ -1,46 +1,47 @@
 "use client";
 
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { 
-  BookOpenIcon,
-  MusicalNoteIcon,
-  AcademicCapIcon,
-  SparklesIcon,
-  GlobeAltIcon,
-  HeartIcon,
-  UserGroupIcon,
-  PaintBrushIcon
-} from "@heroicons/react/24/outline";
+  BookOpen,
+  Music,
+  GraduationCap,
+  Sparkles,
+  Globe,
+  Heart,
+  Users,
+  Palette
+} from "lucide-react";
 
 const culturalElements = [
   {
     title: "Persian Poetry",
     description: "Explore the works of Rumi, Hafez, and contemporary Persian poets",
-    icon: BookOpenIcon,
+    icon: BookOpen,
     activities: ["Poetry readings", "Calligraphy workshops", "Translation circles"],
     color: "bg-purple-100 text-purple-600"
   },
   {
     title: "Traditional Music",
     description: "Experience the rich musical heritage of Iran",
-    icon: MusicalNoteIcon,
+    icon: Music,
     activities: ["Tar and setar performances", "Folk singing", "Music appreciation"],
     color: "bg-blue-100 text-blue-600"
   },
   {
     title: "Persian Cuisine",
     description: "Learn about traditional cooking and food culture",
-    icon: SparklesIcon,
+    icon: Sparkles,
     activities: ["Cooking classes", "Tea ceremonies", "Spice workshops"],
     color: "bg-green-100 text-green-600"
   },
   {
     title: "Art & Crafts",
     description: "Traditional Persian arts and contemporary interpretations",
-    icon: PaintBrushIcon,
+    icon: Palette,
     activities: ["Miniature painting", "Carpet weaving", "Metalwork"],
     color: "bg-orange-100 text-orange-600"
   }
@@ -90,19 +91,19 @@ const culturalValues = [
     title: "Hospitality (Mehmān-navāzī)",
     description: "The Persian tradition of welcoming guests with warmth and generosity",
     example: "Our camp opens its doors to all, offering tea and conversation to any visitor",
-    icon: HeartIcon
+    icon: Heart
   },
   {
     title: "Respect for Elders",
     description: "Honoring the wisdom and experience of our community elders",
     example: "We seek guidance from experienced burners and Persian cultural experts",
-    icon: UserGroupIcon
+    icon: Users
   },
   {
     title: "Education & Learning",
     description: "The high value placed on knowledge, wisdom, and intellectual growth",
     example: "Our workshops and discussions encourage continuous learning and curiosity",
-    icon: AcademicCapIcon
+    icon: GraduationCap
   },
   {
     title: "Artistic Expression",
@@ -170,18 +171,35 @@ const learningResources = [
 
 export default function CulturePage() {
   return (
-    <MainLayout>
-      <div className="py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-persian-purple via-saffron to-desert-gold">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-midnight bg-clip-text text-transparent"
+          >
             Persian Culture & Heritage
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed"
+          >
             Discover the rich traditions, values, and artistic heritage of Persian culture 
             through immersive experiences and community learning
-          </p>
+          </motion.p>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Cultural Elements Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -377,19 +395,19 @@ export default function CulturePage() {
                 <h4 className="font-semibold text-secondary-900 mb-3">How We Do It</h4>
                 <ul className="space-y-2 text-secondary-700">
                   <li className="flex items-start">
-                    <GlobeAltIcon className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
+                    <Globe className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
                     Welcoming people of all backgrounds to explore Persian culture
                   </li>
                   <li className="flex items-start">
-                    <UserGroupIcon className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
+                    <Users className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
                     Creating inclusive spaces for cultural dialogue and learning
                   </li>
                   <li className="flex items-start">
-                    <BookOpenIcon className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
+                    <BookOpen className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
                     Sharing stories, traditions, and values through interactive experiences
                   </li>
                   <li className="flex items-start">
-                    <HeartIcon className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
+                    <Heart className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0 mt-0.5" />
                     Building lasting friendships across cultural boundaries
                   </li>
                 </ul>
@@ -399,24 +417,34 @@ export default function CulturePage() {
         </Card>
 
         {/* Call to Action */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center bg-gradient-to-r from-persian-purple/5 to-saffron/5 rounded-2xl p-12"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-6">
             Explore Persian Culture With Us
           </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             Whether you have Persian heritage or are simply curious about the culture, 
             you're welcome to join our learning community and cultural celebrations.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/events">Attend Cultural Events</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/apply">Join Our Community</Link>
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Link href="/events">Attend Cultural Events</Link>
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Link href="/apply">Join Our Community</Link>
+              </Button>
+            </motion.div>
           </div>
+        </motion.div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

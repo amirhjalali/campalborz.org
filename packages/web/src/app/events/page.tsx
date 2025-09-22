@@ -1,19 +1,20 @@
 "use client";
 
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { 
-  CalendarDaysIcon,
-  ClockIcon,
-  MapPinIcon,
-  UserGroupIcon,
-  WrenchScrewdriverIcon,
-  AcademicCapIcon,
-  MusicalNoteIcon,
-  HeartIcon
-} from "@heroicons/react/24/outline";
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  Wrench,
+  GraduationCap,
+  Music,
+  Heart
+} from "lucide-react";
 
 const upcomingEvents = [
   {
@@ -26,7 +27,7 @@ const upcomingEvents = [
     description: "Join us for a intensive weekend of building our 2024 art installation. All skill levels welcome!",
     attendees: 25,
     maxAttendees: 30,
-    icon: WrenchScrewdriverIcon,
+    icon: Wrench,
     color: "bg-orange-100 text-orange-600"
   },
   {
@@ -39,7 +40,7 @@ const upcomingEvents = [
     description: "Celebrate Nowruz with traditional Persian food, music, and poetry. Open to all community members.",
     attendees: 45,
     maxAttendees: 60,
-    icon: HeartIcon,
+    icon: Heart,
     color: "bg-purple-100 text-purple-600"
   },
   {
@@ -52,7 +53,7 @@ const upcomingEvents = [
     description: "Annual fundraising event with silent auction and Persian cuisine to support our 2024 burn.",
     attendees: 38,
     maxAttendees: 50,
-    icon: HeartIcon,
+    icon: Heart,
     color: "bg-green-100 text-green-600"
   },
   {
@@ -65,7 +66,7 @@ const upcomingEvents = [
     description: "Essential prep for new burners: packing lists, survival tips, and camp expectations.",
     attendees: 12,
     maxAttendees: 20,
-    icon: AcademicCapIcon,
+    icon: GraduationCap,
     color: "bg-blue-100 text-blue-600"
   }
 ];
@@ -74,30 +75,30 @@ const eventTypes = [
   {
     name: "Art Builds",
     description: "Collaborative construction of our installations",
-    icon: WrenchScrewdriverIcon,
+    icon: Wrench,
     count: 8,
-    color: "bg-orange-100 text-orange-600"
+    color: "bg-saffron/10 text-saffron"
   },
   {
     name: "Cultural Events",
     description: "Persian celebrations and cultural exchanges",
-    icon: HeartIcon,
+    icon: Heart,
     count: 6,
-    color: "bg-purple-100 text-purple-600"
+    color: "bg-persian-purple/10 text-persian-purple"
   },
   {
     name: "Workshops",
     description: "Educational sessions and skill sharing",
-    icon: AcademicCapIcon,
+    icon: GraduationCap,
     count: 12,
-    color: "bg-blue-100 text-blue-600"
+    color: "bg-desert-gold/10 text-desert-gold"
   },
   {
     name: "Social Gatherings",
     description: "Community bonding and networking events",
-    icon: UserGroupIcon,
+    icon: Users,
     count: 15,
-    color: "bg-green-100 text-green-600"
+    color: "bg-midnight/10 text-midnight"
   }
 ];
 
@@ -138,40 +139,78 @@ const burningManSchedule = [
 
 export default function EventsPage() {
   return (
-    <MainLayout>
-      <div className="py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-persian-purple via-midnight to-desert-gold">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-6xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-desert-gold bg-clip-text text-transparent"
+          >
             Camp Events & Activities
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed"
+          >
             Join us throughout the year for art builds, cultural celebrations, 
             workshops, and community gatherings
-          </p>
+          </motion.p>
         </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{/* Rest of content goes here */}
 
         {/* Event Types Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {eventTypes.map((type) => (
-            <Card key={type.name}>
-              <CardHeader>
-                <div className="flex items-center">
-                  <div className={`p-2 rounded-lg ${type.color} mr-3`}>
-                    <type.icon className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{type.name}</CardTitle>
-                    <div className="text-sm text-secondary-500">{type.count} events yearly</div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-secondary-600 text-sm">{type.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mb-20"
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-4">Event Categories</h2>
+            <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+              Discover the diverse range of experiences we offer year-round
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {eventTypes.map((type, index) => (
+              <motion.div
+                key={type.name}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              >
+                <Card className="h-full border-2 border-transparent hover:border-persian-purple/20 hover:shadow-xl transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center">
+                      <div className={`p-3 rounded-xl ${type.color} mr-4`}>
+                        <type.icon className="h-7 w-7" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl font-bold text-midnight">{type.name}</CardTitle>
+                        <div className="text-sm text-persian-purple font-medium">{type.count} events yearly</div>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-neutral-600">{type.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Upcoming Events */}
         <div className="mb-16">
@@ -205,19 +244,19 @@ export default function EventsPage() {
                 <CardContent>
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center text-secondary-600">
-                      <CalendarDaysIcon className="h-4 w-4 mr-2" />
+                      <Calendar className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.date}</span>
                     </div>
                     <div className="flex items-center text-secondary-600">
-                      <ClockIcon className="h-4 w-4 mr-2" />
+                      <Clock className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.time}</span>
                     </div>
                     <div className="flex items-center text-secondary-600">
-                      <MapPinIcon className="h-4 w-4 mr-2" />
+                      <MapPin className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.location}</span>
                     </div>
                     <div className="flex items-center text-secondary-600">
-                      <UserGroupIcon className="h-4 w-4 mr-2" />
+                      <Users className="h-4 w-4 mr-2" />
                       <span className="text-sm">{event.attendees}/{event.maxAttendees} attending</span>
                     </div>
                   </div>
@@ -260,7 +299,7 @@ export default function EventsPage() {
                     {day.events.map((event, index) => (
                       <div key={index} className="border-l-2 border-secondary-200 pl-4">
                         <div className="flex items-center mb-2">
-                          <ClockIcon className="h-4 w-4 text-primary-600 mr-2" />
+                          <Clock className="h-4 w-4 text-primary-600 mr-2" />
                           <span className="text-sm font-medium text-primary-600">{event.time}</span>
                         </div>
                         <h4 className="font-semibold text-secondary-900 mb-1">{event.title}</h4>
@@ -328,24 +367,34 @@ export default function EventsPage() {
         </Card>
 
         {/* Call to Action */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center bg-gradient-to-r from-persian-purple/5 to-saffron/5 rounded-2xl p-12"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-6">
             Join Our Next Event
           </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             New to Camp Alborz? Attending an event is the perfect way to meet our 
             community and see if we're a good fit for each other.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/apply">Join as Member</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/about">Learn More About Us</Link>
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Link href="/apply">Join as Member</Link>
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Link href="/about">Learn More About Us</Link>
+              </Button>
+            </motion.div>
           </div>
+        </motion.div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

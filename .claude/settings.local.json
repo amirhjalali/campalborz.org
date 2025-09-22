@@ -26,7 +26,8 @@
       "Bash(taskkill:*)",
       "WebFetch(domain:www.instagram.com)",
       "WebFetch(domain:ethereum.org)",
-      "Bash(npx create-next-app:*)"
+      "Bash(npx create-next-app:*)",
+      "WebFetch(domain:www.amirhjalali.com)"
     ],
     "deny": [],
     "ask": []

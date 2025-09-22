@@ -1,176 +1,282 @@
-"use client";
+'use client';
 
-import { MainLayout } from "@/components/layout/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import Link from "next/link";
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Navigation } from '../../components/navigation';
+import { Mountain, Heart, Users, Globe, Award, Calendar, ArrowRight } from 'lucide-react';
+
+const values = [
+  {
+    icon: Heart,
+    title: 'Radical Hospitality',
+    description: 'Persian culture meets playa spirit - everyone is welcome at our tea house.',
+    gradient: 'from-persian-purple to-persian-violet',
+  },
+  {
+    icon: Users,
+    title: 'Community First',
+    description: 'Building lasting bonds that extend far beyond Black Rock City.',
+    gradient: 'from-desert-gold to-saffron',
+  },
+  {
+    icon: Globe,
+    title: 'Cultural Bridge',
+    description: 'Connecting East and West through art, food, and shared experiences.',
+    gradient: 'from-persian-violet to-pink-500',
+  },
+];
+
+const milestones = [
+  { year: '2008', event: 'Camp Alborz founded by Persian burners' },
+  { year: '2012', event: 'First major art installation: Persian Garden' },
+  { year: '2016', event: 'Became official 501(c)(3) non-profit' },
+  { year: '2020', event: 'Virtual Burns during pandemic' },
+  { year: '2023', event: 'HOMA Fire Sculpture debut' },
+  { year: '2024', event: '500+ members worldwide' },
+];
+
+const team = [
+  { name: 'Amir Jalali', role: 'Founder & Camp Lead', bio: 'Bringing Persian hospitality to the playa since 2008' },
+  { name: 'Maryam Hosseini', role: 'Art Director', bio: 'Leading our creative vision and art installations' },
+  { name: 'David Chen', role: 'Operations Lead', bio: 'Making the impossible possible, year after year' },
+  { name: 'Sara Mohammadi', role: 'Community Manager', bio: 'Fostering connections that last a lifetime' },
+];
 
 export default function AboutPage() {
   return (
-    <MainLayout>
-      <div className="py-12">
+    <>
+      <Navigation />
+      <main className="min-h-screen bg-gradient-to-b from-neutral-50 to-white dark:from-midnight-dark dark:to-midnight">
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
-            About Camp Alborz
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
-            A celebration of Persian culture, community, and creativity in the heart of Black Rock City
-          </p>
-        </div>
+        <section className="relative pt-32 pb-16 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-persian-purple/10 via-transparent to-desert-gold/10" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          >
+            <div className="text-center">
+              <h1 className="text-5xl md:text-6xl font-display font-bold text-neutral-900 dark:text-white mb-6">
+                About Camp Alborz
+              </h1>
+              <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
+                A celebration of Persian culture, community, and creativity in the heart of Black Rock City
+              </p>
+            </div>
+            
+            {/* Mountain Icon */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="flex justify-center mt-8"
+            >
+              <div className="p-4 bg-gradient-to-br from-persian-purple to-persian-violet rounded-full">
+                <Mountain className="h-12 w-12 text-white" />
+              </div>
+            </motion.div>
+          </motion.div>
+        </section>
 
         {/* Mission Statement */}
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle as="h2">Our Mission</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-lg text-secondary-700 mb-4">
-              Camp Alborz brings together the rich traditions of Persian culture with the transformative 
-              spirit of Burning Man. We create a space where ancient wisdom meets radical self-expression, 
-              fostering community, creativity, and cultural exchange.
-            </p>
-            <p className="text-lg text-secondary-700">
-              Named after Mount Alborz, the highest peak in Iran, our camp stands as a beacon of 
-              Persian heritage while embracing the diversity and inclusivity that makes the Burning Man 
-              community so special.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Values Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle>Community First</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                We believe in the power of community to transform lives and create lasting bonds 
-                that extend far beyond the playa.
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-white dark:bg-midnight-light rounded-2xl p-8 md:p-12 shadow-lg"
+            >
+              <h2 className="text-3xl font-display font-bold text-neutral-900 dark:text-white mb-6">
+                Our Mission
+              </h2>
+              <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-4">
+                Camp Alborz brings together the rich traditions of Persian culture with the transformative 
+                spirit of Burning Man. We create a space where ancient wisdom meets radical self-expression, 
+                fostering community, creativity, and cultural exchange.
               </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Cultural Bridge</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                We serve as a bridge between Persian culture and the global Burning Man community, 
-                sharing our heritage while learning from others.
+              <p className="text-lg text-neutral-700 dark:text-neutral-300">
+                Named after Mount Alborz, the highest peak in Iran, our camp stands as a beacon of 
+                Persian heritage while embracing the diversity and inclusivity that makes the Burning Man 
+                community so special.
               </p>
-            </CardContent>
-          </Card>
+            </motion.div>
+          </div>
+        </section>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Radical Inclusion</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                Everyone is welcome in our camp, regardless of background, experience, or 
-                connection to Persian culture.
+        {/* Values */}
+        <section className="py-16 bg-neutral-50 dark:bg-midnight-dark">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+                Our Values
+              </h2>
+              <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                The principles that guide everything we do
               </p>
-            </CardContent>
-          </Card>
+            </motion.div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Art & Expression</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                We encourage creative expression through art, music, poetry, and performance, 
-                blending traditional and contemporary forms.
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {values.map((value, index) => (
+                <motion.div
+                  key={value.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group relative bg-white dark:bg-midnight rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${value.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
+                  <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${value.gradient} mb-4`}>
+                    <value.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-neutral-600 dark:text-neutral-400">
+                    {value.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Timeline */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+                Our Journey
+              </h2>
+              <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                15+ years of magic in the desert
               </p>
-            </CardContent>
-          </Card>
+            </motion.div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Gifting Economy</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                We practice the gift economy through sharing food, art, knowledge, and experiences 
-                without expectation of return.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Leave No Trace</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-secondary-600">
-                We are committed to environmental stewardship and leaving the playa better 
-                than we found it.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* History Section */}
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle as="h2">Our History</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-2">2016 - The Beginning</h3>
-                <p className="text-secondary-700">
-                  Camp Alborz was founded by a small group of Persian-American friends who wanted to 
-                  share their culture with the Burning Man community while creating a home away from home.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-2">2017-2019 - Growing Community</h3>
-                <p className="text-secondary-700">
-                  Our camp grew from 15 to 40 members, establishing traditions like Persian tea ceremonies, 
-                  poetry nights, and collaborative art projects that blend Eastern and Western aesthetics.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-2">2020-2021 - Virtual Connection</h3>
-                <p className="text-secondary-700">
-                  During the pandemic, we maintained our community through virtual events, online 
-                  art collaborations, and regional gatherings, proving that our bonds transcend physical space.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-2">2022-Present - Renaissance</h3>
-                <p className="text-secondary-700">
-                  Returning to the playa stronger than ever, we&apos;ve expanded our offerings to include 
-                  workshops on Persian crafts, cooking classes, and larger-scale art installations.
-                </p>
+            <div className="relative">
+              {/* Timeline line */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-persian-purple to-desert-gold" />
+              
+              {/* Milestones */}
+              <div className="space-y-12">
+                {milestones.map((milestone, index) => (
+                  <motion.div
+                    key={milestone.year}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}
+                  >
+                    <div className="flex-1" />
+                    <div className="w-4 h-4 bg-persian-purple rounded-full relative z-10" />
+                    <div className="flex-1">
+                      <div className={`bg-white dark:bg-midnight-light rounded-lg p-4 shadow-lg ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
+                        <div className="text-persian-purple font-bold mb-1">{milestone.year}</div>
+                        <div className="text-neutral-700 dark:text-neutral-300">{milestone.event}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Call to Action */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-            Join Our Story
-          </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
-            Whether you&apos;re Persian, curious about the culture, or simply looking for a 
-            welcoming community, we&apos;d love to have you as part of our camp family.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/apply">Apply to Join</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/members">Meet Our Members</Link>
-            </Button>
           </div>
-        </div>
-      </div>
-    </MainLayout>
+        </section>
+
+        {/* Team */}
+        <section className="py-16 bg-neutral-50 dark:bg-midnight-dark">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+                Our Leadership
+              </h2>
+              <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                The passionate people who make Camp Alborz possible
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {team.map((member, index) => (
+                <motion.div
+                  key={member.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white dark:bg-midnight rounded-lg p-6 text-center shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <div className="w-20 h-20 bg-gradient-to-br from-persian-purple to-persian-violet rounded-full mx-auto mb-4" />
+                  <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">{member.name}</h3>
+                  <p className="text-sm text-persian-purple dark:text-persian-light mb-3">{member.role}</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">{member.bio}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 501(c)(3) Section */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-br from-persian-purple/10 to-desert-gold/10 rounded-2xl p-8 md:p-12"
+            >
+              <div className="flex items-center mb-6">
+                <Award className="h-8 w-8 text-persian-purple mr-3" />
+                <h2 className="text-3xl font-display font-bold text-neutral-900 dark:text-white">
+                  501(c)(3) Non-Profit
+                </h2>
+              </div>
+              <p className="text-lg text-neutral-700 dark:text-neutral-300 mb-6">
+                Camp Alborz is a registered 501(c)(3) non-profit organization dedicated to promoting 
+                cultural exchange, artistic expression, and community building. Your donations are 
+                tax-deductible and directly support our mission.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/donate"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                >
+                  Support Our Mission
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+                <Link
+                  href="/apply"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-persian-purple hover:bg-persian-purple/10 transition-all duration-300"
+                >
+                  Join Our Camp
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

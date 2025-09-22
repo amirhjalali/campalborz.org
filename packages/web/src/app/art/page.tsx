@@ -1,415 +1,277 @@
-"use client";
+'use client';
 
-import { MainLayout } from "@/components/layout/MainLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import Link from "next/link";
-import { 
-  PhotoIcon,
-  FireIcon,
-  SparklesIcon,
-  EyeIcon,
-  UserGroupIcon,
-  CalendarDaysIcon,
-  MapPinIcon,
-  AcademicCapIcon
-} from "@heroicons/react/24/outline";
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Navigation } from '../../components/navigation';
+import { Palette, Flame, Sparkles, Users, Calendar, MapPin, Eye, ArrowRight } from 'lucide-react';
 
 const featuredInstallations = [
   {
     id: 1,
-    title: "Mount Alborz Rising",
-    year: "2023",
-    artist: "Camp Alborz Collective",
-    description: "A 20-foot tall interactive sculpture representing the highest peak in Iran, featuring LED lights that respond to music and movement.",
-    image: "/api/placeholder/400/300",
-    location: "7:30 & Esplanade",
-    participants: "15 artists",
-    materials: "Steel, LED strips, Arduino sensors",
-    category: "Large Installation",
-    status: "Completed",
-    impact: "Visited by 5,000+ burners"
+    title: 'HOMA Fire Sculpture',
+    year: '2023',
+    artist: 'Camp Alborz Collective',
+    description: 'A 20-foot tall interactive fire sculpture representing the sacred Persian fire altar, featuring programmable LED patterns that respond to music and movement.',
+    location: '7:30 & Esplanade',
+    participants: '15 artists',
+    impact: 'Visited by 5,000+ burners',
+    gradient: 'from-persian-purple to-desert-gold',
   },
   {
     id: 2,
-    title: "Persian Garden Oasis",
-    year: "2022",
-    artist: "Maryam Hosseini & David Chen",
-    description: "An immersive garden space featuring traditional Persian architecture elements and interactive water features.",
-    image: "/api/placeholder/400/300",
-    location: "Camp Alborz",
-    participants: "8 artists",
-    materials: "Recycled wood, mirrors, solar pumps",
-    category: "Environmental Art",
-    status: "Archived",
-    impact: "Featured in Burning Man Journal"
+    title: 'DAMAVAND Project',
+    year: '2022',
+    artist: 'International Collaboration',
+    description: 'An immersive installation inspired by Mount Damavand, featuring mirrors and light to create an infinite mountain range experience.',
+    location: 'Camp Alborz',
+    participants: '8 artists',
+    impact: 'Featured in Burning Man Journal',
+    gradient: 'from-desert-gold to-saffron',
   },
   {
     id: 3,
-    title: "Calligraphy Wind Chimes",
-    year: "2024",
-    artist: "Sara Mohammadi",
-    description: "Large-scale wind chimes featuring Persian poetry that creates both visual and auditory art as desert winds pass through.",
-    image: "/api/placeholder/400/300",
-    location: "In Development",
-    participants: "12 artists",
-    materials: "Copper, aluminum, laser-cut steel",
-    category: "Sound Art",
-    status: "In Progress",
-    impact: "Expected completion July 2024"
-  }
+    title: 'Persian Garden Oasis',
+    year: '2024',
+    artist: 'Community Build',
+    description: 'A living art piece featuring traditional Persian garden elements with interactive water features and aromatic plants.',
+    location: 'In Development',
+    participants: '12 artists',
+    impact: 'Coming to BM 2024',
+    gradient: 'from-persian-violet to-pink-500',
+  },
 ];
 
 const artCategories = [
   {
-    name: "Large Installations",
+    name: 'Fire Art',
     count: 8,
-    description: "Monumental pieces that define our camp's visual presence",
-    icon: FireIcon,
-    color: "bg-red-100 text-red-600"
+    icon: Flame,
+    gradient: 'from-orange-500 to-red-600',
   },
   {
-    name: "Interactive Art",
+    name: 'Interactive',
     count: 12,
-    description: "Pieces that invite participation and engagement",
-    icon: SparklesIcon,
-    color: "bg-purple-100 text-purple-600"
+    icon: Sparkles,
+    gradient: 'from-purple-500 to-pink-600',
   },
   {
-    name: "Cultural Expressions",
+    name: 'Cultural Heritage',
     count: 15,
-    description: "Art celebrating Persian heritage and traditions",
-    icon: AcademicCapIcon,
-    color: "bg-blue-100 text-blue-600"
+    icon: Palette,
+    gradient: 'from-blue-500 to-cyan-600',
   },
   {
-    name: "Community Collaborations",
+    name: 'Community',
     count: 20,
-    description: "Projects involving multiple camp members",
-    icon: UserGroupIcon,
-    color: "bg-green-100 text-green-600"
-  }
-];
-
-const artworkGallery = [
-  {
-    title: "Mirrors of Isfahan",
-    artist: "Collective Work",
-    year: "2021",
-    type: "Installation",
-    description: "Mirror work inspired by traditional Persian architecture"
+    icon: Users,
+    gradient: 'from-green-500 to-emerald-600',
   },
-  {
-    title: "Desert Roses",
-    artist: "Amir Jalali",
-    year: "2020",
-    type: "Sculpture",
-    description: "Steel sculptures representing the resilience of Persian culture"
-  },
-  {
-    title: "Poetry in Motion",
-    artist: "Maryam Hosseini",
-    year: "2023",
-    type: "Performance Art",
-    description: "Live calligraphy combined with spoken word poetry"
-  },
-  {
-    title: "Nomad's Journey",
-    artist: "David Chen",
-    year: "2022",
-    type: "Mixed Media",
-    description: "Interactive map showing historical Persian trade routes"
-  },
-  {
-    title: "Rumi's Wisdom",
-    artist: "Sara Mohammadi",
-    year: "2021",
-    type: "Typography",
-    description: "Large-scale installation of illuminated Rumi quotes"
-  },
-  {
-    title: "Persepolis Dreams",
-    artist: "Community Build",
-    year: "2023",
-    type: "Architecture",
-    description: "Temporary structures inspired by ancient Persian palaces"
-  }
-];
-
-const artProcess = [
-  {
-    phase: "Ideation",
-    description: "Community brainstorming sessions to develop concepts",
-    timeline: "November - December"
-  },
-  {
-    phase: "Design",
-    description: "Detailed planning, sketches, and 3D modeling",
-    timeline: "January - February"
-  },
-  {
-    phase: "Fundraising",
-    description: "Securing materials and funding for the project",
-    timeline: "February - March"
-  },
-  {
-    phase: "Build Season",
-    description: "Collaborative construction at our workshop space",
-    timeline: "April - July"
-  },
-  {
-    phase: "Installation",
-    description: "Setting up the art on the playa during Burning Man",
-    timeline: "August"
-  },
-  {
-    phase: "Legacy",
-    description: "Documentation, archiving, and planning future iterations",
-    timeline: "September - October"
-  }
 ];
 
 export default function ArtPage() {
   return (
-    <MainLayout>
-      <div className="py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-secondary-900 mb-6">
-            Art & Installations
-          </h1>
-          <p className="text-xl text-secondary-600 max-w-3xl mx-auto">
-            Explore our collaborative artistic journey, blending Persian cultural heritage 
-            with contemporary desert art and community creativity
-          </p>
-        </div>
-
-        {/* Art Categories Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {artCategories.map((category) => (
-            <Card key={category.name}>
-              <CardHeader>
-                <div className="flex items-center">
-                  <div className={`p-2 rounded-lg ${category.color} mr-3`}>
-                    <category.icon className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{category.name}</CardTitle>
-                    <div className="text-sm text-secondary-500">{category.count} pieces</div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-secondary-600 text-sm">{category.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Featured Installations */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-              Featured Installations
-            </h2>
-            <p className="text-lg text-secondary-600">
-              Our most significant artistic contributions to the playa
+    <>
+      <Navigation />
+      <main className="min-h-screen bg-gradient-to-b from-neutral-50 to-white dark:from-midnight-dark dark:to-midnight">
+        {/* Hero Section */}
+        <section className="relative pt-32 pb-16 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-persian-purple/10 via-transparent to-desert-gold/10" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          >
+            <h1 className="text-5xl md:text-6xl font-display font-bold text-neutral-900 dark:text-white mb-6">
+              Art & Culture
+            </h1>
+            <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
+              Where Persian artistic heritage meets radical self-expression, creating transformative experiences through collaborative art
             </p>
-          </div>
+          </motion.div>
+        </section>
 
-          <div className="space-y-8">
-            {featuredInstallations.map((installation, index) => (
-              <Card key={installation.id} className="overflow-hidden">
-                <div className={`grid grid-cols-1 lg:grid-cols-2 gap-0 ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                  <div className={`bg-secondary-100 flex items-center justify-center p-8 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                    <div className="w-full h-64 bg-secondary-300 rounded-lg flex items-center justify-center">
-                      <PhotoIcon className="h-16 w-16 text-secondary-500" />
-                      <span className="ml-3 text-secondary-600">Installation Photo</span>
-                    </div>
+        {/* Art Categories */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {artCategories.map((category, index) => (
+                <motion.div
+                  key={category.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group relative bg-white dark:bg-midnight-light rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
+                  <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${category.gradient} mb-4`}>
+                    <category.icon className="h-6 w-6 text-white" />
                   </div>
-                  <div className={`p-8 ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-secondary-900 mb-2">{installation.title}</h3>
-                        <p className="text-primary-600 font-medium">{installation.artist} • {installation.year}</p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        installation.status === 'Completed' ? 'bg-green-100 text-green-600' :
-                        installation.status === 'In Progress' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-secondary-100 text-secondary-600'
-                      }`}>
-                        {installation.status}
-                      </span>
-                    </div>
-                    
-                    <p className="text-secondary-700 mb-6">{installation.description}</p>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                      <div className="flex items-center text-secondary-600">
-                        <MapPinIcon className="h-4 w-4 mr-2 text-primary-600" />
-                        <span className="text-sm">{installation.location}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <UserGroupIcon className="h-4 w-4 mr-2 text-primary-600" />
-                        <span className="text-sm">{installation.participants}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <span className="text-sm"><strong>Materials:</strong> {installation.materials}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <EyeIcon className="h-4 w-4 mr-2 text-primary-600" />
-                        <span className="text-sm">{installation.impact}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <span className="inline-block px-2 py-1 bg-primary-100 text-primary-600 rounded text-xs font-medium mr-2">
-                        {installation.category}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Gallery Grid */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-              Community Art Gallery
-            </h2>
-            <p className="text-lg text-secondary-600">
-              A showcase of artwork created by our talented community members
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {artworkGallery.map((artwork, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-shadow">
-                <div className="aspect-square bg-secondary-100 flex items-center justify-center">
-                  <PhotoIcon className="h-12 w-12 text-secondary-400 group-hover:text-primary-500 transition-colors" />
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-lg">{artwork.title}</CardTitle>
-                  <p className="text-primary-600 font-medium">{artwork.artist}</p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-secondary-600 text-sm mb-3">{artwork.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-secondary-500">{artwork.year}</span>
-                    <span className="px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs">
-                      {artwork.type}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Art Creation Process */}
-        <Card className="mb-16">
-          <CardHeader>
-            <CardTitle as="h2">Our Art Creation Process</CardTitle>
-            <p className="text-secondary-600">
-              How we collaborate to bring artistic visions to life
-            </p>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {artProcess.map((phase, index) => (
-                <div key={phase.phase} className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">
-                      {index + 1}
-                    </div>
-                    <h4 className="font-semibold text-secondary-900">{phase.phase}</h4>
-                  </div>
-                  <p className="text-secondary-700 mb-2">{phase.description}</p>
-                  <div className="flex items-center text-primary-600">
-                    <CalendarDaysIcon className="h-4 w-4 mr-1" />
-                    <span className="text-sm font-medium">{phase.timeline}</span>
-                  </div>
-                </div>
+                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
+                    {category.name}
+                  </h3>
+                  <p className="text-3xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent">
+                    {category.count}
+                  </p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">Projects</p>
+                </motion.div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Get Involved */}
-        <Card className="mb-16">
-          <CardHeader>
-            <CardTitle as="h2">Get Involved in Camp Art</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-semibold text-secondary-900 mb-3">For Artists</h4>
-                <ul className="space-y-2 text-secondary-700">
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Submit your art proposals for community consideration
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Lead workshops to teach your artistic skills
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Collaborate with other artists on larger installations
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Access to camp art budget and workshop space
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-secondary-900 mb-3">For Builders & Supporters</h4>
-                <ul className="space-y-2 text-secondary-700">
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Join weekend art build sessions (no experience needed)
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Contribute materials, tools, or funding for projects
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Help with transportation and playa installation
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary-600 mr-2">•</span>
-                    Document the art creation process and final pieces
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Call to Action */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-            Create Art With Us
-          </h2>
-          <p className="text-lg text-secondary-600 mb-8 max-w-2xl mx-auto">
-            Whether you're an experienced artist or just curious about creating, 
-            there's a place for you in our artistic community.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link href="/apply">Join Our Artists</Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/events">Attend Art Build</Link>
-            </Button>
           </div>
-        </div>
-      </div>
-    </MainLayout>
+        </section>
+
+        {/* Featured Installations */}
+        <section className="py-16 bg-neutral-50 dark:bg-midnight-dark">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+                Featured Installations
+              </h2>
+              <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                Our signature artistic contributions to Black Rock City
+              </p>
+            </motion.div>
+
+            <div className="space-y-8">
+              {featuredInstallations.map((installation, index) => (
+                <motion.div
+                  key={installation.id}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="group relative bg-white dark:bg-midnight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${installation.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                  <div className="p-8">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                          {installation.title}
+                        </h3>
+                        <p className="text-persian-purple dark:text-persian-light font-semibold mb-4">
+                          {installation.artist} • {installation.year}
+                        </p>
+                        <p className="text-neutral-700 dark:text-neutral-300 mb-6">
+                          {installation.description}
+                        </p>
+                        <div className="flex flex-wrap gap-4 text-sm">
+                          <div className="flex items-center text-neutral-600 dark:text-neutral-400">
+                            <MapPin className="h-4 w-4 mr-2 text-persian-purple" />
+                            {installation.location}
+                          </div>
+                          <div className="flex items-center text-neutral-600 dark:text-neutral-400">
+                            <Users className="h-4 w-4 mr-2 text-persian-purple" />
+                            {installation.participants}
+                          </div>
+                          <div className="flex items-center text-neutral-600 dark:text-neutral-400">
+                            <Eye className="h-4 w-4 mr-2 text-persian-purple" />
+                            {installation.impact}
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`h-1 lg:h-auto lg:w-1 bg-gradient-to-b ${installation.gradient}`} />
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Art Process Timeline */}
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+                Our Creative Process
+              </h2>
+              <p className="text-lg text-neutral-600 dark:text-neutral-400">
+                From concept to playa: How we bring art to life
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { phase: 'Ideation', time: 'Nov-Dec', description: 'Community brainstorming and concept development' },
+                { phase: 'Design', time: 'Jan-Feb', description: 'Detailed planning and 3D modeling' },
+                { phase: 'Fundraising', time: 'Feb-Mar', description: 'Securing materials and funding' },
+                { phase: 'Build Season', time: 'Apr-Jul', description: 'Collaborative construction workshops' },
+                { phase: 'Installation', time: 'August', description: 'Setting up on the playa' },
+                { phase: 'Legacy', time: 'Sep-Oct', description: 'Documentation and future planning' },
+              ].map((phase, index) => (
+                <motion.div
+                  key={phase.phase}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="relative"
+                >
+                  <div className="flex items-center mb-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-persian-purple to-persian-violet text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      {index + 1}
+                    </div>
+                    <h4 className="ml-3 font-semibold text-neutral-900 dark:text-white">{phase.phase}</h4>
+                  </div>
+                  <p className="text-neutral-600 dark:text-neutral-400 mb-2 ml-13">{phase.description}</p>
+                  <div className="flex items-center text-persian-purple dark:text-persian-light ml-13">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    <span className="text-sm font-medium">{phase.time}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 bg-gradient-to-br from-persian-purple/10 via-transparent to-desert-gold/10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+          >
+            <h2 className="text-3xl font-bold text-neutral-900 dark:text-white mb-4">
+              Create Art With Us
+            </h2>
+            <p className="text-lg text-neutral-600 dark:text-neutral-400 mb-8">
+              Whether you're an experienced artist or just curious about creating, there's a place for you in our artistic community.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/join"
+                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+              >
+                Join Our Artists
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+              <Link
+                href="/events"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-persian-purple hover:bg-persian-purple/10 transition-all duration-300"
+              >
+                Attend Art Build
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+          </motion.div>
+        </section>
+      </main>
+    </>
   );
 }

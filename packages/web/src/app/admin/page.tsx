@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MainLayout } from "@/components/layout/MainLayout";
+import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MemberManagement } from "@/components/admin/MemberManagement";
@@ -10,70 +10,71 @@ import { DonationManagement } from "@/components/admin/DonationManagement";
 import MediaLibrary from "@/components/admin/MediaLibrary";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
 import { useTenant } from "@/hooks/useTenant";
+import { motion } from "framer-motion";
 import { 
-  UserGroupIcon,
-  DocumentTextIcon,
-  CogIcon,
-  ChartBarIcon,
-  BellIcon,
-  CalendarDaysIcon,
-  PhotoIcon,
-  CurrencyDollarIcon
-} from "@heroicons/react/24/outline";
+  Users,
+  FileText,
+  Settings,
+  BarChart3,
+  Bell,
+  Calendar,
+  Image,
+  DollarSign
+} from "lucide-react";
 
 const adminSections = [
   {
     id: "overview",
     name: "Overview", 
-    icon: ChartBarIcon,
+    icon: BarChart3,
     description: "Dashboard overview and key metrics"
   },
   {
     id: "members",
     name: "Members",
-    icon: UserGroupIcon,
+    icon: Users,
     description: "Manage member applications and profiles"
   },
   {
     id: "content",
     name: "Content",
-    icon: DocumentTextIcon,
+    icon: FileText,
     description: "Manage pages, posts, and site content"
   },
   {
     id: "events",
     name: "Events",
-    icon: CalendarDaysIcon,
+    icon: Calendar,
     description: "Create and manage camp events"
   },
   {
     id: "art",
     name: "Art Gallery",
-    icon: PhotoIcon,
+    icon: Image,
     description: "Manage art portfolio and installations"
   },
   {
     id: "media",
     name: "Media Library",
-    icon: PhotoIcon,
+    icon: Image,
     description: "Manage uploaded files and media assets"
   },
   {
     id: "donations",
     name: "Donations",
-    icon: CurrencyDollarIcon,
+    icon: DollarSign,
     description: "Track donations and financial metrics"
   },
   {
     id: "analytics",
     name: "Analytics",
-    icon: ChartBarIcon,
+    icon: BarChart3,
     description: "View detailed analytics and insights"
   },
   {
     id: "settings",
     name: "Settings",
-    icon: CogIcon,
+    icon: Settings,
     description: "Configure camp settings and preferences"
   }
 ];
@@ -99,22 +100,37 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <MainLayout>
+      <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+        <Navigation />
         <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-white"></div>
         </div>
-      </MainLayout>
+      </div>
     );
   }
 
   if (!tenant) {
     return (
-      <MainLayout>
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold text-secondary-900 mb-4">Admin Access Required</h1>
-          <p className="text-secondary-600">You need admin privileges to access this page.</p>
+      <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+        <Navigation />
+        <div className="text-center py-32 px-4 text-white">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-bold mb-4"
+          >
+            Admin Access Required
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl text-white/80"
+          >
+            You need admin privileges to access this page.
+          </motion.p>
         </div>
-      </MainLayout>
+      </div>
     );
   }
 
@@ -129,7 +145,7 @@ export default function AdminPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium text-gray-600">Total Members</CardTitle>
-                    <UserGroupIcon className="h-4 w-4 text-gray-400" />
+                    <Users className="h-4 w-4 text-gray-400" />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -142,7 +158,7 @@ export default function AdminPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium text-gray-600">Pending Applications</CardTitle>
-                    <BellIcon className="h-4 w-4 text-yellow-400" />
+                    <Bell className="h-4 w-4 text-yellow-400" />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -155,7 +171,7 @@ export default function AdminPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium text-gray-600">Monthly Donations</CardTitle>
-                    <CurrencyDollarIcon className="h-4 w-4 text-green-400" />
+                    <DollarSign className="h-4 w-4 text-green-400" />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -168,7 +184,7 @@ export default function AdminPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium text-gray-600">Page Views</CardTitle>
-                    <ChartBarIcon className="h-4 w-4 text-blue-400" />
+                    <BarChart3 className="h-4 w-4 text-blue-400" />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -211,15 +227,15 @@ export default function AdminPage() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Button onClick={() => setActiveSection("members")} className="justify-start">
-                    <UserGroupIcon className="h-4 w-4 mr-2" />
+                    <Users className="h-4 w-4 mr-2" />
                     Review Applications
                   </Button>
                   <Button onClick={() => setActiveSection("events")} variant="outline" className="justify-start">
-                    <CalendarDaysIcon className="h-4 w-4 mr-2" />
+                    <Calendar className="h-4 w-4 mr-2" />
                     Create Event
                   </Button>
                   <Button onClick={() => setActiveSection("content")} variant="outline" className="justify-start">
-                    <DocumentTextIcon className="h-4 w-4 mr-2" />
+                    <FileText className="h-4 w-4 mr-2" />
                     Edit Content
                   </Button>
                 </div>
@@ -252,7 +268,7 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <DocumentTextIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Content Management System</h3>
                 <p className="text-gray-600 mb-4">
                   The CMS interface will be implemented here, allowing you to:
@@ -278,7 +294,7 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <CalendarDaysIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Event Management System</h3>
                 <p className="text-gray-600 mb-4">
                   The event management interface will be implemented here, allowing you to:
@@ -304,7 +320,7 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <CogIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <Settings className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Settings Panel</h3>
                 <p className="text-gray-600 mb-4">
                   The settings interface will be implemented here, allowing you to:
@@ -334,18 +350,34 @@ export default function AdminPage() {
   };
 
   return (
-    <MainLayout>
-      <div className="py-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-secondary-900 mb-2">
-              Admin Dashboard
-            </h1>
-            <p className="text-lg text-secondary-600">
-              Manage your camp's members, content, and settings
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+      <Navigation />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4 text-center text-white">
+        <div className="max-w-4xl mx-auto">
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-desert-gold bg-clip-text text-transparent"
+          >
+            Admin Dashboard
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed"
+          >
+            Manage your camp's members, content, and settings
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="bg-white pt-20 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
@@ -385,6 +417,6 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
