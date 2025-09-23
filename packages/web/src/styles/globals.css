@@ -1,157 +1,305 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Text:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --persian-purple: 107 70 193;
-    --desert-gold: 245 158 11;
-    --midnight: 30 41 59;
-    --saffron: 252 211 77;
+    /* Playa Dust Earth Tones */
+    --dust-khaki: 196 165 123;
+    --burnt-sienna: 160 82 45;
+    --sage-green: 135 169 107;
+    --desert-sand: 237 201 175;
     
-    --background: 255 255 255;
-    --foreground: 15 23 42;
+    /* Persian Luxury Accents */
+    --persian-emerald: 80 200 120;
+    --royal-gold: 255 215 0;
+    --antique-gold: 212 175 55;
     
+    /* Mystical Colors */
+    --twilight-purple: 93 78 96;
+    --sunrise-coral: 255 107 107;
+    --moonlight-silver: 192 192 192;
+    
+    /* Base Colors */
+    --warm-white: 255 248 240;
+    --desert-night: 44 36 22;
+    --rich-brown: 92 51 23;
+    --dust-grey: 155 155 155;
+    
+    /* Day Mode (Default) - Better Contrast */
+    --background: 255 248 240;
+    --foreground: 44 36 22;
     --card: 255 255 255;
-    --card-foreground: 15 23 42;
-    
-    --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
-    
-    --primary: 107 70 193;
-    --primary-foreground: 248 250 252;
-    
-    --secondary: 245 158 11;
-    --secondary-foreground: 15 23 42;
-    
-    --muted: 241 245 249;
-    --muted-foreground: 100 116 139;
-    
-    --accent: 252 211 77;
-    --accent-foreground: 15 23 42;
-    
-    --destructive: 239 68 68;
-    --destructive-foreground: 248 250 252;
-    
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 107 70 193;
-    
-    --radius: 0.5rem;
+    --card-foreground: 44 36 22;
+    --primary: 160 82 45;
+    --primary-foreground: 255 248 240;
+    --secondary: 212 175 55;
+    --secondary-foreground: 44 36 22;
+    --accent: 80 200 120;
+    --accent-foreground: 44 36 22;
+    --muted: 237 201 175;
+    --muted-foreground: 92 51 23;
+    --border: 196 165 123;
+    --ring: 212 175 55;
+    --radius: 0.75rem;
   }
   
-  .dark {
-    --background: 15 23 42;
-    --foreground: 248 250 252;
-    
-    --card: 30 41 59;
-    --card-foreground: 248 250 252;
-    
-    --popover: 30 41 59;
-    --popover-foreground: 248 250 252;
-    
-    --primary: 139 92 246;
-    --primary-foreground: 248 250 252;
-    
-    --secondary: 251 146 60;
-    --secondary-foreground: 15 23 42;
-    
-    --muted: 51 65 85;
-    --muted-foreground: 148 163 184;
-    
-    --accent: 253 224 138;
-    --accent-foreground: 15 23 42;
-    
-    --destructive: 220 38 38;
-    --destructive-foreground: 248 250 252;
-    
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --ring: 139 92 246;
+  .night-mode {
+    --background: 44 36 22;
+    --foreground: 255 248 240;
+    --card: 93 78 96;
+    --card-foreground: 255 248 240;
+    --primary: 80 200 120;
+    --primary-foreground: 44 36 22;
+    --secondary: 212 175 55;
+    --secondary-foreground: 44 36 22;
+    --accent: 255 215 0;
+    --accent-foreground: 44 36 22;
+    --muted: 93 78 96;
+    --muted-foreground: 192 192 192;
+    --border: 93 78 96;
+    --ring: 80 200 120;
   }
 }
 
 @layer base {
   body {
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "kern" 1, "liga" 1;
+    @apply bg-warm-white text-desert-night;
+    transition: background-color 0.5s ease, color 0.5s ease;
   }
+  
+  .night-mode body {
+    @apply bg-desert-night text-warm-white;
+  }
+  
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight text-desert-night;
+  }
+  
+  .night-mode h1,
+  .night-mode h2,
+  .night-mode h3,
+  .night-mode h4,
+  .night-mode h5,
+  .night-mode h6 {
+    @apply text-warm-white;
+  }
+  
+  p, span, div {
+    @apply text-desert-night;
+  }
+  
+  .night-mode p,
+  .night-mode span,
+  .night-mode div {
+    @apply text-warm-white;
+  }
+  
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .font-body {
+    font-family: 'Crimson Text', serif;
+  }
+  
+  .font-ui {
+    font-family: 'Montserrat', sans-serif;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Desert Dust Effects with Better Layering */
+  .dust-overlay {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(196, 165, 123, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(237, 201, 175, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
   }
   
-  .bg-persian-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236B46C1' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  /* Night Glow Effects */
+  .night-glow {
+    filter: drop-shadow(0 0 20px rgba(80, 200, 120, 0.3));
   }
   
-  .bg-gradient-persian {
-    background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 50%, #A78BFA 100%);
+  .night-mode .night-glow {
+    filter: drop-shadow(0 0 30px rgba(80, 200, 120, 0.5));
   }
   
-  .bg-gradient-desert {
-    background: linear-gradient(135deg, #F59E0B 0%, #FB923C 50%, #FCD34D 100%);
-  }
-  
-  .bg-gradient-hero {
-    background: linear-gradient(135deg, #6B46C1 0%, #F59E0B 100%);
-  }
-  
-  @keyframes float-pattern {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-      opacity: 0.3;
-    }
-    33% {
-      transform: translateY(-10px) rotate(120deg);
-      opacity: 0.5;
-    }
-    66% {
-      transform: translateY(10px) rotate(240deg);
-      opacity: 0.3;
-    }
-  }
-  
-  .animate-float-pattern {
-    animation: float-pattern 20s ease-in-out infinite;
-  }
-  
-  @keyframes gradient-x {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-  
-  .animate-gradient-x {
-    animation: gradient-x 15s ease infinite;
+  /* Gold Shimmer with Better Contrast */
+  .gold-shimmer {
+    background: linear-gradient(
+      45deg,
+      rgb(160, 82, 45) 0%,
+      rgb(212, 175, 55) 40%,
+      rgb(160, 82, 45) 100%
+    );
     background-size: 200% 200%;
+    animation: shimmer 3s ease-in-out infinite;
   }
   
-  .mask-gradient-to-b {
-    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   
-  .mask-gradient-to-t {
-    mask-image: linear-gradient(to top, black 0%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+  /* Mystical Gradient with Depth */
+  .gradient-mystical {
+    background: linear-gradient(
+      135deg,
+      rgb(93, 78, 96) 0%,
+      rgb(80, 200, 120) 50%,
+      rgb(212, 175, 55) 100%
+    );
+  }
+  
+  /* Desert Gradient - Adjusted for Better Contrast */
+  .gradient-desert {
+    background: linear-gradient(
+      135deg,
+      rgb(237, 201, 175) 0%,
+      rgb(196, 165, 123) 50%,
+      rgb(160, 82, 45) 100%
+    );
+  }
+  
+  /* Dust Particles Animation */
+  @keyframes float-dust {
+    0%, 100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.3;
+    }
+    90% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-100vh) translateX(50px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+  
+  .dust-particle {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background: rgb(var(--dust-khaki));
+    border-radius: 50%;
+    opacity: 0;
+    animation: float-dust 15s linear infinite;
+    pointer-events: none;
+  }
+  
+  /* Luxurious Card with Better Contrast */
+  .luxury-card {
+    @apply bg-white backdrop-blur-sm rounded-xl shadow-lg transition-all duration-300;
+    box-shadow: 0 10px 30px rgba(160, 82, 45, 0.1);
+  }
+  
+  .luxury-card:hover {
+    @apply shadow-2xl -translate-y-1;
+    box-shadow: 0 20px 40px rgba(160, 82, 45, 0.15);
+  }
+  
+  .night-mode .luxury-card {
+    @apply bg-twilight-purple/40 backdrop-blur-sm;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .night-mode .luxury-card:hover {
+    box-shadow: 0 20px 40px rgba(80, 200, 120, 0.2);
+  }
+  
+  /* Text Shadows for Better Readability */
+  .text-shadow-soft {
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  }
+  
+  .night-mode .text-shadow-soft {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  }
+  
+  /* Primary Text Colors with Good Contrast */
+  .text-primary {
+    @apply text-desert-night;
+  }
+  
+  .night-mode .text-primary {
+    @apply text-warm-white;
+  }
+  
+  .text-secondary {
+    @apply text-burnt-sienna;
+  }
+  
+  .night-mode .text-secondary {
+    @apply text-antique-gold;
+  }
+  
+  /* Persian Pattern Overlay (Very Subtle) */
+  .persian-pattern {
+    position: relative;
+  }
+  
+  .persian-pattern::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A0522D' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  
+  /* Mountain Silhouette */
+  .mountain-silhouette {
+    background-image: 
+      linear-gradient(180deg, transparent 60%, rgb(var(--warm-white)) 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,300 L150,180 L300,240 L450,120 L600,200 L750,100 L900,170 L1050,130 L1200,200 L1200,300 Z' fill='%235C3317' opacity='0.2'/%3E%3C/svg%3E");
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  /* Button Styles with Good Contrast */
+  .btn-primary {
+    @apply bg-burnt-sienna text-warm-white hover:bg-antique-gold hover:text-desert-night;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-secondary {
+    @apply bg-antique-gold text-desert-night hover:bg-burnt-sienna hover:text-warm-white;
+    transition: all 0.3s ease;
   }
 }
 
-.hero-gradient-mesh {
-  background-image: radial-gradient(at 27% 37%, hsla(261, 67%, 55%, 1) 0px, transparent 0%),
-                    radial-gradient(at 97% 21%, hsla(39, 92%, 50%, 0.9) 0px, transparent 50%),
-                    radial-gradient(at 52% 99%, hsla(261, 67%, 65%, 1) 0px, transparent 50%),
-                    radial-gradient(at 10% 29%, hsla(45, 95%, 65%, 0.8) 0px, transparent 50%),
-                    radial-gradient(at 97% 96%, hsla(261, 67%, 45%, 0.7) 0px, transparent 50%),
-                    radial-gradient(at 33% 50%, hsla(39, 92%, 60%, 0.8) 0px, transparent 50%),
-                    radial-gradient(at 79% 53%, hsla(261, 67%, 75%, 1) 0px, transparent 50%);
+/* Tailwind Custom Colors */
+@layer extend {
+  .bg-dust-khaki { background-color: rgb(var(--dust-khaki)); }
+  .bg-burnt-sienna { background-color: rgb(var(--burnt-sienna)); }
+  .bg-sage-green { background-color: rgb(var(--sage-green)); }
+  .bg-desert-sand { background-color: rgb(var(--desert-sand)); }
+  .bg-persian-emerald { background-color: rgb(var(--persian-emerald)); }
+  .bg-royal-gold { background-color: rgb(var(--royal-gold)); }
+  .bg-antique-gold { background-color: rgb(var(--antique-gold)); }
+  .bg-twilight-purple { background-color: rgb(var(--twilight-purple)); }
+  .bg-warm-white { background-color: rgb(var(--warm-white)); }
+  .bg-desert-night { background-color: rgb(var(--desert-night)); }
+  .bg-rich-brown { background-color: rgb(var(--rich-brown)); }
+  
+  .text-dust-khaki { color: rgb(var(--dust-khaki)); }
+  .text-burnt-sienna { color: rgb(var(--burnt-sienna)); }
+  .text-sage-green { color: rgb(var(--sage-green)); }
+  .text-desert-sand { color: rgb(var(--desert-sand)); }
+  .text-persian-emerald { color: rgb(var(--persian-emerald)); }
+  .text-royal-gold { color: rgb(var(--royal-gold)); }
+  .text-antique-gold { color: rgb(var(--antique-gold)); }
+  .text-twilight-purple { color: rgb(var(--twilight-purple)); }
+  .text-warm-white { color: rgb(var(--warm-white)); }
+  .text-desert-night { color: rgb(var(--desert-night)); }
+  .text-rich-brown { color: rgb(var(--rich-brown)); }
 }

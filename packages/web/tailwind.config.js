@@ -8,31 +8,50 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Persian/Burning Man inspired colors
-        persian: {
-          purple: '#6B46C1',
-          violet: '#8B5CF6',
-          light: '#A78BFA',
+        // Playa Dust Earth Tones
+        dust: {
+          khaki: 'rgb(196, 165, 123)',
+          grey: 'rgb(155, 155, 155)',
+        },
+        burnt: {
+          sienna: 'rgb(160, 82, 45)',
+        },
+        sage: {
+          green: 'rgb(135, 169, 107)',
         },
         desert: {
-          gold: '#F59E0B',
-          orange: '#FB923C',
-          sand: '#FEF3C7',
+          sand: 'rgb(237, 201, 175)',
+          night: 'rgb(44, 36, 22)',
         },
-        midnight: {
-          DEFAULT: '#1E293B',
-          dark: '#0F172A',
-          light: '#334155',
+        
+        // Persian Luxury Accents
+        persian: {
+          emerald: 'rgb(80, 200, 120)',
         },
-        saffron: {
-          DEFAULT: '#FCD34D',
-          light: '#FDE68A',
-          dark: '#F59E0B',
+        royal: {
+          gold: 'rgb(255, 215, 0)',
         },
-        dust: '#92400E',
-        charcoal: '#18181B',
-        smoke: '#71717A',
-        // Ethereum.org inspired neutrals
+        antique: {
+          gold: 'rgb(212, 175, 55)',
+        },
+        
+        // Mystical Colors
+        twilight: {
+          purple: 'rgb(93, 78, 96)',
+        },
+        sunrise: {
+          coral: 'rgb(255, 107, 107)',
+        },
+        moonlight: {
+          silver: 'rgb(192, 192, 192)',
+        },
+        
+        // Base Colors
+        warm: {
+          white: 'rgb(255, 248, 240)',
+        },
+        
+        // Ethereum.org inspired neutrals (keep for compatibility)
         neutral: {
           50: '#FAFAFA',
           100: '#F4F4F5',
@@ -47,24 +66,24 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-        persian: ['Vazirmatn', 'system-ui', 'sans-serif'],
+        display: ['Playfair Display', 'serif'],
+        body: ['Crimson Text', 'serif'],
+        ui: ['Montserrat', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-gradient': 'linear-gradient(135deg, #6B46C1 0%, #F59E0B 100%)',
-        'card-gradient': 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
-        'accent-gradient': 'linear-gradient(135deg, #FCD34D 0%, #FB923C 100%)',
+        'gradient-mystical': 'linear-gradient(135deg, rgb(93, 78, 96) 0%, rgb(80, 200, 120) 50%, rgb(255, 215, 0) 100%)',
+        'gradient-desert': 'linear-gradient(135deg, rgb(196, 165, 123) 0%, rgb(237, 201, 175) 50%, rgb(160, 82, 45) 100%)',
+        'gradient-gold': 'linear-gradient(135deg, rgb(212, 175, 55) 0%, rgb(255, 215, 0) 100%)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
         'slide-down': 'slideDown 0.3s ease-out',
         'float': 'float 6s ease-in-out infinite',
+        'shimmer': 'shimmer 3s ease-in-out infinite',
+        'dust-float': 'dustFloat 15s linear infinite',
         'glow': 'glow 2s ease-in-out infinite',
-        'pattern-drift': 'patternDrift 20s ease-in-out infinite',
-        'gradient-shift': 'gradientShift 8s ease infinite',
       },
       keyframes: {
         fadeIn: {
@@ -83,24 +102,32 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
         },
-        glow: {
-          '0%, 100%': { opacity: 0.8 },
-          '50%': { opacity: 1 },
-        },
-        patternDrift: {
-          '0%, 100%': { transform: 'translateX(0) translateY(0)' },
-          '25%': { transform: 'translateX(10px) translateY(-10px)' },
-          '50%': { transform: 'translateX(-10px) translateY(10px)' },
-          '75%': { transform: 'translateX(5px) translateY(-5px)' },
-        },
-        gradientShift: {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
+        shimmer: {
+          '0%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        dustFloat: {
+          '0%, 100%': { 
+            transform: 'translateY(0) translateX(0) rotate(0deg)',
+            opacity: '0',
+          },
+          '10%': { opacity: '0.3' },
+          '90%': { opacity: '0.3' },
+          '100%': { 
+            transform: 'translateY(-100vh) translateX(50px) rotate(360deg)',
+            opacity: '0',
+          },
+        },
+        glow: {
+          '0%, 100%': { opacity: '0.8' },
+          '50%': { opacity: '1' },
         },
       },
       boxShadow: {
-        'ethereum': '0 4px 6px -1px rgba(107, 70, 193, 0.1), 0 2px 4px -1px rgba(107, 70, 193, 0.06)',
-        'card-hover': '0 20px 25px -5px rgba(107, 70, 193, 0.1), 0 10px 10px -5px rgba(107, 70, 193, 0.04)',
+        'luxury': '0 20px 40px rgba(196, 165, 123, 0.2)',
+        'luxury-hover': '0 25px 50px rgba(196, 165, 123, 0.3)',
+        'night-glow': '0 0 30px rgba(80, 200, 120, 0.4)',
       },
     },
   },

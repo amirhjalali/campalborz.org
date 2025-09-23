@@ -1,15 +1,23 @@
 import { ReactNode } from "react";
 import "../styles/globals.css";
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
 
-const inter = Inter({ 
+const playfair = Playfair_Display({ 
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-playfair',
+  weight: ['400', '700', '900'],
 });
 
-const spaceGrotesk = Space_Grotesk({ 
+const crimson = Crimson_Text({ 
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-crimson',
+  weight: ['400', '600', '700'],
+});
+
+const montserrat = Montserrat({ 
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  weight: ['300', '400', '500', '600'],
 });
 
 export const metadata = {
@@ -46,8 +54,8 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="en" className={`${playfair.variable} ${crimson.variable} ${montserrat.variable}`}>
+      <body className="font-body antialiased">{children}</body>
     </html>
   );
 }
