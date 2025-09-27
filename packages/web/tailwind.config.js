@@ -22,11 +22,21 @@ module.exports = {
         desert: {
           sand: 'rgb(237, 201, 175)',
           night: 'rgb(44, 36, 22)',
+          gold: 'rgb(212, 175, 55)', // antique gold
+          orange: 'rgb(255, 107, 107)', // sunrise coral
+        },
+        saffron: {
+          DEFAULT: 'rgb(255, 215, 0)', // royal gold
+          light: 'rgb(255, 248, 240)', // warm white
+          dark: 'rgb(212, 175, 55)', // antique gold
         },
         
-        // Persian Luxury Accents
+        // Persian Luxury Accents (keeping old names for compatibility)
         persian: {
           emerald: 'rgb(80, 200, 120)',
+          purple: 'rgb(160, 82, 45)', // Now maps to burnt sienna
+          violet: 'rgb(212, 175, 55)', // Now maps to antique gold
+          light: 'rgb(237, 201, 175)', // Now maps to desert sand
         },
         royal: {
           gold: 'rgb(255, 215, 0)',

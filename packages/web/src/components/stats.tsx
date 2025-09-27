@@ -60,7 +60,7 @@ export function Stats() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-burnt-sienna mb-4">
             Our Impact in Numbers
           </h2>
           <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
@@ -89,13 +89,13 @@ export function Stats() {
                 
                 {/* Value */}
                 <div className="mb-2">
-                  <span className="text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent">
+                  <span className={`text-4xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                     {stat.value}
                   </span>
                 </div>
                 
                 {/* Label */}
-                <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
+                <h3 className="text-lg font-semibold text-burnt-sienna mb-1">
                   {stat.label}
                 </h3>
                 
@@ -121,7 +121,7 @@ export function Stats() {
           </p>
           <a
             href="/join"
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-burnt-sienna to-antique-gold text-warm-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             Join Our Community
           </a>

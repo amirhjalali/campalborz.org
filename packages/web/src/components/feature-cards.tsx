@@ -10,7 +10,7 @@ const features = [
     description: 'Join us in Black Rock City for an unforgettable week of art, community, and radical self-expression.',
     icon: Tent,
     href: '/experience/burning-man',
-    gradient: 'from-persian-purple to-persian-violet',
+    gradient: 'from-burnt-sienna to-antique-gold',
     image: '/images/burning-man-camp.jpg',
   },
   {
@@ -26,7 +26,7 @@ const features = [
     description: 'Connect with amazing people from around the world who share our values of hospitality and creativity.',
     icon: Users,
     href: '/community',
-    gradient: 'from-persian-violet to-pink-500',
+    gradient: 'from-antique-gold to-sunrise-coral',
     image: '/images/community.jpg',
   },
   {
@@ -42,7 +42,7 @@ const features = [
     description: 'Help us create transformative experiences and support arts education in underserved communities.',
     icon: Heart,
     href: '/donate',
-    gradient: 'from-pink-500 to-persian-purple',
+    gradient: 'from-sunrise-coral to-burnt-sienna',
     image: '/images/support.jpg',
   },
   {
@@ -50,7 +50,7 @@ const features = [
     description: 'Be part of an international community that spans continents and cultures.',
     icon: Globe,
     href: '/about/global',
-    gradient: 'from-desert-orange to-persian-violet',
+    gradient: 'from-desert-orange to-antique-gold',
     image: '/images/global.jpg',
   },
 ];
@@ -67,7 +67,7 @@ export function FeatureCards() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-neutral-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-burnt-sienna mb-4">
             Discover Camp Alborz
           </h2>
           <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
@@ -98,7 +98,7 @@ export function FeatureCards() {
                     </div>
                     
                     {/* Title */}
-                    <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-3 group-hover:text-persian-purple dark:group-hover:text-persian-light transition-colors">
+                    <h3 className="text-xl font-semibold text-desert-night mb-3 group-hover:text-burnt-sienna transition-colors">
                       {feature.title}
                     </h3>
                     
@@ -108,7 +108,7 @@ export function FeatureCards() {
                     </p>
                     
                     {/* Link with arrow */}
-                    <div className="flex items-center text-persian-purple dark:text-persian-light font-semibold">
+                    <div className="flex items-center text-burnt-sienna font-semibold">
                       <span>Learn More</span>
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
                     </div>
