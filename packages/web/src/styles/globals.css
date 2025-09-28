@@ -275,6 +275,60 @@
     @apply bg-antique-gold text-desert-night hover:bg-burnt-sienna hover:text-warm-white;
     transition: all 0.3s ease;
   }
+  
+  /* Hero Gradient - Dark background for white text */
+  .bg-gradient-hero {
+    background: linear-gradient(
+      135deg,
+      rgb(44, 36, 22) 0%,      /* desert-night */
+      rgb(93, 78, 96) 25%,     /* twilight-purple */
+      rgb(160, 82, 45) 50%,    /* burnt-sienna */
+      rgb(93, 78, 96) 75%,     /* twilight-purple */
+      rgb(44, 36, 22) 100%     /* desert-night */
+    );
+    background-size: 200% 200%;
+  }
+  
+  .hero-gradient-mesh {
+    background-image: 
+      radial-gradient(at 40% 20%, rgb(160, 82, 45) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgb(93, 78, 96) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgb(212, 175, 55) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgb(80, 200, 120) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgb(160, 82, 45) 0px, transparent 50%);
+  }
+  
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-gradient-x {
+    animation: gradient-x 15s ease infinite;
+  }
+  
+  .animate-float-pattern {
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-20px) translateX(10px);
+    }
+    50% {
+      transform: translateY(0) translateX(20px);
+    }
+    75% {
+      transform: translateY(-10px) translateX(10px);
+    }
+  }
 }
 
 /* Tailwind Custom Colors */

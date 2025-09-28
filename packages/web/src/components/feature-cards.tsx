@@ -57,7 +57,7 @@ const features = [
 
 export function FeatureCards() {
   return (
-    <section className="py-24 bg-white dark:bg-midnight">
+    <section className="py-24 bg-dust-khaki/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
@@ -86,7 +86,7 @@ export function FeatureCards() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Link href={feature.href}>
-                <div className="group relative bg-neutral-50 dark:bg-midnight-light rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
+                <div className="group relative bg-warm-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full border border-dust-khaki/20">
                   {/* Gradient overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                   
