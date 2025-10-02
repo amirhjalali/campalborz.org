@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useCampConfig } from '../hooks/useConfig';
 
 const navItems = [
   {
@@ -60,6 +61,7 @@ const navItems = [
 ];
 
 export function Navigation() {
+  const campConfig = useCampConfig();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -93,7 +95,7 @@ export function Navigation() {
                 isScrolled ? 'text-burnt-sienna' : 'text-white'
               )}
             >
-              CAMP ALBORZ
+              {campConfig.name.toUpperCase()}
             </motion.div>
           </Link>
 
