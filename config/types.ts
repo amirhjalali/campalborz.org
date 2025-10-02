@@ -123,6 +123,27 @@ export interface ContentConfig {
 
   // Feature Cards
   features: FeatureCard[];
+
+  // About Page
+  about?: {
+    title: string;
+    subtitle: string;
+    mission: {
+      title: string;
+      paragraphs: string[];
+    };
+    values: AboutValue[];
+    timeline: TimelineEvent[];
+    team: TeamMember[];
+    nonprofit: {
+      title: string;
+      description: string;
+      cta: {
+        donate: string;
+        join: string;
+      };
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -145,5 +166,24 @@ export interface FeatureCard {
   icon: string;
   link: string;
   gradient?: string;
+  image?: string;
+}
+
+export interface AboutValue {
+  icon: string;
+  title: string;
+  description: string;
+  gradient?: string;
+}
+
+export interface TimelineEvent {
+  year: string;
+  event: string;
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
   image?: string;
 }

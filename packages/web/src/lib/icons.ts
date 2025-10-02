@@ -17,6 +17,8 @@ import {
   Coffee,
   Tent,
   ArrowRight,
+  Mountain,
+  Award,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -32,6 +34,8 @@ const iconMap: Record<string, LucideIcon> = {
   coffee: Coffee,
   tent: Tent,
   'arrow-right': ArrowRight,
+  mountain: Mountain,
+  award: Award,
 };
 
 /**
