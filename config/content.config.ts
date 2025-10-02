@@ -41,24 +41,46 @@ export const contentConfig: ContentConfig = {
   // Stats - Customize these numbers for your camp
   stats: [
     {
-      label: "Years on the Playa",
+      label: "Years of Magic",
       value: "15+",
-      icon: "calendar"
+      icon: "flame",
+      description: "Creating unforgettable experiences",
+      color: "from-persian-purple to-persian-violet",
     },
     {
-      label: "Community Members",
+      label: "Members Worldwide",
       value: "500+",
-      icon: "users"
+      icon: "users",
+      description: "A global community united",
+      color: "from-desert-gold to-saffron",
     },
     {
-      label: "Art Installations",
-      value: "25+",
-      icon: "palette"
+      label: "Raised for Charity",
+      value: "$50K",
+      icon: "dollar-sign",
+      description: "Supporting arts and education",
+      color: "from-persian-violet to-pink-500",
     },
     {
-      label: "Events Hosted",
-      value: "100+",
-      icon: "star"
+      label: "Events Per Year",
+      value: "20+",
+      icon: "calendar",
+      description: "Year-round gatherings",
+      color: "from-saffron to-desert-orange",
+    },
+    {
+      label: "Art Projects Funded",
+      value: "5",
+      icon: "heart",
+      description: "Major installations created",
+      color: "from-persian-purple to-desert-gold",
+    },
+    {
+      label: "Countries Reached",
+      value: "12",
+      icon: "globe",
+      description: "International community",
+      color: "from-desert-orange to-persian-violet",
     },
   ],
 

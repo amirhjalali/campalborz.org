@@ -135,6 +135,8 @@ export interface Stat {
   label: string;
   value: string;
   icon: string;
+  description?: string;
+  color?: string;
 }
 
 export interface FeatureCard {
