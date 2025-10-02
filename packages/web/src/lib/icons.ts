@@ -16,6 +16,7 @@ import {
   Star,
   Coffee,
   Tent,
+  ArrowRight,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -30,6 +31,7 @@ const iconMap: Record<string, LucideIcon> = {
   star: Star,
   coffee: Coffee,
   tent: Tent,
+  'arrow-right': ArrowRight,
 };
 
 /**

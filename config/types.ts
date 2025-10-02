@@ -144,4 +144,6 @@ export interface FeatureCard {
   description: string;
   icon: string;
   link: string;
+  gradient?: string;
+  image?: string;
 }
