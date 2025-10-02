@@ -15,10 +15,29 @@ model Tenant {
   id              String   @id @default(cuid())
   name            String
   slug            String   @unique
-  domain          String?  @unique
+  subdomain       String   @unique
+  customDomain    String?  @unique
   logo            String?
   settings        Json     @default("{}")
   isActive        Boolean  @default(true)
+  
+  // Subscription & Billing
+  plan            TenantPlan @default(free)
+  stripeCustomerId     String?
+  subscriptionId       String?
+  subscriptionStatus   String?
+  trialEndsAt         DateTime?
+  
+  // Branding
+  primaryColor    String   @default("#C75D00")
+  secondaryColor  String   @default("#8B4513")
+  accentColor     String   @default("#D4A574")
+  fontFamily      String   @default("Playfair Display")
+  
+  // Feature flags & limits
+  features        Json     @default("{}")
+  limits          Json     @default("{}")
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -27,6 +46,8 @@ model Tenant {
   campaigns       Campaign[]
   events          Event[]
   donations       Donation[]
+  theme           Theme?
+  admins          TenantAdmin[]
 
   @@map("tenants")
 }
@@ -44,6 +65,7 @@ model User {
   updatedAt   DateTime   @updatedAt
 
   tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  adminRoles  TenantAdmin[]
   
   createdCampaigns  Campaign[] @relation("CampaignCreator")
   createdEvents     Event[]    @relation("EventCreator")
@@ -141,6 +163,53 @@ model Donation {
   @@map("donations")
 }
 
+// Theme configuration for tenant branding
+model Theme {
+  id              String   @id @default(cuid())
+  tenantId        String   @unique
+  
+  // Color scheme
+  colors          Json     // {"primary": "#...", "secondary": "#...", etc}
+  
+  // Typography
+  fonts           Json     // {"heading": "...", "body": "..."}
+  
+  // Layout preferences
+  layout          Json     // {"navigation": "top|side", "footer": true|false}
+  
+  // Custom CSS
+  customCss       String?  @db.Text
+  
+  // Assets
+  heroImage       String?
+  backgroundImage String?
+  favicon         String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@map("themes")
+}
+
+// Tenant administrators with role-based permissions
+model TenantAdmin {
+  id          String    @id @default(cuid())
+  tenantId    String
+  userId      String
+  role        AdminRole @default(admin)
+  permissions Json      @default("[]") // Array of specific permissions
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, userId])
+  @@map("tenant_admins")
+}
+
 // Enums
 enum DonationStatus {
   pending
@@ -149,4 +218,18 @@ enum DonationStatus {
   failed
   refunded
   cancelled
+}
+
+enum TenantPlan {
+  free        // 50 members, basic features
+  starter     // 200 members, $49/month
+  growth      // 1000 members, $149/month
+  enterprise  // Unlimited, custom pricing
+}
+
+enum AdminRole {
+  owner       // Full control, billing access
+  admin       // Manage users and content
+  moderator   // Moderate content
+  viewer      // Read-only access
 }

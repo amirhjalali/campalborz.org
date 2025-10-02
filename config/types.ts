@@ -152,6 +152,24 @@ export interface ContentConfig {
     categories: ArtCategory[];
     installations: ArtInstallation[];
   };
+
+  // Events Page
+  events?: {
+    title: string;
+    subtitle: string;
+    eventTypes: EventType[];
+    upcomingEvents: Event[];
+    burningManSchedule?: BurningManDay[];
+    guidelines?: EventGuidelines;
+    cta?: {
+      title: string;
+      description: string;
+      buttons: {
+        primary: { text: string; link: string; };
+        secondary: { text: string; link: string; };
+      };
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -213,4 +231,42 @@ export interface ArtInstallation {
   participants: string;
   impact: string;
   gradient?: string;
+}
+
+export interface EventType {
+  name: string;
+  description: string;
+  icon: string;
+  count: number;
+  color: string;
+}
+
+export interface Event {
+  id: number;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  type: string;
+  description: string;
+  attendees: number;
+  maxAttendees: number;
+  icon: string;
+  color: string;
+}
+
+export interface BurningManDay {
+  day: string;
+  events: BurningManEvent[];
+}
+
+export interface BurningManEvent {
+  time: string;
+  title: string;
+  description: string;
+}
+
+export interface EventGuidelines {
+  beforeAttending: string[];
+  communityValues: string[];
 }

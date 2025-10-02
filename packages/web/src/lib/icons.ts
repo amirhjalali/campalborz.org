@@ -22,6 +22,10 @@ import {
   Sparkles,
   MapPin,
   Eye,
+  Wrench,
+  GraduationCap,
+  Music,
+  Clock,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -42,6 +46,10 @@ const iconMap: Record<string, LucideIcon> = {
   sparkles: Sparkles,
   'map-pin': MapPin,
   eye: Eye,
+  wrench: Wrench,
+  'graduation-cap': GraduationCap,
+  music: Music,
+  clock: Clock,
 };
 
 /**
