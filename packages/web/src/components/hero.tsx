@@ -3,8 +3,10 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Tent, Heart } from 'lucide-react';
+import { useContentConfig } from '../hooks/useConfig';
 
 export function Hero() {
+  const { hero } = useContentConfig();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated gradient background */}
@@ -24,62 +26,61 @@ export function Hero() {
           transition={{ duration: 0.8 }}
         >
           {/* Logo/Title */}
-          <motion.h1 
+          <motion.h1
             className="text-5xl md:text-7xl font-display font-bold text-burnt-sienna mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Welcome to Camp Alborz
+            {hero.title}
           </motion.h1>
-          
+
           {/* Tagline with decorative line */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="h-px bg-gradient-to-r from-transparent via-saffron to-transparent w-24" />
-            <motion.p 
+            <motion.p
               className="text-xl md:text-2xl text-desert-sand font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              Where Persian hospitality meets the spirit of Burning Man
+              {hero.subtitle}
             </motion.p>
             <div className="h-px bg-gradient-to-r from-transparent via-saffron to-transparent w-24" />
           </div>
-          
+
           {/* Description */}
-          <motion.p 
+          <motion.p
             className="text-lg text-desert-night max-w-3xl mx-auto mb-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            For over 15 years, we've created a home on the playa where ancient Persian culture 
-            blends with radical self-expression, building community through art, hospitality, and shared experiences.
+            {hero.description}
           </motion.p>
           
           {/* CTA Buttons */}
-          <motion.div 
+          <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <Link
-              href="/experience"
+              href={hero.cta.primary.link}
               className="inline-flex items-center justify-center px-8 py-4 bg-burnt-sienna text-warm-white font-semibold rounded-lg hover:bg-antique-gold hover:text-desert-night transition-all duration-300 hover:scale-105 shadow-xl group"
             >
               <Tent className="mr-2 h-5 w-5" />
-              Explore Our World
+              {hero.cta.primary.text}
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
-            
+
             <Link
-              href="/join"
+              href={hero.cta.secondary.link}
               className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-burnt-sienna font-semibold rounded-lg border-2 border-burnt-sienna/50 hover:bg-burnt-sienna/10 hover:border-burnt-sienna transition-all duration-300 backdrop-blur-sm group"
             >
               <Heart className="mr-2 h-5 w-5" />
-              Join Our Community
+              {hero.cta.secondary.text}
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </motion.div>
