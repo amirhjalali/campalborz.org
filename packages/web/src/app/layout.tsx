@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 import "../styles/globals.css";
 import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
+import { campConfig } from '../../../../config/camp.config';
+import { brandConfig } from '../../../../config/brand.config';
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -21,18 +23,18 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "Camp Alborz - Burning Man Theme Camp",
-  description: "Where Persian hospitality meets the spirit of Burning Man. A 501(c)(3) non-profit celebrating culture, art, and community.",
-  keywords: ["Burning Man", "Theme Camp", "Persian Culture", "Camp Alborz", "Black Rock City", "Art", "Community"],
-  authors: [{ name: "Camp Alborz" }],
+  title: `${campConfig.name} - Burning Man Theme Camp`,
+  description: `${campConfig.tagline}. A ${campConfig.taxStatus} non-profit celebrating culture, art, and community.`,
+  keywords: ["Burning Man", "Theme Camp", campConfig.cultural.heritage + " Culture", campConfig.name, "Black Rock City", "Art", "Community"],
+  authors: [{ name: campConfig.name }],
   openGraph: {
-    title: "Camp Alborz - Burning Man Theme Camp",
-    description: "Where Persian hospitality meets the spirit of Burning Man",
-    url: "https://campalborz.org",
-    siteName: "Camp Alborz",
+    title: `${campConfig.name} - Burning Man Theme Camp`,
+    description: campConfig.tagline,
+    url: campConfig.website,
+    siteName: campConfig.name,
     images: [
       {
-        url: "/og-image.jpg",
+        url: brandConfig.assets.ogImage,
         width: 1200,
         height: 630,
       },
@@ -42,9 +44,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Camp Alborz - Burning Man Theme Camp",
-    description: "Where Persian hospitality meets the spirit of Burning Man",
-    images: ["/og-image.jpg"],
+    title: `${campConfig.name} - Burning Man Theme Camp`,
+    description: campConfig.tagline,
+    images: [brandConfig.assets.ogImage],
   },
 };
 
