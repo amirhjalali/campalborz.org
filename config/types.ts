@@ -170,6 +170,40 @@ export interface ContentConfig {
       };
     };
   };
+
+  // Donate Page
+  donate?: {
+    title: string;
+    subtitle: string;
+    impactStats: ImpactStat[];
+    donationTiers: DonationTier[];
+    fundingPriorities: FundingPriority[];
+    transparencyItems: TransparencyItem[];
+    otherWaysToHelp: OtherWayToHelp[];
+    donorRecognition?: {
+      title: string;
+      description: string;
+      tiers: DonorRecognitionTier[];
+    };
+    taxInfo?: {
+      title: string;
+      description: string;
+      ein?: string;
+    };
+    donationForm?: {
+      title: string;
+      description: string;
+      campaigns: string[];
+    };
+    cta?: {
+      title: string;
+      description: string;
+      buttons: {
+        primary: { text: string; link: string; };
+        secondary: { text: string; link: string; };
+      };
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -269,4 +303,47 @@ export interface BurningManEvent {
 export interface EventGuidelines {
   beforeAttending: string[];
   communityValues: string[];
+}
+
+export interface ImpactStat {
+  number: string;
+  label: string;
+  icon: string;
+}
+
+export interface DonationTier {
+  amount: number;
+  title: string;
+  description: string;
+  perks: string[];
+  popular: boolean;
+}
+
+export interface FundingPriority {
+  title: string;
+  percentage: number;
+  amount: number;
+  goal: number;
+  description: string;
+  icon: string;
+  color: string;
+}
+
+export interface TransparencyItem {
+  category: string;
+  percentage: number;
+  amount: string;
+  description: string;
+}
+
+export interface OtherWayToHelp {
+  title: string;
+  description: string;
+  icon: string;
+  amount: string;
+}
+
+export interface DonorRecognitionTier {
+  title: string;
+  description: string;
 }

@@ -26,6 +26,10 @@ import {
   GraduationCap,
   Music,
   Clock,
+  Gift,
+  Truck,
+  BarChart3,
+  CheckCircle,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -50,6 +54,10 @@ const iconMap: Record<string, LucideIcon> = {
   'graduation-cap': GraduationCap,
   music: Music,
   clock: Clock,
+  gift: Gift,
+  truck: Truck,
+  'bar-chart-3': BarChart3,
+  'check-circle': CheckCircle,
 };
 
 /**

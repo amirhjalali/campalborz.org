@@ -419,4 +419,203 @@ export const contentConfig: ContentConfig = {
       },
     },
   },
+
+  // Donate Page
+  donate: {
+    title: "Support Camp Alborz",
+    subtitle: "Help us create transformative experiences, build beautiful art, and share Persian culture with the Burning Man community",
+    impactStats: [
+      {
+        number: "$45,000",
+        label: "Raised in 2023",
+        icon: "dollar-sign",
+      },
+      {
+        number: "125",
+        label: "Individual Donors",
+        icon: "users",
+      },
+      {
+        number: "8",
+        label: "Art Projects Funded",
+        icon: "wrench",
+      },
+      {
+        number: "500+",
+        label: "Community Members Served",
+        icon: "heart",
+      },
+    ],
+    donationTiers: [
+      {
+        amount: 25,
+        title: "Tea Ceremony Supporter",
+        description: "Helps fund our daily Persian tea ceremonies",
+        perks: ["Camp sticker", "Thank you email"],
+        popular: false,
+      },
+      {
+        amount: 75,
+        title: "Art Build Contributor",
+        description: "Supports materials for community art projects",
+        perks: ["Camp sticker", "Thank you email", "Progress updates"],
+        popular: false,
+      },
+      {
+        amount: 150,
+        title: "Community Builder",
+        description: "Funds workshops and community events",
+        perks: ["Camp sticker", "Thank you email", "Progress updates", "Invite to donor meetup"],
+        popular: true,
+      },
+      {
+        amount: 300,
+        title: "Infrastructure Champion",
+        description: "Helps with camp setup and infrastructure",
+        perks: ["Camp sticker", "Thank you email", "Progress updates", "Invite to donor meetup", "Camp t-shirt"],
+        popular: false,
+      },
+      {
+        amount: 500,
+        title: "Cultural Ambassador",
+        description: "Sponsors cultural education programs",
+        perks: ["All previous perks", "Recognition on camp website", "Camp hoodie"],
+        popular: false,
+      },
+    ],
+    fundingPriorities: [
+      {
+        title: "Art Installations",
+        percentage: 35,
+        amount: 12250,
+        goal: 35000,
+        description: "Materials and tools for our 2024 art projects",
+        icon: "wrench",
+        color: "bg-orange-500",
+      },
+      {
+        title: "Infrastructure",
+        percentage: 28,
+        amount: 9800,
+        goal: 35000,
+        description: "Shade structures, lighting, and camp facilities",
+        icon: "truck",
+        color: "bg-blue-500",
+      },
+      {
+        title: "Community Programs",
+        percentage: 20,
+        amount: 7000,
+        goal: 35000,
+        description: "Workshops, cultural events, and education",
+        icon: "users",
+        color: "bg-green-500",
+      },
+      {
+        title: "Emergency Fund",
+        percentage: 17,
+        amount: 5950,
+        goal: 35000,
+        description: "Unexpected costs and contingency planning",
+        icon: "heart",
+        color: "bg-purple-500",
+      },
+    ],
+    transparencyItems: [
+      {
+        category: "Art & Installations",
+        percentage: 40,
+        amount: "$18,000",
+        description: "Materials, tools, transportation for art projects",
+      },
+      {
+        category: "Camp Infrastructure",
+        percentage: 30,
+        amount: "$13,500",
+        description: "Shade structures, lighting, kitchen, utilities",
+      },
+      {
+        category: "Community Events",
+        percentage: 15,
+        amount: "$6,750",
+        description: "Workshops, cultural events, food for gatherings",
+      },
+      {
+        category: "Transportation",
+        percentage: 10,
+        amount: "$4,500",
+        description: "Truck rental, fuel, logistics",
+      },
+      {
+        category: "Administrative",
+        percentage: 5,
+        amount: "$2,250",
+        description: "Registration fees, permits, insurance",
+      },
+    ],
+    otherWaysToHelp: [
+      {
+        title: "Sponsor a Workshop",
+        description: "Fund specific cultural or artistic workshops",
+        icon: "gift",
+        amount: "$200-500",
+      },
+      {
+        title: "Adopt an Art Project",
+        description: "Fully sponsor a community art installation",
+        icon: "wrench",
+        amount: "$1,000-3,000",
+      },
+      {
+        title: "Corporate Sponsorship",
+        description: "Partner with us for larger initiatives",
+        icon: "bar-chart-3",
+        amount: "$2,500+",
+      },
+      {
+        title: "In-Kind Donations",
+        description: "Donate materials, tools, or services",
+        icon: "truck",
+        amount: "Various",
+      },
+    ],
+    donorRecognition: {
+      title: "Thank You to Our 2023 Supporters",
+      description: "We're grateful to everyone who made our vision possible",
+      tiers: [
+        {
+          title: "Cultural Ambassadors ($500+)",
+          description: "Special thanks to our major donors who enable our largest initiatives",
+        },
+        {
+          title: "Community Builders ($150+)",
+          description: "And to all our community builders who support our regular programming",
+        },
+      ],
+    },
+    taxInfo: {
+      title: "Tax Deductible Donations",
+      description: "Camp Alborz is a registered 501(c)(3) non-profit organization. All donations are tax-deductible to the full extent allowed by law.",
+      ein: "XX-XXXXXXX",
+    },
+    donationForm: {
+      title: "Make a Difference Today",
+      description: "Your support helps us continue sharing Persian culture, building incredible art, and creating transformative experiences for our community.",
+      campaigns: [
+        "Art & Installations",
+        "Camp Infrastructure",
+        "Community Events",
+        "Transportation",
+        "Burning Man 2024",
+      ],
+    },
+    cta: {
+      title: "Other Ways to Support",
+      description: "Beyond donations, you can support our mission by joining our community and volunteering",
+      buttons: {
+        primary: { text: "Join Our Community", link: "/apply" },
+        secondary: { text: "Volunteer at Events", link: "/events" },
+      },
+    },
+  },
 };
