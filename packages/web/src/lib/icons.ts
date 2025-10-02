@@ -19,6 +19,9 @@ import {
   ArrowRight,
   Mountain,
   Award,
+  Sparkles,
+  MapPin,
+  Eye,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -36,6 +39,9 @@ const iconMap: Record<string, LucideIcon> = {
   'arrow-right': ArrowRight,
   mountain: Mountain,
   award: Award,
+  sparkles: Sparkles,
+  'map-pin': MapPin,
+  eye: Eye,
 };
 
 /**

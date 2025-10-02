@@ -3,72 +3,24 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { Palette, Flame, Sparkles, Users, Calendar, MapPin, Eye, ArrowRight } from 'lucide-react';
-
-const featuredInstallations = [
-  {
-    id: 1,
-    title: 'HOMA Fire Sculpture',
-    year: '2023',
-    artist: 'Camp Alborz Collective',
-    description: 'A 20-foot tall interactive fire sculpture representing the sacred Persian fire altar, featuring programmable LED patterns that respond to music and movement.',
-    location: '7:30 & Esplanade',
-    participants: '15 artists',
-    impact: 'Visited by 5,000+ burners',
-    gradient: 'from-persian-purple to-desert-gold',
-  },
-  {
-    id: 2,
-    title: 'DAMAVAND Project',
-    year: '2022',
-    artist: 'International Collaboration',
-    description: 'An immersive installation inspired by Mount Damavand, featuring mirrors and light to create an infinite mountain range experience.',
-    location: 'Camp Alborz',
-    participants: '8 artists',
-    impact: 'Featured in Burning Man Journal',
-    gradient: 'from-desert-gold to-saffron',
-  },
-  {
-    id: 3,
-    title: 'Persian Garden Oasis',
-    year: '2024',
-    artist: 'Community Build',
-    description: 'A living art piece featuring traditional Persian garden elements with interactive water features and aromatic plants.',
-    location: 'In Development',
-    participants: '12 artists',
-    impact: 'Coming to BM 2024',
-    gradient: 'from-persian-violet to-pink-500',
-  },
-];
-
-const artCategories = [
-  {
-    name: 'Fire Art',
-    count: 8,
-    icon: Flame,
-    gradient: 'from-orange-500 to-red-600',
-  },
-  {
-    name: 'Interactive',
-    count: 12,
-    icon: Sparkles,
-    gradient: 'from-purple-500 to-pink-600',
-  },
-  {
-    name: 'Cultural Heritage',
-    count: 15,
-    icon: Palette,
-    gradient: 'from-blue-500 to-cyan-600',
-  },
-  {
-    name: 'Community',
-    count: 20,
-    icon: Users,
-    gradient: 'from-green-500 to-emerald-600',
-  },
-];
+import { MapPin, Eye, ArrowRight } from 'lucide-react';
+import { useContentConfig } from '../../hooks/useConfig';
+import { getIcon } from '../../lib/icons';
 
 export default function ArtPage() {
+  const { art } = useContentConfig();
+
+  if (!art) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen flex items-center justify-center">
+          <p>Art page configuration not found</p>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Navigation />
@@ -83,10 +35,10 @@ export default function ArtPage() {
             className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
           >
             <h1 className="text-5xl md:text-6xl font-display font-bold text-neutral-900 dark:text-white mb-6">
-              Art & Culture
+              {art.title}
             </h1>
             <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
-              Where Persian artistic heritage meets radical self-expression, creating transformative experiences through collaborative art
+              {art.subtitle}
             </p>
           </motion.div>
         </section>
@@ -95,28 +47,33 @@ export default function ArtPage() {
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {artCategories.map((category, index) => (
-                <motion.div
-                  key={category.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group relative bg-white dark:bg-midnight-light rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
-                  <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${category.gradient} mb-4`}>
-                    <category.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
-                    {category.name}
-                  </h3>
-                  <p className="text-3xl font-bold bg-gradient-to-r ${category.gradient} bg-clip-text text-transparent">
-                    {category.count}
-                  </p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">Projects</p>
-                </motion.div>
-              ))}
+              {art.categories.map((category, index) => {
+                const CategoryIcon = getIcon(category.icon);
+                const gradient = category.gradient || 'from-persian-purple to-persian-violet';
+
+                return (
+                  <motion.div
+                    key={category.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="group relative bg-white dark:bg-midnight-light rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
+                    <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-4`}>
+                      <CategoryIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
+                      {category.name}
+                    </h3>
+                    <p className="text-3xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent">
+                      {category.count}
+                    </p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">Projects</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -140,7 +97,10 @@ export default function ArtPage() {
             </motion.div>
 
             <div className="space-y-8">
-              {featuredInstallations.map((installation, index) => (
+              {art.installations.map((installation, index) => {
+                const gradient = installation.gradient || 'from-persian-purple to-desert-gold';
+
+                return (
                 <motion.div
                   key={installation.id}
                   initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
@@ -149,7 +109,7 @@ export default function ArtPage() {
                   transition={{ duration: 0.6 }}
                   className="group relative bg-white dark:bg-midnight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${installation.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
                   <div className="p-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                       <div className="flex-1">
@@ -177,11 +137,12 @@ export default function ArtPage() {
                           </div>
                         </div>
                       </div>
-                      <div className={`h-1 lg:h-auto lg:w-1 bg-gradient-to-b ${installation.gradient}`} />
+                      <div className={`h-1 lg:h-auto lg:w-1 bg-gradient-to-b ${gradient}`} />
                     </div>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

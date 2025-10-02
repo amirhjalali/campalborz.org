@@ -206,4 +206,71 @@ export const contentConfig: ContentConfig = {
       },
     },
   },
+
+  // Art Page
+  art: {
+    title: "Art & Culture",
+    subtitle: "Where Persian artistic heritage meets radical self-expression, creating transformative experiences through collaborative art",
+    categories: [
+      {
+        name: "Fire Art",
+        count: 8,
+        icon: "flame",
+        gradient: "from-orange-500 to-red-600",
+      },
+      {
+        name: "Interactive",
+        count: 12,
+        icon: "sparkles",
+        gradient: "from-purple-500 to-pink-600",
+      },
+      {
+        name: "Cultural Heritage",
+        count: 15,
+        icon: "palette",
+        gradient: "from-blue-500 to-cyan-600",
+      },
+      {
+        name: "Community",
+        count: 20,
+        icon: "users",
+        gradient: "from-green-500 to-emerald-600",
+      },
+    ],
+    installations: [
+      {
+        id: 1,
+        title: "HOMA Fire Sculpture",
+        year: "2023",
+        artist: "Camp Alborz Collective",
+        description: "A 20-foot tall interactive fire sculpture representing the sacred Persian fire altar, featuring programmable LED patterns that respond to music and movement.",
+        location: "7:30 & Esplanade",
+        participants: "15 artists",
+        impact: "Visited by 5,000+ burners",
+        gradient: "from-persian-purple to-desert-gold",
+      },
+      {
+        id: 2,
+        title: "DAMAVAND Project",
+        year: "2022",
+        artist: "International Collaboration",
+        description: "An immersive installation inspired by Mount Damavand, featuring mirrors and light to create an infinite mountain range experience.",
+        location: "Camp Alborz",
+        participants: "8 artists",
+        impact: "Featured in Burning Man Journal",
+        gradient: "from-desert-gold to-saffron",
+      },
+      {
+        id: 3,
+        title: "Persian Garden Oasis",
+        year: "2024",
+        artist: "Community Build",
+        description: "A living art piece featuring traditional Persian garden elements with interactive water features and aromatic plants.",
+        location: "In Development",
+        participants: "12 artists",
+        impact: "Coming to BM 2024",
+        gradient: "from-persian-violet to-pink-500",
+      },
+    ],
+  },
 };

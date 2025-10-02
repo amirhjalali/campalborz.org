@@ -144,6 +144,14 @@ export interface ContentConfig {
       };
     };
   };
+
+  // Art Page
+  art?: {
+    title: string;
+    subtitle: string;
+    categories: ArtCategory[];
+    installations: ArtInstallation[];
+  };
 }
 
 export interface NavigationItem {
@@ -186,4 +194,23 @@ export interface TeamMember {
   role: string;
   bio: string;
   image?: string;
+}
+
+export interface ArtCategory {
+  name: string;
+  count: number;
+  icon: string;
+  gradient?: string;
+}
+
+export interface ArtInstallation {
+  id: number;
+  title: string;
+  year: string;
+  artist: string;
+  description: string;
+  location: string;
+  participants: string;
+  impact: string;
+  gradient?: string;
 }
