@@ -618,4 +618,180 @@ export const contentConfig: ContentConfig = {
       },
     },
   },
+
+  // Culture Page
+  culture: {
+    title: "Persian Culture & Heritage",
+    subtitle: "Discover the rich traditions, values, and artistic heritage of Persian culture through immersive experiences and community learning",
+    culturalElements: [
+      {
+        title: "Persian Poetry",
+        description: "Explore the works of Rumi, Hafez, and contemporary Persian poets",
+        icon: "book-open",
+        activities: ["Poetry readings", "Calligraphy workshops", "Translation circles"],
+        color: "bg-purple-100 text-purple-600",
+      },
+      {
+        title: "Traditional Music",
+        description: "Experience the rich musical heritage of Iran",
+        icon: "music",
+        activities: ["Tar and setar performances", "Folk singing", "Music appreciation"],
+        color: "bg-blue-100 text-blue-600",
+      },
+      {
+        title: "Persian Cuisine",
+        description: "Learn about traditional cooking and food culture",
+        icon: "sparkles",
+        activities: ["Cooking classes", "Tea ceremonies", "Spice workshops"],
+        color: "bg-green-100 text-green-600",
+      },
+      {
+        title: "Art & Crafts",
+        description: "Traditional Persian arts and contemporary interpretations",
+        icon: "palette",
+        activities: ["Miniature painting", "Carpet weaving", "Metalwork"],
+        color: "bg-orange-100 text-orange-600",
+      },
+    ],
+    culturalValues: [
+      {
+        title: "Hospitality (Mehmān-navāzī)",
+        description: "The Persian tradition of welcoming guests with warmth and generosity",
+        example: "Our camp opens its doors to all, offering tea and conversation to any visitor",
+        icon: "heart",
+      },
+      {
+        title: "Respect for Elders",
+        description: "Honoring the wisdom and experience of our community elders",
+        example: "We seek guidance from experienced burners and Persian cultural experts",
+        icon: "users",
+      },
+      {
+        title: "Education & Learning",
+        description: "The high value placed on knowledge, wisdom, and intellectual growth",
+        example: "Our workshops and discussions encourage continuous learning and curiosity",
+        icon: "graduation-cap",
+      },
+      {
+        title: "Artistic Expression",
+        description: "The celebration of beauty in all its forms through art and creativity",
+        example: "We integrate traditional Persian aesthetics into our Burning Man installations",
+        icon: "palette",
+      },
+    ],
+    workshops: [
+      {
+        title: "Persian Calligraphy",
+        instructor: "Maryam Hosseini",
+        level: "Beginner Friendly",
+        duration: "2 hours",
+        description: "Learn the beautiful art of Persian script writing using traditional techniques and modern tools.",
+        materials: "Provided",
+        frequency: "Monthly",
+      },
+      {
+        title: "Traditional Cooking",
+        instructor: "Community Chefs",
+        level: "All Levels",
+        duration: "3 hours",
+        description: "Master classic Persian dishes like fesenjan, tahdig, and baklava in our communal kitchen.",
+        materials: "Included",
+        frequency: "Bi-weekly",
+      },
+      {
+        title: "Poetry & Storytelling",
+        instructor: "Various Members",
+        level: "All Levels",
+        duration: "90 minutes",
+        description: "Share and discuss Persian poetry, both classical and contemporary, in English and Farsi.",
+        materials: "Books provided",
+        frequency: "Weekly",
+      },
+      {
+        title: "Traditional Dance",
+        instructor: "Sara Mohammadi",
+        level: "Beginner",
+        duration: "1.5 hours",
+        description: "Learn folk dances from different regions of Iran in a welcoming, inclusive environment.",
+        materials: "Comfortable clothing",
+        frequency: "Monthly",
+      },
+    ],
+    celebrations: [
+      {
+        name: "Nowruz (Persian New Year)",
+        date: "March 20",
+        description: "Celebrating the spring equinox with traditional ceremonies, foods, and renewal rituals",
+        traditions: ["Haft-sin table", "Spring cleaning", "Family gatherings", "Gift giving"],
+      },
+      {
+        name: "Yalda Night",
+        date: "December 21",
+        description: "The longest night of the year celebrated with poetry, pomegranates, and community",
+        traditions: ["Poetry reading", "Pomegranate sharing", "Staying up all night", "Storytelling"],
+      },
+      {
+        name: "Chaharshanbe Suri",
+        date: "Last Wednesday before Nowruz",
+        description: "Fire jumping festival to cleanse the past year and welcome the new",
+        traditions: ["Jumping over fires", "Cleansing rituals", "Community bonfires", "Wish making"],
+      },
+    ],
+    learningResources: [
+      {
+        category: "Language",
+        resources: [
+          "Basic Farsi phrases for camp",
+          "Poetry reading in original Farsi",
+          "Cultural context for language use",
+        ],
+      },
+      {
+        category: "History",
+        resources: [
+          "Ancient Persian empires",
+          "Modern Iranian culture",
+          "Persian contributions to world civilization",
+        ],
+      },
+      {
+        category: "Arts",
+        resources: [
+          "Traditional Persian music instruments",
+          "Calligraphy and miniature painting",
+          "Carpet patterns and their meanings",
+        ],
+      },
+      {
+        category: "Literature",
+        resources: [
+          "Classical poets: Rumi, Hafez, Ferdowsi",
+          "Contemporary Persian writers",
+          "Translation and interpretation techniques",
+        ],
+      },
+    ],
+    culturalBridge: {
+      missionTitle: "Our Mission",
+      mission: [
+        "We believe in the power of cultural exchange to build understanding, break down barriers, and create meaningful connections between people from all backgrounds.",
+        "Through our cultural programs, we share the beauty of Persian heritage while learning from and celebrating the diversity of the Burning Man community.",
+      ],
+      howWeDoItTitle: "How We Do It",
+      howWeDoIt: [
+        { icon: "globe", text: "Welcoming people of all backgrounds to explore Persian culture" },
+        { icon: "users", text: "Creating inclusive spaces for cultural dialogue and learning" },
+        { icon: "book-open", text: "Sharing stories, traditions, and values through interactive experiences" },
+        { icon: "heart", text: "Building lasting friendships across cultural boundaries" },
+      ],
+    },
+    cta: {
+      title: "Explore Persian Culture With Us",
+      description: "Whether you have Persian heritage or are simply curious about the culture, you're welcome to join our learning community and cultural celebrations.",
+      buttons: {
+        primary: { text: "Attend Cultural Events", link: "/events" },
+        secondary: { text: "Join Our Community", link: "/apply" },
+      },
+    },
+  },
 };

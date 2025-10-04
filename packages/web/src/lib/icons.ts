@@ -30,6 +30,7 @@ import {
   Truck,
   BarChart3,
   CheckCircle,
+  BookOpen,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -58,6 +59,7 @@ const iconMap: Record<string, LucideIcon> = {
   truck: Truck,
   'bar-chart-3': BarChart3,
   'check-circle': CheckCircle,
+  'book-open': BookOpen,
 };
 
 /**

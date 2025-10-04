@@ -204,6 +204,31 @@ export interface ContentConfig {
       };
     };
   };
+
+  // Culture Page
+  culture?: {
+    title: string;
+    subtitle: string;
+    culturalElements: CulturalElement[];
+    culturalValues: CulturalValue[];
+    workshops: CulturalWorkshop[];
+    celebrations: PersianCelebration[];
+    learningResources: LearningResourceSection[];
+    culturalBridge?: {
+      missionTitle: string;
+      mission: string[];
+      howWeDoItTitle: string;
+      howWeDoIt: BridgeAction[];
+    };
+    cta?: {
+      title: string;
+      description: string;
+      buttons: {
+        primary: { text: string; link: string; };
+        secondary: { text: string; link: string; };
+      };
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -346,4 +371,46 @@ export interface OtherWayToHelp {
 export interface DonorRecognitionTier {
   title: string;
   description: string;
+}
+
+export interface CulturalElement {
+  title: string;
+  description: string;
+  icon: string;
+  activities: string[];
+  color: string;
+}
+
+export interface CulturalValue {
+  title: string;
+  description: string;
+  example: string;
+  icon: string;
+}
+
+export interface CulturalWorkshop {
+  title: string;
+  instructor: string;
+  level: string;
+  duration: string;
+  description: string;
+  materials: string;
+  frequency: string;
+}
+
+export interface PersianCelebration {
+  name: string;
+  date: string;
+  description: string;
+  traditions: string[];
+}
+
+export interface LearningResourceSection {
+  category: string;
+  resources: string[];
+}
+
+export interface BridgeAction {
+  icon: string;
+  text: string;
 }
