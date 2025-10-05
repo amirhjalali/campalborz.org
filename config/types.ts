@@ -229,6 +229,39 @@ export interface ContentConfig {
       };
     };
   };
+
+  // Members Page
+  members?: {
+    title: string;
+    subtitle: string;
+    loginSection: {
+      title: string;
+      emailLabel: string;
+      passwordLabel: string;
+      submitButton: string;
+      notMemberText: string;
+      applyLinkText: string;
+    };
+    benefits: {
+      title: string;
+      subtitle: string;
+      items: MemberBenefit[];
+    };
+    spotlight: {
+      title: string;
+      subtitle: string;
+      members: MemberSpotlight[];
+    };
+    communityStats: CommunityStats[];
+    cta?: {
+      title: string;
+      description: string;
+      buttons: {
+        primary: { text: string; link: string; };
+        secondary: { text: string; link: string; };
+      };
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -413,4 +446,25 @@ export interface LearningResourceSection {
 export interface BridgeAction {
   icon: string;
   text: string;
+}
+
+export interface MemberBenefit {
+  icon: string;
+  title: string;
+  description: string;
+  gradient: string;
+}
+
+export interface MemberSpotlight {
+  name: string;
+  role: string;
+  years: string;
+  contribution: string;
+  gradient: string;
+}
+
+export interface CommunityStats {
+  value: string;
+  label: string;
+  icon: string;
 }

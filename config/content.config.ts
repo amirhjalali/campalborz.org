@@ -794,4 +794,89 @@ export const contentConfig: ContentConfig = {
       },
     },
   },
+
+  // Members Page
+  members: {
+    title: "Member Portal",
+    subtitle: "Join our global community of artists, builders, and dreamers creating magic in the desert and beyond",
+    loginSection: {
+      title: "Member Login",
+      emailLabel: "Email",
+      passwordLabel: "Password",
+      submitButton: "Sign In",
+      notMemberText: "Not a member yet?",
+      applyLinkText: "Apply to join",
+    },
+    benefits: {
+      title: "Member Benefits",
+      subtitle: "Exclusive perks for our camp family",
+      items: [
+        {
+          icon: "shield",
+          title: "Priority Placement",
+          description: "Guaranteed spot at our camp during Burning Man",
+          gradient: "from-persian-purple to-persian-violet",
+        },
+        {
+          icon: "heart",
+          title: "Year-Round Events",
+          description: "Access to exclusive gatherings and workshops",
+          gradient: "from-desert-gold to-saffron",
+        },
+        {
+          icon: "award",
+          title: "Art Grants",
+          description: "Funding support for your creative projects",
+          gradient: "from-persian-violet to-pink-500",
+        },
+        {
+          icon: "users",
+          title: "Global Network",
+          description: "Connect with members worldwide",
+          gradient: "from-saffron to-desert-orange",
+        },
+      ],
+    },
+    spotlight: {
+      title: "Member Spotlight",
+      subtitle: "Meet some of our amazing contributors",
+      members: [
+        {
+          name: "Sarah Martinez",
+          role: "Art Lead",
+          years: "5 years",
+          contribution: "Led the HOMA Fire Sculpture project",
+          gradient: "from-persian-purple to-desert-gold",
+        },
+        {
+          name: "Ali Rezaei",
+          role: "Kitchen Coordinator",
+          years: "8 years",
+          contribution: "Feeds 100+ people daily at Burning Man",
+          gradient: "from-desert-gold to-saffron",
+        },
+        {
+          name: "Emma Chen",
+          role: "Build Lead",
+          years: "3 years",
+          contribution: "Designed our iconic shade structure",
+          gradient: "from-persian-violet to-pink-500",
+        },
+      ],
+    },
+    communityStats: [
+      { value: "500+", label: "Active Members", icon: "users" },
+      { value: "15", label: "Countries", icon: "star" },
+      { value: "100+", label: "Events Annually", icon: "calendar" },
+      { value: "$50K", label: "Art Grants Given", icon: "award" },
+    ],
+    cta: {
+      title: "Ready to Join Our Family?",
+      description: "Become part of a community that celebrates creativity, culture, and connection",
+      buttons: {
+        primary: { text: "Apply Now", link: "/apply" },
+        secondary: { text: "Learn More", link: "/about" },
+      },
+    },
+  },
 };

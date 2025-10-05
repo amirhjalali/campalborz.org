@@ -31,6 +31,7 @@ import {
   BarChart3,
   CheckCircle,
   BookOpen,
+  Shield,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -60,6 +61,7 @@ const iconMap: Record<string, LucideIcon> = {
   'bar-chart-3': BarChart3,
   'check-circle': CheckCircle,
   'book-open': BookOpen,
+  shield: Shield,
 };
 
 /**
