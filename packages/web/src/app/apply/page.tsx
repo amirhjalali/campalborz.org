@@ -5,8 +5,10 @@ import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { motion } from "framer-motion";
+import { useContentConfig } from "../../hooks/useConfig";
 
 export default function ApplyPage() {
+  const { apply } = useContentConfig();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,11 +20,22 @@ export default function ApplyPage() {
     emergency_contact: "",
   });
 
+  if (!apply) {
+    return (
+      <>
+        <Navigation />
+        <main className="min-h-screen flex items-center justify-center">
+          <p>Apply page configuration not found</p>
+        </main>
+      </>
+    );
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement form submission
     console.log("Form submitted:", formData);
-    alert("Application submitted! We'll be in touch soon.");
+    alert(apply.form.successMessage);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -35,25 +48,25 @@ export default function ApplyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-saffron via-desert-gold to-persian-purple">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 text-center text-white">
         <div className="max-w-4xl mx-auto">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-midnight bg-clip-text text-transparent"
           >
-            Join Camp Alborz
+            {apply.title}
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed"
           >
-            We're excited to learn about you and how you'd like to contribute to our community
+            {apply.subtitle}
           </motion.p>
         </div>
       </section>
@@ -65,16 +78,20 @@ export default function ApplyPage() {
         {/* Application Form */}
         <Card>
           <CardHeader>
-            <CardTitle>Membership Application</CardTitle>
+            <CardTitle>{apply.form.title}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Personal Information */}
               <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-4">Personal Information</h3>
+                <h3 className="text-lg font-semibold text-secondary-900 mb-4">
+                  {apply.form.fields.personalInfo.title}
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="form-label">Full Name *</label>
+                    <label className="form-label">
+                      {apply.form.fields.personalInfo.nameLabel}
+                    </label>
                     <input
                       type="text"
                       name="name"
@@ -85,7 +102,9 @@ export default function ApplyPage() {
                     />
                   </div>
                   <div>
-                    <label className="form-label">Email Address *</label>
+                    <label className="form-label">
+                      {apply.form.fields.personalInfo.emailLabel}
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -96,7 +115,9 @@ export default function ApplyPage() {
                     />
                   </div>
                   <div>
-                    <label className="form-label">Phone Number *</label>
+                    <label className="form-label">
+                      {apply.form.fields.personalInfo.phoneLabel}
+                    </label>
                     <input
                       type="tel"
                       name="phone"
@@ -107,13 +128,15 @@ export default function ApplyPage() {
                     />
                   </div>
                   <div>
-                    <label className="form-label">Emergency Contact *</label>
+                    <label className="form-label">
+                      {apply.form.fields.personalInfo.emergencyContactLabel}
+                    </label>
                     <input
                       type="text"
                       name="emergency_contact"
                       required
                       className="form-input"
-                      placeholder="Name and phone number"
+                      placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
                       value={formData.emergency_contact}
                       onChange={handleChange}
                     />
@@ -123,31 +146,30 @@ export default function ApplyPage() {
 
               {/* Burning Man Experience */}
               <div>
-                <label className="form-label">Burning Man Experience</label>
+                <label className="form-label">{apply.form.fields.experienceLabel}</label>
                 <select
                   name="experience"
                   className="form-input"
                   value={formData.experience}
                   onChange={handleChange}
                 >
-                  <option value="">Select your experience level</option>
-                  <option value="first-time">First-time Burner</option>
-                  <option value="1-3-years">1-3 years</option>
-                  <option value="4-7-years">4-7 years</option>
-                  <option value="8-plus-years">8+ years</option>
-                  <option value="veteran">Veteran (15+ years)</option>
+                  {apply.form.fields.experienceOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               {/* Interests */}
               <div>
-                <label className="form-label">What interests you about Camp Alborz? *</label>
+                <label className="form-label">{apply.form.fields.interestsLabel}</label>
                 <textarea
                   name="interests"
                   required
                   rows={4}
                   className="form-input"
-                  placeholder="Tell us what draws you to our camp..."
+                  placeholder={apply.form.fields.interestsPlaceholder}
                   value={formData.interests}
                   onChange={handleChange}
                 />
@@ -155,13 +177,13 @@ export default function ApplyPage() {
 
               {/* Contribution */}
               <div>
-                <label className="form-label">How would you like to contribute? *</label>
+                <label className="form-label">{apply.form.fields.contributionLabel}</label>
                 <textarea
                   name="contribution"
                   required
                   rows={4}
                   className="form-input"
-                  placeholder="Skills, time, resources, ideas..."
+                  placeholder={apply.form.fields.contributionPlaceholder}
                   value={formData.contribution}
                   onChange={handleChange}
                 />
@@ -169,12 +191,12 @@ export default function ApplyPage() {
 
               {/* Dietary Requirements */}
               <div>
-                <label className="form-label">Dietary Requirements/Allergies</label>
+                <label className="form-label">{apply.form.fields.dietaryLabel}</label>
                 <textarea
                   name="dietary"
                   rows={3}
                   className="form-input"
-                  placeholder="Any dietary restrictions or allergies we should know about?"
+                  placeholder={apply.form.fields.dietaryPlaceholder}
                   value={formData.dietary}
                   onChange={handleChange}
                 />
@@ -182,28 +204,29 @@ export default function ApplyPage() {
 
               {/* Terms and Conditions */}
               <div className="bg-secondary-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-secondary-900 mb-2">Before You Apply</h4>
+                <h4 className="font-semibold text-secondary-900 mb-2">
+                  {apply.form.beforeYouApply.title}
+                </h4>
                 <ul className="text-sm text-secondary-700 space-y-1">
-                  <li>• Membership includes camp dues to cover shared expenses</li>
-                  <li>• All members are expected to participate in camp setup and teardown</li>
-                  <li>• We operate on the principles of radical inclusion and respect</li>
-                  <li>• Camp participation requires commitment to our community values</li>
+                  {apply.form.beforeYouApply.items.map((item, index) => (
+                    <li key={index}>• {item}</li>
+                  ))}
                 </ul>
               </div>
 
               {/* Submit Button */}
               <div className="pt-4">
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button 
-                    type="submit" 
-                    size="lg" 
+                  <Button
+                    type="submit"
+                    size="lg"
                     className="w-full bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg"
                   >
-                    Submit Application
+                    {apply.form.submitButton}
                   </Button>
                 </motion.div>
                 <p className="text-sm text-neutral-600 mt-4 text-center">
-                  We'll review your application and get back to you within a week
+                  {apply.form.reviewMessage}
                 </p>
               </div>
             </form>
@@ -213,37 +236,21 @@ export default function ApplyPage() {
         {/* Additional Information */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>What Happens Next?</CardTitle>
+            <CardTitle>{apply.process.title}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-primary-600 font-semibold">1</span>
+              {apply.process.steps.map((step) => (
+                <div key={step.stepNumber} className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-primary-600 font-semibold">{step.stepNumber}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-secondary-900">{step.title}</h4>
+                    <p className="text-secondary-600">{step.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-secondary-900">Application Review</h4>
-                  <p className="text-secondary-600">Our camp leads will review your application</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-primary-600 font-semibold">2</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-secondary-900">Meet & Greet</h4>
-                  <p className="text-secondary-600">We&apos;ll invite you to a virtual or in-person meetup</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-primary-600 font-semibold">3</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-secondary-900">Welcome to the Family</h4>
-                  <p className="text-secondary-600">Join our planning activities and camp community</p>
-                </div>
-              </div>
+              ))}
             </div>
           </CardContent>
         </Card>

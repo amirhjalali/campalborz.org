@@ -879,4 +879,70 @@ export const contentConfig: ContentConfig = {
       },
     },
   },
+
+  // Apply Page
+  apply: {
+    title: "Join Camp Alborz",
+    subtitle: "We're excited to learn about you and how you'd like to contribute to our community",
+    form: {
+      title: "Membership Application",
+      fields: {
+        personalInfo: {
+          title: "Personal Information",
+          nameLabel: "Full Name *",
+          emailLabel: "Email Address *",
+          phoneLabel: "Phone Number *",
+          emergencyContactLabel: "Emergency Contact *",
+          emergencyContactPlaceholder: "Name and phone number",
+        },
+        experienceLabel: "Burning Man Experience",
+        experienceOptions: [
+          { value: "", label: "Select your experience level" },
+          { value: "first-time", label: "First-time Burner" },
+          { value: "1-3-years", label: "1-3 years" },
+          { value: "4-7-years", label: "4-7 years" },
+          { value: "8-plus-years", label: "8+ years" },
+          { value: "veteran", label: "Veteran (15+ years)" },
+        ],
+        interestsLabel: "What interests you about Camp Alborz? *",
+        interestsPlaceholder: "Tell us what draws you to our camp...",
+        contributionLabel: "How would you like to contribute? *",
+        contributionPlaceholder: "Skills, time, resources, ideas...",
+        dietaryLabel: "Dietary Requirements/Allergies",
+        dietaryPlaceholder: "Any dietary restrictions or allergies we should know about?",
+      },
+      beforeYouApply: {
+        title: "Before You Apply",
+        items: [
+          "Membership includes camp dues to cover shared expenses",
+          "All members are expected to participate in camp setup and teardown",
+          "We operate on the principles of radical inclusion and respect",
+          "Camp participation requires commitment to our community values",
+        ],
+      },
+      submitButton: "Submit Application",
+      successMessage: "Application submitted! We'll be in touch soon.",
+      reviewMessage: "We'll review your application and get back to you within a week",
+    },
+    process: {
+      title: "What Happens Next?",
+      steps: [
+        {
+          stepNumber: 1,
+          title: "Application Review",
+          description: "Our camp leads will review your application",
+        },
+        {
+          stepNumber: 2,
+          title: "Meet & Greet",
+          description: "We'll invite you to a virtual or in-person meetup",
+        },
+        {
+          stepNumber: 3,
+          title: "Welcome to the Family",
+          description: "Join our planning activities and camp community",
+        },
+      ],
+    },
+  },
 };

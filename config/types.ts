@@ -262,6 +262,44 @@ export interface ContentConfig {
       };
     };
   };
+
+  // Apply Page
+  apply?: {
+    title: string;
+    subtitle: string;
+    form: {
+      title: string;
+      fields: {
+        personalInfo: {
+          title: string;
+          nameLabel: string;
+          emailLabel: string;
+          phoneLabel: string;
+          emergencyContactLabel: string;
+          emergencyContactPlaceholder: string;
+        };
+        experienceLabel: string;
+        experienceOptions: ExperienceOption[];
+        interestsLabel: string;
+        interestsPlaceholder: string;
+        contributionLabel: string;
+        contributionPlaceholder: string;
+        dietaryLabel: string;
+        dietaryPlaceholder: string;
+      };
+      beforeYouApply: {
+        title: string;
+        items: string[];
+      };
+      submitButton: string;
+      successMessage: string;
+      reviewMessage: string;
+    };
+    process: {
+      title: string;
+      steps: ApplicationStep[];
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -467,4 +505,15 @@ export interface CommunityStats {
   value: string;
   label: string;
   icon: string;
+}
+
+export interface ExperienceOption {
+  value: string;
+  label: string;
+}
+
+export interface ApplicationStep {
+  stepNumber: number;
+  title: string;
+  description: string;
 }
