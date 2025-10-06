@@ -32,6 +32,8 @@ import {
   CheckCircle,
   BookOpen,
   Shield,
+  Search,
+  FileText,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -62,6 +64,8 @@ const iconMap: Record<string, LucideIcon> = {
   'check-circle': CheckCircle,
   'book-open': BookOpen,
   shield: Shield,
+  search: Search,
+  'file-text': FileText,
 };
 
 /**

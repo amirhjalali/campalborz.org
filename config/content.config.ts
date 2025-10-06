@@ -945,4 +945,56 @@ export const contentConfig: ContentConfig = {
       ],
     },
   },
+
+  // Search Page
+  search: {
+    title: "Search Camp Alborz",
+    subtitle: "Find events, members, content, and everything about our Persian community",
+    searchPlaceholder: "Search for anything...",
+    categories: {
+      title: "Search Categories",
+      subtitle: "Browse content by category",
+      items: [
+        { id: "all", label: "All Content", icon: "search", count: "240+" },
+        { id: "events", label: "Events", icon: "calendar", count: "12" },
+        { id: "members", label: "Members", icon: "users", count: "45" },
+        { id: "posts", label: "Posts", icon: "file-text", count: "89" },
+        { id: "art", label: "Art & Culture", icon: "palette", count: "94" },
+      ],
+    },
+    results: {
+      title: "Search Results",
+      mockResults: [
+        {
+          title: "Burning Man 2024 Camp Setup",
+          type: "Event",
+          excerpt: "Join us for the annual camp setup at Black Rock City. We'll be arriving early to establish our Persian oasis in the desert.",
+          date: "August 2024",
+        },
+        {
+          title: "Persian Poetry Night",
+          type: "Culture",
+          excerpt: "An evening of Rumi and Hafez poetry readings under the stars, accompanied by traditional Persian tea.",
+          date: "Monthly",
+        },
+        {
+          title: "HOMA Fire Sculpture",
+          type: "Art",
+          excerpt: "Our signature art installation representing the eternal flame of Persian culture and community.",
+          date: "Ongoing Project",
+        },
+      ],
+    },
+    popularSearches: {
+      title: "Popular Searches",
+      terms: [
+        "burning man 2024",
+        "persian poetry",
+        "art installations",
+        "cultural events",
+        "tea ceremony",
+        "membership application",
+      ],
+    },
+  },
 };

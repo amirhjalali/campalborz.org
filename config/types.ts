@@ -300,6 +300,26 @@ export interface ContentConfig {
       steps: ApplicationStep[];
     };
   };
+
+  // Search Page
+  search?: {
+    title: string;
+    subtitle: string;
+    searchPlaceholder: string;
+    categories: {
+      title: string;
+      subtitle: string;
+      items: SearchCategory[];
+    };
+    results: {
+      title: string;
+      mockResults: SearchResult[];
+    };
+    popularSearches: {
+      title: string;
+      terms: string[];
+    };
+  };
 }
 
 export interface NavigationItem {
@@ -516,4 +536,18 @@ export interface ApplicationStep {
   stepNumber: number;
   title: string;
   description: string;
+}
+
+export interface SearchCategory {
+  id: string;
+  label: string;
+  icon: string;
+  count: string;
+}
+
+export interface SearchResult {
+  title: string;
+  type: string;
+  excerpt: string;
+  date: string;
 }
