@@ -50,7 +50,7 @@ export interface CampConfig {
 }
 
 export interface BrandConfig {
-  // Colors
+  // Colors (Legacy - for backward compatibility)
   colors: {
     primary: string;
     secondary: string;
@@ -69,10 +69,15 @@ export interface BrandConfig {
     ui: string;
   };
 
-  // Theme
+  // Theme (Legacy - for backward compatibility)
   theme: {
     style: string;
     patterns: string[];
+    colors?: ThemeColors; // Extended theme colors
+    gradients?: GradientPresets;
+    shadows?: ShadowPresets;
+    radius?: RadiusPresets;
+    spacing?: SpacingPresets;
   };
 
   // Assets
@@ -550,4 +555,108 @@ export interface SearchResult {
   type: string;
   excerpt: string;
   date: string;
+}
+
+// ========================================
+// Theme System Types
+// ========================================
+
+export interface ColorVariants {
+  DEFAULT: string;
+  light: string;
+  dark: string;
+  50?: string;
+  100?: string;
+  200?: string;
+  300?: string;
+  400?: string;
+  500?: string;
+  600?: string;
+  700?: string;
+  800?: string;
+  900?: string;
+}
+
+export interface ThemeColors {
+  primary: ColorVariants;
+  secondary: ColorVariants;
+  accent: ColorVariants;
+  neutral: {
+    50: string;
+    100: string;
+    200: string;
+    300: string;
+    400: string;
+    500: string;
+    600: string;
+    700: string;
+    800: string;
+    900: string;
+  };
+  semantic: {
+    success: string;
+    warning: string;
+    error: string;
+    info: string;
+  };
+  background: {
+    primary: string;
+    secondary: string;
+    tertiary: string;
+  };
+  text: {
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    inverse: string;
+  };
+  border: {
+    light: string;
+    DEFAULT: string;
+    dark: string;
+  };
+}
+
+export interface GradientPresets {
+  hero: string;
+  card: string;
+  button: string;
+  decorative: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+}
+
+export interface ShadowPresets {
+  sm: string;
+  DEFAULT: string;
+  md: string;
+  lg: string;
+  xl: string;
+  '2xl': string;
+  inner: string;
+  none: string;
+}
+
+export interface RadiusPresets {
+  none: string;
+  sm: string;
+  DEFAULT: string;
+  md: string;
+  lg: string;
+  xl: string;
+  '2xl': string;
+  '3xl': string;
+  full: string;
+}
+
+export interface SpacingPresets {
+  xs: string;
+  sm: string;
+  md: string;
+  lg: string;
+  xl: string;
+  '2xl': string;
+  '3xl': string;
+  '4xl': string;
 }
