@@ -92,7 +92,7 @@ export function Navigation() {
               whileHover={{ scale: 1.05 }}
               className={cn(
                 'text-2xl font-display font-bold transition-colors',
-                isScrolled ? 'text-burnt-sienna' : 'text-white'
+                isScrolled ? 'text-primary' : 'text-white'
               )}
             >
               {campConfig.name.toUpperCase()}
@@ -113,7 +113,7 @@ export function Navigation() {
                   className={cn(
                     'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
                     isScrolled
-                      ? 'text-desert-night hover:text-burnt-sienna hover:bg-antique-gold/10'
+                      ? 'text-neutral-900 hover:text-primary hover:bg-secondary/10'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                   )}
                 >
@@ -137,7 +137,7 @@ export function Navigation() {
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-persian-purple/10 hover:text-persian-purple transition-colors"
+                          className="block px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-primary/10 hover:text-primary transition-colors"
                         >
                           {child.label}
                         </Link>
@@ -157,7 +157,7 @@ export function Navigation() {
               className={cn(
                 'p-2 rounded-lg transition-colors',
                 isScrolled
-                  ? 'text-desert-night hover:bg-desert-sand/20'
+                  ? 'text-neutral-900 hover:bg-neutral-200'
                   : 'text-white hover:bg-white/10'
               )}
             >
@@ -170,7 +170,7 @@ export function Navigation() {
               className={cn(
                 'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-semibold transition-all duration-300',
                 isScrolled
-                  ? 'bg-gradient-to-r from-burnt-sienna to-antique-gold text-warm-white hover:shadow-lg hover:scale-105'
+                  ? 'bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg hover:scale-105'
                   : 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20'
               )}
             >
@@ -183,7 +183,7 @@ export function Navigation() {
               className={cn(
                 'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-semibold transition-all duration-300',
                 isScrolled
-                  ? 'border-2 border-burnt-sienna text-burnt-sienna hover:bg-burnt-sienna hover:text-warm-white'
+                  ? 'border-2 border-primary text-primary hover:bg-primary hover:text-white'
                   : 'text-white border-2 border-white/30 hover:bg-white/10'
               )}
             >
@@ -196,7 +196,7 @@ export function Navigation() {
               className={cn(
                 'lg:hidden p-2 rounded-lg transition-colors',
                 isScrolled
-                  ? 'text-desert-night hover:bg-desert-sand/20'
+                  ? 'text-neutral-900 hover:bg-neutral-200'
                   : 'text-white hover:bg-white/10'
               )}
             >
@@ -246,14 +246,14 @@ export function Navigation() {
               <div className="pt-4 space-y-3 border-t border-neutral-200 dark:border-neutral-700">
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gradient-to-r from-burnt-sienna to-antique-gold text-warm-white rounded-lg font-semibold"
+                  className="block w-full text-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border-2 border-burnt-sienna text-burnt-sienna rounded-lg font-semibold"
+                  className="block w-full text-center px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Member Login

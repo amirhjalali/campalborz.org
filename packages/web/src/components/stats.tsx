@@ -17,7 +17,7 @@ export function Stats() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-burnt-sienna mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-primary mb-4">
             Our Impact in Numbers
           </h2>
           <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
@@ -29,7 +29,7 @@ export function Stats() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {stats.map((stat, index) => {
             const Icon = getIcon(stat.icon);
-            const color = stat.color || 'from-persian-purple to-persian-violet';
+            const color = stat.color || 'from-primary to-secondary';
 
             return (
               <motion.div
@@ -56,7 +56,7 @@ export function Stats() {
                   </div>
 
                   {/* Label */}
-                  <h3 className="text-lg font-semibold text-burnt-sienna mb-1">
+                  <h3 className="text-lg font-semibold text-primary mb-1">
                     {stat.label}
                   </h3>
 
@@ -85,7 +85,7 @@ export function Stats() {
           </p>
           <a
             href="/join"
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-burnt-sienna to-antique-gold text-warm-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             Join Our Community
           </a>

@@ -37,7 +37,7 @@ export function Hero() {
 
           {/* Tagline with decorative line */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-px bg-gradient-to-r from-transparent via-saffron to-transparent w-24" />
+            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24" />
             <motion.p
               className="text-xl md:text-2xl text-desert-sand font-light"
               initial={{ opacity: 0 }}
@@ -46,7 +46,7 @@ export function Hero() {
             >
               {hero.subtitle}
             </motion.p>
-            <div className="h-px bg-gradient-to-r from-transparent via-saffron to-transparent w-24" />
+            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24" />
           </div>
 
           {/* Description */}
