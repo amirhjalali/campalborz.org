@@ -1,140 +1,201 @@
-import { Tenant } from "@camp-platform/shared";
+/**
+ * Theme Utilities
+ *
+ * Functions for generating CSS custom properties from brand configuration
+ * and applying them to the document.
+ */
 
-export interface ThemeColors {
-  primary: string;
-  secondary: string;
-}
-
-export interface ThemeConfig {
-  colors: ThemeColors;
-  logo?: string;
-  favicon?: string;
-  fontFamily?: string;
-  borderRadius?: number;
-}
+import { brandConfig } from '../../../../config/brand.config';
+import type { BrandConfig } from '../../../../config/types';
 
 /**
- * Converts a hex color to HSL values
+ * Generate CSS custom properties from brand configuration
  */
-function hexToHsl(hex: string): [number, number, number] {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
+export function generateCSSVariables(config: BrandConfig): Record<string, string> {
+  const variables: Record<string, string> = {};
 
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h: number, s: number, l: number;
+  // Extended theme colors
+  if (config.theme.colors) {
+    const { colors } = config.theme;
 
-  l = (max + min) / 2;
+    // Primary colors
+    if (colors.primary) {
+      variables['--color-primary'] = colors.primary.DEFAULT;
+      variables['--color-primary-light'] = colors.primary.light;
+      variables['--color-primary-dark'] = colors.primary.dark;
 
-  if (max === min) {
-    h = s = 0;
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      case b: h = (r - g) / d + 4; break;
-      default: h = 0;
+      // Add full scale if available
+      for (let i = 50; i <= 900; i += (i < 100 ? 50 : 100)) {
+        const shade = colors.primary[i as keyof typeof colors.primary];
+        if (shade) {
+          variables[`--color-primary-${i}`] = shade;
+        }
+      }
     }
-    h /= 6;
+
+    // Secondary colors
+    if (colors.secondary) {
+      variables['--color-secondary'] = colors.secondary.DEFAULT;
+      variables['--color-secondary-light'] = colors.secondary.light;
+      variables['--color-secondary-dark'] = colors.secondary.dark;
+
+      for (let i = 50; i <= 900; i += (i < 100 ? 50 : 100)) {
+        const shade = colors.secondary[i as keyof typeof colors.secondary];
+        if (shade) {
+          variables[`--color-secondary-${i}`] = shade;
+        }
+      }
+    }
+
+    // Accent colors
+    if (colors.accent) {
+      variables['--color-accent'] = colors.accent.DEFAULT;
+      variables['--color-accent-light'] = colors.accent.light;
+      variables['--color-accent-dark'] = colors.accent.dark;
+
+      for (let i = 50; i <= 900; i += (i < 100 ? 50 : 100)) {
+        const shade = colors.accent[i as keyof typeof colors.accent];
+        if (shade) {
+          variables[`--color-accent-${i}`] = shade;
+        }
+      }
+    }
+
+    // Neutral colors
+    if (colors.neutral) {
+      for (let i = 50; i <= 900; i += (i < 100 ? 50 : 100)) {
+        const shade = colors.neutral[i as keyof typeof colors.neutral];
+        if (shade) {
+          variables[`--color-neutral-${i}`] = shade;
+        }
+      }
+    }
+
+    // Semantic colors
+    if (colors.semantic) {
+      variables['--color-success'] = colors.semantic.success;
+      variables['--color-warning'] = colors.semantic.warning;
+      variables['--color-error'] = colors.semantic.error;
+      variables['--color-info'] = colors.semantic.info;
+    }
+
+    // Background colors
+    if (colors.background) {
+      variables['--color-bg-primary'] = colors.background.primary;
+      variables['--color-bg-secondary'] = colors.background.secondary;
+      variables['--color-bg-tertiary'] = colors.background.tertiary;
+    }
+
+    // Text colors
+    if (colors.text) {
+      variables['--color-text-primary'] = colors.text.primary;
+      variables['--color-text-secondary'] = colors.text.secondary;
+      variables['--color-text-tertiary'] = colors.text.tertiary;
+      variables['--color-text-inverse'] = colors.text.inverse;
+    }
+
+    // Border colors
+    if (colors.border) {
+      variables['--color-border-light'] = colors.border.light;
+      variables['--color-border'] = colors.border.DEFAULT;
+      variables['--color-border-dark'] = colors.border.dark;
+    }
   }
 
-  return [h * 360, s * 100, l * 100];
+  // Gradients
+  if (config.theme.gradients) {
+    const { gradients } = config.theme;
+    Object.entries(gradients).forEach(([key, value]) => {
+      variables[`--gradient-${key}`] = value;
+    });
+  }
+
+  // Shadows
+  if (config.theme.shadows) {
+    const { shadows } = config.theme;
+    Object.entries(shadows).forEach(([key, value]) => {
+      const cssKey = key === 'DEFAULT' ? 'shadow' : `shadow-${key}`;
+      variables[`--${cssKey}`] = value;
+    });
+  }
+
+  // Border radius
+  if (config.theme.radius) {
+    const { radius } = config.theme;
+    Object.entries(radius).forEach(([key, value]) => {
+      const cssKey = key === 'DEFAULT' ? 'radius' : `radius-${key}`;
+      variables[`--${cssKey}`] = value;
+    });
+  }
+
+  // Spacing
+  if (config.theme.spacing) {
+    const { spacing } = config.theme;
+    Object.entries(spacing).forEach(([key, value]) => {
+      variables[`--spacing-${key}`] = value;
+    });
+  }
+
+  // Fonts
+  variables['--font-display'] = config.fonts.display;
+  variables['--font-body'] = config.fonts.body;
+  variables['--font-ui'] = config.fonts.ui;
+
+  return variables;
 }
 
 /**
- * Generates color palette from a base color
+ * Apply CSS variables to the document root
  */
-function generateColorPalette(baseColor: string): Record<string, string> {
-  const [h, s, l] = hexToHsl(baseColor);
-  
-  const palette: Record<string, string> = {};
-  const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
-  const lightnesses = [95, 90, 80, 65, 50, 40, 30, 25, 20, 15, 10];
-  
-  shades.forEach((shade, index) => {
-    const newL = lightnesses[index];
-    const newS = shade === 50 || shade === 950 ? Math.max(s - 20, 10) : s;
-    palette[shade] = `hsl(${h}, ${newS}%, ${newL}%)`;
-  });
-  
-  return palette;
-}
-
-/**
- * Applies tenant theme to the document
- */
-export function applyTenantTheme(tenant: Tenant) {
-  const settings = tenant.settings as any;
-  const branding = settings?.branding || {};
-  
+export function applyCSSVariables(variables: Record<string, string>): void {
   if (typeof document === 'undefined') return;
-  
+
   const root = document.documentElement;
-  
-  // Apply primary colors
-  if (branding.primaryColor) {
-    const primaryPalette = generateColorPalette(branding.primaryColor);
-    Object.entries(primaryPalette).forEach(([shade, color]) => {
-      root.style.setProperty(`--color-primary-${shade}`, color);
-    });
-  }
-  
-  // Apply secondary colors
-  if (branding.secondaryColor) {
-    const secondaryPalette = generateColorPalette(branding.secondaryColor);
-    Object.entries(secondaryPalette).forEach(([shade, color]) => {
-      root.style.setProperty(`--color-secondary-${shade}`, color);
-    });
-  }
-  
-  // Apply favicon
-  if (branding.favicon) {
-    const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
-    if (favicon) {
-      favicon.href = branding.favicon;
-    }
-  }
-  
-  // Set page title
-  document.title = `${tenant.name} - Camp Management Platform`;
+  Object.entries(variables).forEach(([property, value]) => {
+    root.style.setProperty(property, value);
+  });
 }
 
 /**
- * Gets theme configuration for tenant
+ * Apply theme from brand configuration
  */
-export function getTenantTheme(tenant: Tenant): ThemeConfig {
-  const settings = tenant.settings as any;
-  const branding = settings?.branding || {};
-  
-  return {
-    colors: {
-      primary: branding.primaryColor || '#3b82f6',
-      secondary: branding.secondaryColor || '#6b7280',
-    },
-    logo: branding.logo,
-    favicon: branding.favicon,
-  };
+export function applyTheme(config: BrandConfig = brandConfig): void {
+  const variables = generateCSSVariables(config);
+  applyCSSVariables(variables);
 }
 
 /**
- * Default theme configuration
+ * Get a CSS variable value
  */
-export const defaultTheme: ThemeConfig = {
-  colors: {
-    primary: '#3b82f6',
-    secondary: '#6b7280',
-  },
-};
+export function getCSSVariable(name: string): string {
+  if (typeof window === 'undefined') return '';
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
 
 /**
- * Camp Alborz theme configuration
+ * Convert RGB string to hex
  */
-export const campAlborzTheme: ThemeConfig = {
-  colors: {
-    primary: '#8B5A3C', // Persian brown
-    secondary: '#D4AF37', // Persian gold
-  },
-};
+export function rgbToHex(rgb: string): string {
+  const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (!match) return rgb;
+
+  const r = parseInt(match[1]);
+  const g = parseInt(match[2]);
+  const b = parseInt(match[3]);
+
+  return `#${[r, g, b].map(x => x.toString(16).padStart(2, '0')).join('')}`;
+}
+
+/**
+ * Convert hex to RGB
+ */
+export function hexToRgb(hex: string): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return hex;
+
+  const r = parseInt(result[1], 16);
+  const g = parseInt(result[2], 16);
+  const b = parseInt(result[3], 16);
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
