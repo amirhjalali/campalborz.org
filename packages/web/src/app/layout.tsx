@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { brandConfig } from '../../../../config/brand.config';
+import { ThemeProvider } from '../components/ThemeProvider';
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -57,7 +58,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${crimson.variable} ${montserrat.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
