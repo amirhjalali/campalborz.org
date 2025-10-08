@@ -29,7 +29,7 @@ export default function EventsPage() {
     );
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-persian-purple via-midnight to-desert-gold">
+    <div className="min-h-screen bg-gradient-to-br from-primary via-neutral-900 to-secondary">
       <Navigation />
       
       {/* Hero Section */}
@@ -39,7 +39,7 @@ export default function EventsPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-desert-gold bg-clip-text text-transparent"
+            className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-secondary bg-clip-text text-transparent"
           >
             {events.title}
           </motion.h1>
@@ -82,7 +82,7 @@ export default function EventsPage() {
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 >
-                  <Card className="h-full border-2 border-transparent hover:border-persian-purple/20 hover:shadow-xl transition-all duration-300">
+                  <Card className="h-full border-2 border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300">
                     <CardHeader>
                       <div className="flex items-center">
                         <div className={`p-3 rounded-xl ${type.color} mr-4`}>
@@ -90,7 +90,7 @@ export default function EventsPage() {
                         </div>
                         <div>
                           <CardTitle className="text-xl font-bold text-midnight">{type.name}</CardTitle>
-                          <div className="text-sm text-persian-purple font-medium">{type.count} events yearly</div>
+                          <div className="text-sm text-primary font-medium">{type.count} events yearly</div>
                         </div>
                       </div>
                     </CardHeader>
@@ -251,7 +251,7 @@ export default function EventsPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-center bg-gradient-to-r from-persian-purple/5 to-saffron/5 rounded-2xl p-12"
+            className="text-center bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-6">
               {events.cta.title}
@@ -261,12 +261,12 @@ export default function EventsPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg" asChild>
                   <Link href={events.cta.buttons.primary.link}>{events.cta.buttons.primary.text}</Link>
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-persian-purple hover:text-white" asChild>
                   <Link href={events.cta.buttons.secondary.link}>{events.cta.buttons.secondary.text}</Link>
                 </Button>
               </motion.div>
