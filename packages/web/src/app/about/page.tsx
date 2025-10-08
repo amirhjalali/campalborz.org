@@ -31,7 +31,7 @@ export default function AboutPage() {
       <main className="min-h-screen bg-gradient-to-b from-neutral-50 to-white dark:from-midnight-dark dark:to-midnight">
         {/* Hero Section */}
         <section className="relative pt-32 pb-16 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-persian-purple/10 via-transparent to-desert-gold/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex justify-center mt-8"
             >
-              <div className="p-4 bg-gradient-to-br from-persian-purple to-persian-violet rounded-full">
+              <div className="p-4 bg-gradient-to-br from-primary to-secondary rounded-full">
                 <MountainIcon className="h-12 w-12 text-white" />
               </div>
             </motion.div>
@@ -104,7 +104,7 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {about.values.map((value, index) => {
                 const ValueIcon = getIcon(value.icon);
-                const gradient = value.gradient || 'from-persian-purple to-persian-violet';
+                const gradient = value.gradient || 'from-primary to-secondary';
 
                 return (
                   <motion.div
@@ -152,7 +152,7 @@ export default function AboutPage() {
 
             <div className="relative">
               {/* Timeline line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-persian-purple to-desert-gold" />
+              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary to-secondary" />
               
               {/* Milestones */}
               <div className="space-y-12">
@@ -166,10 +166,10 @@ export default function AboutPage() {
                     className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}
                   >
                     <div className="flex-1" />
-                    <div className="w-4 h-4 bg-persian-purple rounded-full relative z-10" />
+                    <div className="w-4 h-4 bg-primary rounded-full relative z-10" />
                     <div className="flex-1">
                       <div className={`bg-white dark:bg-midnight-light rounded-lg p-4 shadow-lg ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
-                        <div className="text-persian-purple font-bold mb-1">{milestone.year}</div>
+                        <div className="text-primary font-bold mb-1">{milestone.year}</div>
                         <div className="text-neutral-700 dark:text-neutral-300">{milestone.event}</div>
                       </div>
                     </div>
@@ -208,9 +208,9 @@ export default function AboutPage() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-white dark:bg-midnight rounded-lg p-6 text-center shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  <div className="w-20 h-20 bg-gradient-to-br from-persian-purple to-persian-violet rounded-full mx-auto mb-4" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4" />
                   <h3 className="font-semibold text-neutral-900 dark:text-white mb-1">{member.name}</h3>
-                  <p className="text-sm text-persian-purple dark:text-persian-light mb-3">{member.role}</p>
+                  <p className="text-sm text-primary dark:text-primary-light mb-3">{member.role}</p>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400">{member.bio}</p>
                 </motion.div>
               ))}
@@ -226,10 +226,10 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-gradient-to-br from-persian-purple/10 to-desert-gold/10 rounded-2xl p-8 md:p-12"
+              className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-8 md:p-12"
             >
               <div className="flex items-center mb-6">
-                <AwardIcon className="h-8 w-8 text-persian-purple mr-3" />
+                <AwardIcon className="h-8 w-8 text-primary mr-3" />
                 <h2 className="text-3xl font-display font-bold text-neutral-900 dark:text-white">
                   {about.nonprofit.title}
                 </h2>
@@ -240,14 +240,14 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/donate"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                 >
                   {about.nonprofit.cta.donate}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
                 <Link
                   href="/apply"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-persian-purple hover:bg-persian-purple/10 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-primary hover:bg-primary/10 transition-all duration-300"
                 >
                   {about.nonprofit.cta.join}
                   <ArrowRight className="ml-2 h-5 w-5" />
