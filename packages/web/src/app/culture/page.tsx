@@ -279,12 +279,12 @@ export default function CulturePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg" asChild>
+                <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg" asChild>
                   <Link href={culture.cta.buttons.primary.link}>{culture.cta.buttons.primary.text}</Link>
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-2 border-persian-purple text-persian-purple hover:bg-persian-purple hover:text-white" asChild>
+                <Button variant="outline" size="lg" className="border-2 border-persian-purple text-primary hover:bg-persian-purple hover:text-white" asChild>
                   <Link href={culture.cta.buttons.secondary.link}>{culture.cta.buttons.secondary.text}</Link>
                 </Button>
               </motion.div>

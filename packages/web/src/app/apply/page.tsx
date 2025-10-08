@@ -46,7 +46,7 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-saffron via-desert-gold to-persian-purple">
+    <div className="min-h-screen bg-gradient-to-br from-accent via-secondary to-primary">
       <Navigation />
 
       {/* Hero Section */}
@@ -220,7 +220,7 @@ export default function ApplyPage() {
                   <Button
                     type="submit"
                     size="lg"
-                    className="w-full bg-gradient-to-r from-persian-purple to-persian-violet hover:shadow-lg"
+                    className="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg"
                   >
                     {apply.form.submitButton}
                   </Button>

@@ -29,7 +29,7 @@ export default function SearchPage() {
       <main className="min-h-screen bg-gradient-to-b from-neutral-50 to-white dark:from-midnight-dark dark:to-midnight">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-persian-purple/10 via-transparent to-desert-gold/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,15 +87,15 @@ export default function SearchPage() {
                       onClick={() => setSearchType(category.id)}
                       className={`cursor-pointer bg-white dark:bg-midnight-light rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border-2 ${
                         searchType === category.id
-                          ? 'border-persian-purple bg-persian-purple/5'
-                          : 'border-transparent hover:border-persian-purple/20'
+                          ? 'border-primary bg-primary/5'
+                          : 'border-transparent hover:border-primary/20'
                       }`}
                     >
                       <div className="flex flex-col items-center">
                         <div className={`p-3 rounded-xl mb-3 ${
                           searchType === category.id
-                            ? 'bg-persian-purple text-white'
-                            : 'bg-persian-purple/10 text-persian-purple'
+                            ? 'bg-primary text-white'
+                            : 'bg-primary/10 text-primary'
                         }`}>
                           <CategoryIcon className="h-6 w-6" />
                         </div>
@@ -136,7 +136,7 @@ export default function SearchPage() {
                         <h4 className="text-xl font-semibold text-neutral-900 dark:text-white">
                           {result.title}
                         </h4>
-                        <span className="px-3 py-1 bg-persian-purple/10 text-persian-purple rounded-full text-sm">
+                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
                           {result.type}
                         </span>
                       </div>
@@ -168,7 +168,7 @@ export default function SearchPage() {
                   <button
                     key={term}
                     onClick={() => setSearchQuery(term)}
-                    className="px-6 py-2 rounded-full border-2 border-persian-purple/30 text-persian-purple hover:bg-persian-purple hover:text-white transition-all duration-300"
+                    className="px-6 py-2 rounded-full border-2 border-primary/30 text-primary hover:bg-primary hover:text-white transition-all duration-300"
                   >
                     {term}
                   </button>

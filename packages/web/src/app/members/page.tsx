@@ -54,7 +54,7 @@ export default function MembersPage() {
               className="bg-white dark:bg-midnight-light rounded-2xl p-8 shadow-lg"
             >
               <div className="flex justify-center mb-6">
-                <div className="p-3 bg-gradient-to-br from-persian-purple to-persian-violet rounded-full">
+                <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-full">
                   <LogIn className="h-8 w-8 text-white" />
                 </div>
               </div>
@@ -84,7 +84,7 @@ export default function MembersPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full px-6 py-3 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                 >
                   {members.loginSection.submitButton}
                 </button>
@@ -92,7 +92,7 @@ export default function MembersPage() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
                   {members.loginSection.notMemberText}{' '}
-                  <Link href="/apply" className="text-persian-purple hover:underline">
+                  <Link href="/apply" className="text-primary hover:underline">
                     {members.loginSection.applyLinkText}
                   </Link>
                 </p>
@@ -180,7 +180,7 @@ export default function MembersPage() {
                   <h3 className="text-xl font-semibold text-neutral-900 dark:text-white mb-1">
                     {member.name}
                   </h3>
-                  <p className="text-persian-purple dark:text-persian-light font-medium mb-2">
+                  <p className="text-primary dark:text-persian-light font-medium mb-2">
                     {member.role}
                   </p>
                   <p className="text-sm text-neutral-500 dark:text-neutral-500 mb-3">
@@ -209,7 +209,7 @@ export default function MembersPage() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
-                    <StatIcon className="h-8 w-8 text-persian-purple mx-auto mb-3" />
+                    <StatIcon className="h-8 w-8 text-primary mx-auto mb-3" />
                     <div className="text-3xl font-bold text-neutral-900 dark:text-white mb-1">
                       {stat.value}
                     </div>
@@ -242,7 +242,7 @@ export default function MembersPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href={members.cta.buttons.primary.link}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-persian-purple to-persian-violet text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                 >
                   {members.cta.buttons.primary.text}
                   <ArrowRight className="ml-2 h-5 w-5" />
