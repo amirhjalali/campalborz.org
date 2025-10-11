@@ -29,17 +29,17 @@ export default function EventsPage() {
     );
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-neutral-900 to-secondary">
+    <div className="min-h-screen bg-gradient-hero animate-gradient-x">
       <Navigation />
-      
+
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 text-center text-white">
+      <section className="pt-32 pb-20 px-4 text-center">
         <div className="max-w-6xl mx-auto">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6 text-white"
+            className="text-5xl md:text-7xl font-bold mb-6 text-burnt-sienna"
           >
             {events.title}
           </motion.h1>
@@ -47,7 +47,7 @@ export default function EventsPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-desert-night max-w-4xl mx-auto leading-relaxed"
           >
             {events.subtitle}
           </motion.p>
