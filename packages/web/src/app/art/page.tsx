@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { MapPin, Eye, ArrowRight } from 'lucide-react';
+import { MapPin, Eye, ArrowRight, Users, Calendar } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 
