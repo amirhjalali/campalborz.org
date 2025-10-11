@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { cn } from '../lib/utils';
 import { useCampConfig } from '../hooks/useConfig';
 
@@ -62,12 +63,14 @@ const navItems = [
 
 export function Navigation() {
   const campConfig = useCampConfig();
+  const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -152,17 +155,20 @@ export function Navigation() {
           {/* Right side buttons */}
           <div className="flex items-center space-x-4">
             {/* Dark mode toggle */}
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={cn(
-                'p-2 rounded-lg transition-colors',
-                isScrolled
-                  ? 'text-neutral-900 hover:bg-neutral-200'
-                  : 'text-white hover:bg-white/10'
-              )}
-            >
-              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className={cn(
+                  'p-2 rounded-lg transition-colors',
+                  isScrolled
+                    ? 'text-neutral-900 hover:bg-neutral-200'
+                    : 'text-white hover:bg-white/10'
+                )}
+                aria-label="Toggle dark mode"
+              >
+                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+            )}
 
             {/* Donate button */}
             <Link
