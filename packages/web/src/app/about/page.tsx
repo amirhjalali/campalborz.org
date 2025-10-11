@@ -28,10 +28,9 @@ export default function AboutPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-gradient-to-b from-neutral-50 to-white dark:from-midnight-dark dark:to-midnight">
+      <main className="min-h-screen bg-gradient-hero animate-gradient-x">
         {/* Hero Section */}
         <section className="relative pt-32 pb-16 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -39,10 +38,10 @@ export default function AboutPage() {
             className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           >
             <div className="text-center">
-              <h1 className="text-5xl md:text-6xl font-display font-bold text-neutral-900 dark:text-white mb-6">
+              <h1 className="text-5xl md:text-6xl font-display font-bold text-burnt-sienna mb-6">
                 {about.title}
               </h1>
-              <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
+              <p className="text-xl text-desert-night max-w-3xl mx-auto">
                 {about.subtitle}
               </p>
             </div>
