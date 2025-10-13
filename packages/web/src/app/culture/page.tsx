@@ -53,30 +53,43 @@ export default function CulturePage() {
 
         {/* Cultural Elements Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {culture.culturalElements.map((element) => {
+          {culture.culturalElements.map((element, index) => {
             const ElementIcon = getIcon(element.icon);
             return (
-              <Card key={element.title} className="group hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center">
-                    <div className={`p-2 rounded-lg ${element.color} mr-3`}>
-                      <ElementIcon className="h-6 w-6" />
+              <motion.div
+                key={element.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, scale: 1.03 }}
+                className="h-full"
+              >
+                <Card className="h-full group border border-neutral-200 hover:border-primary/40 hover:shadow-2xl transition-all duration-300 bg-white backdrop-blur-sm">
+                  <CardHeader>
+                    <div className="flex items-center">
+                      <motion.div
+                        className={`p-2 rounded-lg ${element.color} mr-3`}
+                        whileHover={{ rotate: 8, scale: 1.1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ElementIcon className="h-6 w-6" />
+                      </motion.div>
+                      <CardTitle className="text-lg">{element.title}</CardTitle>
                     </div>
-                    <CardTitle className="text-lg">{element.title}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-secondary-600 text-sm mb-3">{element.description}</p>
-                  <div className="space-y-1">
-                    {element.activities.map((activity, index) => (
-                      <div key={index} className="text-xs text-secondary-500 flex items-center">
-                        <span className="w-1 h-1 bg-primary-600 rounded-full mr-2"></span>
-                        {activity}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-secondary-600 text-sm mb-3">{element.description}</p>
+                    <div className="space-y-1">
+                      {element.activities.map((activity, idx) => (
+                        <div key={idx} className="text-xs text-secondary-500 flex items-center">
+                          <span className="w-1 h-1 bg-primary-600 rounded-full mr-2"></span>
+                          {activity}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
@@ -124,41 +137,50 @@ export default function CulturePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {culture.workshops.map((workshop) => (
-              <Card key={workshop.title} className="h-full">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{workshop.title}</CardTitle>
-                    <span className="px-2 py-1 bg-primary-100 text-primary-600 rounded text-xs font-medium">
-                      {workshop.frequency}
-                    </span>
-                  </div>
-                  <p className="text-primary-600 font-medium">Led by {workshop.instructor}</p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-secondary-700 mb-4">{workshop.description}</p>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <span className="text-sm font-medium text-secondary-900">Level:</span>
-                      <p className="text-sm text-secondary-600">{workshop.level}</p>
+            {culture.workshops.map((workshop, index) => (
+              <motion.div
+                key={workshop.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                whileHover={{ y: -6, scale: 1.01 }}
+                className="h-full"
+              >
+                <Card className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">{workshop.title}</CardTitle>
+                      <span className="px-2 py-1 bg-primary-100 text-primary-600 rounded text-xs font-medium">
+                        {workshop.frequency}
+                      </span>
                     </div>
-                    <div>
-                      <span className="text-sm font-medium text-secondary-900">Duration:</span>
-                      <p className="text-sm text-secondary-600">{workshop.duration}</p>
+                    <p className="text-primary-600 font-medium">Led by {workshop.instructor}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-secondary-700 mb-4">{workshop.description}</p>
+
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <span className="text-sm font-medium text-secondary-900">Level:</span>
+                        <p className="text-sm text-secondary-600">{workshop.level}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-secondary-900">Duration:</span>
+                        <p className="text-sm text-secondary-600">{workshop.duration}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="mb-4">
-                    <span className="text-sm font-medium text-secondary-900">Materials:</span>
-                    <p className="text-sm text-secondary-600">{workshop.materials}</p>
-                  </div>
+                    <div className="mb-4">
+                      <span className="text-sm font-medium text-secondary-900">Materials:</span>
+                      <p className="text-sm text-secondary-600">{workshop.materials}</p>
+                    </div>
 
-                  <Button variant="outline" size="sm" className="w-full">
-                    Join Workshop
-                  </Button>
-                </CardContent>
-              </Card>
+                    <Button variant="outline" size="sm" className="w-full hover:bg-primary hover:text-white transition-colors">
+                      Join Workshop
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>

@@ -57,19 +57,28 @@ export default function ArtPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="group relative bg-white dark:bg-midnight-light rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
+                    whileHover={{ y: -10, scale: 1.03 }}
+                    className="group relative bg-white dark:bg-midnight-light rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-primary/20"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
-                    <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-4`}>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
+                    <motion.div
+                      className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-4`}
+                      whileHover={{ rotate: 12, scale: 1.1 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <CategoryIcon className="h-6 w-6 text-white" />
-                    </div>
+                    </motion.div>
                     <h3 className="text-lg font-semibold text-neutral-900 dark:text-white mb-1">
                       {category.name}
                     </h3>
-                    <p className="text-3xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent">
+                    <p className={`text-3xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent mb-1`}>
                       {category.count}
                     </p>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-1">Projects</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">Projects</p>
+                    <div className="flex items-center text-primary font-medium text-sm group-hover:text-secondary transition-colors">
+                      <span>View Projects</span>
+                      <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </motion.div>
                 );
               })}
@@ -106,10 +115,11 @@ export default function ArtPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="group relative bg-white dark:bg-midnight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  className="group relative bg-white dark:bg-midnight rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary/20"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-                  <div className="p-8">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-8 transition-opacity duration-300`} />
+                  <div className="p-8 relative z-10">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                       <div className="flex-1">
                         <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">

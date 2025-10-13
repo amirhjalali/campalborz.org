@@ -59,22 +59,34 @@ export default function DonatePage() {
 
         {/* Impact Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          {donate.impactStats.map((stat) => {
+          {donate.impactStats.map((stat, index) => {
             const StatIcon = getIcon(stat.icon);
             return (
-              <Card key={stat.label} className="text-center">
-                <CardHeader>
-                  <div className="flex items-center justify-center">
-                    <div className="p-3 bg-primary-100 rounded-full">
-                      <StatIcon className="h-8 w-8 text-primary-600" />
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, scale: 1.05 }}
+              >
+                <Card className="text-center border border-neutral-200 hover:border-primary/40 hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white via-neutral-50 to-primary/5">
+                  <CardHeader>
+                    <div className="flex items-center justify-center">
+                      <motion.div
+                        className="p-3 bg-primary-100 rounded-full"
+                        whileHover={{ rotate: 360, scale: 1.15 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <StatIcon className="h-8 w-8 text-primary-600" />
+                      </motion.div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-secondary-900 mb-2">{stat.number}</div>
-                  <div className="text-secondary-600">{stat.label}</div>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold text-secondary-900 mb-2">{stat.number}</div>
+                    <div className="text-secondary-600">{stat.label}</div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
@@ -91,38 +103,56 @@ export default function DonatePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {donate.donationTiers.map((tier) => (
-              <Card key={tier.amount} className={`relative ${tier.popular ? 'ring-2 ring-primary-500 shadow-lg' : ''}`}>
-                {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-                <CardHeader>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-secondary-900 mb-2">
-                      ${tier.amount}
+            {donate.donationTiers.map((tier, index) => (
+              <motion.div
+                key={tier.amount}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className="h-full"
+              >
+                <Card className={`relative h-full border-2 transition-all duration-300 bg-white ${
+                  tier.popular
+                    ? 'border-primary-500 shadow-2xl hover:shadow-3xl'
+                    : 'border-neutral-200 hover:border-primary/40 hover:shadow-xl'
+                }`}>
+                  {tier.popular && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.5, type: "spring" }}
+                      className="absolute -top-3 left-1/2 transform -translate-x-1/2"
+                    >
+                      <span className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white px-4 py-1 rounded-full text-sm font-medium shadow-lg">
+                        Most Popular
+                      </span>
+                    </motion.div>
+                  )}
+                  <CardHeader>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-secondary-900 mb-2">
+                        ${tier.amount}
+                      </div>
+                      <CardTitle className="text-lg">{tier.title}</CardTitle>
+                      <p className="text-secondary-600 text-sm mt-2">{tier.description}</p>
                     </div>
-                    <CardTitle className="text-lg">{tier.title}</CardTitle>
-                    <p className="text-secondary-600 text-sm mt-2">{tier.description}</p>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 mb-6">
-                    {tier.perks.map((perk, index) => (
-                      <li key={index} className="flex items-center text-sm text-secondary-700">
-                        <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-                        {perk}
-                      </li>
-                    ))}
-                  </ul>
-                  <Button className="w-full" variant={tier.popular ? "primary" : "outline"}>
-                    Donate ${tier.amount}
-                  </Button>
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 mb-6">
+                      {tier.perks.map((perk, idx) => (
+                        <li key={idx} className="flex items-center text-sm text-secondary-700">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
+                          {perk}
+                        </li>
+                      ))}
+                    </ul>
+                    <Button className="w-full" variant={tier.popular ? "primary" : "outline"}>
+                      Donate ${tier.amount}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
 
@@ -222,28 +252,41 @@ export default function DonatePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {donate.otherWaysToHelp.map((option) => {
+            {donate.otherWaysToHelp.map((option, index) => {
               const OptionIcon = getIcon(option.icon);
               return (
-                <Card key={option.title} className="group hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center">
-                      <div className="p-3 bg-primary-100 rounded-lg mr-4 group-hover:bg-primary-200 transition-colors">
-                        <OptionIcon className="h-6 w-6 text-primary-600" />
+                <motion.div
+                  key={option.title}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  className="h-full"
+                >
+                  <Card className="h-full group border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-white">
+                    <CardHeader>
+                      <div className="flex items-center">
+                        <motion.div
+                          className="p-3 bg-primary-100 rounded-lg mr-4 group-hover:bg-primary-200 transition-colors"
+                          whileHover={{ rotate: 12, scale: 1.1 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <OptionIcon className="h-6 w-6 text-primary-600" />
+                        </motion.div>
+                        <div>
+                          <CardTitle className="text-lg">{option.title}</CardTitle>
+                          <p className="text-primary-600 font-medium">{option.amount}</p>
+                        </div>
                       </div>
-                      <div>
-                        <CardTitle className="text-lg">{option.title}</CardTitle>
-                        <p className="text-primary-600 font-medium">{option.amount}</p>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-secondary-600 mb-4">{option.description}</p>
-                    <Button variant="outline" size="sm">
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-secondary-600 mb-4">{option.description}</p>
+                      <Button variant="outline" size="sm" className="hover:bg-primary hover:text-white transition-colors">
+                        Learn More
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>

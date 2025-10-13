@@ -80,14 +80,19 @@ export default function EventsPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
+                  className="h-full"
                 >
-                  <Card className="h-full border-2 border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+                  <Card className="h-full border-2 border-neutral-100 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 bg-white backdrop-blur-sm">
                     <CardHeader>
                       <div className="flex items-center">
-                        <div className={`p-3 rounded-xl ${type.color} mr-4`}>
+                        <motion.div
+                          className={`p-3 rounded-xl ${type.color} mr-4`}
+                          whileHover={{ rotate: 5, scale: 1.1 }}
+                          transition={{ duration: 0.2 }}
+                        >
                           <TypeIcon className="h-7 w-7" />
-                        </div>
+                        </motion.div>
                         <div>
                           <CardTitle className="text-xl font-bold text-midnight">{type.name}</CardTitle>
                           <div className="text-sm text-primary font-medium">{type.count} events yearly</div>
@@ -116,25 +121,37 @@ export default function EventsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {events.upcomingEvents.map((event) => {
+            {events.upcomingEvents.map((event, idx) => {
               const EventIcon = getIcon(event.icon);
               return (
-                <Card key={event.id} className="h-full">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start">
-                        <div className={`p-2 rounded-lg ${event.color} mr-3 flex-shrink-0`}>
-                          <EventIcon className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg">{event.title}</CardTitle>
-                          <span className="inline-block px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs font-medium">
-                            {event.type}
-                          </span>
+                <motion.div
+                  key={event.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  whileHover={{ y: -6, scale: 1.01 }}
+                  className="h-full"
+                >
+                  <Card className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start">
+                          <motion.div
+                            className={`p-2 rounded-lg ${event.color} mr-3 flex-shrink-0`}
+                            whileHover={{ rotate: 10, scale: 1.15 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <EventIcon className="h-5 w-5" />
+                          </motion.div>
+                          <div>
+                            <CardTitle className="text-lg">{event.title}</CardTitle>
+                            <span className="inline-block px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs font-medium">
+                              {event.type}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardHeader>
+                    </CardHeader>
                   <CardContent>
                     <div className="space-y-3 mb-4">
                       <div className="flex items-center text-secondary-600">
@@ -170,6 +187,7 @@ export default function EventsPage() {
                     </div>
                   </CardContent>
                 </Card>
+                </motion.div>
               );
             })}
           </div>
