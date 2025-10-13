@@ -1,14 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, LogIn } from 'lucide-react';
+import { ArrowRight, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 
 export default function MembersPage() {
   const { members } = useContentConfig();
+  const [showPassword, setShowPassword] = useState(false);
 
   if (!members) {
     return (
@@ -60,41 +62,70 @@ export default function MembersPage() {
               <h2 className="text-2xl font-bold text-center text-neutral-900 dark:text-white mb-6">
                 {members.loginSection.title}
               </h2>
-              <form className="space-y-4">
+              <form className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                  <label className="form-label">
                     {members.loginSection.emailLabel}
                   </label>
                   <input
                     type="email"
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-persian-purple focus:border-transparent"
+                    className="form-input"
                     placeholder="your@email.com"
+                    required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                    {members.loginSection.passwordLabel}
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-persian-purple focus:border-transparent"
-                    placeholder="••••••••"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="form-label mb-0">
+                      {members.loginSection.passwordLabel}
+                    </label>
+                    <Link href="#" className="text-sm text-primary hover:text-secondary transition-colors">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-input pr-12"
+                      placeholder="••••••••"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
                 </div>
-                <button
+                <motion.button
                   type="submit"
-                  className="w-full px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
                 >
                   {members.loginSection.submitButton}
-                </button>
+                </motion.button>
               </form>
-              <div className="mt-6 text-center">
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                  {members.loginSection.notMemberText}{' '}
-                  <Link href="/apply" className="text-primary hover:underline">
-                    {members.loginSection.applyLinkText}
-                  </Link>
-                </p>
+              <div className="mt-6 space-y-3">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-neutral-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-neutral-500">or</span>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    {members.loginSection.notMemberText}{' '}
+                    <Link href="/apply" className="text-primary font-medium hover:text-secondary transition-colors">
+                      {members.loginSection.applyLinkText}
+                    </Link>
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>

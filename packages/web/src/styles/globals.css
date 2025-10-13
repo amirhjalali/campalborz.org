@@ -314,7 +314,7 @@
   .animate-float-pattern {
     animation: float 20s ease-in-out infinite;
   }
-  
+
   @keyframes float {
     0%, 100% {
       transform: translateY(0) translateX(0);
@@ -328,6 +328,43 @@
     75% {
       transform: translateY(-10px) translateX(10px);
     }
+  }
+
+  /* Form Styles with Enhanced Visuals */
+  .form-label {
+    @apply block text-sm font-medium text-secondary-900 mb-2;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 text-base border-2 border-neutral-300 rounded-lg;
+    @apply bg-white text-secondary-900;
+    @apply transition-all duration-300;
+    @apply focus:border-primary focus:ring-4 focus:outline-none;
+    @apply hover:border-neutral-400;
+    @apply placeholder:text-neutral-400;
+  }
+
+  .form-input:focus {
+    box-shadow: 0 4px 12px rgba(160, 82, 45, 0.1);
+    --tw-ring-opacity: 0.2;
+    --tw-ring-color: rgb(160 82 45 / var(--tw-ring-opacity));
+  }
+
+  .form-input.error {
+    @apply border-red-500 focus:border-red-500;
+  }
+
+  .form-input.error:focus {
+    --tw-ring-opacity: 0.2;
+    --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity));
+  }
+
+  .form-error {
+    @apply text-red-600 text-sm mt-1 flex items-center gap-1;
+  }
+
+  .form-hint {
+    @apply text-neutral-500 text-sm mt-1;
   }
 }
 
