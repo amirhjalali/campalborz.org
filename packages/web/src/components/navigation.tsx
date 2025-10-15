@@ -130,20 +130,26 @@ export function Navigation() {
                 <AnimatePresence>
                   {activeDropdown === item.label && item.children && (
                     <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-midnight-dark rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-midnight-dark/95 backdrop-blur-lg rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden"
                     >
-                      {item.children.map((child) => (
-                        <Link
+                      {item.children.map((child, index) => (
+                        <motion.div
                           key={child.href}
-                          href={child.href}
-                          className="block px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-primary/10 hover:text-primary transition-colors"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.2, delay: index * 0.05 }}
                         >
-                          {child.label}
-                        </Link>
+                          <Link
+                            href={child.href}
+                            className="block px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-primary/10 hover:text-primary transition-all duration-200 hover:translate-x-1"
+                          >
+                            {child.label}
+                          </Link>
+                        </motion.div>
                       ))}
                     </motion.div>
                   )}
@@ -219,52 +225,73 @@ export function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-white dark:bg-midnight-dark border-t border-neutral-200 dark:border-neutral-700"
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="lg:hidden bg-white/95 dark:bg-midnight-dark/95 backdrop-blur-lg border-t border-neutral-200 dark:border-neutral-700"
           >
             <div className="px-4 py-6 space-y-4">
-              {navItems.map((item) => (
-                <div key={item.label}>
+              {navItems.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.08 }}
+                >
                   <Link
                     href={item.href}
-                    className="block py-2 text-neutral-700 dark:text-neutral-300 font-medium"
+                    className="block py-2 text-neutral-700 dark:text-neutral-300 font-medium hover:text-primary transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </Link>
                   {item.children && (
-                    <div className="ml-4 mt-2 space-y-2">
-                      {item.children.map((child) => (
-                        <Link
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      transition={{ duration: 0.25, delay: index * 0.08 + 0.1 }}
+                      className="ml-4 mt-2 space-y-2"
+                    >
+                      {item.children.map((child, childIndex) => (
+                        <motion.div
                           key={child.href}
-                          href={child.href}
-                          className="block py-1 text-sm text-neutral-600 dark:text-neutral-400"
-                          onClick={() => setIsMobileMenuOpen(false)}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.2, delay: index * 0.08 + childIndex * 0.05 + 0.15 }}
                         >
-                          {child.label}
-                        </Link>
+                          <Link
+                            href={child.href}
+                            className="block py-1 text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary transition-colors duration-200"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {child.label}
+                          </Link>
+                        </motion.div>
                       ))}
-                    </div>
+                    </motion.div>
                   )}
-                </div>
+                </motion.div>
               ))}
-              
-              <div className="pt-4 space-y-3 border-t border-neutral-200 dark:border-neutral-700">
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: navItems.length * 0.08 + 0.2 }}
+                className="pt-4 space-y-3 border-t border-neutral-200 dark:border-neutral-700"
+              >
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold"
+                  className="block w-full text-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold"
+                  className="block w-full text-center px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Member Login
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}

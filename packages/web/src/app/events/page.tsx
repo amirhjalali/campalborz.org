@@ -1,8 +1,6 @@
 "use client";
 
 import { Navigation } from "../../components/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -81,28 +79,26 @@ export default function EventsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
                   whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
-                  className="h-full"
+                  className="h-full border-2 border-neutral-100 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 bg-white backdrop-blur-sm rounded-lg p-6"
                 >
-                  <Card className="h-full border-2 border-neutral-100 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 bg-white backdrop-blur-sm">
-                    <CardHeader>
-                      <div className="flex items-center">
-                        <motion.div
-                          className={`p-3 rounded-xl ${type.color} mr-4`}
-                          whileHover={{ rotate: 5, scale: 1.1 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <TypeIcon className="h-7 w-7" />
-                        </motion.div>
-                        <div>
-                          <CardTitle className="text-xl font-bold text-midnight">{type.name}</CardTitle>
-                          <div className="text-sm text-primary font-medium">{type.count} events yearly</div>
-                        </div>
+                  <div className="mb-4">
+                    <div className="flex items-center">
+                      <motion.div
+                        className={`p-3 rounded-xl ${type.color} mr-4`}
+                        whileHover={{ rotate: 5, scale: 1.1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <TypeIcon className="h-7 w-7" />
+                      </motion.div>
+                      <div>
+                        <h3 className="text-xl font-bold text-midnight">{type.name}</h3>
+                        <div className="text-sm text-primary font-medium">{type.count} events yearly</div>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-neutral-600">{type.description}</p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-neutral-600">{type.description}</p>
+                  </div>
                 </motion.div>
               );
             })}
@@ -130,29 +126,28 @@ export default function EventsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   whileHover={{ y: -6, scale: 1.01 }}
-                  className="h-full"
+                  className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50 rounded-lg p-6"
                 >
-                  <Card className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start">
-                          <motion.div
-                            className={`p-2 rounded-lg ${event.color} mr-3 flex-shrink-0`}
-                            whileHover={{ rotate: 10, scale: 1.15 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <EventIcon className="h-5 w-5" />
-                          </motion.div>
-                          <div>
-                            <CardTitle className="text-lg">{event.title}</CardTitle>
-                            <span className="inline-block px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs font-medium">
-                              {event.type}
-                            </span>
-                          </div>
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start">
+                        <motion.div
+                          className={`p-2 rounded-lg ${event.color} mr-3 flex-shrink-0`}
+                          whileHover={{ rotate: 10, scale: 1.15 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <EventIcon className="h-5 w-5" />
+                        </motion.div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-midnight mb-2">{event.title}</h3>
+                          <span className="inline-block px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs font-medium">
+                            {event.type}
+                          </span>
                         </div>
                       </div>
-                    </CardHeader>
-                  <CardContent>
+                    </div>
+                  </div>
+                  <div>
                     <div className="space-y-3 mb-4">
                       <div className="flex items-center text-secondary-600">
                         <Calendar className="h-4 w-4 mr-2" />
@@ -181,12 +176,11 @@ export default function EventsPage() {
                           style={{ width: `${(event.attendees / event.maxAttendees) * 100}%` }}
                         ></div>
                       </div>
-                      <Button size="sm" variant="outline">
+                      <button className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
                         RSVP
-                      </Button>
+                      </button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
                 </motion.div>
               );
             })}
@@ -195,14 +189,14 @@ export default function EventsPage() {
 
         {/* Burning Man Schedule */}
         {events.burningManSchedule && events.burningManSchedule.length > 0 && (
-          <Card className="mb-16">
-            <CardHeader>
-              <CardTitle as="h2">Burning Man 2024 Camp Schedule</CardTitle>
+          <div className="mb-16 border border-neutral-200 rounded-lg bg-white p-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-midnight mb-2">Burning Man 2024 Camp Schedule</h2>
               <p className="text-secondary-600">
                 Daily activities and workshops during our time on the playa
               </p>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div>
               <div className="space-y-8">
                 {events.burningManSchedule.map((day) => (
                   <div key={day.day}>
@@ -224,17 +218,17 @@ export default function EventsPage() {
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Event Guidelines */}
         {events.guidelines && (
-          <Card className="mb-16">
-            <CardHeader>
-              <CardTitle as="h2">Event Guidelines</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className="mb-16 border border-neutral-200 rounded-lg bg-white p-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-midnight">Event Guidelines</h2>
+            </div>
+            <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold text-secondary-900 mb-3">Before Attending</h4>
@@ -259,8 +253,8 @@ export default function EventsPage() {
                   </ul>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         )}
 
         {/* Call to Action */}
@@ -279,14 +273,20 @@ export default function EventsPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg" asChild>
-                  <Link href={events.cta.buttons.primary.link}>{events.cta.buttons.primary.text}</Link>
-                </Button>
+                <Link
+                  href={events.cta.buttons.primary.link}
+                  className="inline-block px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary rounded-lg hover:shadow-lg transition-shadow"
+                >
+                  {events.cta.buttons.primary.text}
+                </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-persian-purple hover:text-white" asChild>
-                  <Link href={events.cta.buttons.secondary.link}>{events.cta.buttons.secondary.text}</Link>
-                </Button>
+                <Link
+                  href={events.cta.buttons.secondary.link}
+                  className="inline-block px-8 py-4 text-lg font-semibold border-2 border-primary text-primary rounded-lg hover:bg-purple-700 hover:text-white transition-colors"
+                >
+                  {events.cta.buttons.secondary.text}
+                </Link>
               </motion.div>
             </div>
           </motion.div>

@@ -37,10 +37,11 @@ export function FeatureCards() {
             return (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
                 <Link href={feature.link}>
                   <div className="group relative bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
@@ -50,9 +51,13 @@ export function FeatureCards() {
                     {/* Card content */}
                     <div className="relative p-8">
                       {/* Icon */}
-                      <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      <motion.div
+                        className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-6`}
+                        whileHover={{ rotate: [0, -10, 10, -10, 0], scale: 1.15 }}
+                        transition={{ duration: 0.5 }}
+                      >
                         <Icon className="h-6 w-6 text-white" />
-                      </div>
+                      </motion.div>
 
                       {/* Title */}
                       <h3 className="text-xl font-semibold text-desert-night mb-3 group-hover:text-burnt-sienna transition-colors">

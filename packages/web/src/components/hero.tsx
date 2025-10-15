@@ -1,20 +1,33 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Tent, Heart } from 'lucide-react';
 import { useContentConfig } from '../hooks/useConfig';
 
 export function Hero() {
   const { hero } = useContentConfig();
+  const { scrollY } = useScroll();
+
+  // Parallax effects
+  const yBackground = useTransform(scrollY, [0, 500], [0, 150]);
+  const yPattern = useTransform(scrollY, [0, 500], [0, -100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-hero animate-gradient-x" />
-      
-      {/* Persian pattern overlay */}
-      <div className="absolute inset-0 bg-persian-pattern opacity-10 animate-float-pattern" />
-      
+      {/* Animated gradient background with parallax */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-hero animate-gradient-x"
+        style={{ y: yBackground }}
+      />
+
+      {/* Persian pattern overlay with parallax */}
+      <motion.div
+        className="absolute inset-0 bg-persian-pattern opacity-10 animate-float-pattern"
+        style={{ y: yPattern }}
+      />
+
       {/* Gradient mesh for depth */}
       <div className="absolute inset-0 hero-gradient-mesh opacity-40" />
       
@@ -37,21 +50,21 @@ export function Hero() {
 
           {/* Tagline with decorative line */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24" />
+            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24 md:w-32" />
             <motion.p
-              className="text-xl md:text-2xl text-desert-sand font-light"
+              className="text-2xl md:text-3xl lg:text-4xl text-desert-sand font-light tracking-wide"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
               {hero.subtitle}
             </motion.p>
-            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24" />
+            <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-24 md:w-32" />
           </div>
 
           {/* Description */}
           <motion.p
-            className="text-lg text-desert-night max-w-3xl mx-auto mb-12"
+            className="text-xl md:text-2xl text-desert-night max-w-3xl mx-auto mb-12 leading-relaxed"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -61,28 +74,32 @@ export function Hero() {
           
           {/* CTA Buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-6 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <Link
-              href={hero.cta.primary.link}
-              className="inline-flex items-center justify-center px-8 py-4 bg-burnt-sienna text-warm-white font-semibold rounded-lg hover:bg-antique-gold hover:text-desert-night transition-all duration-300 hover:scale-105 shadow-xl group"
-            >
-              <Tent className="mr-2 h-5 w-5" />
-              {hero.cta.primary.text}
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href={hero.cta.primary.link}
+                className="inline-flex items-center justify-center px-10 py-5 text-lg bg-burnt-sienna text-warm-white font-bold rounded-xl hover:bg-antique-gold hover:text-desert-night transition-all duration-300 shadow-2xl hover:shadow-3xl group"
+              >
+                <Tent className="mr-3 h-6 w-6" />
+                {hero.cta.primary.text}
+                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
+              </Link>
+            </motion.div>
 
-            <Link
-              href={hero.cta.secondary.link}
-              className="inline-flex items-center justify-center px-8 py-4 bg-transparent text-burnt-sienna font-semibold rounded-lg border-2 border-burnt-sienna/50 hover:bg-burnt-sienna/10 hover:border-burnt-sienna transition-all duration-300 backdrop-blur-sm group"
-            >
-              <Heart className="mr-2 h-5 w-5" />
-              {hero.cta.secondary.text}
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
+            <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href={hero.cta.secondary.link}
+                className="inline-flex items-center justify-center px-10 py-5 text-lg bg-transparent text-burnt-sienna font-bold rounded-xl border-3 border-burnt-sienna hover:bg-burnt-sienna hover:text-warm-white transition-all duration-300 backdrop-blur-md shadow-xl hover:shadow-2xl group"
+              >
+                <Heart className="mr-3 h-6 w-6" />
+                {hero.cta.secondary.text}
+                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
+              </Link>
+            </motion.div>
           </motion.div>
         </motion.div>
         

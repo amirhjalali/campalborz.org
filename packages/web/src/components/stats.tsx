@@ -34,19 +34,23 @@ export function Stats() {
             return (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
               >
                 <div className="group relative bg-white dark:bg-midnight rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                   {/* Gradient background on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
 
                   {/* Icon */}
-                  <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${color} mb-4`}>
+                  <motion.div
+                    className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${color} mb-4`}
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                  >
                     <Icon className="h-6 w-6 text-white" />
-                  </div>
+                  </motion.div>
 
                   {/* Value */}
                   <div className="mb-2">
