@@ -45,14 +45,14 @@ export default function MediaLibrary() {
   const [uploadFolder, setUploadFolder] = useState<string>("");
 
   // API queries - using mock data until backend is implemented
-  const mediaQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
-  const foldersQuery = { data: undefined, isLoading: false };
-  const tagsQuery = { data: undefined, isLoading: false };
-  const statsQuery = { data: undefined, isLoading: false };
+  const mediaQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const foldersQuery = { data: undefined as any, isLoading: false };
+  const tagsQuery = { data: undefined as any, isLoading: false };
+  const statsQuery = { data: undefined as any, isLoading: false };
 
   // API mutations - using mock until backend is implemented
-  const updateMediaMutation = { mutate: () => {}, isLoading: false };
-  const deleteMediaMutation = { mutate: () => {}, isLoading: false };
+  const updateMediaMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const deleteMediaMutation = { mutate: (args?: any) => {}, isLoading: false };
 
   // File upload with dropzone
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -126,14 +126,14 @@ export default function MediaLibrary() {
         </div>
         <div className="flex gap-2">
           <Button
-            variant={viewMode === "grid" ? "default" : "outline"}
+            variant={viewMode === "grid" ? "primary" : "outline"}
             size="sm"
             onClick={() => setViewMode("grid")}
           >
             <Grid className="h-4 w-4" />
           </Button>
           <Button
-            variant={viewMode === "list" ? "default" : "outline"}
+            variant={viewMode === "list" ? "primary" : "outline"}
             size="sm"
             onClick={() => setViewMode("list")}
           >
@@ -265,7 +265,7 @@ export default function MediaLibrary() {
                 </Select>
 
                 {selectedFiles.length > 0 && (
-                  <Button variant="destructive" size="sm" onClick={handleDeleteSelected}>
+                  <Button variant="danger" size="sm" onClick={handleDeleteSelected}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete ({selectedFiles.length})
                   </Button>

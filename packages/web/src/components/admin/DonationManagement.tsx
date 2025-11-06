@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { 
+import {
   CurrencyDollarIcon,
   HeartIcon,
-  TrendingUpIcon,
   UserGroupIcon,
   CalendarDaysIcon,
   ArrowDownTrayIcon,
@@ -16,6 +15,7 @@ import {
   XMarkIcon,
   ArrowPathIcon
 } from "@heroicons/react/24/outline";
+import { TrendingUp as TrendingUpIcon } from "lucide-react";
 
 // Mock data - in real app this would come from tRPC
 const mockDonations = [

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { trpc } from '../../lib/trpc';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import {
   Zap,
   Plus,
@@ -22,7 +22,7 @@ import {
   MessageSquare,
   Package,
   TestTube,
-  Sync,
+  RefreshCw as Sync,
   Link as LinkIcon,
 } from 'lucide-react';
 
@@ -44,69 +44,17 @@ export default function IntegrationsHub() {
     webhookUrl: '',
   });
 
-  // Queries
-  const templatesQuery = trpc.integrations.getTemplates.useQuery();
-  const integrationsQuery = trpc.integrations.list.useQuery({});
-  const statsQuery = trpc.integrations.getStats.useQuery();
+  // Queries - using mock data until backend is implemented
+  const templatesQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const integrationsQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const statsQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
 
-  // Mutations
-  const createIntegrationMutation = trpc.integrations.create.useMutation({
-    onSuccess: () => {
-      toast.success("Integration created successfully");
-      integrationsQuery.refetch();
-      statsQuery.refetch();
-      setShowCreateForm(false);
-      resetForm();
-    },
-    onError: (error) => {
-      toast.error(`Failed to create integration: ${error.message}`);
-    },
-  });
-
-  const updateIntegrationMutation = trpc.integrations.update.useMutation({
-    onSuccess: () => {
-      toast.success("Integration updated successfully");
-      integrationsQuery.refetch();
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(`Failed to update integration: ${error.message}`);
-    },
-  });
-
-  const deleteIntegrationMutation = trpc.integrations.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Integration deleted successfully");
-      integrationsQuery.refetch();
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(`Failed to delete integration: ${error.message}`);
-    },
-  });
-
-  const testIntegrationMutation = trpc.integrations.test.useMutation({
-    onSuccess: (data) => {
-      if (data.success) {
-        toast.success("Integration test passed");
-      } else {
-        toast.error(`Integration test failed: ${data.error}`);
-      }
-    },
-    onError: (error) => {
-      toast.error(`Test failed: ${error.message}`);
-    },
-  });
-
-  const syncIntegrationMutation = trpc.integrations.sync.useMutation({
-    onSuccess: () => {
-      toast.success("Integration synced successfully");
-      integrationsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(`Sync failed: ${error.message}`);
-    },
-  });
+  // Mutations - using mock until backend is implemented
+  const createIntegrationMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const updateIntegrationMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const deleteIntegrationMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const testIntegrationMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const syncIntegrationMutation = { mutate: (args?: any) => {}, isLoading: false };
 
   const resetForm = () => {
     setFormData({

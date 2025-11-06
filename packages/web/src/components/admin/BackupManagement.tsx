@@ -25,73 +25,17 @@ export default function BackupManagement() {
   const [backupType, setBackupType] = useState<'database' | 'files' | 'full'>('database');
   const [showRestore, setShowRestore] = useState(false);
 
-  // Queries
-  const backupsQuery = trpc.backup.list.useQuery({
-    limit: 50,
-    offset: 0,
-  });
+  // Queries - using mock data until backend is implemented
+  const backupsQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const statsQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const configQuery = { data: undefined, isLoading: false };
 
-  const statsQuery = trpc.backup.getStats.useQuery();
-  const configQuery = trpc.backup.getConfig.useQuery();
-
-  // Mutations
-  const createBackupMutation = trpc.backup.create.useMutation({
-    onSuccess: () => {
-      toast.success("Backup created successfully");
-      backupsQuery.refetch();
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(`Failed to create backup: ${error.message}`);
-    },
-  });
-
-  const deleteBackupMutation = trpc.backup.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Backup deleted successfully");
-      backupsQuery.refetch();
-      statsQuery.refetch();
-      setSelectedBackup(null);
-    },
-    onError: (error) => {
-      toast.error(`Failed to delete backup: ${error.message}`);
-    },
-  });
-
-  const restoreBackupMutation = trpc.backup.restore.useMutation({
-    onSuccess: () => {
-      toast.success("Backup restored successfully");
-      setShowRestore(false);
-      setSelectedBackup(null);
-    },
-    onError: (error) => {
-      toast.error(`Failed to restore backup: ${error.message}`);
-    },
-  });
-
-  const cleanupMutation = trpc.backup.cleanup.useMutation({
-    onSuccess: (data) => {
-      toast.success(`Cleanup completed: ${data.deleted} backups deleted`);
-      backupsQuery.refetch();
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(`Cleanup failed: ${error.message}`);
-    },
-  });
-
-  const testBackupMutation = trpc.backup.test.useMutation({
-    onSuccess: (data) => {
-      if (data.success) {
-        toast.success("All backup tests passed");
-      } else {
-        toast.error("Some backup tests failed");
-      }
-    },
-    onError: (error) => {
-      toast.error(`Backup test failed: ${error.message}`);
-    },
-  });
+  // Mutations - using mock until backend is implemented
+  const createBackupMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const deleteBackupMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const restoreBackupMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const cleanupMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const testBackupMutation = { mutate: (args?: any) => {}, isLoading: false };
 
   const handleCreateBackup = () => {
     createBackupMutation.mutate({

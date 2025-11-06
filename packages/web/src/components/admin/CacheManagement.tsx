@@ -38,88 +38,19 @@ export default function CacheManagement({ tenantId }: CacheManagementProps) {
   const [tagsToInvalidate, setTagsToInvalidate] = useState("");
   const [keysToDelete, setKeysToDelete] = useState("");
 
-  // API queries
-  const statsQuery = trpc.cache.getStats.useQuery(undefined, {
-    refetchInterval: 30000, // Refresh every 30 seconds
-  });
-  
-  const healthQuery = trpc.cache.getHealth.useQuery(undefined, {
-    refetchInterval: 60000, // Refresh every minute
-  });
-  
-  const configQuery = trpc.cache.getConfig.useQuery();
+  // API queries - using mock data until backend is implemented
+  const statsQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const healthQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const configQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const getCacheQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
 
-  const getCacheQuery = trpc.cache.get.useQuery(
-    { key: selectedKey },
-    { enabled: !!selectedKey }
-  );
-
-  // API mutations
-  const setCacheMutation = trpc.cache.set.useMutation({
-    onSuccess: () => {
-      toast.success("Cache value set successfully");
-      setNewCacheKey("");
-      setNewCacheValue("");
-      setNewCacheTTL("3600");
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const deleteMutation = trpc.cache.delete.useMutation({
-    onSuccess: () => {
-      toast.success("Cache key deleted successfully");
-      setSelectedKey("");
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const deleteManyMutation = trpc.cache.deleteMany.useMutation({
-    onSuccess: (data) => {
-      toast.success(`${data.deletedCount} cache keys deleted successfully`);
-      setKeysToDelete("");
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const invalidateTagsMutation = trpc.cache.invalidateByTags.useMutation({
-    onSuccess: (data) => {
-      toast.success(`${data.invalidatedCount} cache entries invalidated`);
-      setTagsToInvalidate("");
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const flushMutation = trpc.cache.flush.useMutation({
-    onSuccess: () => {
-      toast.success("All cache data has been flushed");
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const warmMutation = trpc.cache.warm.useMutation({
-    onSuccess: (data) => {
-      toast.success(`Cache warmed: ${data.successful}/${data.total} items`);
-      statsQuery.refetch();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  // API mutations - using mock until backend is implemented
+  const setCacheMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const deleteMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const deleteManyMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const invalidateTagsMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const flushMutation = { mutate: (args?: any) => {}, isLoading: false };
+  const warmMutation = { mutate: (args?: any) => {}, isLoading: false };
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -394,7 +325,7 @@ export default function CacheManagement({ tenantId }: CacheManagementProps) {
                       
                       <div className="flex gap-2">
                         <Button
-                          variant="destructive"
+                          variant="danger"
                           size="sm"
                           onClick={() => deleteMutation.mutate({ key: selectedKey })}
                           disabled={deleteMutation.isLoading}
@@ -473,7 +404,7 @@ export default function CacheManagement({ tenantId }: CacheManagementProps) {
               </div>
               
               <Button 
-                variant="destructive" 
+                variant="danger" 
                 onClick={handleDeleteMany} 
                 disabled={deleteManyMutation.isLoading}
               >
@@ -499,7 +430,7 @@ export default function CacheManagement({ tenantId }: CacheManagementProps) {
               </div>
               
               <Button 
-                variant="destructive" 
+                variant="danger" 
                 onClick={handleInvalidateTags} 
                 disabled={invalidateTagsMutation.isLoading}
               >
@@ -520,7 +451,7 @@ export default function CacheManagement({ tenantId }: CacheManagementProps) {
                   This will permanently delete all cached data. This action cannot be undone.
                 </p>
                 <Button 
-                  variant="destructive" 
+                  variant="danger" 
                   onClick={() => {
                     if (confirm("Are you sure you want to flush all cache data?")) {
                       flushMutation.mutate();

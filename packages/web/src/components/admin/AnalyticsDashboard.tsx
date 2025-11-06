@@ -40,11 +40,11 @@ export default function AnalyticsDashboard({ tenantId }: AnalyticsDashboardProps
   });
 
   // API queries - using mock data until backend is implemented
-  const overviewQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
-  const realtimeQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
-  const reportQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
-  const funnelsQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
-  const trafficQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const overviewQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const realtimeQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const reportQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const funnelsQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
+  const trafficQuery = { data: undefined as any, refetch: () => Promise.resolve(), isLoading: false };
 
   const handlePeriodChange = (period: "7d" | "30d" | "90d") => {
     setSelectedPeriod(period);

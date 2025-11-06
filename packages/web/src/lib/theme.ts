@@ -199,3 +199,82 @@ export function hexToRgb(hex: string): string {
 
   return `rgb(${r}, ${g}, ${b})`;
 }
+
+/**
+ * Theme configuration interface
+ */
+export interface ThemeConfig {
+  colors: {
+    primary: string;
+    secondary: string;
+    accent?: string;
+    background?: string;
+    text?: string;
+  };
+  fonts?: {
+    display?: string;
+    body?: string;
+    ui?: string;
+  };
+}
+
+/**
+ * Get theme configuration for a tenant
+ * @param tenant - Tenant object with branding settings
+ * @returns Theme configuration
+ */
+export function getTenantTheme(tenant: any): ThemeConfig {
+  const { branding } = tenant.settings || {};
+
+  return {
+    colors: {
+      primary: branding?.primaryColor || brandConfig.theme.colors.primary.DEFAULT,
+      secondary: branding?.secondaryColor || brandConfig.theme.colors.secondary.DEFAULT,
+      accent: branding?.accentColor || brandConfig.theme.colors.accent?.DEFAULT,
+    },
+    fonts: {
+      display: brandConfig.fonts.display,
+      body: brandConfig.fonts.body,
+      ui: brandConfig.fonts.ui,
+    },
+  };
+}
+
+/**
+ * Apply tenant-specific theme to the document
+ * @param theme - Theme configuration to apply
+ */
+export function applyTenantTheme(theme: ThemeConfig): void {
+  if (typeof document === 'undefined') return;
+
+  const root = document.documentElement;
+
+  // Apply colors
+  root.style.setProperty('--color-primary', theme.colors.primary);
+  root.style.setProperty('--color-secondary', theme.colors.secondary);
+
+  if (theme.colors.accent) {
+    root.style.setProperty('--color-accent', theme.colors.accent);
+  }
+
+  if (theme.colors.background) {
+    root.style.setProperty('--color-bg-primary', theme.colors.background);
+  }
+
+  if (theme.colors.text) {
+    root.style.setProperty('--color-text-primary', theme.colors.text);
+  }
+
+  // Apply fonts
+  if (theme.fonts?.display) {
+    root.style.setProperty('--font-display', theme.fonts.display);
+  }
+
+  if (theme.fonts?.body) {
+    root.style.setProperty('--font-body', theme.fonts.body);
+  }
+
+  if (theme.fonts?.ui) {
+    root.style.setProperty('--font-ui', theme.fonts.ui);
+  }
+}

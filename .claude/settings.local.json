@@ -31,7 +31,8 @@
       "Bash(git pull:*)",
       "Bash(test -f:*)",
       "Bash(git log:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
