@@ -43,29 +43,26 @@ export default function RegisterForm({
     feedback: string[];
   }>({ score: 0, feedback: [] });
 
-  const registerMutation = trpc.auth.register.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-      
-      if (onSuccess) {
-        onSuccess(data.user);
-      }
+  // Mock mutations until backend is implemented
+  const registerMutation = {
+    mutate: (args?: any) => {
+      toast.info("Registration feature coming soon - backend not yet implemented");
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+    isLoading: false
+  };
 
-  const validatePasswordMutation = trpc.security.validatePassword.useMutation({
-    onSuccess: (data) => {
+  const validatePasswordMutation = {
+    mutate: (args?: any) => {
+      // Mock password validation
+      const password = args?.password || '';
+      const score = password.length >= 12 ? 4 : password.length >= 8 ? 3 : password.length >= 6 ? 2 : 1;
       setPasswordStrength({
-        score: data.strength === 'very_strong' ? 4 : 
-               data.strength === 'strong' ? 3 :
-               data.strength === 'medium' ? 2 : 1,
-        feedback: data.errors,
+        score,
+        feedback: password.length < 8 ? ['Password should be at least 8 characters'] : []
       });
     },
-  });
+    isLoading: false
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

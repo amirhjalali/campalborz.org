@@ -9,19 +9,7 @@ import { createTRPCReact } from '@trpc/react-query';
 
 // Define a placeholder AppRouter type
 // This will be replaced with the actual router type from the API package
-export type AppRouter = {
-  _def: {
-    _config: {
-      $types: {
-        ctx: unknown;
-        meta: unknown;
-        errorShape: unknown;
-        transformer: unknown;
-      };
-    };
-    procedures: Record<string, unknown>;
-  };
-};
+export type AppRouter = any;
 
 // Create the tRPC React hooks
 export const trpc = createTRPCReact<AppRouter>();

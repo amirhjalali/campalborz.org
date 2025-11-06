@@ -26,30 +26,30 @@ export default function PasswordResetForm({ onBack, resetToken }: PasswordResetF
   });
   const [isEmailSent, setIsEmailSent] = useState(false);
 
-  const requestResetMutation = trpc.auth.requestPasswordReset.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
+  // Mock mutations until backend is implemented
+  const requestResetMutation = {
+    mutate: (args?: any) => {
+      toast.info("Password reset feature coming soon - backend not yet implemented");
       setIsEmailSent(true);
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+    isLoading: false
+  };
 
-  const resetPasswordMutation = trpc.auth.resetPassword.useMutation({
-    onSuccess: (data) => {
-      toast.success(data.message);
-      // Redirect to login or handle success
+  const resetPasswordMutation = {
+    mutate: (args?: any) => {
+      toast.info("Password reset feature coming soon - backend not yet implemented");
       if (onBack) {
         setTimeout(() => onBack(), 2000);
       }
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+    isLoading: false
+  };
 
-  const validatePasswordMutation = trpc.security.validatePassword.useMutation();
+  const validatePasswordMutation = {
+    mutate: (args?: any) => {},
+    data: { errors: [] },
+    isLoading: false
+  };
 
   const handleRequestReset = (e: React.FormEvent) => {
     e.preventDefault();

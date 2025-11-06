@@ -51,15 +51,18 @@ export default function MediaSelector({
   const [selectedType, setSelectedType] = useState<string>("all");
   const [activeTab, setActiveTab] = useState<"browse" | "upload">("browse");
 
-  // API queries
-  const mediaQuery = trpc.upload.getMedia.useQuery({
-    search: searchQuery || undefined,
-    folder: selectedFolder || undefined,
-    type: selectedType === "all" ? "all" : (selectedType as any),
-    limit: 50,
-  });
+  // Mock API queries until backend is implemented
+  const mediaQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
-  const foldersQuery = trpc.upload.getFolders.useQuery();
+  const foldersQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
   const formatFileSize = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB"];

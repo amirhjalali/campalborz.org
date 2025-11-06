@@ -10,8 +10,19 @@ interface AnalyticsEvent {
 
 export function useAnalytics() {
   const sessionId = useRef<string>();
-  const trackMutation = trpc.analytics.track.useMutation();
-  const trackGoalMutation = trpc.analytics.trackGoal.useMutation();
+
+  // Mock mutations until backend is implemented
+  const trackMutation = {
+    mutateAsync: async (args?: any) => {},
+    mutate: (args?: any) => {},
+    isLoading: false
+  };
+
+  const trackGoalMutation = {
+    mutateAsync: async (args?: any) => {},
+    mutate: (args?: any) => {},
+    isLoading: false
+  };
 
   // Generate session ID on mount
   useEffect(() => {

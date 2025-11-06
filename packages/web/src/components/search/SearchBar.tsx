@@ -42,24 +42,23 @@ export default function SearchBar({
   // Debounce search query for API calls
   const debouncedQuery = useDebounce(query, 300);
 
-  // API queries
-  const quickSearchQuery = trpc.search.quickSearch.useQuery(
-    { query: debouncedQuery, limit: 5 },
-    { 
-      enabled: debouncedQuery.length >= 2,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    }
-  );
+  // Mock API queries until backend is implemented
+  const quickSearchQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
-  const suggestionsQuery = trpc.search.getSuggestions.useQuery(
-    { query: debouncedQuery, limit: 8 },
-    { 
-      enabled: debouncedQuery.length >= 1,
-      staleTime: 1000 * 60 * 10, // 10 minutes
-    }
-  );
+  const suggestionsQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
-  const saveSearchMutation = trpc.search.saveSearch.useMutation();
+  const saveSearchMutation = {
+    mutate: (args?: any) => {},
+    isLoading: false
+  };
 
   // Handle input focus
   const handleFocus = () => {

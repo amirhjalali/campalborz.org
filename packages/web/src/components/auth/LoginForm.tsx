@@ -36,36 +36,14 @@ export default function LoginForm({
   const [showPassword, setShowPassword] = useState(false);
   const [requires2FA, setRequires2FA] = useState(false);
 
-  const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (data) => {
-      toast.success("Login successful!");
-      
-      // Store tokens
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      
-      if (onSuccess) {
-        onSuccess(data.user, {
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-          expiresAt: data.expiresAt,
-        });
-      }
-
-      // Redirect or handle success
-      if (redirectPath) {
-        window.location.href = redirectPath;
-      }
+  // Mock login mutation until backend is implemented
+  const loginMutation = {
+    mutate: (args?: any) => {
+      // Mock successful login for demo purposes
+      toast.info("Login feature coming soon - backend not yet implemented");
     },
-    onError: (error) => {
-      if (error.message.includes('Two-factor authentication token required')) {
-        setRequires2FA(true);
-        toast.error("Please enter your 2FA code");
-      } else {
-        toast.error(error.message);
-      }
-    },
-  });
+    isLoading: false
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

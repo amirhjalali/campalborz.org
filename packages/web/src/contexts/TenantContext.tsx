@@ -23,6 +23,7 @@ interface TenantTheme {
     [key: string]: any;
   };
   customCss?: string;
+  favicon?: string;
 }
 
 interface Tenant {

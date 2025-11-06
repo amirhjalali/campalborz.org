@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { X, Bell, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { useRealtime, type NotificationBroadcast } from '@/lib/realtime';
 import { formatDistanceToNow } from 'date-fns';
 

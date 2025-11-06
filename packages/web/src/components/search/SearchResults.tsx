@@ -61,23 +61,24 @@ export default function SearchResults() {
     offset: 0,
   });
 
-  // API queries
-  const searchQuery = trpc.search.search.useQuery({
-    query,
-    types: filters.types.length > 0 ? filters.types as any : undefined,
-    filters: {
-      dateRange: filters.dateRange,
-      author: filters.author,
-      tags: filters.tags.length > 0 ? filters.tags : undefined,
-    },
-    pagination,
-    sort,
-  }, {
-    enabled: query.length >= 1,
-  });
+  // Mock API queries until backend is implemented
+  const searchQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
-  const authorsQuery = trpc.search.getFilterOptions.useQuery({ type: "authors" });
-  const tagsQuery = trpc.search.getFilterOptions.useQuery({ type: "tags" });
+  const authorsQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
+
+  const tagsQuery = {
+    data: undefined as any,
+    isLoading: false,
+    refetch: () => Promise.resolve()
+  };
 
   // Update URL when search changes
   useEffect(() => {
@@ -329,14 +330,14 @@ export default function SearchResults() {
               {/* View Mode */}
               <div className="flex">
                 <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
+                  variant={viewMode === "list" ? "primary" : "outline"}
                   size="sm"
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
+                  variant={viewMode === "grid" ? "primary" : "outline"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
                 >

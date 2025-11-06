@@ -1,4 +1,6 @@
-import { io, Socket } from 'socket.io-client';
+import ioClient from 'socket.io-client';
+const io = ioClient;
+type Socket = any;
 import { useAuthStore } from '../stores/auth';
 
 interface RealtimeEvent {

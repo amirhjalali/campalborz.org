@@ -72,7 +72,8 @@ export function useTenant() {
 
   const applyTheme = () => {
     if (tenant) {
-      applyTenantTheme(tenant);
+      const themeConfig = getTenantTheme(tenant);
+      applyTenantTheme(themeConfig);
     }
   };
 
