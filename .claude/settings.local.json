@@ -30,7 +30,8 @@
       "WebFetch(domain:www.amirhjalali.com)",
       "Bash(git pull:*)",
       "Bash(test -f:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
