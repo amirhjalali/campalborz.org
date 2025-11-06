@@ -25,7 +25,8 @@ const PLANS = {
     price: 0,
     members: 50,
     features: ['Basic features', 'Email support', 'Community forums'],
-    color: 'bg-gray-100'
+    color: 'bg-gray-100',
+    recommended: false
   },
   starter: {
     name: 'Starter',
@@ -40,14 +41,16 @@ const PLANS = {
     price: 149,
     members: 1000,
     features: ['All Starter features', 'API access', 'White-label options', 'Dedicated account manager'],
-    color: 'bg-burnt-sienna/20'
+    color: 'bg-burnt-sienna/20',
+    recommended: false
   },
   enterprise: {
     name: 'Enterprise',
     price: 'custom',
     members: 'Unlimited',
     features: ['All features', 'Custom development', 'SLA guarantee', '24/7 phone support'],
-    color: 'bg-desert-night/10'
+    color: 'bg-desert-night/10',
+    recommended: false
   }
 };
 

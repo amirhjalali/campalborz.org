@@ -3,9 +3,9 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { trpc } from "../../lib/trpc";
-import { Button } from "../../components/ui/button";
+import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Badge } from "../../components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
@@ -44,40 +44,15 @@ export default function MediaLibrary() {
   const [selectedType, setSelectedType] = useState<string>("all");
   const [uploadFolder, setUploadFolder] = useState<string>("");
 
-  // API queries
-  const mediaQuery = trpc.upload.getMedia.useQuery({
-    search: searchQuery || undefined,
-    folder: selectedFolder || undefined,
-    type: selectedType as any,
-    limit: 50,
-  });
+  // API queries - using mock data until backend is implemented
+  const mediaQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const foldersQuery = { data: undefined, isLoading: false };
+  const tagsQuery = { data: undefined, isLoading: false };
+  const statsQuery = { data: undefined, isLoading: false };
 
-  const foldersQuery = trpc.upload.getFolders.useQuery();
-  const tagsQuery = trpc.upload.getTags.useQuery();
-  const statsQuery = trpc.upload.getStats.useQuery();
-
-  // API mutations
-  const updateMediaMutation = trpc.upload.updateMedia.useMutation({
-    onSuccess: () => {
-      toast.success("Media updated successfully");
-      mediaQuery.refetch();
-      setEditingFile(null);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const deleteMediaMutation = trpc.upload.deleteMedia.useMutation({
-    onSuccess: () => {
-      toast.success("Media deleted successfully");
-      mediaQuery.refetch();
-      setSelectedFiles([]);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  // API mutations - using mock until backend is implemented
+  const updateMediaMutation = { mutate: () => {}, isLoading: false };
+  const deleteMediaMutation = { mutate: () => {}, isLoading: false };
 
   // File upload with dropzone
   const onDrop = useCallback(async (acceptedFiles: File[]) => {

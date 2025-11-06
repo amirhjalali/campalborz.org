@@ -2,9 +2,9 @@
 
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { Button } from "./button";
+import { Button } from "./Button";
 import { Progress } from "./progress";
-import { Card, CardContent } from "./card";
+import { Card, CardContent } from "./Card";
 import { Badge } from "./badge";
 import { X, Upload, FileText, Image, Video, Music, File } from "lucide-react";
 import { toast } from "sonner";

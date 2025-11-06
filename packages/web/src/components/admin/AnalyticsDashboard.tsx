@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card";
+import { Button } from "../ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Badge } from "../ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
@@ -26,7 +26,7 @@ import {
   Activity
 } from "lucide-react";
 import { trpc } from "../../lib/trpc";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Cell, Area, AreaChart } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RechartsPieChart, Pie, Cell, Area, AreaChart } from "recharts";
 
 interface AnalyticsDashboardProps {
   tenantId: string;
@@ -39,20 +39,12 @@ export default function AnalyticsDashboard({ tenantId }: AnalyticsDashboardProps
     end: new Date(),
   });
 
-  // API queries
-  const overviewQuery = trpc.analytics.getOverview.useQuery({ period: selectedPeriod });
-  const realtimeQuery = trpc.analytics.getRealtime.useQuery(undefined, {
-    refetchInterval: 30000, // Refresh every 30 seconds
-  });
-  const reportQuery = trpc.analytics.getReport.useQuery({
-    dateRange: selectedDateRange,
-  });
-  const funnelsQuery = trpc.analytics.getFunnels.useQuery({
-    dateRange: selectedDateRange,
-  });
-  const trafficQuery = trpc.analytics.getTrafficSources.useQuery({
-    dateRange: selectedDateRange,
-  });
+  // API queries - using mock data until backend is implemented
+  const overviewQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const realtimeQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const reportQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const funnelsQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
+  const trafficQuery = { data: undefined, refetch: () => Promise.resolve(), isLoading: false };
 
   const handlePeriodChange = (period: "7d" | "30d" | "90d") => {
     setSelectedPeriod(period);

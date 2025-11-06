@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { trpc } from '../../lib/trpc';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import {
   Shield,
   Download,

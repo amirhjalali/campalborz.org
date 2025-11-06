@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./dialog";
-import { Button } from "./button";
+import { Button } from "./Button";
 import { Input } from "./input";
-import { Card, CardContent } from "./card";
+import { Card, CardContent } from "./Card";
 import { Badge } from "./badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";

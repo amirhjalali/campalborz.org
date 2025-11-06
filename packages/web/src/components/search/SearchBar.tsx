@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/Button";
+import { Card, CardContent } from "../ui/Card";
 import { Badge } from "../ui/badge";
 import { Search, X, Clock, TrendingUp, Filter } from "lucide-react";
 import { trpc } from "../../lib/trpc";
