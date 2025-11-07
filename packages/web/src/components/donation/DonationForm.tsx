@@ -29,6 +29,8 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
   const [customAmount, setCustomAmount] = useState("");
   const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
   const [selectedCampaign, setSelectedCampaign] = useState("");
+  const [donorName, setDonorName] = useState("");
+  const [donorEmail, setDonorEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,6 +69,16 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
       }
       setStep("details");
     } else if (step === "details") {
+      // Validate email if not anonymous
+      if (!isAnonymous) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!donorEmail || !emailRegex.test(donorEmail)) {
+          setError("Please enter a valid email address to receive your receipt");
+          return;
+        }
+      }
+      setError(null);
+
       // Create payment intent when moving to payment step
       if (stripeConfigured) {
         setIsProcessing(true);
@@ -80,6 +92,12 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               amount,
               donationType,
               currency: 'usd',
+              metadata: {
+                donorName: isAnonymous ? 'Anonymous' : donorName,
+                donorEmail: isAnonymous ? '' : donorEmail,
+                message,
+                campaign: selectedCampaign,
+              },
             }),
           });
 
@@ -140,6 +158,9 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
             setAmount(null);
             setCustomAmount("");
             setMessage("");
+            setDonorName("");
+            setDonorEmail("");
+            setIsAnonymous(false);
           }}>
             Make Another Donation
           </Button>
@@ -297,6 +318,42 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                 </div>
               )}
             </div>
+
+            {/* Donor Information */}
+            {!isAnonymous && (
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="donorName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="donorName"
+                    value={donorName}
+                    onChange={(e) => setDonorName(e.target.value)}
+                    placeholder="John Doe"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="donorEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="donorEmail"
+                    value={donorEmail}
+                    onChange={(e) => setDonorEmail(e.target.value)}
+                    placeholder="john@example.com"
+                    required
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    We'll send your donation receipt to this email
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Message */}
             <div>
