@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { 
+import { Elements } from '@stripe/react-stripe-js';
+import { getStripe, isStripeConfigured } from '@/lib/stripe';
+import { StripePaymentForm, DemoPaymentForm } from './StripePaymentForm';
+import { toast } from 'sonner';
+import {
   HeartIcon,
   CurrencyDollarIcon,
   CheckCircleIcon,
@@ -30,6 +34,13 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [stripeConfigured, setStripeConfigured] = useState(false);
+
+  // Check if Stripe is configured
+  useEffect(() => {
+    setStripeConfigured(isStripeConfigured());
+  }, []);
 
   const handleAmountSelection = (selectedAmount: number) => {
     setAmount(selectedAmount);
@@ -48,7 +59,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
     }
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     if (step === "amount") {
       if (!amount || amount < 100) { // Minimum $1
         setError("Please select or enter a valid donation amount");
@@ -56,39 +67,60 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
       }
       setStep("details");
     } else if (step === "details") {
-      setStep("payment");
+      // Create payment intent when moving to payment step
+      if (stripeConfigured) {
+        setIsProcessing(true);
+        try {
+          const response = await fetch('/api/create-payment-intent', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              amount,
+              donationType,
+              currency: 'usd',
+            }),
+          });
+
+          const data = await response.json();
+
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+            setStep("payment");
+          } else {
+            throw new Error(data.error || 'Failed to initialize payment');
+          }
+        } catch (err) {
+          toast.error('Failed to initialize payment. Please try again.');
+          console.error('Payment intent creation failed:', err);
+        } finally {
+          setIsProcessing(false);
+        }
+      } else {
+        // Demo mode - just proceed to payment step
+        setStep("payment");
+      }
     }
   };
 
-  const handleSubmit = async () => {
-    if (!amount) return;
-
-    setIsProcessing(true);
-    setError(null);
-
-    try {
-      // In a real app, this would call the payment API
-      // const result = await trpc.payments.createDonation.mutate({
-      //   amount,
-      //   type: donationType,
-      //   campaign: selectedCampaign || undefined,
-      //   message: message || undefined,
-      //   isAnonymous,
-      // });
-
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Mock success
-      setStep("success");
-      if (onSuccess) {
-        onSuccess("mock-donation-id");
-      }
-    } catch (err) {
-      setError("Failed to process donation. Please try again.");
-    } finally {
-      setIsProcessing(false);
+  const handlePaymentSuccess = () => {
+    setStep("success");
+    toast.success('Thank you for your donation!', {
+      description: 'You will receive a receipt via email shortly.',
+      duration: 5000,
+    });
+    if (onSuccess) {
+      onSuccess("donation-" + Date.now());
     }
+  };
+
+  const handlePaymentError = (errorMessage: string) => {
+    toast.error('Payment failed', {
+      description: errorMessage,
+      duration: 5000,
+    });
+    setError(errorMessage);
   };
 
   if (step === "success") {
@@ -359,47 +391,37 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               </div>
             </div>
 
-            {/* Payment Form Placeholder */}
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8">
-              <div className="text-center">
-                <CreditCardIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Secure Payment Processing
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  In production, this would integrate with Stripe for secure payment processing.
-                </p>
-                <div className="flex items-center justify-center text-sm text-gray-500">
-                  <LockClosedIcon className="h-4 w-4 mr-1" />
-                  SSL Encrypted & PCI Compliant
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setStep("details")}
-                disabled={isProcessing}
-                className="flex-1"
+            {/* Stripe Payment Form or Demo Form */}
+            {stripeConfigured && clientSecret ? (
+              <Elements
+                stripe={getStripe()}
+                options={{
+                  clientSecret,
+                  appearance: {
+                    theme: 'stripe',
+                    variables: {
+                      colorPrimary: '#8B5A3C',
+                    },
+                  },
+                }}
               >
-                Back
-              </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={isProcessing}
-                className="flex-1"
-              >
-                {isProcessing ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </div>
-                ) : (
-                  `Donate $${(amount! / 100).toFixed(2)}`
-                )}
-              </Button>
-            </div>
+                <StripePaymentForm
+                  amount={amount!}
+                  onSuccess={handlePaymentSuccess}
+                  onError={handlePaymentError}
+                  onBack={() => setStep("details")}
+                  donationType={donationType}
+                />
+              </Elements>
+            ) : (
+              <DemoPaymentForm
+                amount={amount!}
+                onSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                onBack={() => setStep("details")}
+                donationType={donationType}
+              />
+            )}
           </div>
         )}
       </CardContent>
