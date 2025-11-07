@@ -7,6 +7,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { StripePaymentForm, DemoPaymentForm } from './StripePaymentForm';
 import { toast } from 'sonner';
+import { useFormPersistence } from '@/hooks/useFormPersistence';
 import {
   HeartIcon,
   CurrencyDollarIcon,
@@ -25,14 +26,21 @@ interface DonationFormProps {
 const suggestedAmounts = [25, 75, 150, 300, 500];
 
 export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFormProps) {
-  const [amount, setAmount] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState("");
-  const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
-  const [selectedCampaign, setSelectedCampaign] = useState("");
-  const [donorName, setDonorName] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  // Form persistence - automatically saves/restores form data
+  const { data: formData, updateField, clearData: clearPersistedData } = useFormPersistence('donation-form', {
+    amount: null as number | null,
+    customAmount: "",
+    donationType: "ONE_TIME" as "ONE_TIME" | "RECURRING",
+    selectedCampaign: "",
+    donorName: "",
+    donorEmail: "",
+    message: "",
+    isAnonymous: false,
+  });
+
+  // Destructure for easier access
+  const { amount, customAmount, donationType, selectedCampaign, donorName, donorEmail, message, isAnonymous } = formData;
+
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
@@ -45,19 +53,19 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
   }, []);
 
   const handleAmountSelection = (selectedAmount: number) => {
-    setAmount(selectedAmount);
-    setCustomAmount("");
+    updateField('amount', selectedAmount);
+    updateField('customAmount', "");
     setError(null);
   };
 
   const handleCustomAmountChange = (value: string) => {
-    setCustomAmount(value);
+    updateField('customAmount', value);
     const numValue = parseFloat(value);
     if (!isNaN(numValue) && numValue > 0) {
-      setAmount(Math.round(numValue * 100)); // Convert to cents
+      updateField('amount', Math.round(numValue * 100)); // Convert to cents
       setError(null);
     } else {
-      setAmount(null);
+      updateField('amount', null);
     }
   };
 
@@ -124,6 +132,8 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
 
   const handlePaymentSuccess = () => {
     setStep("success");
+    // Clear persisted form data after successful payment
+    clearPersistedData();
     toast.success('Thank you for your donation!', {
       description: 'You will receive a receipt via email shortly.',
       duration: 5000,
@@ -155,12 +165,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
           </p>
           <Button onClick={() => {
             setStep("amount");
-            setAmount(null);
-            setCustomAmount("");
-            setMessage("");
-            setDonorName("");
-            setDonorEmail("");
-            setIsAnonymous(false);
+            clearPersistedData();
           }}>
             Make Another Donation
           </Button>
@@ -203,7 +208,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => setDonationType("ONE_TIME")}
+                  onClick={() => updateField('donationType', "ONE_TIME")}
                   className={`p-3 border rounded-lg text-center transition-colors ${
                     donationType === "ONE_TIME"
                       ? "border-primary-600 bg-primary-50 text-primary-700"
@@ -214,7 +219,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                   <div className="text-sm text-gray-500">Single donation</div>
                 </button>
                 <button
-                  onClick={() => setDonationType("RECURRING")}
+                  onClick={() => updateField('donationType', "RECURRING")}
                   className={`p-3 border rounded-lg text-center transition-colors ${
                     donationType === "RECURRING"
                       ? "border-primary-600 bg-primary-50 text-primary-700"
@@ -270,7 +275,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                 </label>
                 <select
                   value={selectedCampaign}
-                  onChange={(e) => setSelectedCampaign(e.target.value)}
+                  onChange={(e) => updateField('selectedCampaign', e.target.value)}
                   className="w-full border border-gray-300 rounded-md px-3 py-2"
                 >
                   <option value="">General Fund</option>
@@ -330,7 +335,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                     type="text"
                     id="donorName"
                     value={donorName}
-                    onChange={(e) => setDonorName(e.target.value)}
+                    onChange={(e) => updateField('donorName', e.target.value)}
                     placeholder="John Doe"
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
@@ -343,7 +348,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                     type="email"
                     id="donorEmail"
                     value={donorEmail}
-                    onChange={(e) => setDonorEmail(e.target.value)}
+                    onChange={(e) => updateField('donorEmail', e.target.value)}
                     placeholder="john@example.com"
                     required
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -362,7 +367,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               </label>
               <textarea
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => updateField('message', e.target.value)}
                 placeholder="Share why you're supporting our cause..."
                 rows={4}
                 className="w-full border border-gray-300 rounded-md px-3 py-2"
@@ -375,7 +380,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
                 type="checkbox"
                 id="anonymous"
                 checked={isAnonymous}
-                onChange={(e) => setIsAnonymous(e.target.checked)}
+                onChange={(e) => updateField('isAnonymous', e.target.checked)}
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               />
               <label htmlFor="anonymous" className="ml-2 text-sm text-gray-700">
