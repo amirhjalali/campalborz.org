@@ -242,6 +242,195 @@ function PageSkeleton() {
   );
 }
 
+/**
+ * Spinner Component
+ */
+interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: 'border' | 'dots' | 'bars';
+  color?: 'primary' | 'white' | 'gray';
+  className?: string;
+}
+
+function Spinner({
+  size = 'md',
+  variant = 'border',
+  color = 'primary',
+  className,
+}: SpinnerProps) {
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12',
+    xl: 'h-16 w-16',
+  };
+
+  const colorClasses = {
+    primary: 'border-primary-600',
+    white: 'border-white',
+    gray: 'border-gray-600',
+  };
+
+  if (variant === 'border') {
+    return (
+      <div
+        className={cn(
+          'animate-spin rounded-full border-4 border-t-transparent',
+          sizeClasses[size],
+          colorClasses[color],
+          className
+        )}
+      />
+    );
+  }
+
+  if (variant === 'dots') {
+    const dotSizes = {
+      sm: 'h-1.5 w-1.5',
+      md: 'h-2 w-2',
+      lg: 'h-3 w-3',
+      xl: 'h-4 w-4',
+    };
+
+    const dotColors = {
+      primary: 'bg-primary-600',
+      white: 'bg-white',
+      gray: 'bg-gray-600',
+    };
+
+    return (
+      <div className={cn('flex gap-1', className)}>
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className={cn(
+              'rounded-full animate-bounce',
+              dotSizes[size],
+              dotColors[color]
+            )}
+            style={{
+              animationDelay: `${i * 0.15}s`,
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (variant === 'bars') {
+    const barSizes = {
+      sm: 'h-4 w-1',
+      md: 'h-6 w-1.5',
+      lg: 'h-8 w-2',
+      xl: 'h-10 w-2.5',
+    };
+
+    const barColors = {
+      primary: 'bg-primary-600',
+      white: 'bg-white',
+      gray: 'bg-gray-600',
+    };
+
+    return (
+      <div className={cn('flex items-end gap-1', className)}>
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className={cn(
+              'rounded-sm animate-pulse',
+              barSizes[size],
+              barColors[color]
+            )}
+            style={{
+              animationDelay: `${i * 0.15}s`,
+              animationDuration: '1s',
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/**
+ * Loading Overlay
+ */
+interface LoadingOverlayProps {
+  isLoading: boolean;
+  children?: React.ReactNode;
+  message?: string;
+  spinnerSize?: 'sm' | 'md' | 'lg' | 'xl';
+  blur?: boolean;
+  className?: string;
+}
+
+function LoadingOverlay({
+  isLoading,
+  children,
+  message,
+  spinnerSize = 'lg',
+  blur = true,
+  className,
+}: LoadingOverlayProps) {
+  if (!isLoading) return <>{children}</>;
+
+  return (
+    <div className={cn('relative', className)}>
+      {children && (
+        <div className={cn('pointer-events-none', blur && 'blur-sm opacity-50')}>
+          {children}
+        </div>
+      )}
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-white/80">
+        <Spinner size={spinnerSize} />
+        {message && <p className="text-sm text-gray-600">{message}</p>}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Page Loading Component
+ */
+function PageLoading({ message = 'Loading...' }: { message?: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+      <Spinner size="xl" />
+      <p className="text-gray-600">{message}</p>
+    </div>
+  );
+}
+
+/**
+ * Inline Loading Component
+ */
+interface InlineLoadingProps {
+  message?: string;
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+function InlineLoading({ message, size = 'sm', className }: InlineLoadingProps) {
+  return (
+    <div className={cn('inline-flex items-center gap-2', className)}>
+      <Spinner size={size} />
+      {message && <span className="text-sm text-gray-600">{message}</span>}
+    </div>
+  );
+}
+
+/**
+ * Button Loading State
+ */
+function ButtonLoading({ className }: { className?: string }) {
+  return (
+    <Spinner size="sm" color="white" className={className} />
+  );
+}
+
 export {
   Skeleton,
   CardSkeleton,
@@ -253,4 +442,9 @@ export {
   ListSkeleton,
   DashboardSkeleton,
   PageSkeleton,
+  Spinner,
+  LoadingOverlay,
+  PageLoading,
+  InlineLoading,
+  ButtonLoading,
 };
