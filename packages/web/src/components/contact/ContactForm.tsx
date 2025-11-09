@@ -154,7 +154,7 @@ export function ContactForm({
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Name */}
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="name" className="block text-sm font-ui font-medium text-desert-night mb-1">
           Your Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -164,7 +164,7 @@ export function ContactForm({
           onChange={(e) => updateField('name', e.target.value)}
           required
           disabled={isSubmitting}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
+          className="w-full px-4 py-2 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 disabled:bg-desert-sand/20 transition-all duration-300 font-body"
           placeholder="John Doe"
         />
       </div>
@@ -182,7 +182,7 @@ export function ContactForm({
             onChange={(e) => updateField('email', e.target.value)}
             required
             disabled={isSubmitting}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
+            className="w-full px-4 py-2 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 disabled:bg-desert-sand/20 transition-all duration-300 font-body"
             placeholder="john@example.com"
           />
         </div>
@@ -197,7 +197,7 @@ export function ContactForm({
             value={formData.phone}
             onChange={(e) => updateField('phone', e.target.value)}
             disabled={isSubmitting}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
+            className="w-full px-4 py-2 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 disabled:bg-desert-sand/20 transition-all duration-300 font-body"
             placeholder="(555) 123-4567"
           />
         </div>
@@ -213,7 +213,7 @@ export function ContactForm({
           value={formData.subject}
           onChange={(e) => updateField('subject', e.target.value)}
           disabled={isSubmitting}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
+          className="w-full px-4 py-2 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 disabled:bg-desert-sand/20 transition-all duration-300 font-body"
         >
           <option value="">Select a subject</option>
           {subjectOptions.map((option) => (
@@ -236,7 +236,7 @@ export function ContactForm({
           required
           rows={6}
           disabled={isSubmitting}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:bg-gray-100"
+          className="w-full px-4 py-2 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 disabled:bg-desert-sand/20 transition-all duration-300 font-body"
           placeholder="Tell us how we can help..."
         />
         <p className="text-xs text-gray-500 mt-1">
@@ -317,7 +317,7 @@ export function ContactForm({
               </div>
 
               {/* Office Hours */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-dust-khaki/20">
                 <p className="font-medium text-gray-900 mb-2">Office Hours</p>
                 <p className="text-sm text-gray-600">
                   Monday - Friday
@@ -327,7 +327,7 @@ export function ContactForm({
               </div>
 
               {/* Social Links */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-dust-khaki/20">
                 <p className="font-medium text-gray-900 mb-3">Follow Us</p>
                 <div className="flex gap-3">
                   <a

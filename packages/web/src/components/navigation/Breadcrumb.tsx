@@ -125,10 +125,10 @@ export function BreadcrumbBanner({
   items?: BreadcrumbItem[];
 }) {
   return (
-    <div className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 py-8">
+    <div className="bg-gradient-to-r from-desert-sand/20 to-desert-sand/10 border-b border-dust-khaki/20 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Breadcrumb items={items} homeIcon />
-        <h1 className="text-3xl font-bold text-gray-900 mt-4">{title}</h1>
+        <h1 className="text-3xl font-display font-bold text-desert-night mt-4">{title}</h1>
       </div>
     </div>
   );

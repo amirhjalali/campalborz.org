@@ -100,18 +100,18 @@ export function TestimonialsCarousel({
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-warm-white shadow-[0_4px_15px_rgba(160,82,45,0.3)] rounded-full p-2 hover:bg-desert-sand/30 hover:shadow-[0_6px_20px_rgba(160,82,45,0.4)] transition-all duration-300 z-10"
             aria-label="Previous testimonial"
           >
-            <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+            <ChevronLeftIcon className="h-6 w-6 text-burnt-sienna" />
           </button>
 
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors z-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-warm-white shadow-[0_4px_15px_rgba(160,82,45,0.3)] rounded-full p-2 hover:bg-desert-sand/30 hover:shadow-[0_6px_20px_rgba(160,82,45,0.4)] transition-all duration-300 z-10"
             aria-label="Next testimonial"
           >
-            <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+            <ChevronRightIcon className="h-6 w-6 text-burnt-sienna" />
           </button>
         </>
       )}
@@ -126,7 +126,7 @@ export function TestimonialsCarousel({
               className={`h-2 rounded-full transition-all ${
                 index === currentIndex
                   ? 'w-8 bg-primary-600'
-                  : 'w-2 bg-gray-300 hover:bg-gray-400'
+                  : 'w-2 bg-dust-khaki/40 hover:bg-burnt-sienna/60'
               }`}
               aria-label={`Go to testimonial ${index + 1}`}
             />

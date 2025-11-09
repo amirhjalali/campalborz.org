@@ -86,9 +86,9 @@ export function FAQAccordion({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search FAQs..."
-            className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="w-full px-4 py-3 pl-10 border-2 border-dust-khaki/30 rounded-lg bg-warm-white text-desert-night focus:outline-none focus:ring-2 focus:ring-antique-gold/50 focus:border-antique-gold/70 hover:border-dust-khaki/50 transition-all duration-300 font-body"
           />
-          <QuestionMarkCircleIcon className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
+          <QuestionMarkCircleIcon className="absolute left-3 top-3.5 h-5 w-5 text-desert-night/40" />
         </div>
       )}
 
@@ -96,7 +96,7 @@ export function FAQAccordion({
       {Object.entries(groupedItems).map(([category, categoryItems]) => (
         <div key={category}>
           {showCategories && (
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            <h3 className="text-lg font-display font-semibold text-desert-night mb-3">
               {category}
             </h3>
           )}
@@ -106,13 +106,13 @@ export function FAQAccordion({
               <Card key={item.id} className="overflow-hidden">
                 <button
                   onClick={() => toggleItem(item.id)}
-                  className="w-full text-left p-4 hover:bg-gray-50 transition-colors flex items-center justify-between group"
+                  className="w-full text-left p-4 hover:bg-desert-sand/20 transition-colors duration-300 flex items-center justify-between group"
                 >
-                  <span className="font-medium text-gray-900 pr-4">
+                  <span className="font-ui font-medium text-desert-night pr-4">
                     {item.question}
                   </span>
                   <ChevronDownIcon
-                    className={`h-5 w-5 text-gray-500 flex-shrink-0 transition-transform duration-200 ${
+                    className={`h-5 w-5 text-burnt-sienna flex-shrink-0 transition-transform duration-200 ${
                       openItems.includes(item.id) ? 'transform rotate-180' : ''
                     }`}
                   />
@@ -120,7 +120,7 @@ export function FAQAccordion({
 
                 {openItems.includes(item.id) && (
                   <CardContent className="px-4 pb-4 pt-0">
-                    <div className="prose prose-sm max-w-none text-gray-600 border-t border-gray-100 pt-4">
+                    <div className="prose prose-sm max-w-none text-desert-night/70 border-t border-dust-khaki/20 pt-4 font-body">
                       {item.answer}
                     </div>
                   </CardContent>
@@ -233,7 +233,7 @@ export function SimpleFAQ({ items }: { items: FAQItem[] }) {
   return (
     <div className="space-y-6">
       {items.map((item) => (
-        <div key={item.id} className="border-b border-gray-200 pb-6 last:border-0">
+        <div key={item.id} className="border-b border-dust-khaki/20 pb-6 last:border-0">
           <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-start gap-2">
             <QuestionMarkCircleIcon className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
             {item.question}
