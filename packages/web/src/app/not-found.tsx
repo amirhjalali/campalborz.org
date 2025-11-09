@@ -9,7 +9,7 @@ import {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-desert-sand/10 to-warm-white flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl w-full text-center">
         {/* 404 Animation */}
         <div className="mb-8">
@@ -20,37 +20,37 @@ export default function NotFound() {
 
         {/* Main Message */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-display font-bold text-desert-night mb-4">
             Looks Like You've Wandered Off the Playa
           </h2>
-          <p className="text-xl text-gray-600 mb-2">
+          <p className="text-xl text-desert-night/80 mb-2 font-body">
             The page you're looking for doesn't exist or has been moved.
           </p>
-          <p className="text-gray-500">
+          <p className="text-desert-night/60 font-body">
             Don't worry, even the best explorers get lost sometimes.
           </p>
         </div>
 
         {/* Helpful Links */}
-        <div className="bg-white border border-gray-200 rounded-lg p-8 mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-warm-white border border-dust-khaki/20 rounded-2xl p-8 mb-8 shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)]">
+          <h3 className="text-lg font-display font-semibold text-desert-night mb-4">
             Try one of these instead:
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link
               href="/"
-              className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors group"
+              className="flex items-center gap-3 p-4 border border-dust-khaki/30 rounded-lg hover:border-antique-gold/70 hover:bg-desert-sand/20 transition-all duration-300 group"
             >
-              <HomeIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-600" />
+              <HomeIcon className="h-6 w-6 text-desert-night/40 group-hover:text-burnt-sienna" />
               <div className="text-left">
-                <p className="font-medium text-gray-900 group-hover:text-primary-700">Home</p>
-                <p className="text-sm text-gray-500">Start from the beginning</p>
+                <p className="font-ui font-medium text-desert-night group-hover:text-burnt-sienna">Home</p>
+                <p className="text-sm text-desert-night/60 font-body">Start from the beginning</p>
               </div>
             </Link>
 
             <Link
               href="/about"
-              className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors group"
+              className="flex items-center gap-3 p-4 border border-dust-khaki/30 rounded-lg hover:border-antique-gold/70 hover:bg-desert-sand/20 transition-all duration-300 group"
             >
               <MapIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-600" />
               <div className="text-left">
@@ -61,7 +61,7 @@ export default function NotFound() {
 
             <Link
               href="/events"
-              className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors group"
+              className="flex items-center gap-3 p-4 border border-dust-khaki/30 rounded-lg hover:border-antique-gold/70 hover:bg-desert-sand/20 transition-all duration-300 group"
             >
               <svg
                 className="h-6 w-6 text-gray-400 group-hover:text-primary-600"
@@ -84,7 +84,7 @@ export default function NotFound() {
 
             <Link
               href="/donate"
-              className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors group"
+              className="flex items-center gap-3 p-4 border border-dust-khaki/30 rounded-lg hover:border-antique-gold/70 hover:bg-desert-sand/20 transition-all duration-300 group"
             >
               <HeartIcon className="h-6 w-6 text-gray-400 group-hover:text-primary-600" />
               <div className="text-left">
@@ -113,18 +113,18 @@ export default function NotFound() {
 
         {/* Fun Message */}
         <div className="text-center">
-          <p className="text-sm text-gray-500 italic">
+          <p className="text-sm text-desert-night/60 italic font-body">
             "Not all who wander are lost... but this page definitely is."
           </p>
         </div>
 
         {/* Contact Support */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <p className="text-sm text-gray-600">
+        <div className="mt-12 pt-8 border-t border-dust-khaki/20">
+          <p className="text-sm text-desert-night/70 font-body">
             Still can't find what you're looking for?{' '}
             <a
               href="mailto:info@campalborz.org"
-              className="text-primary-600 hover:text-primary-700 underline font-medium"
+              className="text-burnt-sienna hover:text-antique-gold underline font-medium transition-colors duration-300"
             >
               Contact us
             </a>{' '}

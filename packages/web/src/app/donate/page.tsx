@@ -54,7 +54,7 @@ export default function DonatePage() {
       </section>
 
       {/* Main Content */}
-      <div className="bg-white pt-20 pb-12">
+      <div className="bg-warm-white pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Impact Stats */}
@@ -112,7 +112,7 @@ export default function DonatePage() {
                 whileHover={{ y: -10, scale: 1.02 }}
                 className="h-full"
               >
-                <Card className={`relative h-full border-2 transition-all duration-300 bg-white ${
+                <Card className={`relative h-full border-2 transition-all duration-300 bg-warm-white ${
                   tier.popular
                     ? 'border-primary-500 shadow-2xl hover:shadow-3xl'
                     : 'border-neutral-200 hover:border-primary/40 hover:shadow-xl'
@@ -263,7 +263,7 @@ export default function DonatePage() {
                   whileHover={{ y: -6, scale: 1.01 }}
                   className="h-full"
                 >
-                  <Card className="h-full group border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-white">
+                  <Card className="h-full group border border-dust-khaki/20 hover:border-antique-gold/40 hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] transition-all duration-300 bg-warm-white">
                     <CardHeader>
                       <div className="flex items-center">
                         <motion.div
@@ -385,7 +385,7 @@ export default function DonatePage() {
             <h3 className="text-3xl font-bold text-midnight mb-6">
               {donate.cta.title}
             </h3>
-            <p className="text-lg text-neutral-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-desert-night/70 mb-8 max-w-2xl mx-auto font-body">
               {donate.cta.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
