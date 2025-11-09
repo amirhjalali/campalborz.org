@@ -23,14 +23,14 @@ export function Header({ navigation, className }: HeaderProps) {
   const { tenant, theme } = useTenant();
 
   return (
-    <header className={`bg-white shadow-sm border-b border-secondary-200 ${className}`}>
+    <header className={`bg-warm-white/95 backdrop-blur-md shadow-[0_2px_10px_rgba(160,82,45,0.08)] border-b border-dust-khaki/20 ${className}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between items-center">
           {/* Logo and tenant name */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <TenantLogo className="h-8 w-auto" />
-              <span className="ml-3 text-xl font-bold text-secondary-900">
+              <span className="ml-3 text-xl font-display font-bold text-desert-night">
                 {tenant?.name || "Camp Platform"}
               </span>
             </Link>
@@ -42,10 +42,10 @@ export function Header({ navigation, className }: HeaderProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-2 text-sm font-ui font-medium rounded-lg transition-all duration-300 ${
                   item.current
-                    ? "bg-primary-100 text-primary-700"
-                    : "text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100"
+                    ? "bg-desert-sand/30 text-burnt-sienna font-semibold"
+                    : "text-desert-night/70 hover:text-burnt-sienna hover:bg-desert-sand/20"
                 }`}
               >
                 {item.name}
@@ -69,7 +69,7 @@ export function Header({ navigation, className }: HeaderProps) {
             {/* Mobile menu button */}
             <button
               type="button"
-              className="md:hidden p-2 rounded-md text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100"
+              className="md:hidden p-2 rounded-lg text-desert-night/70 hover:text-burnt-sienna hover:bg-desert-sand/20 transition-all duration-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               <span className="sr-only">Open main menu</span>
@@ -84,9 +84,9 @@ export function Header({ navigation, className }: HeaderProps) {
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-secondary-200 pt-4 pb-4">
+          <div className="md:hidden border-t border-dust-khaki/20 pt-4 pb-4">
             {/* Mobile Search */}
-            <div className="px-3 pb-3 mb-3 border-b border-secondary-100">
+            <div className="px-3 pb-3 mb-3 border-b border-dust-khaki/10">
               <SearchBar 
                 placeholder="Search..." 
                 className="w-full"
@@ -99,10 +99,10 @@ export function Header({ navigation, className }: HeaderProps) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`block px-3 py-2 text-base font-medium rounded-md ${
+                  className={`block px-3 py-2 text-base font-ui font-medium rounded-lg transition-all duration-300 ${
                     item.current
-                      ? "bg-primary-100 text-primary-700"
-                      : "text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100"
+                      ? "bg-desert-sand/30 text-burnt-sienna font-semibold"
+                      : "text-desert-night/70 hover:text-burnt-sienna hover:bg-desert-sand/20"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >

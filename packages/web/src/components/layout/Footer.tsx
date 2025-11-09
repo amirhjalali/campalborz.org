@@ -53,16 +53,16 @@ export function Footer({ sections = defaultSections, className }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={`bg-secondary-900 text-secondary-300 ${className}`}>
+    <footer className={`bg-desert-night text-desert-sand/80 ${className}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Organization info */}
             <div className="lg:col-span-1">
-              <h3 className="text-lg font-semibold text-white mb-4">
+              <h3 className="text-lg font-display font-semibold text-warm-white mb-4">
                 {tenant?.name || "Camp Platform"}
               </h3>
-              <p className="text-sm text-secondary-400 mb-4">
+              <p className="text-sm text-desert-sand/70 mb-4 font-body">
                 Building community through art, culture, and shared experiences.
               </p>
               {/* Social media links would go here */}
@@ -71,7 +71,7 @@ export function Footer({ sections = defaultSections, className }: FooterProps) {
             {/* Footer sections */}
             {sections.map((section) => (
               <div key={section.title}>
-                <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                <h4 className="text-sm font-ui font-semibold text-warm-white uppercase tracking-wider mb-4">
                   {section.title}
                 </h4>
                 <ul className="space-y-2">
@@ -79,7 +79,7 @@ export function Footer({ sections = defaultSections, className }: FooterProps) {
                     <li key={link.name}>
                       <Link
                         href={link.href}
-                        className="text-sm text-secondary-400 hover:text-white transition-colors"
+                        className="text-sm text-desert-sand/70 hover:text-antique-gold transition-colors duration-300 font-body"
                       >
                         {link.name}
                       </Link>
@@ -92,21 +92,21 @@ export function Footer({ sections = defaultSections, className }: FooterProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-secondary-800 py-6">
+        <div className="border-t border-dust-khaki/20 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-secondary-400">
+            <p className="text-sm text-desert-sand/60 font-body">
               © {currentYear} {tenant?.name || "Camp Platform"}. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
               <Link
                 href="/privacy"
-                className="text-sm text-secondary-400 hover:text-white transition-colors"
+                className="text-sm text-desert-sand/70 hover:text-antique-gold transition-colors duration-300 font-body"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/terms"
-                className="text-sm text-secondary-400 hover:text-white transition-colors"
+                className="text-sm text-desert-sand/70 hover:text-antique-gold transition-colors duration-300 font-body"
               >
                 Terms of Service
               </Link>
