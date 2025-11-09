@@ -18,6 +18,55 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/ALBORZ.html',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/ART.html',
+        destination: '/art',
+        permanent: true,
+      },
+      {
+        source: '/HOMA.html',
+        destination: '/art/homa',
+        permanent: true,
+      },
+      {
+        source: '/DAMAVAND.html',
+        destination: '/art/damavand',
+        permanent: true,
+      },
+      {
+        source: '/EVENTS.html',
+        destination: '/events',
+        permanent: true,
+      },
+      {
+        source: '/DONATE.html',
+        destination: '/donate',
+        permanent: true,
+      },
+      {
+        source: '/APPLY.html',
+        destination: '/apply',
+        permanent: true,
+      },
+      {
+        source: '/MEMBERS.html',
+        destination: '/members',
+        permanent: true,
+      },
+      {
+        source: '/THANKS.html',
+        destination: '/donate/success',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

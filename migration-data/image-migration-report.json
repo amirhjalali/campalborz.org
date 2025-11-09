@@ -1,0 +1,163 @@
+{
+  "migrated": 39,
+  "errors": 0,
+  "files": [
+    {
+      "from": "OLD/ALBORZ/025df5a3f099c8c74d1529f817f5d5f5.jpg",
+      "to": "images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg"
+    },
+    {
+      "from": "OLD/ALBORZ/1d06a7040c9ca6f814a95b3d31ff2cfb.jpg",
+      "to": "images/migrated/alborz/1d06a7040c9ca6f814a95b3d31ff2cfb.jpg"
+    },
+    {
+      "from": "OLD/ALBORZ/741b0955e065164bc12eadd8b26f0af4.jpg",
+      "to": "images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+    },
+    {
+      "from": "OLD/ALBORZ/bc5ba4c0e8a110e8e110b58c81189ff8.jpg",
+      "to": "images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
+    },
+    {
+      "from": "OLD/ALBORZ/e4956d45216d473ca35c279237d61592.jpg",
+      "to": "images/migrated/alborz/e4956d45216d473ca35c279237d61592.jpg"
+    },
+    {
+      "from": "OLD/ART/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/art/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/ART/193f4a3f0015480546bb78faa7650751.jpg",
+      "to": "images/migrated/art/193f4a3f0015480546bb78faa7650751.jpg"
+    },
+    {
+      "from": "OLD/DAMAVAND/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/damavand/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/DAMAVAND/12eaa03f0f463a26064517d77ee3b879.jpg",
+      "to": "images/migrated/damavand/12eaa03f0f463a26064517d77ee3b879.jpg"
+    },
+    {
+      "from": "OLD/DONATE/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/donate/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/DONATE/0fcd9633e3561274ef8a22da01c2024f.jpg",
+      "to": "images/migrated/donate/0fcd9633e3561274ef8a22da01c2024f.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/events/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/04de9a62263ef36832d33871e7b1aa20.jpg",
+      "to": "images/migrated/events/04de9a62263ef36832d33871e7b1aa20.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/27eea1c0bedf418d1caa75ed0f7c6b1b.jpg",
+      "to": "images/migrated/events/27eea1c0bedf418d1caa75ed0f7c6b1b.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/4f19f06ccefd8581d50e28880b6b2b54.jpg",
+      "to": "images/migrated/events/4f19f06ccefd8581d50e28880b6b2b54.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/586405b0f930de2b0cecbbdc9dc36660.jpg",
+      "to": "images/migrated/events/586405b0f930de2b0cecbbdc9dc36660.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/6300ec6946cc0241c54b7982d2f32e89.jpg",
+      "to": "images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/698cbb6dc2327c16c32eae044a9938eb.jpg",
+      "to": "images/migrated/events/698cbb6dc2327c16c32eae044a9938eb.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/8778bd1886dd14180e8bcb3823e2886a.jpg",
+      "to": "images/migrated/events/8778bd1886dd14180e8bcb3823e2886a.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/90226b8f19b99c932e1683253b2018c4.jpg",
+      "to": "images/migrated/events/90226b8f19b99c932e1683253b2018c4.jpg"
+    },
+    {
+      "from": "OLD/EVENTS/c409f99d429aac6e65d7d3317fc76512.jpg",
+      "to": "images/migrated/events/c409f99d429aac6e65d7d3317fc76512.jpg"
+    },
+    {
+      "from": "OLD/HOMA/06c31b39a5b47d50c0580e6e51e64c58.jpg",
+      "to": "images/migrated/homa/06c31b39a5b47d50c0580e6e51e64c58.jpg"
+    },
+    {
+      "from": "OLD/HOMA/149889f001e2f7945fa917258838a272.jpg",
+      "to": "images/migrated/homa/149889f001e2f7945fa917258838a272.jpg"
+    },
+    {
+      "from": "OLD/HOMA/1d703783563f83a48077baddf1e5e4af.jpg",
+      "to": "images/migrated/homa/1d703783563f83a48077baddf1e5e4af.jpg"
+    },
+    {
+      "from": "OLD/HOMA/3ad88bf19f50cd4964491e5ab3efd3cd.jpg",
+      "to": "images/migrated/homa/3ad88bf19f50cd4964491e5ab3efd3cd.jpg"
+    },
+    {
+      "from": "OLD/HOMA/435e2468508df066e91f8a16ecf57923.jpg",
+      "to": "images/migrated/homa/435e2468508df066e91f8a16ecf57923.jpg"
+    },
+    {
+      "from": "OLD/HOMA/a989ac400bf555e054cd071098a77114.jpg",
+      "to": "images/migrated/homa/a989ac400bf555e054cd071098a77114.jpg"
+    },
+    {
+      "from": "OLD/MEMBERS/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/members/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/MEMBERS/0fcd9633e3561274ef8a22da01c2024f.jpg",
+      "to": "images/migrated/members/0fcd9633e3561274ef8a22da01c2024f.jpg"
+    },
+    {
+      "from": "OLD/MEMBERS/6975d80c8b032f4c5b95a1dbbea8920d.jpg",
+      "to": "images/migrated/members/6975d80c8b032f4c5b95a1dbbea8920d.jpg"
+    },
+    {
+      "from": "OLD/MEMBERS/791b0d1ca3bd74b6a1f7c45caac4fa6c.jpg",
+      "to": "images/migrated/members/791b0d1ca3bd74b6a1f7c45caac4fa6c.jpg"
+    },
+    {
+      "from": "OLD/APPLY/03cb3d52aee72cf138162860ff95965f.jpg",
+      "to": "images/migrated/apply/03cb3d52aee72cf138162860ff95965f.jpg"
+    },
+    {
+      "from": "OLD/THANKS/07e40a4f58915b67016922edd87a9af5.jpg",
+      "to": "images/migrated/thanks/07e40a4f58915b67016922edd87a9af5.jpg"
+    },
+    {
+      "from": "OLD/05c08c09cf6d0acecd5548ac9dcefa1e.jpg",
+      "to": "images/migrated/05c08c09cf6d0acecd5548ac9dcefa1e.jpg"
+    },
+    {
+      "from": "OLD/2d47312bb10753410cba64af50c19a9b.jpg",
+      "to": "images/migrated/2d47312bb10753410cba64af50c19a9b.jpg"
+    },
+    {
+      "from": "OLD/48d7c85189f7b171a95a7cdf07c046c7.jpg",
+      "to": "images/migrated/48d7c85189f7b171a95a7cdf07c046c7.jpg"
+    },
+    {
+      "from": "OLD/50a1ba08ce4b3d023fa7858c275af97e.jpg",
+      "to": "images/migrated/50a1ba08ce4b3d023fa7858c275af97e.jpg"
+    },
+    {
+      "from": "OLD/64b7764c1e7a64abc2b1ea1a7dcaabd9.jpg",
+      "to": "images/migrated/64b7764c1e7a64abc2b1ea1a7dcaabd9.jpg"
+    },
+    {
+      "from": "OLD/deddfca0aee9687686af177f9f99a945.jpg",
+      "to": "images/migrated/deddfca0aee9687686af177f9f99a945.jpg"
+    }
+  ],
+  "errors_list": []
+}

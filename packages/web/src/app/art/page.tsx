@@ -107,6 +107,7 @@ export default function ArtPage() {
             <div className="space-y-8">
               {art.installations.map((installation, index) => {
                 const gradient = installation.gradient || 'from-primary to-secondary';
+                const detailUrl = installation.slug ? `/art/${installation.slug}` : null;
 
                 return (
                 <motion.div
@@ -123,7 +124,13 @@ export default function ArtPage() {
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                       <div className="flex-1">
                         <h3 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
-                          {installation.title}
+                          {detailUrl ? (
+                            <Link href={detailUrl} className="hover:text-primary transition-colors">
+                              {installation.title}
+                            </Link>
+                          ) : (
+                            installation.title
+                          )}
                         </h3>
                         <p className="text-primary dark:text-persian-light font-semibold mb-4">
                           {installation.artist} • {installation.year}
@@ -131,7 +138,7 @@ export default function ArtPage() {
                         <p className="text-neutral-700 dark:text-neutral-300 mb-6">
                           {installation.description}
                         </p>
-                        <div className="flex flex-wrap gap-4 text-sm">
+                        <div className="flex flex-wrap gap-4 text-sm mb-4">
                           <div className="flex items-center text-neutral-600 dark:text-neutral-400">
                             <MapPin className="h-4 w-4 mr-2 text-primary" />
                             {installation.location}
@@ -145,6 +152,15 @@ export default function ArtPage() {
                             {installation.impact}
                           </div>
                         </div>
+                        {detailUrl && (
+                          <Link
+                            href={detailUrl}
+                            className="inline-flex items-center text-primary hover:text-secondary font-medium transition-colors"
+                          >
+                            Learn More
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Link>
+                        )}
                       </div>
                       <div className={`h-1 lg:h-auto lg:w-1 bg-gradient-to-b ${gradient}`} />
                     </div>
