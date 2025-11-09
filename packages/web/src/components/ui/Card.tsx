@@ -10,9 +10,9 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variantClasses = {
-  default: "bg-white shadow border border-secondary-200",
-  bordered: "bg-white border-2 border-secondary-200",
-  elevated: "bg-white shadow-lg border border-secondary-100",
+  default: "bg-warm-white shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] hover:border-antique-gold/40 transition-all duration-500 group",
+  bordered: "bg-warm-white border-2 border-dust-khaki/30 hover:border-antique-gold/50 transition-all duration-300",
+  elevated: "bg-warm-white shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_12px_40px_rgba(160,82,45,0.15),0_16px_60px_rgba(212,175,55,0.1)] hover:border-antique-gold/50 transition-all duration-500 group",
 };
 
 const paddingClasses = {
@@ -37,14 +37,18 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          "rounded-lg overflow-hidden",
+          "relative rounded-2xl overflow-hidden",
           variantClasses[variant],
           paddingClasses[padding],
           className
         )}
         {...props}
       >
-        {children}
+        {/* Subtle gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-antique-gold/5 via-transparent to-burnt-sienna/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+        <div className="relative z-10">
+          {children}
+        </div>
       </div>
     );
   }
@@ -61,7 +65,7 @@ export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={clsx("border-b border-secondary-200 pb-4 mb-4", className)}
+        className={clsx("border-b border-dust-khaki/30 pb-4 mb-4", className)}
         {...props}
       >
         {children}
@@ -82,7 +86,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
     return (
       <Component
         ref={ref}
-        className={clsx("text-lg font-semibold text-secondary-900", className)}
+        className={clsx("text-lg font-display font-semibold text-desert-night", className)}
         {...props}
       >
         {children}
@@ -102,7 +106,7 @@ export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
     return (
       <div
         ref={ref}
-        className={clsx("text-secondary-600", className)}
+        className={clsx("text-desert-night/70 font-body", className)}
         {...props}
       >
         {children}
@@ -122,7 +126,7 @@ export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
     return (
       <div
         ref={ref}
-        className={clsx("border-t border-secondary-200 pt-4 mt-4", className)}
+        className={clsx("border-t border-dust-khaki/30 pt-4 mt-4", className)}
         {...props}
       >
         {children}

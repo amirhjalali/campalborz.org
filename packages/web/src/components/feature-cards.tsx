@@ -23,7 +23,7 @@ export function FeatureCards() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-burnt-sienna mb-4">
             Discover {campConfig.name}
           </h2>
-          <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-lg text-desert-night/70 max-w-2xl mx-auto font-body">
             Explore the many facets of our community and find your place in our story
           </p>
         </motion.div>
@@ -44,9 +44,9 @@ export function FeatureCards() {
                 whileHover={{ y: -8, scale: 1.02 }}
               >
                 <Link href={feature.link}>
-                  <div className="group relative bg-white rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 h-full">
+                  <div className="group relative bg-warm-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] hover:border-antique-gold/40 transition-all duration-500 h-full">
                     {/* Gradient overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-2xl`} />
 
                     {/* Card content */}
                     <div className="relative p-8">
@@ -65,7 +65,7 @@ export function FeatureCards() {
                       </h3>
 
                       {/* Description */}
-                      <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+                      <p className="text-desert-night/70 mb-4 font-body">
                         {feature.description}
                       </p>
 

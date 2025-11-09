@@ -96,24 +96,31 @@ export function ImageGallery({
           <div
             key={image.id}
             onClick={() => openLightbox(index)}
-            className="group relative cursor-pointer overflow-hidden rounded-lg bg-gray-100"
+            className="group relative cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-burnt-sienna/20 via-antique-gold/10 to-desert-sand/20 p-[2px] hover:shadow-[0_20px_60px_rgba(160,82,45,0.3),0_0_40px_rgba(212,175,55,0.2)] transition-all duration-500"
           >
-            <div className={`relative ${getAspectRatioClass()}`}>
+            {/* Gradient border */}
+            <div className="absolute inset-0 bg-gradient-to-br from-burnt-sienna/50 via-antique-gold/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+            
+            <div className={`relative ${getAspectRatioClass()} rounded-2xl overflow-hidden bg-desert-sand/10`}>
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 brightness-[1.05] contrast-[1.1] saturate-[1.1] group-hover:brightness-[1.1] group-hover:contrast-[1.15]"
                 sizes={`(max-width: 768px) 100vw, (max-width: 1200px) ${100 / columns}vw, ${100 / columns}vw`}
               />
+              
+              {/* Overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-desert-night/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
-                <MagnifyingGlassIcon className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                <MagnifyingGlassIcon className="h-8 w-8 text-warm-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 drop-shadow-lg" />
               </div>
             </div>
             {image.title && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-sm font-medium truncate">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-desert-night/80 via-desert-night/40 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-b-2xl">
+                <p className="text-warm-white text-sm font-semibold truncate font-body">
                   {image.title}
                 </p>
               </div>
@@ -229,21 +236,30 @@ export function MasonryGallery({ images }: { images: GalleryImage[] }) {
           <div
             key={image.id}
             onClick={() => setSelectedIndex(index)}
-            className="group relative break-inside-avoid cursor-pointer overflow-hidden rounded-lg"
+            className="group relative break-inside-avoid cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-burnt-sienna/20 via-antique-gold/10 to-desert-sand/20 p-[2px] hover:shadow-[0_20px_60px_rgba(160,82,45,0.3),0_0_40px_rgba(212,175,55,0.2)] transition-all duration-500"
           >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={image.width || 400}
-              height={image.height || 600}
-              className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity duration-300 flex items-center justify-center">
-              <MagnifyingGlassIcon className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            {/* Gradient border */}
+            <div className="absolute inset-0 bg-gradient-to-br from-burnt-sienna/50 via-antique-gold/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+            
+            <div className="relative rounded-2xl overflow-hidden bg-desert-sand/10">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width || 400}
+                height={image.height || 600}
+                className="w-full h-auto transition-transform duration-700 group-hover:scale-110 brightness-[1.05] contrast-[1.1] saturate-[1.1] group-hover:brightness-[1.1] group-hover:contrast-[1.15]"
+              />
+              
+              {/* Overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-desert-night/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                <MagnifyingGlassIcon className="h-8 w-8 text-warm-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 drop-shadow-lg" />
+              </div>
             </div>
             {image.title && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-sm font-medium">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-desert-night/80 via-desert-night/40 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-b-2xl">
+                <p className="text-warm-white text-sm font-semibold font-body">
                   {image.title}
                 </p>
               </div>

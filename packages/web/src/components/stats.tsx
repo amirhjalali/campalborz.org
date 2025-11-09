@@ -7,7 +7,7 @@ import { getIcon } from '../lib/icons';
 export function Stats() {
   const { stats } = useContentConfig();
   return (
-    <section className="py-24 bg-neutral-50 dark:bg-midnight-dark">
+    <section className="py-24 bg-desert-sand/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
@@ -20,7 +20,7 @@ export function Stats() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-primary mb-4">
             Our Impact in Numbers
           </h2>
-          <p className="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto">
+          <p className="text-lg text-desert-night/70 max-w-2xl mx-auto font-body">
             Building bridges between cultures, creating art, and fostering community for over a decade
           </p>
         </motion.div>
@@ -39,7 +39,7 @@ export function Stats() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
               >
-                <div className="group relative bg-white dark:bg-midnight rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <div className="group relative bg-warm-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] hover:border-antique-gold/40 transition-all duration-500 overflow-hidden">
                   {/* Gradient background on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
 
@@ -66,7 +66,7 @@ export function Stats() {
 
                   {/* Description */}
                   {stat.description && (
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                    <p className="text-sm text-desert-night/70 font-body">
                       {stat.description}
                     </p>
                   )}
@@ -84,12 +84,12 @@ export function Stats() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="text-center mt-16"
         >
-          <p className="text-neutral-600 dark:text-neutral-400 mb-6">
+          <p className="text-desert-night/70 mb-6 font-body">
             Want to be part of our story?
           </p>
           <a
             href="/join"
-            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-burnt-sienna via-antique-gold to-burnt-sienna text-warm-white font-bold rounded-xl shadow-[0_4px_15px_rgba(160,82,45,0.4),0_0_30px_rgba(212,175,55,0.2)] hover:shadow-[0_6px_25px_rgba(160,82,45,0.5),0_0_40px_rgba(212,175,55,0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
           >
             Join Our Community
           </a>

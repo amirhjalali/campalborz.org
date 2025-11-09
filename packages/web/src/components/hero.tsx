@@ -40,7 +40,7 @@ export function Hero() {
         >
           {/* Logo/Title */}
           <motion.h1
-            className="text-5xl md:text-7xl font-display font-bold text-burnt-sienna mb-6"
+            className="text-5xl md:text-7xl font-display font-bold bg-gradient-to-r from-burnt-sienna via-antique-gold to-burnt-sienna bg-clip-text text-transparent tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(160,82,45,0.3)] mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -64,7 +64,7 @@ export function Hero() {
 
           {/* Description */}
           <motion.p
-            className="text-xl md:text-2xl text-desert-night max-w-3xl mx-auto mb-12 leading-relaxed"
+            className="text-xl md:text-2xl text-desert-night/90 max-w-3xl mx-auto mb-12 leading-relaxed font-body tracking-wide"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}

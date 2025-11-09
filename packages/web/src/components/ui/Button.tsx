@@ -14,11 +14,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses = {
-  primary: "bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500",
-  secondary: "bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500",
-  outline: "border-secondary-300 text-secondary-700 bg-white hover:bg-secondary-50 focus:ring-secondary-500",
-  ghost: "text-secondary-600 hover:text-secondary-900 hover:bg-secondary-100 focus:ring-secondary-500",
-  danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+  primary: "relative overflow-hidden bg-gradient-to-r from-burnt-sienna via-antique-gold to-burnt-sienna bg-[length:200%_100%] text-warm-white font-bold shadow-[0_4px_15px_rgba(160,82,45,0.4),0_0_30px_rgba(212,175,55,0.2)] hover:shadow-[0_6px_25px_rgba(160,82,45,0.5),0_0_40px_rgba(212,175,55,0.3)] hover:scale-[1.02] active:scale-[0.98] focus:ring-2 focus:ring-antique-gold/50 focus:ring-offset-2 focus:ring-offset-warm-white before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700",
+  secondary: "relative overflow-hidden bg-gradient-to-r from-antique-gold via-royal-gold to-antique-gold bg-[length:200%_100%] text-desert-night font-bold shadow-[0_4px_15px_rgba(212,175,55,0.4),0_0_30px_rgba(255,215,0,0.2)] hover:shadow-[0_6px_25px_rgba(212,175,55,0.5),0_0_40px_rgba(255,215,0,0.3)] hover:scale-[1.02] active:scale-[0.98] focus:ring-2 focus:ring-royal-gold/50 focus:ring-offset-2 focus:ring-offset-warm-white before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700",
+  outline: "border-2 border-dust-khaki/50 text-burnt-sienna bg-warm-white/80 backdrop-blur-sm hover:bg-desert-sand/30 hover:border-antique-gold/70 focus:ring-2 focus:ring-antique-gold/50 focus:ring-offset-2 focus:ring-offset-warm-white transition-all duration-300",
+  ghost: "text-burnt-sienna hover:text-desert-night hover:bg-desert-sand/30 focus:ring-2 focus:ring-antique-gold/50 focus:ring-offset-2 focus:ring-offset-warm-white transition-all duration-300",
+  danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-lg hover:shadow-xl transition-all duration-300",
 };
 
 const sizeClasses = {
@@ -47,9 +47,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const buttonClasses = clsx(
       // Base styles
-      "inline-flex items-center justify-center font-medium rounded-md transition-colors duration-200",
-      "focus:outline-none focus:ring-2 focus:ring-offset-2",
-      "disabled:opacity-50 disabled:cursor-not-allowed",
+      "inline-flex items-center justify-center font-ui font-semibold rounded-xl transition-all duration-300",
+      "focus:outline-none",
+      "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100",
       
       // Variant styles
       variantClasses[variant],
@@ -75,7 +75,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <svg
-            className={clsx("animate-spin", {
+            className={clsx("animate-spin relative z-10", {
               "w-3 h-3": size === "sm",
               "w-4 h-4": size === "md",
               "w-5 h-5": size === "lg",
@@ -100,7 +100,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         
         {!isLoading && leftIcon && (
-          <span className={clsx({
+          <span className={clsx("relative z-10", {
             "mr-1.5": size === "sm",
             "mr-2": size === "md" || size === "lg",
           })}>
@@ -108,12 +108,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
 
-        <span className={isLoading ? "ml-2" : undefined}>
+        <span className={clsx("relative z-10", isLoading ? "ml-2" : undefined)}>
           {children}
         </span>
 
         {!isLoading && rightIcon && (
-          <span className={clsx({
+          <span className={clsx("relative z-10", {
             "ml-1.5": size === "sm",
             "ml-2": size === "md" || size === "lg",
           })}>
