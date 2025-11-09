@@ -9,6 +9,8 @@ import { EventManagement } from "@/components/admin/EventManagement";
 import { DonationManagement } from "@/components/admin/DonationManagement";
 import MediaLibrary from "@/components/admin/MediaLibrary";
 import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import { StatsGrid } from "@/components/admin/StatsCard";
+import { BarChart, LineChart, PieChart, ActivityTimeline } from "@/components/admin/Charts";
 import { useTenant } from "@/hooks/useTenant";
 import { motion } from "framer-motion";
 import { 
@@ -139,85 +141,81 @@ export default function AdminPage() {
       case "overview":
         return (
           <div className="space-y-6">
-            {/* Overview Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Total Members</CardTitle>
-                    <Users className="h-4 w-4 text-gray-400" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{overviewStats.totalMembers}</div>
-                  <p className="text-xs text-green-600">+3 this month</p>
-                </CardContent>
-              </Card>
+            {/* Overview Stats with New StatsGrid */}
+            <StatsGrid
+              stats={[
+                {
+                  title: "Total Members",
+                  value: overviewStats.totalMembers,
+                  change: 7.1,
+                  changeLabel: "vs last month",
+                  icon: <Users className="h-5 w-5" />,
+                  variant: "default"
+                },
+                {
+                  title: "Pending Applications",
+                  value: overviewStats.pendingApplications,
+                  icon: <Bell className="h-5 w-5" />,
+                  variant: "warning"
+                },
+                {
+                  title: "Monthly Donations",
+                  value: overviewStats.monthlyDonations,
+                  change: 15,
+                  changeLabel: "vs last month",
+                  icon: <DollarSign className="h-5 w-5" />,
+                  variant: "success"
+                },
+                {
+                  title: "Page Views",
+                  value: overviewStats.pageViews,
+                  change: 23.4,
+                  changeLabel: "vs last month",
+                  icon: <BarChart3 className="h-5 w-5" />,
+                  variant: "primary"
+                },
+              ]}
+              columns={4}
+            />
 
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Pending Applications</CardTitle>
-                    <Bell className="h-4 w-4 text-yellow-400" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-yellow-600">{overviewStats.pendingApplications}</div>
-                  <p className="text-xs text-gray-600">Needs attention</p>
-                </CardContent>
-              </Card>
+            {/* Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <LineChart
+                title="Member Growth"
+                data={[
+                  { label: "Jan", value: 32 },
+                  { label: "Feb", value: 35 },
+                  { label: "Mar", value: 38 },
+                  { label: "Apr", value: 41 },
+                  { label: "May", value: 43 },
+                  { label: "Jun", value: 45 },
+                ]}
+                height={250}
+              />
 
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Monthly Donations</CardTitle>
-                    <DollarSign className="h-4 w-4 text-green-400" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-green-600">{overviewStats.monthlyDonations}</div>
-                  <p className="text-xs text-green-600">+15% from last month</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium text-gray-600">Page Views</CardTitle>
-                    <BarChart3 className="h-4 w-4 text-blue-400" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{overviewStats.pageViews}</div>
-                  <p className="text-xs text-blue-600">This month</p>
-                </CardContent>
-              </Card>
+              <PieChart
+                title="Donation Sources"
+                data={[
+                  { label: "One-time", value: 1250, color: "#3b82f6" },
+                  { label: "Recurring", value: 800, color: "#10b981" },
+                  { label: "Events", value: 400, color: "#f59e0b" },
+                ]}
+                size={180}
+              />
             </div>
 
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {overviewStats.recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
-                      <div className="flex items-center">
-                        <div className={`w-2 h-2 rounded-full mr-3 ${
-                          activity.type === 'application' ? 'bg-blue-500' :
-                          activity.type === 'donation' ? 'bg-green-500' :
-                          activity.type === 'event' ? 'bg-purple-500' :
-                          'bg-gray-500'
-                        }`}></div>
-                        <span className="text-sm text-gray-700">{activity.message}</span>
-                      </div>
-                      <span className="text-xs text-gray-500">{activity.time}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Activity Timeline */}
+            <ActivityTimeline
+              title="Recent Activity"
+              events={overviewStats.recentActivity.map((activity, index) => ({
+                id: String(index),
+                title: activity.message,
+                timestamp: activity.time,
+                type: activity.type === 'donation' ? 'success' :
+                      activity.type === 'application' ? 'info' :
+                      'info',
+              }))}
+            />
 
             {/* Quick Actions */}
             <Card>
