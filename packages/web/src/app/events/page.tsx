@@ -283,7 +283,7 @@ export default function EventsPage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href={events.cta.buttons.secondary.link}
-                  className="inline-block px-8 py-4 text-lg font-semibold border-2 border-primary text-primary rounded-lg hover:bg-purple-700 hover:text-white transition-colors"
+                  className="inline-block px-8 py-4 text-lg font-semibold border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors"
                 >
                   {events.cta.buttons.secondary.text}
                 </Link>

@@ -102,7 +102,7 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+      <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-700 to-secondary-600">
         <Navigation />
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-white"></div>
@@ -113,7 +113,7 @@ export default function AdminPage() {
 
   if (!tenant) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+      <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-700 to-secondary-600">
         <Navigation />
         <div className="text-center py-32 px-4 text-white">
           <motion.h1 
@@ -348,17 +348,17 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-midnight via-persian-purple to-desert-gold">
+    <div className="min-h-screen bg-gradient-to-br from-primary-900 via-primary-700 to-secondary-600">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 text-center text-white">
         <div className="max-w-4xl mx-auto">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-desert-gold bg-clip-text text-transparent"
+            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-accent bg-clip-text text-transparent"
           >
             Admin Dashboard
           </motion.h1>

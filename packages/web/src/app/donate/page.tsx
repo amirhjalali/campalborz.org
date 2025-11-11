@@ -380,7 +380,7 @@ export default function DonatePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-center bg-gradient-to-r from-persian-purple/5 to-desert-gold/5 rounded-2xl p-12"
+            className="text-center bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-12"
           >
             <h3 className="text-3xl font-bold text-midnight mb-6">
               {donate.cta.title}
@@ -395,7 +395,7 @@ export default function DonatePage() {
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="lg" className="border-2 border-persian-purple text-primary hover:bg-persian-purple hover:text-white" asChild>
+                <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-white" asChild>
                   <Link href={donate.cta.buttons.secondary.link}>{donate.cta.buttons.secondary.text}</Link>
                 </Button>
               </motion.div>

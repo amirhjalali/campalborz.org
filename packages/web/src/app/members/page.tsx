@@ -226,7 +226,7 @@ export default function MembersPage() {
         </section>
 
         {/* Community Stats */}
-        <section className="py-16 bg-gradient-to-br from-persian-purple/10 to-desert-gold/10">
+        <section className="py-16 bg-gradient-to-br from-primary/10 to-secondary/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
               {members.communityStats.map((stat, index) => {
@@ -279,7 +279,7 @@ export default function MembersPage() {
                 </Link>
                 <Link
                   href={members.cta.buttons.secondary.link}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-persian-purple hover:bg-persian-purple/10 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-midnight text-neutral-900 dark:text-white font-semibold rounded-lg border-2 border-primary hover:bg-primary/10 transition-all duration-300"
                 >
                   {members.cta.buttons.secondary.text}
                   <ArrowRight className="ml-2 h-5 w-5" />

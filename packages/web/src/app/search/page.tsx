@@ -50,7 +50,7 @@ export default function SearchPage() {
                 placeholder={search.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-4 py-4 text-lg rounded-2xl border border-neutral-200 bg-white dark:bg-midnight-light dark:border-neutral-700 text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none focus:ring-4 focus:ring-persian-purple/20"
+                className="w-full pl-14 pr-4 py-4 text-lg rounded-2xl border border-neutral-200 bg-white dark:bg-midnight-light dark:border-neutral-700 text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none focus:ring-4 focus:ring-primary/20"
               />
             </div>
           </motion.div>

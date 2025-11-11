@@ -113,6 +113,13 @@ module.exports = {
           900: 'var(--color-neutral-900, #18181B)',
         },
 
+        // Midnight colors (legacy compatibility)
+        midnight: {
+          DEFAULT: '#1E293B',
+          light: '#334155',
+          dark: '#0F172A',
+        },
+
         // Semantic colors
         success: 'var(--color-success, rgb(34, 197, 94))',
         warning: 'var(--color-warning, rgb(234, 179, 8))',
