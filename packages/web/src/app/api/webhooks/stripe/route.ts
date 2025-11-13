@@ -202,13 +202,3 @@ async function handleSubscriptionCanceled(subscription: any) {
 
   // TODO: Send cancellation confirmation email
 }
-
-/**
- * Configuration for Next.js
- * This ensures the raw body is available for signature verification
- */
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

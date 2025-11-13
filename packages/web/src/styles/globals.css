@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Crimson+Text:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+/* Style Guide Fonts: Cinzel (display - readable weights!), Cormorant (accent), Inter (body/UI) */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Cormorant:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -45,68 +46,105 @@
     --radius: 0.75rem;
   }
   
+  /* Dark mode - Style Guide compliant */
+  .dark,
   .night-mode {
-    --background: 44 36 22;
-    --foreground: 255 248 240;
-    --card: 93 78 96;
-    --card-foreground: 255 248 240;
-    --primary: 80 200 120;
-    --primary-foreground: 44 36 22;
-    --secondary: 212 175 55;
-    --secondary-foreground: 44 36 22;
-    --accent: 255 215 0;
-    --accent-foreground: 44 36 22;
-    --muted: 93 78 96;
-    --muted-foreground: 192 192 192;
-    --border: 93 78 96;
-    --ring: 80 200 120;
+    --background: 47 66 67;        /* Deep Teal (sage-dark) */
+    --foreground: 245 239 230;     /* Warm Beige (tan-light) */
+    --card: 74 93 90;              /* Sage Green */
+    --card-foreground: 245 239 230;
+    --primary: 74 93 90;           /* Sage Green */
+    --primary-foreground: 245 239 230;
+    --secondary: 212 196 168;      /* Desert Tan */
+    --secondary-foreground: 47 66 67;
+    --accent: 212 175 55;          /* Antique Gold */
+    --accent-foreground: 47 66 67;
+    --muted: 59 74 72;             /* Sage-600 */
+    --muted-foreground: 212 196 168;
+    --border: 74 93 90;
+    --ring: 212 175 55;
   }
 }
 
 @layer base {
   body {
     font-feature-settings: "kern" 1, "liga" 1;
-    @apply bg-warm-white text-desert-night;
+    @apply bg-warm-white text-sage-dark font-body;
     transition: background-color 0.5s ease, color 0.5s ease;
   }
-  
+
+  /* Dark mode body - Deep teal background per style guide */
+  .dark body,
   .night-mode body {
-    @apply bg-desert-night text-warm-white;
+    @apply bg-sage-dark text-tan-light;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-desert-night;
+
+  /* Headings - Readable weights for better contrast */
+  h1 {
+    @apply font-display tracking-tight text-sage-dark;
+    font-weight: 600; /* Semibold for main titles - READABLE */
   }
-  
-  .night-mode h1,
-  .night-mode h2,
-  .night-mode h3,
-  .night-mode h4,
-  .night-mode h5,
-  .night-mode h6 {
-    @apply text-warm-white;
+
+  h2 {
+    @apply font-display tracking-tight text-sage-dark;
+    font-weight: 500; /* Medium for section headers */
   }
-  
+
+  h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-sage-dark;
+    font-weight: 400; /* Regular for smaller headings */
+  }
+
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+  .night-mode h1, .night-mode h2, .night-mode h3, .night-mode h4, .night-mode h5, .night-mode h6 {
+    @apply text-tan-light;
+    font-weight: 700; /* Bold in dark mode for contrast */
+  }
+
+  /* Default text colors - NO OPACITY for readability */
   p, span, div {
-    @apply text-desert-night;
+    @apply text-sage-dark;
+    font-weight: 400; /* Regular weight minimum */
   }
-  
-  .night-mode p,
-  .night-mode span,
-  .night-mode div {
-    @apply text-warm-white;
+
+  .dark p, .dark span, .dark div,
+  .night-mode p, .night-mode span, .night-mode div {
+    @apply text-tan-light;
+    font-weight: 500; /* Medium weight in dark mode for contrast */
   }
   
   .font-display {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Cinzel', serif;
+    font-weight: 500; /* Default to medium weight for readability */
   }
-  
+
+  .font-accent {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-weight: 400;
+  }
+
   .font-body {
-    font-family: 'Crimson Text', serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
   }
-  
+
   .font-ui {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+
+  /* Style Guide Typography Classes */
+  .text-display-thin {
+    font-family: 'Cinzel', serif;
+    font-weight: 100; /* Thin weight for elegant headings */
+    letter-spacing: 0.05em;
+  }
+
+  .text-display-light {
+    font-family: 'Cinzel', serif;
+    font-weight: 300; /* Light weight for subheadings */
+    letter-spacing: 0.03em;
   }
 }
 

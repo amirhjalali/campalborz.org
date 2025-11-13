@@ -45,36 +45,99 @@ module.exports = {
           dark: 'var(--color-accent-dark, rgb(212, 175, 0))',
         },
 
-        // Legacy color names (backward compatibility) - map to primary/secondary
-        // Playa Dust Earth Tones
+        // Style Guide Colors - Sage Green & Tan
+        sage: {
+          DEFAULT: 'rgb(74, 93, 90)',
+          light: 'rgb(138, 157, 154)',
+          dark: 'rgb(47, 66, 67)',
+          50: 'rgb(245, 247, 247)',
+          100: 'rgb(235, 239, 238)',
+          200: 'rgb(214, 221, 220)',
+          300: 'rgb(176, 189, 187)',
+          400: 'rgb(125, 141, 138)',
+          500: 'rgb(74, 93, 90)',
+          600: 'rgb(59, 74, 72)',
+          700: 'rgb(47, 66, 67)',
+          800: 'rgb(35, 50, 51)',
+          900: 'rgb(24, 34, 35)',
+        },
+        tan: {
+          DEFAULT: 'rgb(212, 196, 168)',
+          light: 'rgb(245, 239, 230)',
+          dark: 'rgb(169, 153, 128)',
+          50: 'rgb(252, 250, 247)',
+          100: 'rgb(250, 247, 242)',
+          200: 'rgb(245, 239, 230)',
+          300: 'rgb(235, 225, 210)',
+          400: 'rgb(224, 208, 185)',
+          500: 'rgb(212, 196, 168)',
+          600: 'rgb(190, 174, 146)',
+          700: 'rgb(169, 153, 128)',
+          800: 'rgb(135, 122, 102)',
+          900: 'rgb(108, 98, 82)',
+        },
+        gold: {
+          DEFAULT: 'rgb(212, 175, 55)',
+          light: 'rgb(232, 195, 75)',
+          dark: 'rgb(192, 155, 35)',
+          metallic: 'rgb(212, 175, 55)',
+        },
+
+        // SAFFRON GOLD - Now the DOMINANT primary color (60% usage)
+        saffron: {
+          DEFAULT: 'rgb(241, 196, 15)',   // #F1C40F - Bold Saffron Gold
+          50: 'rgb(254, 252, 234)',
+          100: 'rgb(254, 249, 195)',
+          200: 'rgb(253, 244, 155)',
+          300: 'rgb(252, 236, 116)',
+          400: 'rgb(247, 220, 60)',
+          500: 'rgb(241, 196, 15)',       // Primary Saffron
+          600: 'rgb(212, 168, 10)',
+          700: 'rgb(180, 140, 8)',
+          800: 'rgb(148, 113, 7)',
+          900: 'rgb(121, 93, 6)',
+          light: 'rgb(244, 208, 63)',     // F4D03F
+          dark: 'rgb(212, 163, 9)',       // D4A309
+        },
+
+        // COBALT BLUE - Secondary bold color (25% usage)
+        cobalt: {
+          DEFAULT: 'rgb(0, 71, 171)',     // Bold Cobalt Blue
+          50: 'rgb(239, 246, 255)',
+          100: 'rgb(219, 234, 254)',
+          200: 'rgb(191, 219, 254)',
+          300: 'rgb(147, 197, 253)',
+          400: 'rgb(96, 165, 250)',
+          500: 'rgb(0, 71, 171)',
+          600: 'rgb(0, 60, 145)',
+          700: 'rgb(0, 48, 116)',
+          800: 'rgb(0, 37, 90)',
+          900: 'rgb(0, 28, 68)',
+        },
+
+        // VIBRANT Persian accent colors (15% usage for energy!)
+        persian: {
+          blue: 'rgb(0, 103, 127)',      // Deep teal-blue - vibrant!
+          rose: 'rgb(201, 62, 92)',       // Rich rose - bold!
+          crimson: 'rgb(220, 20, 60)',    // Crimson for CTAs
+          emerald: 'rgb(34, 139, 87)',    // Vibrant green - energetic!
+          purple: 'rgb(102, 51, 153)',    // Royal purple - regal!
+          sunset: 'rgb(255, 107, 53)',    // Burning Man sunset orange!
+        },
+
+        // Legacy color names (backward compatibility)
         dust: {
           khaki: 'rgb(196, 165, 123)',
           grey: 'rgb(155, 155, 155)',
         },
         burnt: {
-          sienna: 'var(--color-primary, rgb(160, 82, 45))',
-        },
-        sage: {
-          green: 'rgb(135, 169, 107)',
+          sienna: 'var(--color-primary, rgb(74, 93, 90))',
         },
         desert: {
           sand: 'rgb(237, 201, 175)',
           night: 'rgb(44, 36, 22)',
           gold: 'var(--color-secondary, rgb(212, 175, 55))',
           orange: 'rgb(255, 107, 107)',
-        },
-        saffron: {
-          DEFAULT: 'var(--color-accent, rgb(255, 215, 0))',
-          light: 'rgb(255, 248, 240)',
-          dark: 'var(--color-secondary, rgb(212, 175, 55))',
-        },
-
-        // Persian Luxury Accents (keeping old names for compatibility)
-        persian: {
-          emerald: 'rgb(80, 200, 120)',
-          purple: 'var(--color-primary, rgb(160, 82, 45))',
-          violet: 'var(--color-secondary, rgb(212, 175, 55))',
-          light: 'rgb(237, 201, 175)',
         },
         royal: {
           gold: 'var(--color-accent, rgb(255, 215, 0))',
@@ -120,16 +183,19 @@ module.exports = {
         info: 'var(--color-info, rgb(59, 130, 246))',
       },
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['Crimson Text', 'serif'],
-        ui: ['Montserrat', 'sans-serif'],
+        display: ['Cinzel', 'serif'],          // Elegant serif for headings (Style Guide)
+        accent: ['Cormorant', 'serif'],        // Italic serif for subheadings (Style Guide)
+        body: ['Inter', 'sans-serif'],         // Clean sans-serif for body (Style Guide)
+        ui: ['Inter', 'sans-serif'],           // UI elements
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         // NEW: CSS Variable-based gradients from brand config
-        'gradient-hero': 'var(--gradient-hero, linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(212, 175, 55) 50%, rgb(160, 82, 45) 100%))',
-        'gradient-card': 'var(--gradient-card, linear-gradient(135deg, rgb(160, 82, 45) 0%, rgb(212, 175, 55) 100%))',
-        'gradient-button': 'var(--gradient-button, linear-gradient(135deg, rgb(212, 175, 55) 0%, rgb(255, 215, 0) 100%))',
+        'gradient-hero': 'var(--gradient-hero, linear-gradient(135deg, rgb(74, 93, 90) 0%, rgb(47, 66, 67) 50%, rgb(212, 196, 168) 100%))',
+        'gradient-card': 'var(--gradient-card, linear-gradient(135deg, rgb(74, 93, 90) 0%, rgb(212, 196, 168) 100%))',
+        'gradient-button': 'var(--gradient-button, linear-gradient(90deg, rgb(212, 175, 55) 0%, rgb(232, 195, 75) 100%))',
+        'gradient-sage': 'linear-gradient(180deg, rgb(74, 93, 90) 0%, rgb(59, 74, 72) 100%)',
+        'gradient-tan': 'linear-gradient(180deg, rgb(245, 239, 230) 0%, rgb(212, 196, 168) 100%)',
         'gradient-overlay': 'var(--gradient-overlay, linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%))',
         'gradient-border': 'var(--gradient-border, linear-gradient(135deg, rgb(212, 175, 55) 0%, rgb(160, 82, 45) 100%))',
         'gradient-text': 'var(--gradient-text, linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(212, 175, 55) 100%))',

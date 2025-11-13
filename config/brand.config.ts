@@ -7,23 +7,24 @@ import { BrandConfig } from './types';
  * Customize colors, fonts, and assets to match your camp's identity.
  */
 export const brandConfig: BrandConfig = {
-  // Colors - Desert/Persian Theme (Legacy support)
+  // Colors - Based on Burning Man 2025 Style Guide
   colors: {
-    primary: "rgb(160, 82, 45)",      // Burnt Sienna
-    secondary: "rgb(212, 175, 55)",   // Antique Gold
-    accent: "rgb(255, 215, 0)",       // Royal Gold
-    background: "rgb(255, 248, 240)", // Warm White
+    primary: "rgb(74, 93, 90)",       // Sage Green
+    secondary: "rgb(212, 196, 168)",  // Desert Tan
+    accent: "rgb(212, 175, 55)",      // Antique Gold
+    background: "rgb(250, 247, 242)", // Cream
     text: {
       primary: "rgb(44, 36, 22)",     // Desert Night
-      secondary: "rgb(237, 201, 175)", // Desert Sand
+      secondary: "rgb(138, 157, 154)", // Light Sage
     },
   },
 
-  // Typography
+  // Typography - Based on Style Guide
   fonts: {
-    display: "Playfair Display",  // Headings
-    body: "Crimson Text",         // Body text
-    ui: "Montserrat",             // UI elements
+    display: "Cinzel",            // Elegant serif for headings
+    accent: "Cormorant",          // Italic serif for subheadings
+    body: "Inter",                // Clean sans-serif for body
+    ui: "Inter",                  // UI elements
   },
 
   // Theme - Extended configuration
@@ -31,37 +32,39 @@ export const brandConfig: BrandConfig = {
     style: "desert-mystical",
     patterns: ["persian-geometric", "desert-waves"],
 
-    // Complete color system with variants
+    // Complete color system with variants - Style Guide Colors
     colors: {
+      // Sage Green (Primary)
       primary: {
-        DEFAULT: "rgb(160, 82, 45)",   // Burnt Sienna
-        light: "rgb(180, 102, 65)",    // Lighter Burnt Sienna
-        dark: "rgb(140, 62, 25)",      // Darker Burnt Sienna
-        50: "rgb(251, 248, 246)",
-        100: "rgb(245, 235, 229)",
-        200: "rgb(230, 210, 198)",
-        300: "rgb(210, 175, 158)",
-        400: "rgb(185, 129, 102)",
-        500: "rgb(160, 82, 45)",       // Base
-        600: "rgb(140, 62, 25)",
-        700: "rgb(115, 47, 15)",
-        800: "rgb(90, 35, 10)",
-        900: "rgb(65, 25, 5)",
+        DEFAULT: "rgb(74, 93, 90)",    // Sage Green
+        light: "rgb(138, 157, 154)",   // Light Sage
+        dark: "rgb(47, 66, 67)",       // Deep Teal
+        50: "rgb(245, 247, 247)",
+        100: "rgb(235, 239, 238)",
+        200: "rgb(214, 221, 220)",
+        300: "rgb(176, 189, 187)",
+        400: "rgb(125, 141, 138)",
+        500: "rgb(74, 93, 90)",        // Base
+        600: "rgb(59, 74, 72)",
+        700: "rgb(47, 66, 67)",
+        800: "rgb(35, 50, 51)",
+        900: "rgb(24, 34, 35)",
       },
+      // Desert Tan (Secondary)
       secondary: {
-        DEFAULT: "rgb(212, 175, 55)",  // Antique Gold
-        light: "rgb(232, 195, 75)",
-        dark: "rgb(192, 155, 35)",
-        50: "rgb(254, 252, 245)",
-        100: "rgb(252, 248, 230)",
-        200: "rgb(248, 238, 200)",
-        300: "rgb(242, 220, 155)",
-        400: "rgb(227, 198, 105)",
-        500: "rgb(212, 175, 55)",      // Base
-        600: "rgb(192, 155, 35)",
-        700: "rgb(165, 130, 25)",
-        800: "rgb(135, 105, 20)",
-        900: "rgb(105, 80, 15)",
+        DEFAULT: "rgb(212, 196, 168)",  // Desert Tan
+        light: "rgb(245, 239, 230)",    // Warm Beige
+        dark: "rgb(169, 153, 128)",
+        50: "rgb(252, 250, 247)",
+        100: "rgb(250, 247, 242)",
+        200: "rgb(245, 239, 230)",
+        300: "rgb(235, 225, 210)",
+        400: "rgb(224, 208, 185)",
+        500: "rgb(212, 196, 168)",     // Base
+        600: "rgb(190, 174, 146)",
+        700: "rgb(169, 153, 128)",
+        800: "rgb(135, 122, 102)",
+        900: "rgb(108, 98, 82)",
       },
       accent: {
         DEFAULT: "rgb(255, 215, 0)",   // Royal Gold
@@ -97,9 +100,11 @@ export const brandConfig: BrandConfig = {
         info: "rgb(59, 130, 246)",     // Blue
       },
       background: {
-        primary: "rgb(255, 248, 240)",   // Warm White
-        secondary: "rgb(250, 245, 238)", // Lighter warm
-        tertiary: "rgb(245, 240, 232)",  // Even lighter
+        primary: "rgb(250, 247, 242)",   // Cream
+        secondary: "rgb(245, 239, 230)", // Warm Beige
+        tertiary: "rgb(252, 250, 247)",  // Lightest Cream
+        sage: "rgb(74, 93, 90)",         // Sage Green (for dark sections)
+        tan: "rgb(212, 196, 168)",       // Desert Tan (for alternating sections)
       },
       text: {
         primary: "rgb(44, 36, 22)",      // Desert Night
@@ -114,15 +119,17 @@ export const brandConfig: BrandConfig = {
       },
     },
 
-    // Gradient presets
+    // Gradient presets - Style Guide Inspired
     gradients: {
-      hero: "linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(212, 175, 55) 50%, rgb(160, 82, 45) 100%)",
-      card: "linear-gradient(135deg, rgb(160, 82, 45) 0%, rgb(212, 175, 55) 100%)",
-      button: "linear-gradient(90deg, rgb(160, 82, 45) 0%, rgb(180, 102, 65) 100%)",
-      decorative: "linear-gradient(135deg, rgb(196, 165, 123) 0%, rgb(237, 201, 175) 50%, rgb(160, 82, 45) 100%)",
-      primary: "linear-gradient(135deg, rgb(160, 82, 45) 0%, rgb(180, 102, 65) 100%)",
-      secondary: "linear-gradient(135deg, rgb(212, 175, 55) 0%, rgb(232, 195, 75) 100%)",
-      accent: "linear-gradient(135deg, rgb(255, 215, 0) 0%, rgb(255, 235, 100) 100%)",
+      hero: "linear-gradient(135deg, rgb(74, 93, 90) 0%, rgb(47, 66, 67) 50%, rgb(212, 196, 168) 100%)",
+      card: "linear-gradient(135deg, rgb(74, 93, 90) 0%, rgb(212, 196, 168) 100%)",
+      button: "linear-gradient(90deg, rgb(212, 175, 55) 0%, rgb(232, 195, 75) 100%)",
+      decorative: "linear-gradient(135deg, rgb(212, 196, 168) 0%, rgb(245, 239, 230) 50%, rgb(212, 175, 55) 100%)",
+      primary: "linear-gradient(135deg, rgb(74, 93, 90) 0%, rgb(138, 157, 154) 100%)",
+      secondary: "linear-gradient(135deg, rgb(212, 196, 168) 0%, rgb(245, 239, 230) 100%)",
+      accent: "linear-gradient(135deg, rgb(212, 175, 55) 0%, rgb(232, 195, 75) 100%)",
+      sage: "linear-gradient(180deg, rgb(74, 93, 90) 0%, rgb(59, 74, 72) 100%)",
+      tan: "linear-gradient(180deg, rgb(245, 239, 230) 0%, rgb(212, 196, 168) 100%)",
     },
 
     // Shadow presets

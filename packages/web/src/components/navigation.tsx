@@ -83,7 +83,7 @@ export function Navigation() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
-          ? 'bg-white/95 dark:bg-midnight/95 backdrop-blur-lg shadow-lg'
+          ? 'bg-warm-white/95 dark:bg-sage-dark/95 backdrop-blur-lg shadow-lg'
           : 'bg-transparent'
       )}
     >
@@ -94,8 +94,8 @@ export function Navigation() {
             <motion.div
               whileHover={{ scale: 1.05 }}
               className={cn(
-                'text-2xl font-display font-bold transition-colors',
-                isScrolled ? 'text-primary' : 'text-white'
+                'text-2xl font-display font-light tracking-wide transition-colors',
+                isScrolled ? 'text-sage-dark dark:text-tan-light' : 'text-white'
               )}
             >
               {campConfig.name.toUpperCase()}
@@ -116,7 +116,7 @@ export function Navigation() {
                   className={cn(
                     'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
                     isScrolled
-                      ? 'text-neutral-900 hover:text-primary hover:bg-secondary/10'
+                      ? 'text-sage-dark dark:text-tan-light hover:text-gold hover:bg-gold/10'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                   )}
                 >
@@ -134,7 +134,7 @@ export function Navigation() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.25, ease: "easeOut" }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-white/95 dark:bg-midnight-dark/95 backdrop-blur-lg rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden"
+                      className="absolute top-full left-0 mt-2 w-56 bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg rounded-lg shadow-xl border border-tan-300 dark:border-sage-light overflow-hidden"
                     >
                       {item.children.map((child, index) => (
                         <motion.div
@@ -145,7 +145,7 @@ export function Navigation() {
                         >
                           <Link
                             href={child.href}
-                            className="block px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-primary/10 hover:text-primary transition-all duration-200 hover:translate-x-1"
+                            className="block px-4 py-3 text-sm text-sage-dark dark:text-tan-light hover:bg-gold/10 hover:text-gold transition-all duration-200 hover:translate-x-1"
                           >
                             {child.label}
                           </Link>
@@ -167,7 +167,7 @@ export function Navigation() {
                 className={cn(
                   'p-2 rounded-lg transition-colors',
                   isScrolled
-                    ? 'text-neutral-900 hover:bg-neutral-200'
+                    ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
                     : 'text-white hover:bg-white/10'
                 )}
                 aria-label="Toggle dark mode"
@@ -180,9 +180,9 @@ export function Navigation() {
             <Link
               href="/donate"
               className={cn(
-                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-semibold transition-all duration-300',
+                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
                 isScrolled
-                  ? 'bg-gradient-to-r from-primary to-secondary text-white hover:shadow-lg hover:scale-105'
+                  ? 'bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105'
                   : 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20'
               )}
             >
@@ -193,9 +193,9 @@ export function Navigation() {
             <Link
               href="/members"
               className={cn(
-                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-semibold transition-all duration-300',
+                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
                 isScrolled
-                  ? 'border-2 border-primary text-primary hover:bg-primary hover:text-white'
+                  ? 'border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark'
                   : 'text-white border-2 border-white/30 hover:bg-white/10'
               )}
             >
@@ -208,7 +208,7 @@ export function Navigation() {
               className={cn(
                 'lg:hidden p-2 rounded-lg transition-colors',
                 isScrolled
-                  ? 'text-neutral-900 hover:bg-neutral-200'
+                  ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
                   : 'text-white hover:bg-white/10'
               )}
             >
@@ -226,7 +226,7 @@ export function Navigation() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="lg:hidden bg-white/95 dark:bg-midnight-dark/95 backdrop-blur-lg border-t border-neutral-200 dark:border-neutral-700"
+            className="lg:hidden bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg border-t border-tan-300 dark:border-sage-light"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item, index) => (
@@ -238,7 +238,7 @@ export function Navigation() {
                 >
                   <Link
                     href={item.href}
-                    className="block py-2 text-neutral-700 dark:text-neutral-300 font-medium hover:text-primary transition-colors duration-200"
+                    className="block py-2 text-sage-dark dark:text-tan-light font-medium hover:text-gold transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -259,7 +259,7 @@ export function Navigation() {
                         >
                           <Link
                             href={child.href}
-                            className="block py-1 text-sm text-neutral-600 dark:text-neutral-400 hover:text-primary transition-colors duration-200"
+                            className="block py-1 text-sm text-sage dark:text-tan-200 hover:text-gold transition-colors duration-200"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             {child.label}
@@ -275,18 +275,18 @@ export function Navigation() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: navItems.length * 0.08 + 0.2 }}
-                className="pt-4 space-y-3 border-t border-neutral-200 dark:border-neutral-700"
+                className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light"
               >
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-lg font-display font-semibold hover:bg-gold-dark hover:shadow-lg transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan rounded-lg font-display font-semibold hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Member Login
