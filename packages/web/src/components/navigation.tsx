@@ -95,7 +95,7 @@ export function Navigation() {
               whileHover={{ scale: 1.05 }}
               className={cn(
                 'text-2xl font-display font-light tracking-wide transition-colors',
-                isScrolled ? 'text-sage-dark dark:text-tan-light' : 'text-white'
+                isScrolled ? 'text-sage-dark dark:text-tan-light' : 'text-sage-dark'
               )}
             >
               {campConfig.name.toUpperCase()}
@@ -117,7 +117,7 @@ export function Navigation() {
                     'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
                     isScrolled
                       ? 'text-sage-dark dark:text-tan-light hover:text-gold hover:bg-gold/10'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                      : 'text-sage-dark hover:text-gold hover:bg-gold/10'
                   )}
                 >
                   {item.label}
@@ -168,7 +168,7 @@ export function Navigation() {
                   'p-2 rounded-lg transition-colors',
                   isScrolled
                     ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
-                    : 'text-white hover:bg-white/10'
+                    : 'text-sage-dark hover:bg-gold/10'
                 )}
                 aria-label="Toggle dark mode"
               >
@@ -183,7 +183,7 @@ export function Navigation() {
                 'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
                 isScrolled
                   ? 'bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105'
-                  : 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20'
+                  : 'bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105'
               )}
             >
               Donate
@@ -196,7 +196,7 @@ export function Navigation() {
                 'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
                 isScrolled
                   ? 'border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark'
-                  : 'text-white border-2 border-white/30 hover:bg-white/10'
+                  : 'border-2 border-sage text-sage-dark hover:bg-sage hover:text-tan-light'
               )}
             >
               Member Login
@@ -209,7 +209,7 @@ export function Navigation() {
                 'lg:hidden p-2 rounded-lg transition-colors',
                 isScrolled
                   ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
-                  : 'text-white hover:bg-white/10'
+                  : 'text-sage-dark hover:bg-gold/10'
               )}
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
