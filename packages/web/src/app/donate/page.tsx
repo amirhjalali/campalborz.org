@@ -91,6 +91,81 @@ export default function DonatePage() {
           })}
         </div>
 
+        {/* Direct Payment Options */}
+        {donate.paymentOptions && donate.paymentOptions.length > 0 && (
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-secondary-900 mb-4">Preferred Ways to Give</h2>
+              <p className="text-lg text-secondary-600">
+                Send dues, grid fees, and contributions exactly the way we outlined on the legacy site.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {donate.paymentOptions.map((option, index) => {
+                const OptionIcon = getIcon(option.icon || "heart");
+                return (
+                  <motion.div
+                    key={option.method}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-3 bg-primary-100 rounded-lg">
+                              <OptionIcon className="h-5 w-5 text-primary-600" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-lg">{option.method}</CardTitle>
+                              <p className="text-sm text-secondary-500">{option.description}</p>
+                            </div>
+                          </div>
+                          {option.badge && (
+                            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wide bg-primary-600 text-white rounded-full">
+                              {option.badge}
+                            </span>
+                          )}
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <ul className="space-y-2">
+                          {option.details.map((detail, detailIdx) => (
+                            <li key={detailIdx} className="flex items-start text-sm text-secondary-600">
+                              <CheckCircle className="h-4 w-4 text-primary-500 mr-2 flex-shrink-0 mt-0.5" />
+                              {detail}
+                            </li>
+                          ))}
+                        </ul>
+                        {option.linkUrl && option.linkText && (
+                          <div className="mt-4">
+                            <Button
+                              asChild
+                              size="sm"
+                              variant="outline"
+                              className="hover:bg-primary hover:text-white transition-colors"
+                            >
+                              <Link
+                                href={option.linkUrl}
+                                target={option.linkUrl.startsWith("http") ? "_blank" : undefined}
+                                rel={option.linkUrl.startsWith("http") ? "noreferrer" : undefined}
+                              >
+                                {option.linkText}
+                              </Link>
+                            </Button>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Donation Tiers */}
         <div className="mb-16">
           <div className="text-center mb-12">
@@ -401,6 +476,19 @@ export default function DonatePage() {
               </motion.div>
             </div>
           </motion.div>
+        )}
+
+        {donate.gratitude && (
+          <div className="mt-16">
+            <Card className="border border-neutral-200 bg-gradient-to-br from-cream-50 via-white to-neutral-50 shadow-xl">
+              <CardHeader>
+                <CardTitle as="h2">{donate.gratitude.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-secondary-700 text-lg">{donate.gratitude.message}</p>
+              </CardContent>
+            </Card>
+          </div>
         )}
         </div>
       </div>

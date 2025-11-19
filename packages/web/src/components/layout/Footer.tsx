@@ -1,7 +1,10 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
+import { Instagram, Youtube, Music2, Mail } from "lucide-react";
 import { useTenant } from "@/hooks/useTenant";
+import { useCampConfig } from "@/hooks/useConfig";
 
 interface FooterLink {
   name: string;
@@ -50,7 +53,22 @@ const defaultSections: FooterSection[] = [
 
 export function Footer({ sections = defaultSections, className }: FooterProps) {
   const { tenant } = useTenant();
+  const campConfig = useCampConfig();
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    campConfig.social.instagram
+      ? { href: campConfig.social.instagram, label: "Instagram", icon: <Instagram className="h-4 w-4" /> }
+      : null,
+    campConfig.social.youtube
+      ? { href: campConfig.social.youtube, label: "YouTube", icon: <Youtube className="h-4 w-4" /> }
+      : null,
+    campConfig.social.soundcloud
+      ? { href: campConfig.social.soundcloud, label: "SoundCloud", icon: <Music2 className="h-4 w-4" /> }
+      : null,
+    campConfig.email
+      ? { href: `mailto:${campConfig.email}`, label: "Email", icon: <Mail className="h-4 w-4" /> }
+      : null,
+  ].filter(Boolean) as { href: string; label: string; icon: ReactNode }[];
 
   return (
     <footer className={`bg-desert-night text-desert-sand/80 ${className}`}>
@@ -65,7 +83,22 @@ export function Footer({ sections = defaultSections, className }: FooterProps) {
               <p className="text-sm text-desert-sand/70 mb-4 font-body">
                 Building community through art, culture, and shared experiences.
               </p>
-              {/* Social media links would go here */}
+              {socialLinks.length > 0 && (
+                <div className="flex items-center space-x-3">
+                  {socialLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      target={link.href.startsWith("http") ? "_blank" : undefined}
+                      rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                      className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-warm-white transition-colors"
+                      aria-label={link.label}
+                    >
+                      {link.icon}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Footer sections */}

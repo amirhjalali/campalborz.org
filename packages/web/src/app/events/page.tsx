@@ -119,6 +119,9 @@ export default function EventsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {events.upcomingEvents.map((event, idx) => {
               const EventIcon = getIcon(event.icon);
+              const hasProgress = typeof event.attendees === "number" && typeof event.maxAttendees === "number" && event.maxAttendees > 0;
+              const progress = hasProgress ? Math.min(100, (event.attendees! / event.maxAttendees!) * 100) : null;
+              const isExternalLink = event.linkUrl?.startsWith("http");
               return (
                 <motion.div
                   key={event.id}
@@ -169,16 +172,30 @@ export default function EventsPage() {
 
                     <p className="text-secondary-700 mb-4">{event.description}</p>
 
-                    <div className="flex justify-between items-center">
-                      <div className="flex-1 bg-secondary-200 rounded-full h-2 mr-3">
-                        <div
-                          className="bg-primary-600 h-2 rounded-full"
-                          style={{ width: `${(event.attendees / event.maxAttendees) * 100}%` }}
-                        ></div>
-                      </div>
-                      <button className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
-                        RSVP
-                      </button>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      {progress !== null ? (
+                        <div className="flex-1 bg-secondary-200 rounded-full h-2">
+                          <div className="bg-primary-600 h-2 rounded-full" style={{ width: `${progress}%` }} />
+                        </div>
+                      ) : (
+                        <div className="text-xs uppercase tracking-[0.3em] text-secondary-500">
+                          Limited Capacity
+                        </div>
+                      )}
+                      {event.linkUrl ? (
+                        <Link
+                          href={event.linkUrl}
+                          target={isExternalLink ? "_blank" : undefined}
+                          rel={isExternalLink ? "noreferrer" : undefined}
+                          className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors text-center"
+                        >
+                          {event.linkText || "View Details"}
+                        </Link>
+                      ) : (
+                        <button className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
+                          RSVP
+                        </button>
+                      )}
                     </div>
                   </div>
                 </motion.div>
