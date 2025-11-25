@@ -9,9 +9,8 @@ import { CampConfig } from './types';
 export const campConfig: CampConfig = {
   // Basic Info
   name: "Camp Alborz",
-  tagline: "Legendary Persian hospitality, without the baggage.",
-  description:
-    "Camp Alborz is a 501c3 music and arts organization celebrating Persian culture through radical hospitality, immersive art cars, and inclusive gatherings that stretch from Brooklyn to Black Rock City.",
+  tagline: "Where Persian hospitality meets the spirit of Burning Man",
+  description: "For over 15 years, we've created a home on the playa where ancient Persian culture blends with radical self-expression, building community through art, hospitality, and shared experiences.",
 
   // Organization
   legalName: "Camp Alborz Inc.",
@@ -30,11 +29,10 @@ export const campConfig: CampConfig = {
 
   // Social Media
   social: {
-    instagram: "https://www.instagram.com/campalborz/",
+    instagram: undefined,
     facebook: undefined,
     twitter: undefined,
-    youtube: "https://www.youtube.com/@campalborz",
-    soundcloud: "https://soundcloud.com/camp_alborz",
+    youtube: undefined,
   },
 
   // Features - Toggle features on/off for your camp

@@ -172,63 +172,6 @@ export default function ArtPage() {
           </div>
         </section>
 
-        {art.collaborations && art.collaborations.length > 0 && (
-          <section className="py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-12"
-              >
-                <h2 className="text-4xl font-display font-bold text-neutral-900 dark:text-white mb-4">
-                  Collaborations & Sponsored Projects
-                </h2>
-                <p className="text-lg text-neutral-600 dark:text-neutral-400">
-                  Art we’ve helped finance, transport, or host through the Camp Alborz network
-                </p>
-              </motion.div>
-              <div className="grid gap-6 md:grid-cols-2">
-                {art.collaborations.map((collaboration, index) => (
-                  <motion.div
-                    key={collaboration.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="bg-white dark:bg-midnight rounded-2xl p-6 shadow-lg border border-neutral-100 dark:border-neutral-800"
-                  >
-                    <p className="text-xs uppercase tracking-[0.4em] text-primary mb-2">
-                      {collaboration.year || "Ongoing"}
-                    </p>
-                    <h3 className="text-2xl font-display font-semibold text-neutral-900 dark:text-white mb-3">
-                      {collaboration.title}
-                    </h3>
-                    <p className="text-sm text-primary dark:text-persian-light font-semibold mb-3">
-                      {collaboration.partners}
-                    </p>
-                    <p className="text-neutral-600 dark:text-neutral-300 mb-4">
-                      {collaboration.description}
-                    </p>
-                    {collaboration.link && (
-                      <Link
-                        href={collaboration.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center text-primary hover:text-secondary font-medium text-sm"
-                      >
-                        Learn more
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </Link>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Art Process Timeline */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

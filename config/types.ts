@@ -29,7 +29,6 @@ export interface CampConfig {
     facebook?: string;
     twitter?: string;
     youtube?: string;
-    soundcloud?: string;
   };
 
   // Features
@@ -112,13 +111,6 @@ export interface ContentConfig {
     };
   };
 
-  // Home specific content
-  home?: {
-    rumiQuote?: QuoteBlock;
-    mediaSpotlight?: MediaSpotlight;
-    gallery?: HomeGallery;
-  };
-
   // Navigation
   navigation: {
     enabled: boolean;
@@ -164,7 +156,6 @@ export interface ContentConfig {
     subtitle: string;
     categories: ArtCategory[];
     installations: ArtInstallation[];
-    collaborations?: ArtCollaboration[];
   };
 
   // Events Page
@@ -208,11 +199,6 @@ export interface ContentConfig {
       title: string;
       description: string;
       campaigns: string[];
-    };
-    paymentOptions?: PaymentOption[];
-    gratitude?: {
-      title: string;
-      message: string;
     };
     cta?: {
       title: string;
@@ -272,7 +258,6 @@ export interface ContentConfig {
       members: MemberSpotlight[];
     };
     communityStats: CommunityStats[];
-    portalInfo?: MembersPortalInfo;
     cta?: {
       title: string;
       description: string;
@@ -318,12 +303,6 @@ export interface ContentConfig {
     process: {
       title: string;
       steps: ApplicationStep[];
-    };
-    externalApplication?: {
-      description: string;
-      linkText: string;
-      linkUrl: string;
-      note?: string;
     };
   };
 
@@ -371,33 +350,6 @@ export interface FeatureCard {
   image?: string;
 }
 
-export interface QuoteBlock {
-  text: string;
-  attribution: string;
-  context: string;
-}
-
-export interface MediaSpotlight {
-  title: string;
-  description: string;
-  videoUrl: string;
-  cta?: {
-    text: string;
-    link: string;
-  };
-}
-
-export interface HomeGallery {
-  title: string;
-  description: string;
-  images: GalleryImage[];
-}
-
-export interface GalleryImage {
-  src: string;
-  caption: string;
-}
-
 export interface AboutValue {
   icon: string;
   title: string;
@@ -434,15 +386,6 @@ export interface ArtInstallation {
   participants: string;
   impact: string;
   gradient?: string;
-  slug?: string;
-}
-
-export interface ArtCollaboration {
-  title: string;
-  partners: string;
-  description: string;
-  link?: string;
-  year?: string;
 }
 
 export interface EventType {
@@ -461,12 +404,10 @@ export interface Event {
   location: string;
   type: string;
   description: string;
-  attendees?: number;
-  maxAttendees?: number;
+  attendees: number;
+  maxAttendees: number;
   icon: string;
   color: string;
-  linkText?: string;
-  linkUrl?: string;
 }
 
 export interface BurningManDay {
@@ -521,16 +462,6 @@ export interface OtherWayToHelp {
   description: string;
   icon: string;
   amount: string;
-}
-
-export interface PaymentOption {
-  method: string;
-  description: string;
-  details: string[];
-  icon?: string;
-  badge?: string;
-  linkText?: string;
-  linkUrl?: string;
 }
 
 export interface DonorRecognitionTier {
@@ -599,48 +530,6 @@ export interface CommunityStats {
   value: string;
   label: string;
   icon: string;
-}
-
-export interface MembersPortalInfo {
-  welcomeTitle: string;
-  highlights: PortalHighlight[];
-  dues: {
-    amountLabel: string;
-    description: string;
-    breakdown: string[];
-    gridFees: GridFee[];
-  };
-  paymentOptions?: PaymentOption[];
-  resources: ResourceLink[];
-  fundraisers: FundraiserSpotlight[];
-}
-
-export interface PortalHighlight {
-  title: string;
-  description: string;
-  linkText?: string;
-  linkUrl?: string;
-}
-
-export interface GridFee {
-  label: string;
-  amount: string;
-  description: string;
-}
-
-export interface ResourceLink {
-  title: string;
-  description: string;
-  linkText: string;
-  linkUrl: string;
-}
-
-export interface FundraiserSpotlight {
-  title: string;
-  date: string;
-  description: string;
-  linkText?: string;
-  linkUrl?: string;
 }
 
 export interface ExperienceOption {

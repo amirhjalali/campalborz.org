@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Navigation } from "../../components/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -193,35 +192,6 @@ export default function ApplyPage() {
                   We'll be in touch within 1-2 weeks.
                 </p>
               </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Legacy Google Form Link */}
-        {apply.externalApplication && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 border border-dust-khaki/40 rounded-2xl bg-gradient-to-br from-cream-50 to-white p-6 text-left"
-          >
-            <p className="text-sm uppercase tracking-[0.3em] text-primary mb-2">Legacy Form</p>
-            <h3 className="text-2xl font-display font-semibold text-midnight mb-3">
-              Prefer the Google Form?
-            </h3>
-            <p className="text-neutral-700 mb-4">{apply.externalApplication.description}</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button asChild className="w-full sm:w-auto bg-gradient-to-r from-primary to-secondary">
-                <Link
-                  href={apply.externalApplication.linkUrl}
-                  target={apply.externalApplication.linkUrl.startsWith("http") ? "_blank" : undefined}
-                  rel={apply.externalApplication.linkUrl.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  {apply.externalApplication.linkText}
-                </Link>
-              </Button>
-              {apply.externalApplication.note && (
-                <p className="text-sm text-neutral-500">{apply.externalApplication.note}</p>
-              )}
             </div>
           </motion.div>
         )}
