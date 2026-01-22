@@ -115,8 +115,8 @@ export function Stats() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center"
         >
-          <a href="/apply" className="cta-primary inline-flex">
-            Join Our Community
+          <a href="/donate" className="cta-primary inline-flex">
+            Support Our Mission
           </a>
         </motion.div>
       </div>

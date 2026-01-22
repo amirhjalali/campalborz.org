@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, ChevronDown, Calendar, Sparkles, BookOpen, Users } from 'lucide-react';
+import { ArrowRight, ChevronDown, Calendar, Star, BookOpen, Users } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
@@ -319,7 +319,7 @@ export default function CulturePage() {
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                     <div className="flex items-center gap-4">
                       <div className="p-3 rounded-full bg-gold-500/20 border border-gold-500/30">
-                        <Sparkles className="h-5 w-5 text-gold-500" />
+                        <Star className="h-5 w-5 text-gold-500" />
                       </div>
                       <h3 className="text-display-thin text-xl">{celebration.name}</h3>
                     </div>

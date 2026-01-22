@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sparkles, ChevronDown } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
 import { useRef } from 'react';
 
@@ -54,7 +54,6 @@ export function PageHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Sparkles size={16} className="text-gold" />
           {campConfig.tagline}
         </motion.span>
 

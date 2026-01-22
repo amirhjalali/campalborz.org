@@ -34,7 +34,7 @@ const defaultSections: FooterSection[] = [
   {
     title: "Get Involved",
     links: [
-      { name: "Join Us", href: "/apply" },
+      { name: "Events", href: "/events" },
       { name: "Volunteer", href: "/volunteer" },
       { name: "Donate", href: "/donate" },
       { name: "Sponsor", href: "/sponsor" },

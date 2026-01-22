@@ -173,7 +173,7 @@ export default function HomePage() {
           kicker="JOIN THE COMMUNITY"
           heading="Come for the tea, stay for the community."
           description="Whether you're Persian or simply curious about the culture, Camp Alborz welcomes you."
-          primary={{ label: 'Apply to Join', href: '/apply', variant: 'primary' }}
+          primary={{ label: 'Learn More', href: '/about', variant: 'primary' }}
           secondary={{ label: 'Support Our Mission', href: '/donate', variant: 'secondary' }}
         />
       </main>

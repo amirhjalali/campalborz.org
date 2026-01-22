@@ -34,7 +34,6 @@ const defaultNavigation = [
   { name: "Members", href: "/members" },
   { name: "Events", href: "/events" },
   { name: "Art", href: "/art" },
-  { name: "Apply", href: "/apply" },
   { name: "Donate", href: "/donate" },
 ];
 

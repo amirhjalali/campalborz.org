@@ -312,8 +312,8 @@ export default function AboutPage() {
                   {about.nonprofit.cta.donate}
                   <ArrowRight size={18} />
                 </Link>
-                <Link href="/apply" className="cta-secondary">
-                  {about.nonprofit.cta.join}
+                <Link href="/events" className="cta-secondary">
+                  See Upcoming Events
                   <ArrowRight size={18} />
                 </Link>
               </div>

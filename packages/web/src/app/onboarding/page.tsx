@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ArrowLeft, ArrowRight, Sparkles, Users, Calendar, DollarSign, Palette, Shield } from 'lucide-react';
+import { CheckCircle, ArrowLeft, ArrowRight, Rocket, Users, Calendar, DollarSign, Palette, Shield } from 'lucide-react';
 
 interface CampData {
   name: string;
@@ -394,7 +394,7 @@ export default function OnboardingPage() {
     },
     {
       title: 'Review & Launch',
-      icon: Sparkles,
+      icon: Rocket,
       component: (
         <div className="space-y-6">
           <div className="bg-gray-50 rounded-lg p-6">
@@ -582,7 +582,7 @@ export default function OnboardingPage() {
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 mr-2" />
+                    <Rocket className="w-4 h-4 mr-2" />
                     Launch Platform
                   </>
                 )}

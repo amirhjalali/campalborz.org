@@ -15,9 +15,9 @@ export const contentConfig: ContentConfig = {
       "Camp Alborz is a 501(c)(3) music and arts organization celebrating Persian culture through hospitality, immersive art installations, and year-round community gatherings from Brooklyn to the playa.",
     cta: {
       primary: {
-        text: "Apply for 2026",
-        icon: "pen-square",
-        link: "/apply",
+        text: "Explore Our Story",
+        icon: "arrow-right",
+        link: "/about",
       },
       secondary: {
         text: "Support Our Art",
@@ -263,7 +263,7 @@ export const contentConfig: ContentConfig = {
       {
         name: "Interactive",
         count: 12,
-        icon: "sparkles",
+        icon: "layers",
         gradient: "from-purple-500 to-pink-600",
       },
       {
@@ -465,7 +465,7 @@ export const contentConfig: ContentConfig = {
       title: "Join Our Next Event",
       description: "New to Camp Alborz? Attending an event is the perfect way to meet our community and see if we're a good fit for each other.",
       buttons: {
-        primary: { text: "Join as Member", link: "/apply" },
+        primary: { text: "See Upcoming Events", link: "/events" },
         secondary: { text: "Learn More About Us", link: "/about" },
       },
     },
@@ -712,7 +712,7 @@ export const contentConfig: ContentConfig = {
       title: "Other Ways to Support",
       description: "Beyond donations, you can support our mission by joining our community and volunteering",
       buttons: {
-        primary: { text: "Join Our Community", link: "/apply" },
+        primary: { text: "About Camp Alborz", link: "/about" },
         secondary: { text: "Volunteer at Events", link: "/events" },
       },
     },
@@ -740,7 +740,7 @@ export const contentConfig: ContentConfig = {
       {
         title: "Persian Cuisine",
         description: "Learn about traditional cooking and food culture",
-        icon: "sparkles",
+        icon: "flame",
         activities: ["Cooking classes", "Tea ceremonies", "Spice workshops"],
         color: "bg-green-100 text-green-600",
       },
@@ -889,7 +889,7 @@ export const contentConfig: ContentConfig = {
       description: "Whether you have Persian heritage or are simply curious about the culture, you're welcome to join our learning community and cultural celebrations.",
       buttons: {
         primary: { text: "Attend Cultural Events", link: "/events" },
-        secondary: { text: "Join Our Community", link: "/apply" },
+        secondary: { text: "About Camp Alborz", link: "/about" },
       },
     },
   },
@@ -1058,10 +1058,10 @@ export const contentConfig: ContentConfig = {
       ],
     },
     cta: {
-      title: "Ready to Join Our Family?",
-      description: "Become part of a community that celebrates creativity, culture, and connection",
+      title: "Get Involved",
+      description: "Connect with a community that celebrates creativity, culture, and connection",
       buttons: {
-        primary: { text: "Apply Now", link: "/apply" },
+        primary: { text: "Support Our Mission", link: "/donate" },
         secondary: { text: "Learn More", link: "/about" },
       },
     },

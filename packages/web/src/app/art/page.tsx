@@ -395,8 +395,8 @@ export default function ArtPage() {
                 Whether you're an experienced artist or just curious about creating, there's a place for you in our artistic community.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/apply" className="cta-primary">
-                  Join Our Artists
+                <Link href="/events" className="cta-primary">
+                  See Art Events
                   <ArrowRight size={18} />
                 </Link>
                 <Link href="/events" className="cta-secondary">

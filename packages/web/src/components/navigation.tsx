@@ -30,10 +30,6 @@ const navItems = [
     href: '/culture',
   },
   {
-    label: 'Apply',
-    href: '/apply',
-  },
-  {
     label: 'Members',
     href: '/members',
   },
