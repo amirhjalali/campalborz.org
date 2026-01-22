@@ -6,7 +6,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   StarIcon,
-  QuoteIcon,
+  ChatBubbleLeftIcon,
 } from '@heroicons/react/24/solid';
 
 export interface Testimonial {
@@ -145,7 +145,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
     <Card className="p-6 relative">
       {/* Quote Icon */}
       <div className="absolute top-4 right-4 opacity-10">
-        <QuoteIcon className="h-12 w-12 text-primary-600" />
+        <ChatBubbleLeftIcon className="h-12 w-12 text-primary-600" />
       </div>
 
       {/* Rating */}
@@ -221,7 +221,7 @@ export function FeaturedTestimonial({ testimonial }: { testimonial: Testimonial 
       <Card className="p-12 text-center relative overflow-hidden">
         {/* Background Quote */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5">
-          <QuoteIcon className="h-48 w-48 text-primary-600" />
+          <ChatBubbleLeftIcon className="h-48 w-48 text-primary-600" />
         </div>
 
         {/* Rating */}

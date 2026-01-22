@@ -246,7 +246,7 @@ function MediaAssetCard({ asset }: { asset: MediaAsset }) {
         <Button
           variant="primary"
           size="sm"
-          fullWidth
+          className="w-full"
           onClick={handleDownload}
         >
           <ArrowDownTrayIcon className="h-4 w-4 mr-2" />

@@ -239,7 +239,7 @@ export function useFocusVisible(): {
  * Roving tabindex hook for managing focus in lists
  */
 export function useRovingTabIndex(length: number) {
-  const [currentIndex, setCurrentIndex] = useRef(0);
+  const currentIndexRef = useRef(0);
 
   const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
     let newIndex = index;
@@ -267,12 +267,12 @@ export function useRovingTabIndex(length: number) {
         return;
     }
 
-    setCurrentIndex.current = newIndex;
+    currentIndexRef.current = newIndex;
   };
 
   return {
     getItemProps: (index: number) => ({
-      tabIndex: index === currentIndex.current ? 0 : -1,
+      tabIndex: index === currentIndexRef.current ? 0 : -1,
       onKeyDown: (e: React.KeyboardEvent) => handleKeyDown(e, index),
     }),
   };

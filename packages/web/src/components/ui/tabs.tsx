@@ -1,7 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { cn } from '@/lib/utils';
+
+// Context for Radix-style Tabs API
+interface TabsContextValue {
+  value: string;
+  onValueChange: (value: string) => void;
+}
+
+const TabsContext = createContext<TabsContextValue | null>(null);
 
 /**
  * Tabs Component
@@ -18,7 +26,7 @@ export interface Tab {
 }
 
 export interface TabsProps {
-  tabs: Tab[];
+  tabs?: Tab[];
   defaultTab?: string;
   activeTab?: string;
   onChange?: (tabId: string) => void;
@@ -29,21 +37,53 @@ export interface TabsProps {
   className?: string;
   tabListClassName?: string;
   tabPanelClassName?: string;
+  // Radix-style API support
+  children?: React.ReactNode;
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
-export function Tabs({
-  tabs,
-  defaultTab,
-  activeTab: controlledActiveTab,
-  onChange,
-  variant = 'default',
-  orientation = 'horizontal',
-  size = 'md',
-  fullWidth = false,
-  className,
-  tabListClassName,
-  tabPanelClassName,
-}: TabsProps) {
+// Radix-style Tabs wrapper component
+function TabsWithChildren({ children, defaultValue, value, onValueChange, className }: {
+  children?: React.ReactNode;
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  className?: string;
+}) {
+  const [activeValue, setActiveValue] = useState(defaultValue || '');
+  const currentValue = value !== undefined ? value : activeValue;
+
+  const handleValueChange = (newValue: string) => {
+    setActiveValue(newValue);
+    onValueChange?.(newValue);
+  };
+
+  return (
+    <TabsContext.Provider value={{ value: currentValue, onValueChange: handleValueChange }}>
+      <div className={cn('w-full', className)}>
+        {children}
+      </div>
+    </TabsContext.Provider>
+  );
+}
+
+// Original tabs array API component
+function TabsWithArray(props: TabsProps) {
+  const {
+    tabs = [],
+    defaultTab,
+    activeTab: controlledActiveTab,
+    onChange,
+    variant = 'default',
+    orientation = 'horizontal',
+    size = 'md',
+    fullWidth = false,
+    className,
+    tabListClassName,
+    tabPanelClassName,
+  } = props;
   const [internalActiveTab, setInternalActiveTab] = useState(
     defaultTab || tabs.find(t => !t.disabled)?.id || tabs[0]?.id
   );
@@ -201,6 +241,14 @@ export function Tabs({
   );
 }
 
+// Main Tabs export - routes to correct implementation
+export function Tabs(props: TabsProps) {
+  if (props.children) {
+    return <TabsWithChildren {...props} />;
+  }
+  return <TabsWithArray {...props} />;
+}
+
 /**
  * Simple Tabs (alternative API)
  */
@@ -248,6 +296,81 @@ export interface TabPanelProps {
 
 export function TabPanel({ children }: TabPanelProps) {
   return <>{children}</>;
+}
+
+/**
+ * Radix-style Tabs API (compatibility exports)
+ * These provide a shadcn/radix-compatible API for components expecting that pattern
+ */
+export interface TabsRootProps {
+  children: React.ReactNode;
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  className?: string;
+}
+
+export function TabsRoot({ children, className }: TabsRootProps) {
+  return <div className={cn('w-full', className)}>{children}</div>;
+}
+
+export interface TabsListProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function TabsList({ children, className }: TabsListProps) {
+  return (
+    <div className={cn('flex border-b border-gray-200', className)}>
+      {children}
+    </div>
+  );
+}
+
+export interface TabsTriggerProps {
+  children: React.ReactNode;
+  value: string;
+  className?: string;
+  disabled?: boolean;
+}
+
+export function TabsTrigger({ children, value, className, disabled }: TabsTriggerProps) {
+  const context = useContext(TabsContext);
+  const isActive = context?.value === value;
+
+  return (
+    <button
+      disabled={disabled}
+      onClick={() => context?.onValueChange(value)}
+      className={cn(
+        'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+        isActive
+          ? 'border-primary-600 text-primary-600'
+          : 'border-transparent text-gray-600 hover:text-primary-600 hover:border-gray-300',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+export interface TabsContentProps {
+  children: React.ReactNode;
+  value: string;
+  className?: string;
+}
+
+export function TabsContent({ children, value, className }: TabsContentProps) {
+  const context = useContext(TabsContext);
+
+  // Only render if this tab is active
+  if (context && context.value !== value) {
+    return null;
+  }
+
+  return <div className={cn('mt-4', className)}>{children}</div>;
 }
 
 /**

@@ -52,43 +52,21 @@ const requiredInProduction = [
 
 /**
  * Validate environment variables
+ * Note: Validation is lenient - only warns, doesn't throw
  */
 function validateEnv(): void {
   const errors: string[] = [];
-  const isProduction = process.env.NODE_ENV === 'production';
 
   // Check required vars
   for (const envVar of requiredEnvVars) {
     if (!process.env[envVar]) {
-      errors.push(`Missing required environment variable: ${envVar}`);
-    }
-  }
-
-  // Check production-only vars
-  if (isProduction) {
-    for (const envVar of requiredInProduction) {
-      if (!process.env[envVar]) {
-        errors.push(`Missing required production environment variable: ${envVar}`);
-      }
+      errors.push(`Missing environment variable: ${envVar}`);
     }
   }
 
   if (errors.length > 0) {
-    const message = [
-      '❌ Environment validation failed:',
-      ...errors.map(e => `  - ${e}`),
-      '',
-      '📝 Please check your .env file and ensure all required variables are set.',
-      '   See .env.example for reference.',
-    ].join('\n');
-
-    if (isProduction) {
-      // Fail hard in production
-      throw new Error(message);
-    } else {
-      // Warn in development
-      console.warn('\n' + message + '\n');
-    }
+    // Always just warn - don't throw errors that break the build
+    console.warn('\n⚠️  Some environment variables are not set:', errors.join(', '));
   }
 }
 

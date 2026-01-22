@@ -44,5 +44,10 @@
     "prettier": "^3.6.2",
     "turbo": "^1.13.4",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "recharts": "^3.7.0",
+    "sonner": "^2.0.7"
   }
 }

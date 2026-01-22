@@ -216,7 +216,7 @@ export function MemberProfileCard({
         {/* Message button */}
         {showActions && onMessage && (
           <div className="mt-6">
-            <Button variant="primary" fullWidth onClick={onMessage}>
+            <Button variant="primary" className="w-full" onClick={onMessage}>
               <EnvelopeIcon className="h-4 w-4 mr-2" />
               Send Message
             </Button>

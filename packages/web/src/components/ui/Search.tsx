@@ -13,6 +13,7 @@ export interface SearchProps {
   value?: string;
   onChange?: (value: string) => void;
   onSearch?: (value: string) => void;
+  onFocus?: () => void;
   placeholder?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'filled' | 'bordered';
@@ -28,6 +29,7 @@ export function Search({
   value: controlledValue,
   onChange,
   onSearch,
+  onFocus,
   placeholder = 'Search...',
   size = 'md',
   variant = 'default',
@@ -90,6 +92,7 @@ export function Search({
         type="text"
         value={value}
         onChange={(e) => handleChange(e.target.value)}
+        onFocus={onFocus}
         placeholder={placeholder}
         disabled={disabled}
         autoFocus={autoFocus}

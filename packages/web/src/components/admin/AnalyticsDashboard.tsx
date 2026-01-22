@@ -369,7 +369,7 @@ export default function AnalyticsDashboard({ tenantId }: AnalyticsDashboardProps
                         cx="50%"
                         cy="50%"
                         outerRadius={60}
-                        label={({ name, percentage }) => `${name} ${percentage}%`}
+                        label={({ name, percent }: any) => `${name || ''} ${((percent || 0) * 100).toFixed(0)}%`}
                       >
                         {trafficQuery.data?.devices?.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

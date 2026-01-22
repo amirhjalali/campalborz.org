@@ -506,8 +506,8 @@ export function toTitle(str: string): string {
  */
 export function smartQuotes(str: string): string {
   return str
-    .replace(/(\s|^)"([^"]*)"/g, '$1"$2"') // Replace double quotes
-    .replace(/(\s|^)'([^']*)'/g, '$1'$2''); // Replace single quotes
+    .replace(/(\s|^)"([^"]*)"/g, '$1\u201C$2\u201D') // Replace double quotes
+    .replace(/(\s|^)'([^']*)'/g, '$1\u2018$2\u2019'); // Replace single quotes
 }
 
 /**

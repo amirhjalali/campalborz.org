@@ -66,6 +66,7 @@ export interface BrandConfig {
   // Typography
   fonts: {
     display: string;
+    accent?: string;
     body: string;
     ui: string;
   };
