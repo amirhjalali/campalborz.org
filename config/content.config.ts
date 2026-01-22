@@ -10,17 +10,17 @@ export const contentConfig: ContentConfig = {
   // Hero Section
   hero: {
     title: "Camp Alborz · Persian Hospitality in Black Rock City",
-    subtitle: "501(c)(3) • Legendary hospitality • HOMA & DAMAVAND art cars",
+    subtitle: "501(c)(3) Non-Profit • HOMA & DAMAVAND Art Cars • 15+ Years of Community",
     description:
-      "ALBORZ is a 501c3 music and arts organization celebrating Persian culture through radical hospitality, immersive art, and year-round community gatherings from Brooklyn to the playa.",
+      "Camp Alborz is a 501(c)(3) music and arts organization celebrating Persian culture through hospitality, immersive art installations, and year-round community gatherings from Brooklyn to the playa.",
     cta: {
       primary: {
-        text: "Apply for 2025",
+        text: "Apply for 2026",
         icon: "pen-square",
         link: "/apply",
       },
       secondary: {
-        text: "Support the Art Cars",
+        text: "Support Our Art",
         icon: "flame",
         link: "/donate",
       },
@@ -33,7 +33,7 @@ export const contentConfig: ContentConfig = {
         "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there. When the soul lies down in that grass, the world is too full to talk about.",
       attribution: "Rumi · translated by Coleman Barks",
       context:
-        "Shared with Camp Alborz to describe the heart of our camp—where differences dissolve and we meet each other in pure connection.",
+        "This verse captures the spirit of Camp Alborz—a space where boundaries dissolve and genuine human connection flourishes.",
     },
     mediaSpotlight: {
       title: "THE CLIMB — [ALBORZ FILM 2022]",
@@ -47,7 +47,7 @@ export const contentConfig: ContentConfig = {
     },
     gallery: {
       title: "Moments from the Playa",
-      description: "Scenes from our tea house, art cars, and the generous hosts who welcome the world in.",
+      description: "Scenes from our tea house, art cars, and the community members who make Alborz home.",
       images: [
         {
           src: "/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg",
@@ -127,7 +127,7 @@ export const contentConfig: ContentConfig = {
   features: [
     {
       title: "Tea House & Hookah Lounge",
-      description: "Daily Persian chai, saffron sweets, and generous hosts welcoming everyone into the majlis.",
+      description: "Daily Persian chai, saffron sweets, and open hospitality in our shaded majlis.",
       icon: "coffee",
       link: "/culture",
       gradient: "from-burnt-sienna to-antique-gold",
@@ -135,23 +135,23 @@ export const contentConfig: ContentConfig = {
     },
     {
       title: "HOMA & DAMAVAND Art Cars",
-      description: "Two mythic beasts rising from the dust—complete with Lantern Sound Design speakers and joyful riders.",
+      description: "Two mobile sound stages featuring Lantern Sound Design systems and room for the whole community.",
       icon: "truck",
       link: "/art",
       gradient: "from-persian-purple to-desert-gold",
       image: "/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg",
     },
     {
-      title: "Fundraisers & Club Nights",
-      description: "From Los Angeles to Washington DC, we gather to raise funds for the playa and celebrate our artists.",
+      title: "Fundraisers & Events",
+      description: "Year-round gatherings in Los Angeles, Washington DC, New York, and beyond.",
       icon: "calendar",
       link: "/events",
       gradient: "from-saffron to-desert-orange",
       image: "/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg",
     },
     {
-      title: "Service & Stewardship",
-      description: "Beyond the K Bridge cleanups and community service projects keep us grounded in the cities we live in.",
+      title: "Community Service",
+      description: "Beyond the K Bridge cleanups and stewardship projects in the cities where we live.",
       icon: "check-circle",
       link: "/events",
       gradient: "from-desert-gold to-saffron",
@@ -159,15 +159,15 @@ export const contentConfig: ContentConfig = {
     },
     {
       title: "Immersive Storytelling",
-      description: "Postal Tales of Forgotten Souls and other pop-up experiences blend Persian myth with modern soundscapes.",
+      description: "Postal Tales of Forgotten Souls and other narrative experiences blending Persian heritage with contemporary art.",
       icon: "book-open",
       link: "/art",
       gradient: "from-persian-violet to-pink-500",
       image: "/images/migrated/art/193f4a3f0015480546bb78faa7650751.jpg",
     },
     {
-      title: "Soundcloud Archives",
-      description: "Listen to Camp Alborz sets, radio shows, and sonic experiments from our global family.",
+      title: "Sound Archives",
+      description: "DJ sets, radio shows, and sonic experiments from our global community.",
       icon: "music",
       link: "https://soundcloud.com/camp_alborz",
       gradient: "from-antique-gold to-sunrise-coral",
@@ -178,65 +178,65 @@ export const contentConfig: ContentConfig = {
   // About Page
   about: {
     title: "About Camp Alborz",
-    subtitle: "A celebration of Persian culture, community, and creativity in the heart of Black Rock City",
+    subtitle: "Celebrating Persian culture, community, and creativity in Black Rock City since 2008",
     mission: {
       title: "Our Mission",
       paragraphs: [
-        "ALBORZ is a 501c3 Non-Profit music and arts organization, supporting an inclusive and diverse community of performers and artists through events, partnerships, community involvement, mentorship and relationship building.",
-        "ALBORZ was founded to celebrate Persian Culture worldwide, through music, food and art. The legendary hospitality, without any of the baggage.",
-        "Our inclusive events foster cross-cultural understanding and community engagement. Join us in preserving and promoting the vibrant Persian culture. Our mission is to leverage our wide community reach to support efforts focused on helping our community, our country and our planet.",
-        "We gather all over the globe but coalesce around our love for hosting new and old friends at our home, in our home, Black Rock City.",
-        "Many of us live far away from our ancestral lands but we try to share the best parts of our cultural heritage with one another as well as the broader community.",
+        "Camp Alborz is a 501(c)(3) non-profit music and arts organization supporting an inclusive community of performers and artists through events, partnerships, and mentorship.",
+        "Founded to celebrate Persian culture worldwide through music, food, and art, we bring hospitality traditions to new communities.",
+        "Our events foster cross-cultural understanding and engagement. We leverage our community reach to support efforts focused on our local neighborhoods, cultural preservation, and environmental stewardship.",
+        "We gather across the globe but unite around hosting friends—new and returning—at our home in Black Rock City.",
+        "Many of us live far from our ancestral lands. We share the best parts of our cultural heritage with one another and the broader community.",
       ],
     },
     values: [
       {
         icon: "heart",
         title: "Radical Hospitality",
-        description: "Persian culture meets playa spirit - everyone is welcome at our tea house.",
+        description: "The Persian tradition of mehmān-navāzī—everyone is welcome at our table.",
         gradient: "from-persian-purple to-persian-violet",
       },
       {
         icon: "users",
         title: "Community First",
-        description: "Building lasting bonds that extend far beyond Black Rock City.",
+        description: "Building relationships that extend year-round, far beyond Black Rock City.",
         gradient: "from-desert-gold to-saffron",
       },
       {
         icon: "globe",
-        title: "Cultural Bridge",
-        description: "Connecting East and West through art, food, and shared experiences.",
+        title: "Cultural Exchange",
+        description: "Sharing Persian heritage through art, food, and collaborative experiences.",
         gradient: "from-persian-violet to-pink-500",
       },
     ],
     timeline: [
-      { year: "2008", event: "Camp Alborz founded by Persian burners" },
-      { year: "2012", event: "First major art installation: Persian Garden" },
-      { year: "2016", event: "Became official 501(c)(3) non-profit" },
-      { year: "2020", event: "Virtual Burns during pandemic" },
-      { year: "2023", event: "HOMA Fire Sculpture debut" },
-      { year: "2024", event: "500+ members worldwide" },
+      { year: "2008", event: "Camp Alborz founded by a group of Persian burners" },
+      { year: "2012", event: "First major art installation unveiled on the playa" },
+      { year: "2016", event: "Established as an official 501(c)(3) non-profit" },
+      { year: "2022", event: "DAMAVAND art car makes its debut" },
+      { year: "2023", event: "HOMA art car joins the fleet" },
+      { year: "2025", event: "Community grows to 500+ members worldwide" },
     ],
     team: [
       {
         name: "Amir Jalali",
         role: "Founder & Camp Lead",
-        bio: "Bringing Persian hospitality to the playa since 2008",
+        bio: "Building Persian community at Burning Man since 2008",
       },
       {
-        name: "Maryam Hosseini",
-        role: "Art Director",
-        bio: "Leading our creative vision and art installations",
+        name: "Art Collective",
+        role: "Art Direction",
+        bio: "A rotating team of artists leading our installations",
       },
       {
-        name: "David Chen",
-        role: "Operations Lead",
-        bio: "Making the impossible possible, year after year",
+        name: "Operations Team",
+        role: "Logistics & Infrastructure",
+        bio: "Coordinating camp build, transport, and playa operations",
       },
       {
-        name: "Sara Mohammadi",
-        role: "Community Manager",
-        bio: "Fostering connections that last a lifetime",
+        name: "Community Leads",
+        role: "Membership & Events",
+        bio: "Connecting members and organizing year-round gatherings",
       },
     ],
     nonprofit: {
@@ -251,8 +251,8 @@ export const contentConfig: ContentConfig = {
 
   // Art Page
   art: {
-    title: "Art & Culture",
-    subtitle: "Where Persian artistic heritage meets radical self-expression, creating transformative experiences through collaborative art",
+    title: "Art & Installations",
+    subtitle: "Persian artistic heritage meets collaborative playa art through our installations, art cars, and sponsored projects",
     categories: [
       {
         name: "Fire Art",
@@ -306,13 +306,13 @@ export const contentConfig: ContentConfig = {
       },
       {
         id: 3,
-        title: "Persian Garden Oasis",
-        year: "2024",
+        title: "Persian Garden Concept",
+        year: "TBD",
         artist: "Community Build",
-        description: "A living art piece featuring traditional Persian garden elements with interactive water features and aromatic plants.",
+        description: "A proposed installation featuring traditional Persian garden elements with interactive features. Currently in the concept phase seeking artists and funding.",
         location: "In Development",
-        participants: "12 artists",
-        impact: "Coming to BM 2024",
+        participants: "Open for collaboration",
+        impact: "Future project",
         gradient: "from-persian-violet to-pink-500",
       },
     ],
@@ -344,8 +344,8 @@ export const contentConfig: ContentConfig = {
 
   // Events Page
   events: {
-    title: "Camp Events & Activities",
-    subtitle: "Fundraisers, service days, and cultural storytelling from Brooklyn to Los Angeles",
+    title: "Events & Gatherings",
+    subtitle: "Fundraisers, community service, and cultural events throughout the year",
     eventTypes: [
       {
         name: "Fundraisers & Club Nights",
@@ -380,23 +380,23 @@ export const contentConfig: ContentConfig = {
       {
         id: 1,
         title: "Beyond The K Bridge Community Cleanup",
-        date: "November 3, 2025",
+        date: "Ongoing • Multiple dates",
         time: "RSVP for shift details",
         location: "Kosciuszko Bridge, Brooklyn NY",
         type: "Community Service",
-        description: "Join our NYC crew for a day of beautification, mural touch-ups, and neighborhood connection beneath the K Bridge.",
+        description: "Join our NYC crew for neighborhood beautification and community connection beneath the K Bridge.",
         icon: "check-circle",
         color: "bg-green-100 text-green-700",
       },
       {
         id: 2,
         title: "Postal Tales of Forgotten Souls",
-        date: "TBA 2025",
+        date: "TBA 2026",
         time: "Immersive evening experience",
         location: "TBA • Brooklyn, NY",
         type: "Immersive Art",
         description:
-          "“In the shadows of history, a dead letter is one that never found its destination…” Dive into a narrative installation filled with untold secrets from forgotten souls.",
+          "A narrative installation exploring untold stories through the lens of undelivered letters and forgotten voices.",
         icon: "book-open",
         color: "bg-purple-100 text-purple-600",
         linkText: "View on Resident Advisor",
@@ -404,79 +404,61 @@ export const contentConfig: ContentConfig = {
       },
       {
         id: 3,
-        title: "SL x Camp Alborz: Sam Shure · Dastan b2b Ace On · shilimili",
-        date: "June 23, 2024",
-        time: "Sunday Love · Afternoon into Night",
-        location: "Flash Rooftop, Washington DC",
-        type: "Fundraiser",
-        description:
-          "A Sunday Love takeover featuring Sam Shure and friends raising funds for HOMA, DAMAVAND, and our 2025 playa build.",
-        icon: "music",
-        color: "bg-orange-100 text-orange-600",
-        linkText: "Grab tickets on Shotgun",
-        linkUrl: "https://shotgun.live/events/sunday-love-sam-shure",
-      },
-      {
-        id: 4,
-        title: "Camp Alborz Burning Man Fundraiser",
-        date: "April 14, 2024",
-        time: "7:00 PM – Late",
+        title: "Los Angeles Fundraiser",
+        date: "June 14, 2025",
+        time: "Evening event",
         location: "Los Angeles, CA",
         type: "Fundraiser",
         description:
-          "An intimate LA gathering with DJs, tea service, and a sneak peek at Damavand upgrades before we roll into the desert.",
+          "An evening fundraiser supporting HOMA and DAMAVAND upgrades for the 2026 playa season.",
+        icon: "music",
+        color: "bg-orange-100 text-orange-600",
+        linkText: "Get tickets",
+        linkUrl: "https://www.eventbrite.com/e/2025-alborz-fundraiser-tickets-1364970556679",
+      },
+      {
+        id: 4,
+        title: "New York Fundraiser",
+        date: "July 2025",
+        time: "TBA",
+        location: "New York, NY",
+        type: "Fundraiser",
+        description:
+          "Annual NYC gathering with music, hospitality, and community. Details announced via our mailing list.",
         icon: "heart",
         color: "bg-rose-100 text-rose-600",
-        linkText: "RSVP via Shotgun",
-        linkUrl: "https://shotgun.live/events/camp-alborz-burning-man-fundraiser",
       },
     ],
     burningManSchedule: [
       {
-        day: "Monday",
+        day: "Daily Schedule",
         events: [
-          { time: "4:00 PM", title: "Arrival & Camp Setup", description: "Welcome new members, set up camp infrastructure" },
-          { time: "6:00 PM", title: "Persian Tea Ceremony", description: "Traditional welcome ceremony with tea and sweets" },
-          { time: "8:00 PM", title: "Community Dinner", description: "First shared meal to bring everyone together" },
+          { time: "Morning", title: "Tea House Opens", description: "Persian chai and light refreshments available" },
+          { time: "Afternoon", title: "Open Hospitality", description: "Hookah lounge and shade for visitors" },
+          { time: "Evening", title: "Community Dinner", description: "Shared meals for camp members" },
         ],
       },
       {
-        day: "Tuesday",
+        day: "Special Events",
         events: [
-          { time: "10:00 AM", title: "Persian Calligraphy Workshop", description: "Learn traditional Persian writing arts" },
-          { time: "2:00 PM", title: "Art Installation Tour", description: "Visit and learn about our collaborative installations" },
-          { time: "7:00 PM", title: "Poetry & Music Night", description: "Share Persian poetry and traditional music" },
-        ],
-      },
-      {
-        day: "Wednesday",
-        events: [
-          { time: "11:00 AM", title: "Persian Cooking Class", description: "Learn to make traditional Persian dishes" },
-          { time: "4:00 PM", title: "Mindfulness & Meditation", description: "Persian-inspired meditation practices" },
-          { time: "8:00 PM", title: "Cultural Exchange", description: "Share stories and traditions from different backgrounds" },
-        ],
-      },
-      {
-        day: "Thursday",
-        events: [
-          { time: "9:00 AM", title: "Art Build Continuation", description: "Complete ongoing installation projects" },
-          { time: "3:00 PM", title: "Persian Dance Workshop", description: "Learn traditional Persian folk dances" },
-          { time: "6:00 PM", title: "Community Potluck", description: "Everyone contributes to a massive shared feast" },
+          { time: "Varies", title: "Art Car Rides", description: "HOMA and DAMAVAND tours when available" },
+          { time: "Varies", title: "Cultural Workshops", description: "Calligraphy, cooking, and music sessions" },
+          { time: "Saturday", title: "Saturday Night Celebration", description: "Annual signature camp event" },
         ],
       },
     ],
     guidelines: {
       beforeAttending: [
-        "Use the official RSVP or ticket link so we can plan tea, power, and security.",
-        "Pack for the vibe—work clothes for service days, playa glam for club nights.",
-        "Bring ID, hydration, and any gifts you’d like to share.",
-        "Only purchase or transfer tickets for confirmed (welcomed) Alborzians.",
+        "RSVP using official links so we can plan resources appropriately",
+        "Dress for the occasion—work clothes for service, event attire for gatherings",
+        "Bring ID, water, and anything you'd like to contribute",
+        "Respect capacity limits and ticketing processes",
       ],
       communityValues: [
-        "Lead with radical inclusion and consent in every interaction.",
-        "Leave no trace—whether under the K Bridge or on the playa.",
-        "Share rides, tools, tea, and knowledge generously.",
-        "Name your contributions so we can celebrate and thank you properly.",
+        "Practice consent and inclusion in all interactions",
+        "Leave no trace at all venues and events",
+        "Share resources, knowledge, and transportation when possible",
+        "Acknowledge contributions to strengthen community bonds",
       ],
     },
     cta: {
@@ -558,7 +540,7 @@ export const contentConfig: ContentConfig = {
         percentage: 35,
         amount: 12250,
         goal: 35000,
-        description: "Materials and tools for our 2024 art projects",
+        description: "Materials and tools for our 2026 art projects",
         icon: "wrench",
         color: "bg-orange-500",
       },
@@ -675,7 +657,7 @@ export const contentConfig: ContentConfig = {
         "Camp Infrastructure",
         "Community Events",
         "Transportation",
-        "Burning Man 2024",
+        "Burning Man 2026",
       ],
     },
     paymentOptions: [
@@ -988,7 +970,7 @@ export const contentConfig: ContentConfig = {
       { value: "$50K", label: "Art Grants Given", icon: "award" },
     ],
     portalInfo: {
-      welcomeTitle: "You’ve been welcomed for 2025!",
+      welcomeTitle: "Welcome to Camp Alborz",
       highlights: [
         {
           title: "Complete the membership form",
@@ -1048,8 +1030,8 @@ export const contentConfig: ContentConfig = {
       ],
       resources: [
         {
-          title: "2025 Welcome Document",
-          description: "Timelines, packing lists, roles, and everything you need before we hit the dust.",
+          title: "Member Welcome Document",
+          description: "Timelines, packing lists, roles, and everything you need before arriving on playa.",
           linkText: "Read the guide",
           linkUrl: "https://docs.google.com/document/d/1J-XqS524V3FqX5Rjl1_cP99QWQ_--UXudIs6Eeq-7oI/edit?usp=sharing",
         },
@@ -1150,8 +1132,8 @@ export const contentConfig: ContentConfig = {
       ],
     },
     externalApplication: {
-      description: "Prefer the classic Google Form? Submit the official 2025 interest form directly on Google.",
-      linkText: "Open the 2025 Alborz Application",
+      description: "Prefer the classic Google Form? Submit the official interest form directly on Google.",
+      linkText: "Open the Alborz Application Form",
       linkUrl: "https://forms.gle/EbuR1omywjH62yYX8",
       note: "This links out to the same intake form referenced on the legacy site.",
     },
@@ -1177,10 +1159,10 @@ export const contentConfig: ContentConfig = {
       title: "Search Results",
       mockResults: [
         {
-          title: "Burning Man 2024 Camp Setup",
+          title: "Annual Camp Setup",
           type: "Event",
-          excerpt: "Join us for the annual camp setup at Black Rock City. We'll be arriving early to establish our Persian oasis in the desert.",
-          date: "August 2024",
+          excerpt: "Join us for the annual camp setup at Black Rock City. We arrive early to establish our Persian oasis in the desert.",
+          date: "August",
         },
         {
           title: "Persian Poetry Night",
@@ -1199,7 +1181,7 @@ export const contentConfig: ContentConfig = {
     popularSearches: {
       title: "Popular Searches",
       terms: [
-        "burning man 2024",
+        "burning man",
         "persian poetry",
         "art installations",
         "cultural events",

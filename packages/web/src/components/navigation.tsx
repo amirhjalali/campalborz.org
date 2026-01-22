@@ -12,52 +12,30 @@ const navItems = [
   {
     label: 'About',
     href: '/about',
-    children: [
-      { label: 'Our Story', href: '/about/story' },
-      { label: 'Mission & Values', href: '/about/mission' },
-      { label: 'Team & Leadership', href: '/about/team' },
-      { label: '501(c)(3) Info', href: '/about/nonprofit' },
-    ],
   },
   {
-    label: 'Experience',
-    href: '/experience',
-    children: [
-      { label: 'At Burning Man', href: '/experience/burning-man' },
-      { label: 'Year-Round Events', href: '/experience/events' },
-      { label: 'Virtual Gatherings', href: '/experience/virtual' },
-      { label: 'Photo Gallery', href: '/experience/gallery' },
-    ],
+    label: 'Events',
+    href: '/events',
   },
   {
-    label: 'Art & Culture',
+    label: 'Art',
     href: '/art',
     children: [
-      { label: 'HOMA Fire Sculpture', href: '/art/homa' },
-      { label: 'DAMAVAND Project', href: '/art/damavand' },
-      { label: 'Artist Showcase', href: '/art/artists' },
-      { label: 'Cultural Programs', href: '/art/culture' },
+      { label: 'HOMA Art Car', href: '/art/homa' },
+      { label: 'DAMAVAND Art Car', href: '/art/damavand' },
     ],
   },
   {
-    label: 'Get Involved',
-    href: '/join',
-    children: [
-      { label: 'Membership', href: '/join/membership' },
-      { label: 'Volunteer', href: '/join/volunteer' },
-      { label: 'Camp Application', href: '/join/apply' },
-      { label: 'Sponsorship', href: '/join/sponsor' },
-    ],
+    label: 'Culture',
+    href: '/culture',
   },
   {
-    label: 'Community',
-    href: '/community',
-    children: [
-      { label: 'Member Portal', href: '/members' },
-      { label: 'Forum', href: '/community/forum' },
-      { label: 'Resources', href: '/community/resources' },
-      { label: 'Newsletter', href: '/community/newsletter' },
-    ],
+    label: 'Apply',
+    href: '/apply',
+  },
+  {
+    label: 'Members',
+    href: '/members',
   },
 ];
 
