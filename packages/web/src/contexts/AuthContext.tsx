@@ -29,9 +29,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
+// Demo mode - enables local authentication when API is unavailable
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || true;
+
 interface AuthProviderProps {
   children: ReactNode;
 }
+
+// Helper to generate mock tokens
+const generateMockToken = () => `demo_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
@@ -80,6 +86,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
+      // Try API first
       const response = await fetch(`${API_BASE_URL}/trpc/auth.login`, {
         method: 'POST',
         headers: {
@@ -113,6 +120,44 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(result?.message || 'Login failed');
       }
     } catch (error) {
+      // If API fails and demo mode is enabled, use mock auth
+      if (DEMO_MODE) {
+        console.log('API unavailable, using demo mode authentication');
+
+        // Get stored demo users
+        const storedUsers = JSON.parse(localStorage.getItem('demo_users') || '[]');
+        const user = storedUsers.find((u: User) => u.email === email);
+
+        if (user) {
+          // Check password (stored in a separate key for demo)
+          const passwords = JSON.parse(localStorage.getItem('demo_passwords') || '{}');
+          if (passwords[email] === password) {
+            const accessToken = generateMockToken();
+            const refreshToken = generateMockToken();
+
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            setState({
+              user,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+            return;
+          }
+        }
+
+        // No matching user or wrong password
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: 'Invalid email or password. Please register first.',
+        }));
+        throw new Error('Invalid email or password');
+      }
+
       const message = error instanceof Error ? error.message : 'Login failed';
       setState(prev => ({
         ...prev,
@@ -127,6 +172,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
+      // Try API first
       const response = await fetch(`${API_BASE_URL}/trpc/auth.register`, {
         method: 'POST',
         headers: {
@@ -155,6 +201,46 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error(result?.message || 'Registration failed');
       }
     } catch (error) {
+      // If API fails and demo mode is enabled, use mock registration
+      if (DEMO_MODE) {
+        console.log('API unavailable, using demo mode registration');
+
+        // Check if email already exists
+        const storedUsers = JSON.parse(localStorage.getItem('demo_users') || '[]');
+        if (storedUsers.find((u: User) => u.email === email)) {
+          setState(prev => ({
+            ...prev,
+            isLoading: false,
+            error: 'An account with this email already exists.',
+          }));
+          throw new Error('Email already registered');
+        }
+
+        // Create new demo user
+        const newUser: User = {
+          id: `demo_${Date.now()}`,
+          email,
+          name,
+          role: 'MEMBER',
+          emailVerified: true, // Auto-verify in demo mode
+        };
+
+        storedUsers.push(newUser);
+        localStorage.setItem('demo_users', JSON.stringify(storedUsers));
+
+        // Store password
+        const passwords = JSON.parse(localStorage.getItem('demo_passwords') || '{}');
+        passwords[email] = password;
+        localStorage.setItem('demo_passwords', JSON.stringify(passwords));
+
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: null,
+        }));
+        return;
+      }
+
       const message = error instanceof Error ? error.message : 'Registration failed';
       setState(prev => ({
         ...prev,
@@ -169,7 +255,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const refreshToken = localStorage.getItem('refreshToken');
 
     try {
-      if (refreshToken) {
+      if (refreshToken && !refreshToken.startsWith('demo_')) {
         await fetch(`${API_BASE_URL}/trpc/auth.logout`, {
           method: 'POST',
           headers: {

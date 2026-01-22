@@ -45,10 +45,22 @@ export const tenantProtectedProcedure = protectedProcedure.use(requireTenant);
 export const withPermission = (permission: string) =>
   protectedProcedure.use(({ ctx, next }) => {
     if (!ctx.user.permissions.includes(permission)) {
-      throw new TRPCError({ 
-        code: "FORBIDDEN", 
-        message: `Missing permission: ${permission}` 
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: `Missing permission: ${permission}`
       });
     }
     return next();
   });
+
+// Admin procedure - requires authentication, tenant, and admin role
+export const adminProcedure = tenantProtectedProcedure.use(({ ctx, next }) => {
+  const adminRoles = ['ADMIN', 'TENANT_ADMIN', 'SUPER_ADMIN'];
+  if (!ctx.user.role || !adminRoles.includes(ctx.user.role)) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required"
+    });
+  }
+  return next();
+});
