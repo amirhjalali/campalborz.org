@@ -4,6 +4,7 @@ import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
 import { AuthProvider } from '../contexts/AuthContext';
+import { Footer } from '../components/footer';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
 
 const playfair = Playfair_Display({
@@ -38,6 +39,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
             {children}
+            <Footer />
           </AuthProvider>
         </ThemeProvider>
       </body>

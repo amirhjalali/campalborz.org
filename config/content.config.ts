@@ -51,15 +51,15 @@ export const contentConfig: ContentConfig = {
       images: [
         {
           src: "/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg",
-          caption: "Persian tea and sweets shared at sunset in Black Rock City.",
+          caption: "The Alborz mountain range — inspiration for our camp's name and spirit.",
         },
         {
           src: "/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg",
-          caption: "Campmates and visitors connecting under our shaded majlis.",
+          caption: "Night riders gathering at our camp for a playa adventure.",
         },
         {
           src: "/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg",
-          caption: "HOMA and DAMAVAND preparing for a night ride across the playa.",
+          caption: "Persian calligraphy and poetry — the heart of our cultural expression.",
         },
       ],
     },
