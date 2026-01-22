@@ -1,0 +1,6 @@
+# Nixpacks configuration for Coolify deployment
+[start]
+cmd = "cd packages/web && npm run start"
+
+[variables]
+NODE_ENV = "production"
