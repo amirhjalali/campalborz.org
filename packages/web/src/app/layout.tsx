@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
+import { AuthProvider } from '../contexts/AuthContext';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
 
 const playfair = Playfair_Display({
@@ -35,7 +36,9 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${crimson.variable} ${montserrat.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
