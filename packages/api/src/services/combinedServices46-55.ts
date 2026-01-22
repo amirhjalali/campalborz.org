@@ -18,7 +18,7 @@ export class AssetManagementService {
     });
   }
 
-  async scheduleMainte nance(tenantId: string, assetId: string, maintenance: any) {
+  async scheduleMaintenance(tenantId: string, assetId: string, maintenance: any) {
     return await prisma.assetMaintenance.create({
       data: { ...maintenance, tenantId, assetId }
     });
