@@ -19,12 +19,12 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
-// Middleware to require tenant context
-export const tenantProcedure = t.procedure.use(({ ctx, next }) => {
+// Middleware function to require tenant context
+const requireTenant = t.middleware(({ ctx, next }) => {
   if (!ctx.tenant) {
-    throw new TRPCError({ 
-      code: "BAD_REQUEST", 
-      message: "Tenant not found or invalid domain" 
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Tenant not found or invalid domain"
     });
   }
   return next({
@@ -35,8 +35,11 @@ export const tenantProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
+// Procedure that requires tenant context
+export const tenantProcedure = t.procedure.use(requireTenant);
+
 // Middleware to require both authentication and tenant
-export const tenantProtectedProcedure = protectedProcedure.use(tenantProcedure);
+export const tenantProtectedProcedure = protectedProcedure.use(requireTenant);
 
 // Middleware to check permissions
 export const withPermission = (permission: string) =>

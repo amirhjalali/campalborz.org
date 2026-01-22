@@ -135,7 +135,7 @@ class SecurityService {
 
   async generateJWT(payload: any, expiresIn: string | number = '24h'): Promise<string> {
     const secret = process.env.JWT_SECRET || 'default-secret';
-    return jwt.sign(payload, secret, { expiresIn });
+    return jwt.sign(payload, secret, { expiresIn: expiresIn as string });
   }
 
   async verifyJWT(token: string): Promise<{ valid: boolean; payload?: any; error?: string }> {
@@ -144,7 +144,7 @@ class SecurityService {
       const payload = jwt.verify(token, secret);
       return { valid: true, payload };
     } catch (error) {
-      return { valid: false, error: error.message };
+      return { valid: false, error: (error as Error).message };
     }
   }
 
@@ -153,17 +153,17 @@ class SecurityService {
     iv: string;
     tag: string;
   }> {
-    const encryptionKey = key || process.env.ENCRYPTION_KEY || crypto.randomBytes(32);
+    const encryptionKey = key || process.env.ENCRYPTION_KEY || crypto.randomBytes(32).toString('hex');
+    const keyBuffer = typeof encryptionKey === 'string' ? Buffer.from(encryptionKey.slice(0, 32)) : encryptionKey;
     const iv = crypto.randomBytes(16);
-    
-    const cipher = crypto.createCipherGCM('aes-256-gcm', encryptionKey);
-    cipher.setIVLength(16);
-    
+
+    const cipher = crypto.createCipheriv('aes-256-gcm', keyBuffer, iv);
+
     let encrypted = cipher.update(data, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
+
     const tag = cipher.getAuthTag();
-    
+
     return {
       encrypted,
       iv: iv.toString('hex'),
@@ -181,12 +181,14 @@ class SecurityService {
       throw new Error('Encryption key not available');
     }
 
-    const decipher = crypto.createDecipherGCM('aes-256-gcm', encryptionKey);
+    const keyBuffer = typeof encryptionKey === 'string' ? Buffer.from(encryptionKey.slice(0, 32)) : encryptionKey;
+    const iv = Buffer.from(encryptedData.iv, 'hex');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', keyBuffer, iv);
     decipher.setAuthTag(Buffer.from(encryptedData.tag, 'hex'));
-    
+
     let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
-    
+
     return decrypted;
   }
 
@@ -195,8 +197,8 @@ class SecurityService {
     qrCode: string;
     backupCodes: string[];
   }> {
-    // Generate a base32 secret for TOTP
-    const secret = crypto.randomBytes(20).toString('base32');
+    // Generate a hex secret for TOTP (base32 not natively supported)
+    const secret = crypto.randomBytes(20).toString('hex').toUpperCase();
     
     // Generate backup codes
     const backupCodes = Array.from({ length: 10 }, () => 
@@ -395,33 +397,33 @@ class SecurityService {
       // Calculate metrics
       const totalEvents = logs.length;
       
-      const eventsByType = logs.reduce((acc, log) => {
+      const eventsByType = logs.reduce((acc: Record<string, number>, log: any) => {
         acc[log.action] = (acc[log.action] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
-      const eventsBySeverity = logs.reduce((acc, log) => {
+      const eventsBySeverity = logs.reduce((acc: Record<string, number>, log: any) => {
         acc[log.severity] = (acc[log.severity] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
-      const ipCounts = logs.reduce((acc, log) => {
+      const ipCounts = logs.reduce((acc: Record<string, number>, log: any) => {
         acc[log.ip] = (acc[log.ip] || 0) + 1;
         return acc;
       }, {} as Record<string, number>);
 
       const topIPs = Object.entries(ipCounts)
-        .sort(([, a], [, b]) => b - a)
+        .sort(([, a], [, b]) => (b as number) - (a as number))
         .slice(0, 10)
-        .map(([ip, count]) => ({ ip, count }));
+        .map(([ip, count]) => ({ ip, count: count as number }));
 
       // Create timeline (group by hour)
-      const timeline = logs.reduce((acc, log) => {
+      const timeline = logs.reduce((acc: Array<{ timestamp: Date; count: number; severity: string }>, log: any) => {
         const hour = new Date(log.timestamp);
         hour.setMinutes(0, 0, 0);
         const key = hour.toISOString();
-        
-        const existing = acc.find(item => item.timestamp.toISOString() === key);
+
+        const existing = acc.find((item: { timestamp: Date; count: number; severity: string }) => item.timestamp.toISOString() === key);
         if (existing) {
           existing.count++;
         } else {
@@ -431,7 +433,7 @@ class SecurityService {
             severity: log.severity,
           });
         }
-        
+
         return acc;
       }, [] as Array<{ timestamp: Date; count: number; severity: string }>);
 

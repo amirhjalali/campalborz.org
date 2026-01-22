@@ -283,7 +283,7 @@ class TestingService {
     } catch (error) {
       testRun.status = 'failed';
       testRun.completedAt = new Date();
-      testRun.logs.push(`Error during execution: ${error.message}`);
+      testRun.logs.push(`Error during execution: ${(error as Error).message}`);
       throw error;
     }
   }

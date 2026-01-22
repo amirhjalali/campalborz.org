@@ -1,4 +1,4 @@
-import { Server as SocketIOServer } from 'socket.io';
+import { Server as SocketIOServer, Socket } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import jwt from 'jsonwebtoken';
 import { logger } from '../lib/logger';
@@ -322,7 +322,7 @@ class RealtimeService {
       const messagesKey = `chat:messages:${roomId}`;
       const messages = await redis.lrange(messagesKey, 0, limit - 1);
       
-      return messages.map(msg => JSON.parse(msg)).reverse();
+      return messages.map((msg: string) => JSON.parse(msg)).reverse();
     } catch (error) {
       logger.error('Error getting chat history:', error);
       return [];
@@ -338,4 +338,5 @@ class RealtimeService {
   }
 }
 
-export { RealtimeService, RealtimeEvent, AuthenticatedSocket };
+export { RealtimeService };
+export type { RealtimeEvent, AuthenticatedSocket };

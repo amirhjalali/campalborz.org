@@ -203,7 +203,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return pages.map(page => ({
+      return pages.map((page: any) => ({
         id: page.id,
         type: "pages" as SearchType,
         title: page.title,
@@ -275,7 +275,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return events.map(event => ({
+      return events.map((event: any) => ({
         id: event.id,
         type: "events" as SearchType,
         title: event.title,
@@ -343,7 +343,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return members.map(member => ({
+      return members.map((member: any) => ({
         id: member.id,
         type: "members" as SearchType,
         title: member.name,
@@ -416,7 +416,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return media.map(file => ({
+      return media.map((file: any) => ({
         id: file.id,
         type: "media" as SearchType,
         title: file.originalName,
@@ -476,7 +476,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return donations.map(donation => ({
+      return donations.map((donation: any) => ({
         id: donation.id,
         type: "donations" as SearchType,
         title: `Donation from ${donation.donorName || "Anonymous"}`,
@@ -533,7 +533,7 @@ class SearchService {
         take: pagination.limit || 50,
       });
 
-      return notifications.map(notification => ({
+      return notifications.map((notification: any) => ({
         id: notification.id,
         type: "notifications" as SearchType,
         title: notification.title,
