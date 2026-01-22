@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { Navigation } from "../../components/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { motion } from "framer-motion";
-import { useContentConfig } from "../../hooks/useConfig";
-import { toast } from "sonner";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { useState, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Navigation } from '../../components/navigation';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useContentConfig } from '../../hooks/useConfig';
+import { toast } from 'sonner';
+import { CheckCircle, Loader2, ChevronDown, ArrowRight, ExternalLink, FileText, Users, MessageSquare, Clock } from 'lucide-react';
 
 interface ApplicationFormData {
   name: string;
@@ -23,15 +22,26 @@ interface ApplicationFormData {
 
 export default function ApplyPage() {
   const { apply } = useContentConfig();
+  const heroRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   const [formData, setFormData] = useState<ApplicationFormData>({
-    name: "",
-    email: "",
-    phone: "",
-    experience: "",
-    interests: "",
-    contribution: "",
-    dietary: "",
-    emergency_contact: "",
+    name: '',
+    email: '',
+    phone: '',
+    experience: '',
+    interests: '',
+    contribution: '',
+    dietary: '',
+    emergency_contact: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,36 +50,33 @@ export default function ApplyPage() {
     return (
       <>
         <Navigation />
-        <main className="min-h-screen flex items-center justify-center">
-          <p>Apply page configuration not found</p>
+        <main className="min-h-screen flex items-center justify-center bg-cream">
+          <p className="text-ink-soft">Apply page configuration not found</p>
         </main>
       </>
     );
   }
 
   const validateForm = (): boolean => {
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address");
+      toast.error('Please enter a valid email address');
       return false;
     }
 
-    // Phone validation (basic)
     const phoneRegex = /^[\d\s\-\+\(\)]+$/;
     if (!phoneRegex.test(formData.phone)) {
-      toast.error("Please enter a valid phone number");
+      toast.error('Please enter a valid phone number');
       return false;
     }
 
-    // Check required text fields have minimum length
     if (formData.interests.length < 50) {
-      toast.error("Please tell us more about your interests (at least 50 characters)");
+      toast.error('Please tell us more about your interests (at least 50 characters)');
       return false;
     }
 
     if (formData.contribution.length < 50) {
-      toast.error("Please tell us more about how you'd like to contribute (at least 50 characters)");
+      toast.error('Please tell us more about how you\'d like to contribute (at least 50 characters)');
       return false;
     }
 
@@ -79,7 +86,6 @@ export default function ApplyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form
     if (!validateForm()) {
       return;
     }
@@ -87,10 +93,8 @@ export default function ApplyPage() {
     setIsSubmitting(true);
 
     try {
-      // Mock API call - replace with actual tRPC call when backend is ready
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Simulate API call
       const response = await fetch('/api/applications', {
         method: 'POST',
         headers: {
@@ -98,38 +102,35 @@ export default function ApplyPage() {
         },
         body: JSON.stringify(formData),
       }).catch(() => {
-        // If API not available, still show success (mock mode)
         return { ok: true };
       });
 
       if (response.ok) {
         setIsSubmitted(true);
-        toast.success(apply.form.successMessage || "Application submitted successfully!", {
-          description: "We'll review your application and get back to you soon.",
+        toast.success(apply.form.successMessage || 'Application submitted successfully!', {
+          description: 'We\'ll review your application and get back to you soon.',
           duration: 5000,
         });
 
-        // Reset form
         setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          experience: "",
-          interests: "",
-          contribution: "",
-          dietary: "",
-          emergency_contact: "",
+          name: '',
+          email: '',
+          phone: '',
+          experience: '',
+          interests: '',
+          contribution: '',
+          dietary: '',
+          emergency_contact: '',
         });
 
-        // Scroll to top to show success message
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         throw new Error('Submission failed');
       }
     } catch (error) {
       console.error('Application submission error:', error);
-      toast.error("Failed to submit application", {
-        description: "Please try again or contact us directly if the problem persists.",
+      toast.error('Failed to submit application', {
+        description: 'Please try again or contact us directly if the problem persists.',
         duration: 5000,
       });
     } finally {
@@ -144,277 +145,407 @@ export default function ApplyPage() {
     });
   };
 
+  const processIcons = [FileText, Users, MessageSquare, Clock];
+
   return (
-    <div className="min-h-screen bg-gradient-hero animate-gradient-x">
+    <>
       <Navigation />
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 text-center">
-        <div className="max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6 text-burnt-sienna"
+      <main className="bg-cream">
+        {/* Hero Section with Parallax */}
+        <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden flex items-center justify-center">
+          <motion.div
+            className="absolute inset-0 z-0"
+            style={{ y: backgroundY }}
           >
-            {apply.title}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-desert-night max-w-3xl mx-auto leading-relaxed"
-          >
-            {apply.subtitle}
-          </motion.p>
-        </div>
-      </section>
+            <Image
+              src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+              alt="Join Camp Alborz"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
+          </motion.div>
 
-      {/* Main Content */}
-      <div className="bg-white pt-20 pb-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+
+          <motion.div
+            className="relative z-10 section-contained text-center py-24"
+            style={{ y: textY, opacity }}
+          >
+            <motion.p
+              className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              JOIN OUR COMMUNITY
+            </motion.p>
+            <motion.h1
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.9 }}
+            >
+              {apply.title}
+            </motion.h1>
+            <motion.p
+              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              {apply.subtitle}
+            </motion.p>
+
+            <motion.div
+              className="ornate-divider mt-8"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              style={{ filter: 'brightness(1.5)' }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ChevronDown className="w-8 h-8 text-white/60" />
+          </motion.div>
+        </section>
 
         {/* Success Message */}
         {isSubmitted && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-6 bg-green-50 border-2 border-green-200 rounded-lg"
-          >
-            <div className="flex items-start">
-              <CheckCircle className="w-6 h-6 text-green-600 mr-3 flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="text-lg font-semibold text-green-900 mb-2">
-                  Application Submitted Successfully!
-                </h3>
-                <p className="text-green-700">
-                  Thank you for your interest in joining our camp! We've received your application
-                  and will review it carefully. You should receive a confirmation email shortly.
-                  We'll be in touch within 1-2 weeks.
-                </p>
+          <section className="section-base section-contained">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="frame-panel text-center space-y-6"
+            >
+              <div className="inline-flex p-4 rounded-full bg-sage-100 border border-sage-300">
+                <CheckCircle className="h-10 w-10 text-sage-600" />
               </div>
-            </div>
-          </motion.div>
+              <h2 className="text-display-thin text-2xl md:text-3xl">
+                Application Submitted Successfully!
+              </h2>
+              <p className="text-body-relaxed text-ink-soft max-w-2xl mx-auto">
+                Thank you for your interest in joining our camp! We've received your application
+                and will review it carefully. You should receive a confirmation email shortly.
+                We'll be in touch within 1-2 weeks.
+              </p>
+            </motion.div>
+          </section>
         )}
 
-        {/* Legacy Google Form Link */}
+        {/* Legacy Form Option */}
         {apply.externalApplication && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 border border-dust-khaki/40 rounded-2xl bg-gradient-to-br from-cream-50 to-white p-6 text-left"
-          >
-            <p className="text-sm uppercase tracking-[0.3em] text-primary mb-2">Legacy Form</p>
-            <h3 className="text-2xl font-display font-semibold text-midnight mb-3">
-              Prefer the Google Form?
-            </h3>
-            <p className="text-neutral-700 mb-4">{apply.externalApplication.description}</p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <Button asChild className="w-full sm:w-auto bg-gradient-to-r from-primary to-secondary">
-                <Link
-                  href={apply.externalApplication.linkUrl}
-                  target={apply.externalApplication.linkUrl.startsWith("http") ? "_blank" : undefined}
-                  rel={apply.externalApplication.linkUrl.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  {apply.externalApplication.linkText}
-                </Link>
-              </Button>
-              {apply.externalApplication.note && (
-                <p className="text-sm text-neutral-500">{apply.externalApplication.note}</p>
-              )}
-            </div>
-          </motion.div>
+          <section className="section-base section-contained">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="luxury-card"
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-2">
+                    Alternative Option
+                  </p>
+                  <h3 className="text-display-thin text-xl mb-2">
+                    Prefer the Google Form?
+                  </h3>
+                  <p className="text-body-relaxed text-sm text-ink-soft">
+                    {apply.externalApplication.description}
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                  <Link
+                    href={apply.externalApplication.linkUrl}
+                    target={apply.externalApplication.linkUrl.startsWith('http') ? '_blank' : undefined}
+                    rel={apply.externalApplication.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
+                    className="cta-primary"
+                  >
+                    {apply.externalApplication.linkText}
+                    <ExternalLink className="h-4 w-4" />
+                  </Link>
+                  {apply.externalApplication.note && (
+                    <p className="text-xs text-ink-soft">{apply.externalApplication.note}</p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </section>
         )}
 
         {/* Application Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{apply.form.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Personal Information */}
-              <div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-4">
-                  {apply.form.fields.personalInfo.title}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="form-label">
-                      {apply.form.fields.personalInfo.nameLabel}
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      className="form-input"
-                      value={formData.name}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="form-label">
-                      {apply.form.fields.personalInfo.emailLabel}
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      className="form-input"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="form-label">
-                      {apply.form.fields.personalInfo.phoneLabel}
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      className="form-input"
-                      value={formData.phone}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="form-label">
-                      {apply.form.fields.personalInfo.emergencyContactLabel}
-                    </label>
-                    <input
-                      type="text"
-                      name="emergency_contact"
-                      required
-                      className="form-input"
-                      placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
-                      value={formData.emergency_contact}
-                      onChange={handleChange}
-                    />
+        <section className="section-base">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="luxury-card"
+            >
+              <div className="text-center mb-10">
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70 mb-3">
+                  ONLINE APPLICATION
+                </p>
+                <h2 className="text-display-thin text-2xl md:text-3xl">
+                  {apply.form.title}
+                </h2>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Personal Information */}
+                <div className="space-y-6">
+                  <h3 className="text-display-thin text-lg pb-3 border-b border-line/30">
+                    {apply.form.fields.personalInfo.title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="form-label">
+                        {apply.form.fields.personalInfo.nameLabel}
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        required
+                        className="form-input"
+                        value={formData.name}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div>
+                      <label className="form-label">
+                        {apply.form.fields.personalInfo.emailLabel}
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        className="form-input"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div>
+                      <label className="form-label">
+                        {apply.form.fields.personalInfo.phoneLabel}
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        required
+                        className="form-input"
+                        value={formData.phone}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div>
+                      <label className="form-label">
+                        {apply.form.fields.personalInfo.emergencyContactLabel}
+                      </label>
+                      <input
+                        type="text"
+                        name="emergency_contact"
+                        required
+                        className="form-input"
+                        placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
+                        value={formData.emergency_contact}
+                        onChange={handleChange}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Burning Man Experience */}
-              <div>
-                <label className="form-label">{apply.form.fields.experienceLabel}</label>
-                <select
-                  name="experience"
-                  className="form-input"
-                  value={formData.experience}
-                  onChange={handleChange}
-                >
-                  {apply.form.fields.experienceOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                {/* Experience */}
+                <div>
+                  <label className="form-label">{apply.form.fields.experienceLabel}</label>
+                  <select
+                    name="experience"
+                    className="form-input"
+                    value={formData.experience}
+                    onChange={handleChange}
+                  >
+                    {apply.form.fields.experienceOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-              {/* Interests */}
-              <div>
-                <label className="form-label">{apply.form.fields.interestsLabel}</label>
-                <textarea
-                  name="interests"
-                  required
-                  rows={4}
-                  className="form-input"
-                  placeholder={apply.form.fields.interestsPlaceholder}
-                  value={formData.interests}
-                  onChange={handleChange}
-                />
-              </div>
+                {/* Interests */}
+                <div>
+                  <label className="form-label">{apply.form.fields.interestsLabel}</label>
+                  <textarea
+                    name="interests"
+                    required
+                    rows={4}
+                    className="form-input"
+                    placeholder={apply.form.fields.interestsPlaceholder}
+                    value={formData.interests}
+                    onChange={handleChange}
+                  />
+                </div>
 
-              {/* Contribution */}
-              <div>
-                <label className="form-label">{apply.form.fields.contributionLabel}</label>
-                <textarea
-                  name="contribution"
-                  required
-                  rows={4}
-                  className="form-input"
-                  placeholder={apply.form.fields.contributionPlaceholder}
-                  value={formData.contribution}
-                  onChange={handleChange}
-                />
-              </div>
+                {/* Contribution */}
+                <div>
+                  <label className="form-label">{apply.form.fields.contributionLabel}</label>
+                  <textarea
+                    name="contribution"
+                    required
+                    rows={4}
+                    className="form-input"
+                    placeholder={apply.form.fields.contributionPlaceholder}
+                    value={formData.contribution}
+                    onChange={handleChange}
+                  />
+                </div>
 
-              {/* Dietary Requirements */}
-              <div>
-                <label className="form-label">{apply.form.fields.dietaryLabel}</label>
-                <textarea
-                  name="dietary"
-                  rows={3}
-                  className="form-input"
-                  placeholder={apply.form.fields.dietaryPlaceholder}
-                  value={formData.dietary}
-                  onChange={handleChange}
-                />
-              </div>
+                {/* Dietary */}
+                <div>
+                  <label className="form-label">{apply.form.fields.dietaryLabel}</label>
+                  <textarea
+                    name="dietary"
+                    rows={3}
+                    className="form-input"
+                    placeholder={apply.form.fields.dietaryPlaceholder}
+                    value={formData.dietary}
+                    onChange={handleChange}
+                  />
+                </div>
 
-              {/* Terms and Conditions */}
-              <div className="bg-secondary-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-secondary-900 mb-2">
-                  {apply.form.beforeYouApply.title}
-                </h4>
-                <ul className="text-sm text-secondary-700 space-y-1">
-                  {apply.form.beforeYouApply.items.map((item, index) => (
-                    <li key={index}>• {item}</li>
-                  ))}
-                </ul>
-              </div>
+                {/* Terms */}
+                <div className="bg-tan-50 p-6 rounded-xl">
+                  <h4 className="text-display-thin text-lg mb-4">
+                    {apply.form.beforeYouApply.title}
+                  </h4>
+                  <ul className="space-y-2">
+                    {apply.form.beforeYouApply.items.map((item, index) => (
+                      <li key={index} className="flex items-start gap-3 text-sm text-ink-soft">
+                        <span className="text-gold-500 mt-1">◆</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
-                <motion.div whileHover={{ scale: isSubmitting ? 1 : 1.02 }} whileTap={{ scale: isSubmitting ? 1 : 0.98 }}>
-                  <Button
+                {/* Submit */}
+                <div className="pt-4">
+                  <motion.button
                     type="submit"
-                    size="lg"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-primary to-secondary hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                    whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                    whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                    className="w-full cta-primary disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        <Loader2 className="w-5 h-5 animate-spin" />
                         Submitting Application...
                       </>
                     ) : (
-                      apply.form.submitButton
+                      <>
+                        {apply.form.submitButton}
+                        <ArrowRight size={18} />
+                      </>
                     )}
-                  </Button>
-                </motion.div>
-                <p className="text-sm text-neutral-600 mt-4 text-center">
-                  {apply.form.reviewMessage}
-                </p>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Additional Information */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>{apply.process.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {apply.process.steps.map((step) => (
-                <div key={step.stepNumber} className="flex items-start">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-primary-600 font-semibold">{step.stepNumber}</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-secondary-900">{step.title}</h4>
-                    <p className="text-secondary-600">{step.description}</p>
-                  </div>
+                  </motion.button>
+                  <p className="text-sm text-ink-soft mt-4 text-center">
+                    {apply.form.reviewMessage}
+                  </p>
                 </div>
-              ))}
+              </form>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Application Process */}
+        <section className="section-contrast">
+          <div className="section-contained">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center space-y-4 mb-14"
+            >
+              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
+                WHAT TO EXPECT
+              </p>
+              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+                {apply.process.title}
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {apply.process.steps.map((step, index) => {
+                const StepIcon = processIcons[index] || FileText;
+                return (
+                  <motion.div
+                    key={step.stepNumber}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center"
+                  >
+                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
+                      <StepIcon className="h-6 w-6 text-gold-400" />
+                    </div>
+                    <div className="text-3xl font-display text-gold-500 mb-2">
+                      {step.stepNumber}
+                    </div>
+                    <h3 className="text-display-thin text-lg text-tan-light mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-body-relaxed text-sm text-tan-light/70">
+                      {step.description}
+                    </p>
+                  </motion.div>
+                );
+              })}
             </div>
-          </CardContent>
-        </Card>
-        </div>
-      </div>
-    </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="section-base">
+          <div className="section-contained">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="frame-panel text-center space-y-8"
+            >
+              <h2 className="text-display-thin text-2xl md:text-3xl">
+                Questions About Applying?
+              </h2>
+              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                If you have any questions about the application process or camp membership,
+                don't hesitate to reach out. We're here to help.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/about" className="cta-secondary">
+                  Learn More About Us
+                  <ArrowRight size={18} />
+                </Link>
+                <Link href="/culture" className="cta-secondary">
+                  Explore Our Culture
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

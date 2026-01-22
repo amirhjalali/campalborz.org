@@ -1,127 +1,175 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
+import { useRef } from 'react';
 
 export default function AboutPage() {
   const { about } = useContentConfig();
   const campConfig = useCampConfig();
+  const heroRef = useRef<HTMLElement>(null);
 
-  // Fallback in case about config is not defined
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
   if (!about) {
     return (
       <>
         <Navigation />
-        <main className="min-h-screen flex items-center justify-center">
-          <p>About page configuration not found</p>
+        <main className="min-h-screen flex items-center justify-center bg-cream">
+          <p className="text-ink-soft">About page configuration not found</p>
         </main>
       </>
     );
   }
 
-  const MountainIcon = getIcon('mountain');
-  const AwardIcon = getIcon('award');
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-gradient-hero animate-gradient-x">
-        {/* Hero Section */}
-        <section className="relative pt-32 pb-16 overflow-hidden">
+      <main className="bg-cream">
+        {/* Hero Section with Parallax */}
+        <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden flex items-center justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+            className="absolute inset-0 z-0"
+            style={{ y: backgroundY }}
           >
-            <div className="text-center">
-              <h1 className="text-5xl md:text-6xl font-display font-bold text-burnt-sienna mb-6">
-                {about.title}
-              </h1>
-              <p className="text-xl text-desert-night max-w-3xl mx-auto">
-                {about.subtitle}
-              </p>
-            </div>
-            
-            {/* Mountain Icon */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="flex justify-center mt-8"
+            <Image
+              src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+              alt="Camp Alborz Community"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
+          </motion.div>
+
+          <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+
+          <motion.div
+            className="relative z-10 section-contained text-center py-24"
+            style={{ y: textY, opacity }}
+          >
+            <motion.p
+              className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              <div className="p-4 bg-gradient-to-br from-primary to-secondary rounded-full">
-                <MountainIcon className="h-12 w-12 text-white" />
-              </div>
-            </motion.div>
+              OUR STORY
+            </motion.p>
+            <motion.h1
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.9 }}
+            >
+              {about.title}
+            </motion.h1>
+            <motion.p
+              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              {about.subtitle}
+            </motion.p>
+
+            <motion.div
+              className="ornate-divider mt-8"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              style={{ filter: 'brightness(1.5)' }}
+            />
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ChevronDown className="w-8 h-8 text-white/60" />
           </motion.div>
         </section>
 
         {/* Mission Statement */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-warm-white rounded-2xl p-8 md:p-12 shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm"
-            >
-              <h2 className="text-3xl font-display font-bold text-desert-night mb-6">
-                {about.mission.title}
-              </h2>
+        <section className="section-base section-contained">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="frame-panel text-center space-y-8"
+          >
+            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+              WHY WE EXIST
+            </p>
+            <h2 className="text-display-thin text-3xl md:text-4xl">
+              {about.mission.title}
+            </h2>
+            <div className="max-w-3xl mx-auto space-y-6">
               {about.mission.paragraphs.map((paragraph, index) => (
-                <p key={index} className={`text-lg text-desert-night/80 font-body ${index < about.mission.paragraphs.length - 1 ? 'mb-4' : ''}`}>
+                <p key={index} className="text-body-relaxed text-base md:text-lg text-ink-soft">
                   {paragraph}
                 </p>
               ))}
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </section>
 
-        {/* Values */}
-        <section className="py-16 bg-desert-sand/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Values Section */}
+        <section className="section-contrast">
+          <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-12"
+              className="text-center space-y-4 mb-14"
             >
-              <h2 className="text-4xl font-display font-bold text-desert-night mb-4">
-                Our Values
+              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
+                WHAT WE BELIEVE
+              </p>
+              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+                Our Core Values
               </h2>
-              <p className="text-lg text-desert-night/70 font-body">
-                The principles that guide everything we do
+              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
+                The principles that guide everything we create and share
               </p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {about.values.map((value, index) => {
                 const ValueIcon = getIcon(value.icon);
-                const gradient = value.gradient || 'from-primary to-secondary';
 
                 return (
                   <motion.div
                     key={value.title}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="group relative bg-warm-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] hover:border-antique-gold/40 transition-all duration-500"
+                    transition={{ duration: 0.6, delay: index * 0.15 }}
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
-                    <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${gradient} mb-4`}>
-                      <ValueIcon className="h-6 w-6 text-white" />
+                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
+                      <ValueIcon className="h-8 w-8 text-gold-400" />
                     </div>
-                    <h3 className="text-xl font-display font-semibold text-desert-night mb-3">
+                    <h3 className="text-display-thin text-xl text-tan-light mb-4">
                       {value.title}
                     </h3>
-                    <p className="text-desert-night/70 font-body">
+                    <p className="text-body-relaxed text-sm text-tan-light/80">
                       {value.description}
                     </p>
                   </motion.div>
@@ -131,45 +179,50 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Timeline */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Timeline Section */}
+        <section className="section-base">
+          <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-12"
+              className="text-center space-y-4 mb-14"
             >
-              <h2 className="text-4xl font-display font-bold text-desert-night mb-4">
+              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                15+ YEARS OF MAGIC
+              </p>
+              <h2 className="text-display-thin text-3xl md:text-4xl">
                 Our Journey
               </h2>
-              <p className="text-lg text-desert-night/70 font-body">
-                15+ years of magic in the desert
-              </p>
             </motion.div>
 
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary to-secondary" />
-              
-              {/* Milestones */}
+            <div className="relative max-w-3xl mx-auto">
+              {/* Timeline Line */}
+              <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold-500/50 via-gold-500 to-gold-500/50" />
+
               <div className="space-y-12">
                 {about.timeline.map((milestone, index) => (
                   <motion.div
                     key={milestone.year}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center`}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                   >
-                    <div className="flex-1" />
-                    <div className="w-4 h-4 bg-primary rounded-full relative z-10" />
-                    <div className="flex-1">
-                      <div className={`bg-warm-white rounded-lg p-4 shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
-                        <div className="text-burnt-sienna font-display font-bold mb-1">{milestone.year}</div>
-                        <div className="text-desert-night/80 font-body">{milestone.event}</div>
+                    {/* Timeline Dot */}
+                    <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-gold-500 border-4 border-cream z-10" />
+
+                    {/* Content Card */}
+                    <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'}`}>
+                      <div className="luxury-card">
+                        <p className="text-display-wide text-xs tracking-[0.3em] text-gold-600 mb-2">
+                          {milestone.year}
+                        </p>
+                        <p className="text-body-relaxed text-ink-soft">
+                          {milestone.event}
+                        </p>
                       </div>
                     </div>
                   </motion.div>
@@ -179,77 +232,89 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Team */}
-        <section className="py-16 bg-desert-sand/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Team Section */}
+        <section className="section-alt">
+          <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center mb-12"
+              className="text-center space-y-4 mb-14"
             >
-              <h2 className="text-4xl font-display font-bold text-desert-night mb-4">
+              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                THE PEOPLE
+              </p>
+              <h2 className="text-display-thin text-3xl md:text-4xl">
                 Our Leadership
               </h2>
-              <p className="text-lg text-desert-night/70 font-body">
+              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
                 The passionate people who make {campConfig.name} possible
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {about.team.map((member, index) => (
                 <motion.div
                   key={member.name}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-warm-white rounded-lg p-6 text-center shadow-[0_4px_20px_rgba(160,82,45,0.08),0_8px_40px_rgba(212,175,55,0.06)] border border-dust-khaki/20 backdrop-blur-sm hover:shadow-[0_8px_30px_rgba(160,82,45,0.12),0_12px_50px_rgba(212,175,55,0.08)] hover:border-antique-gold/40 transition-all duration-500"
+                  className="luxury-card text-center"
                 >
-                  <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4" />
-                  <h3 className="font-display font-semibold text-desert-night mb-1">{member.name}</h3>
-                  <p className="text-sm text-burnt-sienna mb-3 font-body">{member.role}</p>
-                  <p className="text-sm text-desert-night/70 font-body">{member.bio}</p>
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-400 to-sage-600 flex items-center justify-center">
+                    <span className="text-2xl font-display text-white">
+                      {member.name.charAt(0)}
+                    </span>
+                  </div>
+                  <h3 className="text-display-thin text-lg mb-1">{member.name}</h3>
+                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-3">
+                    {member.role}
+                  </p>
+                  <p className="text-body-relaxed text-sm text-ink-soft">
+                    {member.bio}
+                  </p>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 501(c)(3) Section */}
-        <section className="py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 501(c)(3) CTA Section */}
+        <section className="section-base">
+          <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-8 md:p-12"
+              className="frame-panel text-center space-y-8"
             >
-              <div className="flex items-center mb-6">
-                <AwardIcon className="h-8 w-8 text-primary mr-3" />
-                <h2 className="text-3xl font-display font-bold text-desert-night">
+              <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
+                {(() => {
+                  const AwardIcon = getIcon('award');
+                  return <AwardIcon className="h-10 w-10 text-gold-500" />;
+                })()}
+              </div>
+
+              <div className="space-y-4">
+                <h2 className="text-display-thin text-2xl md:text-3xl">
                   {about.nonprofit.title}
                 </h2>
+                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                  {about.nonprofit.description}
+                </p>
               </div>
-              <p className="text-lg text-desert-night/80 font-body mb-6">
-                {about.nonprofit.description}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/donate"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-                >
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/donate" className="cta-primary">
                   {about.nonprofit.cta.donate}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight size={18} />
                 </Link>
-                <Link
-                  href="/apply"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-warm-white text-desert-night font-semibold rounded-xl border-2 border-burnt-sienna hover:bg-desert-sand/30 transition-all duration-300"
-                >
+                <Link href="/apply" className="cta-secondary">
                   {about.nonprofit.cta.join}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight size={18} />
                 </Link>
               </div>
             </motion.div>

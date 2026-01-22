@@ -1,315 +1,385 @@
-"use client";
+'use client';
 
-import { Navigation } from "../../components/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Users
-} from "lucide-react";
-import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Navigation } from '../../components/navigation';
+import { ArrowRight, ChevronDown, Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
+import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
+import { useRef } from 'react';
 
 export default function EventsPage() {
   const { events } = useContentConfig();
-  const campConfig = useCampConfig();
+  const heroRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   if (!events) {
     return (
       <>
         <Navigation />
-        <main className="min-h-screen flex items-center justify-center">
-          <p>Events page configuration not found</p>
+        <main className="min-h-screen flex items-center justify-center bg-cream">
+          <p className="text-ink-soft">Events page configuration not found</p>
         </main>
       </>
     );
   }
+
   return (
-    <div className="min-h-screen bg-gradient-hero animate-gradient-x">
+    <>
       <Navigation />
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 text-center">
-        <div className="max-w-6xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6 text-burnt-sienna"
+      <main className="bg-cream">
+        {/* Hero Section with Parallax */}
+        <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden flex items-center justify-center">
+          <motion.div
+            className="absolute inset-0 z-0"
+            style={{ y: backgroundY }}
           >
-            {events.title}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-desert-night max-w-4xl mx-auto leading-relaxed"
+            <Image
+              src="/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg"
+              alt="Camp Alborz Events"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
+          </motion.div>
+
+          <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+
+          <motion.div
+            className="relative z-10 section-contained text-center py-24"
+            style={{ y: textY, opacity }}
           >
-            {events.subtitle}
-          </motion.p>
-        </div>
-      </section>
+            <motion.p
+              className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              GATHER WITH US
+            </motion.p>
+            <motion.h1
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.9 }}
+            >
+              {events.title}
+            </motion.h1>
+            <motion.p
+              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              {events.subtitle}
+            </motion.p>
 
-      {/* Main Content */}
-      <div className="bg-white pt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{/* Rest of content goes here */}
+            <motion.div
+              className="ornate-divider mt-8"
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              style={{ filter: 'brightness(1.5)' }}
+            />
+          </motion.div>
 
-        {/* Event Types Overview */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-20"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-4">Event Categories</h2>
-            <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ChevronDown className="w-8 h-8 text-white/60" />
+          </motion.div>
+        </section>
+
+        {/* Event Types */}
+        <section className="section-base section-contained">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center space-y-4 mb-14"
+          >
+            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+              WHAT WE DO
+            </p>
+            <h2 className="text-display-thin text-3xl md:text-4xl">
+              Event Categories
+            </h2>
+            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
               Discover the diverse range of experiences we offer year-round
             </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {events.eventTypes.map((type, index) => {
               const TypeIcon = getIcon(type.icon);
+
               return (
                 <motion.div
                   key={type.name}
                   initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                  whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
-                  className="h-full border-2 border-neutral-100 hover:border-primary/30 hover:shadow-2xl transition-all duration-300 bg-white backdrop-blur-sm rounded-lg p-6"
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="luxury-card text-center"
                 >
-                  <div className="mb-4">
-                    <div className="flex items-center">
-                      <motion.div
-                        className={`p-3 rounded-xl ${type.color} mr-4`}
-                        whileHover={{ rotate: 5, scale: 1.1 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <TypeIcon className="h-7 w-7" />
-                      </motion.div>
-                      <div>
-                        <h3 className="text-xl font-bold text-midnight">{type.name}</h3>
-                        <div className="text-sm text-primary font-medium">{type.count} events yearly</div>
-                      </div>
-                    </div>
+                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
+                    <TypeIcon className="h-7 w-7 text-gold-500" />
                   </div>
-                  <div>
-                    <p className="text-neutral-600">{type.description}</p>
-                  </div>
+                  <h3 className="text-display-thin text-lg mb-2">{type.name}</h3>
+                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-3">
+                    {type.count} events yearly
+                  </p>
+                  <p className="text-body-relaxed text-sm text-ink-soft">
+                    {type.description}
+                  </p>
                 </motion.div>
               );
             })}
           </div>
-        </motion.div>
+        </section>
 
         {/* Upcoming Events */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-secondary-900 mb-4">
-              Upcoming Events
-            </h2>
-            <p className="text-lg text-secondary-600">
-              Mark your calendars for these exciting upcoming activities
-            </p>
-          </div>
+        <section className="section-contrast">
+          <div className="section-contained">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center space-y-4 mb-14"
+            >
+              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
+                MARK YOUR CALENDAR
+              </p>
+              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+                Upcoming Events
+              </h2>
+              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
+                Join us for these exciting upcoming gatherings
+              </p>
+            </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {events.upcomingEvents.map((event, idx) => {
-              const EventIcon = getIcon(event.icon);
-              const hasProgress = typeof event.attendees === "number" && typeof event.maxAttendees === "number" && event.maxAttendees > 0;
-              const progress = hasProgress ? Math.min(100, (event.attendees! / event.maxAttendees!) * 100) : null;
-              const isExternalLink = event.linkUrl?.startsWith("http");
-              return (
-                <motion.div
-                  key={event.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  whileHover={{ y: -6, scale: 1.01 }}
-                  className="h-full border border-neutral-200 hover:border-primary/40 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-neutral-50 rounded-lg p-6"
-                >
-                  <div className="mb-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start">
-                        <motion.div
-                          className={`p-2 rounded-lg ${event.color} mr-3 flex-shrink-0`}
-                          whileHover={{ rotate: 10, scale: 1.15 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          <EventIcon className="h-5 w-5" />
-                        </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {events.upcomingEvents.map((event, index) => {
+                const EventIcon = getIcon(event.icon);
+                const isExternalLink = event.linkUrl?.startsWith('http');
+
+                return (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
+                  >
+                    <div className="flex items-start gap-5">
+                      <div className="flex-shrink-0 p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
+                        <EventIcon className="h-6 w-6 text-gold-400" />
+                      </div>
+                      <div className="flex-1 space-y-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-midnight mb-2">{event.title}</h3>
-                          <span className="inline-block px-2 py-1 bg-secondary-100 text-secondary-700 rounded text-xs font-medium">
+                          <span className="text-xs text-gold-400 tracking-[0.2em] uppercase">
                             {event.type}
                           </span>
+                          <h3 className="text-display-thin text-xl text-tan-light mt-1">
+                            {event.title}
+                          </h3>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center text-secondary-600">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{event.date}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <Clock className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{event.time}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{event.location}</span>
-                      </div>
-                      <div className="flex items-center text-secondary-600">
-                        <Users className="h-4 w-4 mr-2" />
-                        <span className="text-sm">{event.attendees}/{event.maxAttendees} attending</span>
-                      </div>
-                    </div>
 
-                    <p className="text-secondary-700 mb-4">{event.description}</p>
+                        <div className="space-y-2 text-sm text-tan-light/70">
+                          <div className="flex items-center gap-3">
+                            <Calendar className="h-4 w-4 text-gold-500/70" />
+                            <span>{event.date}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Clock className="h-4 w-4 text-gold-500/70" />
+                            <span>{event.time}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <MapPin className="h-4 w-4 text-gold-500/70" />
+                            <span>{event.location}</span>
+                          </div>
+                        </div>
 
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      {progress !== null ? (
-                        <div className="flex-1 bg-secondary-200 rounded-full h-2">
-                          <div className="bg-primary-600 h-2 rounded-full" style={{ width: `${progress}%` }} />
-                        </div>
-                      ) : (
-                        <div className="text-xs uppercase tracking-[0.3em] text-secondary-500">
-                          Limited Capacity
-                        </div>
-                      )}
-                      {event.linkUrl ? (
-                        <Link
-                          href={event.linkUrl}
-                          target={isExternalLink ? "_blank" : undefined}
-                          rel={isExternalLink ? "noreferrer" : undefined}
-                          className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors text-center"
-                        >
-                          {event.linkText || "View Details"}
-                        </Link>
-                      ) : (
-                        <button className="px-4 py-2 text-sm border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors">
-                          RSVP
-                        </button>
-                      )}
+                        <p className="text-body-relaxed text-sm text-tan-light/80">
+                          {event.description}
+                        </p>
+
+                        {event.linkUrl && (
+                          <Link
+                            href={event.linkUrl}
+                            target={isExternalLink ? '_blank' : undefined}
+                            rel={isExternalLink ? 'noreferrer' : undefined}
+                            className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors"
+                          >
+                            {event.linkText || 'View Details'}
+                            <ExternalLink className="h-4 w-4" />
+                          </Link>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Burning Man Schedule */}
         {events.burningManSchedule && events.burningManSchedule.length > 0 && (
-          <div className="mb-16 border border-neutral-200 rounded-lg bg-white p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-midnight mb-2">Burning Man 2024 Camp Schedule</h2>
-              <p className="text-secondary-600">
-                Daily activities and workshops during our time on the playa
-              </p>
-            </div>
-            <div>
-              <div className="space-y-8">
-                {events.burningManSchedule.map((day) => (
-                  <div key={day.day}>
-                    <h3 className="text-xl font-semibold text-secondary-900 mb-4 border-l-4 border-primary-600 pl-4">
+          <section className="section-base">
+            <div className="section-contained">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center space-y-4 mb-14"
+              >
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                  ON THE PLAYA
+                </p>
+                <h2 className="text-display-thin text-3xl md:text-4xl">
+                  Burning Man Schedule
+                </h2>
+                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                  Daily activities and workshops during our time at Black Rock City
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {events.burningManSchedule.map((day, dayIndex) => (
+                  <motion.div
+                    key={day.day}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: dayIndex * 0.15 }}
+                    className="luxury-card"
+                  >
+                    <h3 className="text-display-thin text-xl mb-6 pb-4 border-b border-line/30">
                       {day.day}
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {day.events.map((event, index) => (
-                        <div key={index} className="border-l-2 border-secondary-200 pl-4">
-                          <div className="flex items-center mb-2">
-                            <Clock className="h-4 w-4 text-primary-600 mr-2" />
-                            <span className="text-sm font-medium text-primary-600">{event.time}</span>
+                    <div className="space-y-6">
+                      {day.events.map((scheduleEvent, eventIndex) => (
+                        <div key={eventIndex} className="flex gap-4">
+                          <div className="flex-shrink-0 w-16 text-xs text-gold-600 tracking-[0.1em] uppercase font-medium">
+                            {scheduleEvent.time}
                           </div>
-                          <h4 className="font-semibold text-secondary-900 mb-1">{event.title}</h4>
-                          <p className="text-sm text-secondary-600">{event.description}</p>
+                          <div>
+                            <h4 className="font-display text-sm text-ink mb-1">
+                              {scheduleEvent.title}
+                            </h4>
+                            <p className="text-body-relaxed text-xs text-ink-soft">
+                              {scheduleEvent.description}
+                            </p>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
-          </div>
+          </section>
         )}
 
         {/* Event Guidelines */}
         {events.guidelines && (
-          <div className="mb-16 border border-neutral-200 rounded-lg bg-white p-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-midnight">Event Guidelines</h2>
-            </div>
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold text-secondary-900 mb-3">Before Attending</h4>
-                  <ul className="space-y-2 text-secondary-700">
-                    {events.guidelines.beforeAttending.map((item, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-primary-600 mr-2">•</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+          <section className="section-alt">
+            <div className="section-contained">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="frame-panel"
+              >
+                <div className="text-center space-y-4 mb-10">
+                  <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                    GOOD TO KNOW
+                  </p>
+                  <h2 className="text-display-thin text-2xl md:text-3xl">
+                    Event Guidelines
+                  </h2>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-secondary-900 mb-3">Community Values</h4>
-                  <ul className="space-y-2 text-secondary-700">
-                    {events.guidelines.communityValues.map((item, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-primary-600 mr-2">•</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div>
+                    <h3 className="text-display-thin text-lg mb-5">Before Attending</h3>
+                    <ul className="space-y-3">
+                      {events.guidelines.beforeAttending.map((item, index) => (
+                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm text-ink-soft">
+                          <span className="text-gold-500 mt-1">◆</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="text-display-thin text-lg mb-5">Community Values</h3>
+                    <ul className="space-y-3">
+                      {events.guidelines.communityValues.map((item, index) => (
+                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm text-ink-soft">
+                          <span className="text-gold-500 mt-1">◆</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Call to Action */}
+        {/* CTA Section */}
         {events.cta && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-center bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-midnight mb-6">
-              {events.cta.title}
-            </h2>
-            <p className="text-lg text-neutral-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              {events.cta.description}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href={events.cta.buttons.primary.link}
-                  className="inline-block px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-primary to-secondary rounded-lg hover:shadow-lg transition-shadow"
-                >
-                  {events.cta.buttons.primary.text}
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href={events.cta.buttons.secondary.link}
-                  className="inline-block px-8 py-4 text-lg font-semibold border-2 border-primary text-primary rounded-lg hover:bg-purple-700 hover:text-white transition-colors"
-                >
-                  {events.cta.buttons.secondary.text}
-                </Link>
+          <section className="section-base">
+            <div className="section-contained">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="frame-panel text-center space-y-8"
+              >
+                <h2 className="text-display-thin text-2xl md:text-3xl">
+                  {events.cta.title}
+                </h2>
+                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                  {events.cta.description}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link href={events.cta.buttons.primary.link} className="cta-primary">
+                    {events.cta.buttons.primary.text}
+                    <ArrowRight size={18} />
+                  </Link>
+                  <Link href={events.cta.buttons.secondary.link} className="cta-secondary">
+                    {events.cta.buttons.secondary.text}
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
               </motion.div>
             </div>
-          </motion.div>
+          </section>
         )}
-        </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }
