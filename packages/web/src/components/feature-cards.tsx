@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useContentConfig, useCampConfig } from '../hooks/useConfig';
 import { getIcon } from '../lib/icons';
-import { LuxuryCard } from './home/LuxuryCard';
 
 export function FeatureCards() {
   const { features } = useContentConfig();
@@ -26,30 +27,67 @@ export function FeatureCards() {
           Discover {campConfig.name}
         </h2>
         <p className="text-body-relaxed text-base md:text-lg text-ink-soft mx-auto max-w-2xl">
-          Explore the pillars of hospitality, art, and culture that define our oasis on
-          playa.
+          Explore the pillars of hospitality, art, and culture that define our community.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => {
           const Icon = getIcon(feature.icon);
-          const accent = index % 2 === 0 ? 'gold' : 'sage';
+          const isExternal = feature.link?.startsWith('http');
+
+          const CardContent = (
+            <motion.article
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              className="group relative overflow-hidden rounded-2xl bg-white border border-line/40 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              {/* Image */}
+              {feature.image && (
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                  {/* Icon Badge */}
+                  <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-gold/30 shadow-lg">
+                    <Icon className="h-5 w-5 text-gold" />
+                  </div>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="text-display-thin text-xl text-ink mb-2">{feature.title}</h3>
+                <p className="text-body-relaxed text-sm text-ink-soft mb-4">{feature.description}</p>
+
+                <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-gold group-hover:gap-3 transition-all duration-300">
+                  {isExternal ? 'Listen' : 'Learn More'}
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            </motion.article>
+          );
+
+          if (isExternal) {
+            return (
+              <a key={feature.title} href={feature.link} target="_blank" rel="noopener noreferrer" className="block">
+                {CardContent}
+              </a>
+            );
+          }
 
           return (
-            <LuxuryCard
-              key={feature.title}
-              title={feature.title}
-              description={feature.description}
-              icon={<Icon className="h-6 w-6 text-ink" />}
-              accent={accent}
-              href={feature.link}
-            >
-              <div className="mt-4 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.3em] uppercase text-ink-soft">
-                Learn More
-                <ArrowRight size={16} />
-              </div>
-            </LuxuryCard>
+            <Link key={feature.title} href={feature.link || '#'} className="block">
+              {CardContent}
+            </Link>
           );
         })}
       </div>

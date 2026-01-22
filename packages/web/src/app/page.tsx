@@ -30,7 +30,7 @@ const campQAs = [
             <strong>Hookah Lounge:</strong> Relaxing smoke sessions under shade structures
           </li>
           <li>
-            <strong>Art Cars:</strong> HOMA (2024) and DAMAVAND (redesigned for 2025)
+            <strong>Art Cars:</strong> HOMA and DAMAVAND mobile sound stages
           </li>
           <li>
             <strong>Cultural Workshops:</strong> Calligraphy, poetry, music, and more
@@ -170,9 +170,9 @@ export default function HomePage() {
         <FeatureCards />
 
         <FramedCTA
-          kicker="JOIN THE FAMILY"
-          heading="Come for the tea, stay for the magic."
-          description="Whether you're Persian, Persia-curious, or simply seeking connection, Camp Alborz welcomes you."
+          kicker="JOIN THE COMMUNITY"
+          heading="Come for the tea, stay for the community."
+          description="Whether you're Persian or simply curious about the culture, Camp Alborz welcomes you."
           primary={{ label: 'Apply to Join', href: '/apply', variant: 'primary' }}
           secondary={{ label: 'Support Our Mission', href: '/donate', variant: 'secondary' }}
         />
