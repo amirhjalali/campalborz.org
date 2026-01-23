@@ -39,6 +39,27 @@ interface AuthProviderProps {
 // Helper to generate mock tokens
 const generateMockToken = () => `demo_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
 
+// Default admin account for demo mode
+const DEMO_ADMIN: User = {
+  id: 'admin_001',
+  email: 'admin@campalborz.org',
+  name: 'Camp Admin',
+  role: 'ADMIN',
+  emailVerified: true,
+};
+const DEMO_ADMIN_PASSWORD = 'admin123';
+
+function seedDemoAdmin() {
+  const storedUsers: User[] = JSON.parse(localStorage.getItem('demo_users') || '[]');
+  if (!storedUsers.find((u) => u.email === DEMO_ADMIN.email)) {
+    storedUsers.push(DEMO_ADMIN);
+    localStorage.setItem('demo_users', JSON.stringify(storedUsers));
+    const passwords = JSON.parse(localStorage.getItem('demo_passwords') || '{}');
+    passwords[DEMO_ADMIN.email] = DEMO_ADMIN_PASSWORD;
+    localStorage.setItem('demo_passwords', JSON.stringify(passwords));
+  }
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -49,6 +70,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Check for existing session on mount
   useEffect(() => {
+    if (DEMO_MODE) seedDemoAdmin();
+
     const checkAuth = async () => {
       const token = localStorage.getItem('accessToken');
       const userData = localStorage.getItem('user');

@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { Navigation } from '../components/navigation';
 import { Stats } from '../components/stats';
@@ -55,7 +57,7 @@ export default function HomePage() {
 
         <section className="section-base section-contained">
           <div className="frame-panel text-center space-y-6">
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               MISSION STATEMENT
             </p>
             <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -74,7 +76,7 @@ export default function HomePage() {
           <section className="section-contrast">
             <div className="section-contained">
               <div className="frame-panel bg-white/5 border border-white/10 text-center space-y-6">
-                <p className="text-ink-soft/60 tracking-[0.4em] text-xs font-semibold">
+                <p className="text-ink-soft/70 tracking-[0.4em] text-xs font-semibold">
                   RUMI • COLEMAN BARKS
                 </p>
                 <p className="text-display-thin text-2xl md:text-3xl italic text-tan-light">
@@ -101,11 +103,11 @@ export default function HomePage() {
                 />
               </div>
               <div className="space-y-4">
-                <p className="text-display-wide text-xs tracking-[0.4em] text-ink-soft/70">
+                <p className="text-display-wide text-xs tracking-[0.4em] text-ink-soft/80">
                   FILM SPOTLIGHT
                 </p>
                 <h2 className="text-display-thin text-3xl md:text-4xl">{home.mediaSpotlight.title}</h2>
-                <p className="text-body-relaxed text-base md:text-lg text-ink-soft/80">
+                <p className="text-body-relaxed text-base md:text-lg text-ink-soft/90">
                   {home.mediaSpotlight.description}
                 </p>
                 {home.mediaSpotlight.cta && (
@@ -146,10 +148,10 @@ export default function HomePage() {
           <section className="section-base">
             <div className="section-contained space-y-6">
               <div className="text-center space-y-2">
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/60">
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
                   {home.gallery.title.toUpperCase()}
                 </p>
-                <p className="text-body-relaxed text-base md:text-lg text-ink-soft/80">{home.gallery.description}</p>
+                <p className="text-body-relaxed text-base md:text-lg text-ink-soft/90">{home.gallery.description}</p>
               </div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {home.gallery.images.map((image) => (
@@ -157,7 +159,7 @@ export default function HomePage() {
                     <div className="relative h-64 w-full">
                       <Image src={image.src} alt={image.caption} fill className="object-cover" sizes="(min-width: 1024px) 33vw, 100vw" />
                     </div>
-                    <figcaption className="p-4 text-sm text-ink-soft/80">
+                    <figcaption className="p-4 text-sm text-ink-soft/90">
                       {image.caption}
                     </figcaption>
                   </figure>

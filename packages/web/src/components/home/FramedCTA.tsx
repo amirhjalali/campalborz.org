@@ -49,7 +49,7 @@ export function FramedCTA({
     <section className="section-base section-contained">
       <div className="frame-panel space-y-8 text-center">
         {kicker && (
-          <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+          <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
             {kicker}
           </p>
         )}

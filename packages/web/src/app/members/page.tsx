@@ -70,7 +70,7 @@ export default function MembersPage() {
           <section className="relative pt-32 pb-16 overflow-hidden">
             <div className="pattern-persian opacity-20 absolute inset-0" />
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="relative section-contained"
@@ -103,8 +103,8 @@ export default function MembersPage() {
               <section className="py-16">
                 <div className="section-contained">
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 14 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                     className="text-center mb-10"
@@ -120,8 +120,8 @@ export default function MembersPage() {
                     {portalInfo.highlights.map((item, index) => (
                       <motion.div
                         key={item.title}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ y: 14 }}
+                        whileInView={{ y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="luxury-card p-6"
@@ -205,8 +205,8 @@ export default function MembersPage() {
                         return (
                           <motion.div
                             key={option.method}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={{ y: 14 }}
+                            whileInView={{ y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             className="luxury-card p-6"
@@ -311,7 +311,7 @@ export default function MembersPage() {
         <section className="relative pt-32 pb-16 overflow-hidden">
           <div className="pattern-persian opacity-20 absolute inset-0" />
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="relative section-contained text-center"
@@ -332,8 +332,8 @@ export default function MembersPage() {
         <section className="py-16">
           <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="luxury-card p-8"
@@ -455,8 +455,8 @@ export default function MembersPage() {
         <section className="py-16 section-alt">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
@@ -478,8 +478,8 @@ export default function MembersPage() {
                 return (
                   <motion.div
                     key={benefit.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 14 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="luxury-card p-6 group"
@@ -504,8 +504,8 @@ export default function MembersPage() {
         <section className="py-16">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
@@ -525,8 +525,8 @@ export default function MembersPage() {
               {members.spotlight.members.map((member, index) => (
                 <motion.div
                   key={member.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 14 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="text-center"
@@ -559,8 +559,8 @@ export default function MembersPage() {
                 return (
                   <motion.div
                     key={stat.label}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ scale: 0.95 }}
+                    whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                   >
@@ -582,8 +582,8 @@ export default function MembersPage() {
         {members.cta && (
           <section className="py-16">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="section-contained text-center"

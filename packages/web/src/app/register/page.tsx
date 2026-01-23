@@ -111,7 +111,7 @@ export default function RegisterPage() {
         <section className="relative pt-32 pb-16 overflow-hidden">
           <div className="pattern-persian opacity-20 absolute inset-0" />
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="relative section-contained text-center"
@@ -132,8 +132,8 @@ export default function RegisterPage() {
         <section className="py-16">
           <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="luxury-card p-8"

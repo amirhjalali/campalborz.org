@@ -53,8 +53,8 @@ export function Stats() {
     <section className="section-alt">
       <div className="section-contained space-y-14">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          whileInView={{ y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center space-y-4"
@@ -75,8 +75,8 @@ export function Stats() {
             return (
               <motion.article
                 key={stat.label}
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ y: 20, scale: 0.97 }}
+                whileInView={{ y: 0, scale: 1 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6, delay: index * 0.08 }}
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
@@ -99,7 +99,7 @@ export function Stats() {
                 </h3>
 
                 {stat.description && (
-                  <p className="mt-3 text-body-relaxed text-sm text-ink-soft/80">
+                  <p className="mt-3 text-body-relaxed text-sm text-ink-soft/90">
                     {stat.description}
                   </p>
                 )}
@@ -108,17 +108,11 @@ export function Stats() {
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
-        >
+        <div className="text-center">
           <a href="/donate" className="cta-primary inline-flex">
             Support Our Mission
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

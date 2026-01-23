@@ -38,7 +38,7 @@ export default function ArtPage() {
       <Navigation />
       <main className="bg-cream">
         {/* Hero Section with Parallax */}
-        <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden flex items-center justify-center">
+        <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
           <motion.div
             className="absolute inset-0 z-0"
             style={{ y: backgroundY }}
@@ -62,7 +62,7 @@ export default function ArtPage() {
           >
             <motion.p
               className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
@@ -70,7 +70,7 @@ export default function ArtPage() {
             </motion.p>
             <motion.h1
               className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.9 }}
             >
@@ -78,7 +78,7 @@ export default function ArtPage() {
             </motion.h1>
             <motion.p
               className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
@@ -87,7 +87,7 @@ export default function ArtPage() {
 
             <motion.div
               className="ornate-divider mt-8"
-              initial={{ scaleX: 0, opacity: 0 }}
+              initial={{ scaleX: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
               style={{ filter: 'brightness(1.5)' }}
@@ -106,13 +106,13 @@ export default function ArtPage() {
         {/* Art Categories */}
         <section className="section-base section-contained">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            whileInView={{ y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-center space-y-4 mb-14"
           >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               OUR WORK
             </p>
             <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -127,8 +127,8 @@ export default function ArtPage() {
               return (
                 <motion.div
                   key={category.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 20 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card text-center"
@@ -153,8 +153,8 @@ export default function ArtPage() {
         <section className="section-contrast">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center space-y-4 mb-14"
@@ -177,8 +177,8 @@ export default function ArtPage() {
                 return (
                   <motion.div
                     key={installation.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 20 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
@@ -262,13 +262,13 @@ export default function ArtPage() {
           <section className="section-base">
             <div className="section-contained">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 20 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="text-center space-y-4 mb-14"
               >
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                   COMMUNITY PARTNERSHIPS
                 </p>
                 <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -283,8 +283,8 @@ export default function ArtPage() {
                 {art.collaborations.map((collab, index) => (
                   <motion.div
                     key={collab.title}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 20 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="luxury-card"
@@ -323,13 +323,13 @@ export default function ArtPage() {
         <section className="section-alt">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center space-y-4 mb-14"
             >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                 FROM CONCEPT TO PLAYA
               </p>
               <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -351,8 +351,8 @@ export default function ArtPage() {
               ].map((phase, index) => (
                 <motion.div
                   key={phase.phase}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 20 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card"
@@ -382,8 +382,8 @@ export default function ArtPage() {
         <section className="section-base">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="frame-panel text-center space-y-8"

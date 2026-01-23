@@ -44,7 +44,7 @@ export function LuxuryCard({
 
       <div className="relative flex flex-col gap-4">
         {eyebrow && (
-          <p className="text-xs tracking-[0.4em] text-ink-soft/70 uppercase">
+          <p className="text-xs tracking-[0.4em] text-ink-soft/80 uppercase">
             {eyebrow}
           </p>
         )}

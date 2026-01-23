@@ -14,7 +14,7 @@ export default function HomaPage() {
         {/* Hero Section */}
         <section className="relative pt-32 pb-16 overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -39,8 +39,8 @@ export default function HomaPage() {
         <section className="py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="bg-white dark:bg-midnight rounded-2xl p-8 shadow-lg"
@@ -94,8 +94,8 @@ export default function HomaPage() {
               ].map((src, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  initial={{ scale: 0.95 }}
+                  whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="relative aspect-square rounded-lg overflow-hidden shadow-lg"

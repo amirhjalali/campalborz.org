@@ -246,7 +246,7 @@ export function Navigation() {
               ))}
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: navItems.length * 0.08 + 0.2 }}
                 className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light"

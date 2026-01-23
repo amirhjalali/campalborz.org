@@ -14,8 +14,8 @@ export function FeatureCards() {
   return (
     <section className="section-base section-contained">
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ y: 16 }}
+        whileInView={{ y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         className="text-center space-y-4 mb-14"
@@ -38,8 +38,8 @@ export function FeatureCards() {
 
           const CardContent = (
             <motion.article
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.3 } }}

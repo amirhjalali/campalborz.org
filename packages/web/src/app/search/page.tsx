@@ -30,7 +30,7 @@ export default function SearchPage() {
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
@@ -60,8 +60,8 @@ export default function SearchPage() {
         <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="mb-12"
@@ -79,8 +79,8 @@ export default function SearchPage() {
                   return (
                     <motion.div
                       key={category.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={{ y: 14 }}
+                      whileInView={{ y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.6, delay: index * 0.1 }}
                       onClick={() => setSearchType(category.id)}
@@ -114,7 +114,7 @@ export default function SearchPage() {
             {/* Search Results */}
             {searchQuery && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className="mb-12"
@@ -126,7 +126,7 @@ export default function SearchPage() {
                   {search.results.mockResults.map((result, index) => (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ x: -14 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: index * 0.1 }}
                       className="bg-white dark:bg-midnight-light rounded-lg p-6 shadow-lg hover:shadow-xl transition-all duration-300"
@@ -153,8 +153,8 @@ export default function SearchPage() {
 
             {/* Popular Searches */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="bg-white dark:bg-midnight-light rounded-2xl p-8 shadow-lg"

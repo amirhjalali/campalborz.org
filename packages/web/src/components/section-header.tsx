@@ -60,8 +60,8 @@ export default function SectionHeader({
       {decorated && <DecorativeDivider variant="ornate" color={dividerColor} />}
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ y: 14 }}
+        whileInView={{ y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
         className={`

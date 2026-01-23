@@ -173,6 +173,10 @@ module.exports = {
           '50%': { opacity: '1' },
         },
       },
+      minHeight: {
+        'hero': '100vh',
+        'hero-sm': '70vh',
+      },
       boxShadow: {
         'luxury': '0 20px 40px rgba(196, 165, 123, 0.2)',
         'luxury-hover': '0 25px 50px rgba(196, 165, 123, 0.3)',

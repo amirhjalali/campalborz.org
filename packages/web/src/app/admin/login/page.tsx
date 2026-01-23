@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { toast } from 'sonner';
-import { useAuthStore } from '@/stores/auth';
+import { useAuth } from '../../../contexts/AuthContext';
 import {
   Shield,
   Mail,
@@ -14,67 +13,40 @@ import {
   EyeOff,
   Loader2,
   ArrowRight,
+  AlertCircle,
 } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { login, error, clearError, isLoading: authLoading } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearError();
 
-    // Validate
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitting(true);
 
     try {
-      // In production, call authentication API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Mock authentication
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, rememberMe }),
-      }).catch(() => ({
-        ok: true,
-        json: () => Promise.resolve({
-          user: { id: '1', name: 'Admin User', email },
-          token: 'mock_token_' + Date.now(),
-        }),
-      }));
-
-      if (response.ok) {
-        const data = await response.json();
-        login(data.user, data.token);
-
-        toast.success('Login successful!');
-        router.push('/admin');
-      } else {
-        toast.error('Invalid email or password');
-      }
-    } catch (error) {
-      toast.error('Login failed', {
-        description: 'Please try again later.',
-      });
+      await login(email, password);
+      router.push('/admin');
+    } catch {
+      // Error handled by AuthContext
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -83,7 +55,7 @@ export default function AdminLoginPage() {
       <div className="absolute inset-0 pattern-persian opacity-10" />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="relative w-full max-w-md"
@@ -112,6 +84,19 @@ export default function AdminLoginPage() {
             Welcome Back
           </h2>
 
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
+            >
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            </motion.div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
@@ -128,7 +113,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                   className="form-input pl-12"
                   placeholder="admin@campalborz.org"
                 />
@@ -137,17 +122,9 @@ export default function AdminLoginPage() {
 
             {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="password" className="form-label mb-0">
-                  Password
-                </label>
-                <Link
-                  href="/admin/forgot-password"
-                  className="text-sm text-gold hover:text-gold/80 transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-ink-soft/50" />
@@ -158,7 +135,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                   className="form-input pl-12 pr-12"
                   placeholder="Enter your password"
                 />
@@ -178,30 +155,15 @@ export default function AdminLoginPage() {
               </div>
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                disabled={isLoading}
-                className="h-4 w-4 text-gold border-line/40 rounded focus:ring-gold"
-              />
-              <label htmlFor="rememberMe" className="ml-2 text-sm text-ink-soft">
-                Remember me for 30 days
-              </label>
-            </div>
-
             {/* Submit Button */}
             <motion.button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting || authLoading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   Signing in...
@@ -215,13 +177,16 @@ export default function AdminLoginPage() {
             </motion.button>
           </form>
 
-          {/* Demo Notice */}
+          {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-gold/5 border border-gold/20 rounded-xl">
             <p className="text-sm text-ink font-medium mb-1">
-              Demo Mode
+              Demo Credentials
             </p>
             <p className="text-xs text-ink-soft">
-              This is a demo login. In production, this would connect to your authentication system.
+              Email: <span className="font-mono text-gold">admin@campalborz.org</span>
+            </p>
+            <p className="text-xs text-ink-soft">
+              Password: <span className="font-mono text-gold">admin123</span>
             </p>
           </div>
         </div>
@@ -238,7 +203,7 @@ export default function AdminLoginPage() {
 
         {/* Security Notice */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-ink-soft/60 flex items-center justify-center gap-1">
+          <p className="text-xs text-ink-soft/70 flex items-center justify-center gap-1">
             <Lock className="h-3 w-3" />
             Secured with SSL encryption
           </p>

@@ -38,7 +38,7 @@ export default function CulturePage() {
       <Navigation />
       <main className="bg-cream">
         {/* Hero Section with Parallax */}
-        <section ref={heroRef} className="relative min-h-[70vh] overflow-hidden flex items-center justify-center">
+        <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
           <motion.div
             className="absolute inset-0 z-0"
             style={{ y: backgroundY }}
@@ -62,7 +62,7 @@ export default function CulturePage() {
           >
             <motion.p
               className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
@@ -70,7 +70,7 @@ export default function CulturePage() {
             </motion.p>
             <motion.h1
               className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.9 }}
             >
@@ -78,7 +78,7 @@ export default function CulturePage() {
             </motion.h1>
             <motion.p
               className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
@@ -87,7 +87,7 @@ export default function CulturePage() {
 
             <motion.div
               className="ornate-divider mt-8"
-              initial={{ scaleX: 0, opacity: 0 }}
+              initial={{ scaleX: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8 }}
               style={{ filter: 'brightness(1.5)' }}
@@ -106,13 +106,13 @@ export default function CulturePage() {
         {/* Cultural Elements */}
         <section className="section-base section-contained">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            whileInView={{ y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-center space-y-4 mb-14"
           >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               PILLARS OF OUR CAMP
             </p>
             <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -130,8 +130,8 @@ export default function CulturePage() {
               return (
                 <motion.div
                   key={element.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 20 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card"
@@ -161,8 +161,8 @@ export default function CulturePage() {
         <section className="section-contrast">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center space-y-4 mb-14"
@@ -185,8 +185,8 @@ export default function CulturePage() {
                 return (
                   <motion.div
                     key={value.title}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 20 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
@@ -218,13 +218,13 @@ export default function CulturePage() {
         <section className="section-base">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center space-y-4 mb-14"
             >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                 HANDS-ON LEARNING
               </p>
               <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -239,8 +239,8 @@ export default function CulturePage() {
               {culture.workshops.map((workshop, index) => (
                 <motion.div
                   key={workshop.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 20 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card"
@@ -258,17 +258,17 @@ export default function CulturePage() {
 
                   <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
                     <div>
-                      <span className="text-xs text-ink-soft/70 uppercase tracking-[0.1em]">Level</span>
+                      <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Level</span>
                       <p className="text-ink">{workshop.level}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-ink-soft/70 uppercase tracking-[0.1em]">Duration</span>
+                      <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Duration</span>
                       <p className="text-ink">{workshop.duration}</p>
                     </div>
                   </div>
 
                   <div className="mb-6">
-                    <span className="text-xs text-ink-soft/70 uppercase tracking-[0.1em]">Materials</span>
+                    <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Materials</span>
                     <p className="text-sm text-ink">{workshop.materials}</p>
                   </div>
 
@@ -289,13 +289,13 @@ export default function CulturePage() {
         <section className="section-alt">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="text-center space-y-4 mb-14"
             >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                 FESTIVALS & HOLIDAYS
               </p>
               <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -310,8 +310,8 @@ export default function CulturePage() {
               {culture.celebrations.map((celebration, index) => (
                 <motion.div
                   key={celebration.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ y: 20 }}
+                  whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="luxury-card"
@@ -334,7 +334,7 @@ export default function CulturePage() {
                   </p>
 
                   <div className="pl-0 md:pl-16">
-                    <p className="text-xs text-ink-soft/70 uppercase tracking-[0.1em] mb-3">Traditions</p>
+                    <p className="text-xs text-ink-soft/80 uppercase tracking-[0.1em] mb-3">Traditions</p>
                     <div className="flex flex-wrap gap-2">
                       {celebration.traditions.map((tradition, idx) => (
                         <span
@@ -356,8 +356,8 @@ export default function CulturePage() {
         <section className="section-base">
           <div className="section-contained">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
               className="frame-panel"
@@ -366,7 +366,7 @@ export default function CulturePage() {
                 <div className="inline-flex p-3 rounded-full bg-gold-500/20 border border-gold-500/30">
                   <BookOpen className="h-6 w-6 text-gold-500" />
                 </div>
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/70">
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                   EDUCATIONAL RESOURCES
                 </p>
                 <h2 className="text-display-thin text-2xl md:text-3xl">
@@ -378,8 +378,8 @@ export default function CulturePage() {
                 {culture.learningResources.map((section, index) => (
                   <motion.div
                     key={section.category}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ y: 14 }}
+                    whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
@@ -406,8 +406,8 @@ export default function CulturePage() {
           <section className="section-contrast">
             <div className="section-contained">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 20 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="text-center space-y-4 mb-14"
@@ -425,8 +425,8 @@ export default function CulturePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ x: -20 }}
+                  whileInView={{ x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
                   className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
@@ -444,8 +444,8 @@ export default function CulturePage() {
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ x: 20 }}
+                  whileInView={{ x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.1 }}
                   className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
@@ -479,8 +479,8 @@ export default function CulturePage() {
           <section className="section-base">
             <div className="section-contained">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 20 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 className="frame-panel text-center space-y-8"
