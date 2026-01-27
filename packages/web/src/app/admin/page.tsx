@@ -159,18 +159,16 @@ export default function AdminPage() {
           </div>
         );
 
-      default:
+      default: {
+        const section = adminSections.find(s => s.id === activeSection);
+        const Icon = section?.icon || Settings;
         return (
           <div className="luxury-card p-8 text-center">
             <div className="inline-flex p-4 rounded-full bg-gold/10 border border-gold/20 mb-4">
-              {(() => {
-                const section = adminSections.find(s => s.id === activeSection);
-                const Icon = section?.icon || Settings;
-                return <Icon className="h-8 w-8 text-gold" />;
-              })()}
+              <Icon className="h-8 w-8 text-gold" />
             </div>
             <h3 className="text-display-thin text-2xl text-ink mb-2">
-              {adminSections.find(s => s.id === activeSection)?.name}
+              {section?.name}
             </h3>
             <p className="text-body-relaxed text-ink-soft mb-6">
               This section is under development and will be available soon.
@@ -180,6 +178,7 @@ export default function AdminPage() {
             </button>
           </div>
         );
+      }
     }
   };
 

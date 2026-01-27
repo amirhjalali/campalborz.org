@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 interface Subsection {
@@ -10,35 +10,13 @@ interface Subsection {
 
 interface QASectionProps {
   question: string;
-  answer: string | React.ReactNode;
+  answer: string | ReactNode;
   subsections?: Subsection[];
   bgColor?: 'sage' | 'tan' | 'cream' | 'transparent';
   highlightQuestion?: boolean;
-  darkMode?: boolean; // For dark sage background
+  darkMode?: boolean;
 }
 
-/**
- * QASection Component
- *
- * Creates Q&A format sections matching the Alborz_Guides_25.pdf style guide.
- *
- * Features:
- * - Italic question styling (Cormorant font)
- * - Regular answer text (Inter font)
- * - Optional subsections with bullet points
- * - Alternating background colors
- * - Elegant typography hierarchy
- *
- * @example
- * <QASection
- *   question="Will there be food all week?"
- *   answer="Camp meals officially kick off on Monday..."
- *   subsections={[
- *     { title: "Breakfast", content: "8-10am daily" },
- *     { title: "Dinner", content: "6-8pm daily" }
- *   ]}
- * />
- */
 export default function QASection({
   question,
   answer,
@@ -54,10 +32,8 @@ export default function QASection({
     transparent: 'bg-transparent',
   };
 
-  // Text colors based on dark mode (for sage green backgrounds)
   const questionColor = darkMode ? 'text-tan-light' : (highlightQuestion ? 'text-sage-dark' : 'text-sage');
   const answerColor = darkMode ? 'text-tan-200' : 'text-sage-dark/80';
-  const borderColor = darkMode ? 'border-gold' : 'border-gold';
 
   return (
     <motion.div
@@ -108,7 +84,7 @@ export default function QASection({
                   {subsection.title}
                 </h4>
               )}
-              <p className={`font-body text-base md:text-lg ${answerColor} leading-relaxed pl-4 border-l-2 ${borderColor}`}>
+              <p className={`font-body text-base md:text-lg ${answerColor} leading-relaxed pl-4 border-l-2 border-gold`}>
                 {subsection.content}
               </p>
             </div>
@@ -119,23 +95,10 @@ export default function QASection({
   );
 }
 
-/**
- * QAList Component
- *
- * Groups multiple Q&A sections with alternating backgrounds.
- *
- * @example
- * <QAList
- *   items={[
- *     { question: "...", answer: "..." },
- *     { question: "...", answer: "..." }
- *   ]}
- * />
- */
 interface QAListProps {
   items: Array<{
     question: string;
-    answer: string | React.ReactNode;
+    answer: string | ReactNode;
     subsections?: Subsection[];
   }>;
   alternateBackgrounds?: boolean;

@@ -87,13 +87,18 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-tan-light/40">
-            &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
-          </p>
-          <p className="text-xs text-tan-light/30">
-            Black Rock City, Nevada
-          </p>
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="flex justify-center mb-6">
+            <span className="simurgh-accent" aria-hidden="true" />
+          </div>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-tan-light/40">
+              &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
+            </p>
+            <p className="text-xs text-tan-light/30">
+              Black Rock City, Nevada
+            </p>
+          </div>
         </div>
       </div>
     </footer>

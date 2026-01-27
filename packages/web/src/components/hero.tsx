@@ -8,17 +8,13 @@ import { useContentConfig } from '../hooks/useConfig';
 export function Hero() {
   const { hero } = useContentConfig();
   const { scrollY } = useScroll();
-
-  // Parallax effects
   const yPattern = useTransform(scrollY, [0, 500], [0, -50]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Light cream/beige background - Style Guide compliant */}
       <div className="absolute inset-0 bg-gradient-to-b from-warm-white via-tan-50 to-tan-100" />
 
-      {/* Subtle Persian geometric pattern overlay - refined elegance */}
+      {/* Persian geometric pattern overlay */}
       <motion.div
         className="absolute inset-0 opacity-10"
         style={{ y: yPattern }}
@@ -32,17 +28,14 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* Subtle gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-tan-200/20" />
-      
-      {/* Content - CENTERED, ELEGANT, LUXURIOUS */}
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Logo/Title - Elegant and refined */}
           <motion.h1
             className="text-5xl md:text-6xl lg:text-7xl font-display font-semibold text-sage-dark tracking-tight leading-tight mb-6"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -52,7 +45,6 @@ export function Hero() {
             {hero.title}
           </motion.h1>
 
-          {/* Tagline with gold decorative lines - Style Guide pattern */}
           <div className="flex items-center justify-center gap-4 mb-8">
             <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent w-24 md:w-32" />
             <motion.p
@@ -67,7 +59,6 @@ export function Hero() {
             <div className="h-px bg-gradient-to-r from-transparent via-gold to-transparent w-24 md:w-32" />
           </div>
 
-          {/* Description - Centered, elegant */}
           <motion.p
             className="text-lg md:text-xl text-sage-dark max-w-3xl mx-auto mb-12 leading-relaxed font-body font-normal"
             initial={{ opacity: 0 }}
@@ -77,7 +68,6 @@ export function Hero() {
             {hero.description}
           </motion.p>
 
-          {/* CTA Buttons - Refined gold and sage */}
           <motion.div
             className="flex flex-col sm:flex-row gap-6 justify-center"
             initial={{ y: 14 }}
@@ -108,7 +98,6 @@ export function Hero() {
           </motion.div>
         </motion.div>
         
-        {/* Scroll indicator - Style Guide colors */}
         <motion.div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           initial={{ opacity: 0 }}

@@ -75,12 +75,12 @@ export function Stats() {
             return (
               <motion.article
                 key={stat.label}
-                initial={{ y: 20, scale: 0.97 }}
-                whileInView={{ y: 0, scale: 1 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: index * 0.08 }}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="luxury-card group cursor-default"
+                initial={{ y: 30, scale: 0.95, opacity: 0 }}
+                whileInView={{ y: 0, scale: 1, opacity: 1 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.7, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -8, rotateX: 2, rotateY: -2, transition: { duration: 0.3 } }}
+                className="luxury-card card-tilt group cursor-default"
               >
                 <div className="flex items-center gap-4">
                   <motion.div

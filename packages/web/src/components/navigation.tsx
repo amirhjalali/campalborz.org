@@ -88,10 +88,10 @@ export function Navigation() {
                 <Link
                   href={item.href}
                   className={cn(
-                    'px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
+                    'nav-link-gold px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
                     isScrolled
-                      ? 'text-sage-dark dark:text-tan-light hover:text-gold hover:bg-gold/10'
-                      : 'text-sage-dark hover:text-gold hover:bg-gold/10'
+                      ? 'text-sage-dark dark:text-tan-light hover:text-gold'
+                      : 'text-sage-dark hover:text-gold'
                   )}
                 >
                   {item.label}
@@ -153,12 +153,7 @@ export function Navigation() {
             {/* Donate button */}
             <Link
               href="/donate"
-              className={cn(
-                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
-                isScrolled
-                  ? 'bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105'
-                  : 'bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105'
-              )}
+              className="hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105"
             >
               Donate
             </Link>

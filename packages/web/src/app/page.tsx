@@ -55,7 +55,12 @@ export default function HomePage() {
         <PageHero />
         <Stats />
 
-        <section className="section-base section-contained">
+        {/* Chapter I Marker */}
+        <div className="chapter-marker">
+          <span>I</span>
+        </div>
+
+        <section className="section-base section-contained vignette">
           <div className="frame-panel text-center space-y-6">
             <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               MISSION STATEMENT
@@ -63,7 +68,7 @@ export default function HomePage() {
             <h2 className="text-display-thin text-3xl md:text-4xl">
               Building Bridges Between Cultures
             </h2>
-            <p className="text-body-relaxed text-base md:text-lg text-ink-soft/90 max-w-3xl mx-auto">
+            <p className="drop-cap text-body-relaxed text-base md:text-lg text-ink-soft/90 max-w-3xl mx-auto text-left">
               Camp Alborz exists to celebrate and share Persian culture within the transformative environment
               of Burning Man. We create immersive experiences that honor our heritage while embracing radical
               inclusion, gifting, and communal effort. Through art, music, food, and hospitality, we build bridges
@@ -75,16 +80,18 @@ export default function HomePage() {
         {home?.rumiQuote && (
           <section className="section-contrast">
             <div className="section-contained">
-              <div className="frame-panel bg-white/5 border border-white/10 text-center space-y-6">
-                <p className="text-ink-soft/70 tracking-[0.4em] text-xs font-semibold">
-                  RUMI • COLEMAN BARKS
-                </p>
-                <p className="text-display-thin text-2xl md:text-3xl italic text-tan-light">
-                  “{home.rumiQuote.text}”
-                </p>
-                <p className="text-body-relaxed text-sm md:text-base text-tan-light/80 max-w-3xl mx-auto">
-                  {home.rumiQuote.context}
-                </p>
+              <div className="frame-panel bg-white/5 border border-white/10 text-center">
+                <div className="blockquote-elegant space-y-6">
+                  <p className="text-tan-light/60 tracking-[0.4em] text-xs font-semibold uppercase">
+                    Rumi • Coleman Barks Translation
+                  </p>
+                  <p className="font-accent text-3xl md:text-4xl lg:text-5xl italic text-tan-light leading-relaxed" style={{ fontFamily: "'Cormorant', serif", fontWeight: 400 }}>
+                    {home.rumiQuote.text}
+                  </p>
+                  <p className="text-body-relaxed text-sm md:text-base text-tan-light/70 max-w-2xl mx-auto">
+                    {home.rumiQuote.context}
+                  </p>
+                </div>
               </div>
             </div>
           </section>
@@ -120,6 +127,11 @@ export default function HomePage() {
           </section>
         )}
 
+        {/* Chapter II Marker */}
+        <div className="chapter-marker">
+          <span>II</span>
+        </div>
+
         <section className="section-contrast">
           <div className="section-contained space-y-10">
             <div className="text-center space-y-4">
@@ -133,8 +145,11 @@ export default function HomePage() {
 
             <div className="grid gap-8 md:grid-cols-2">
               {campQAs.map(({ question, answer }) => (
-                <div key={question} className="border border-white/10 rounded-2xl p-6 bg-white/5 backdrop-blur-sm">
-                  <p className="font-accent text-xl text-tan-light italic">{question}</p>
+                <div key={question} className="border border-white/10 rounded-2xl p-6 bg-white/5 backdrop-blur-sm vignette">
+                  <h3 className="font-accent text-2xl md:text-[1.65rem] text-tan-light italic leading-snug" style={{ fontFamily: "'Cormorant', serif", fontWeight: 500 }}>
+                    {question}
+                  </h3>
+                  <div className="ornate-divider !w-[60px] !my-4" style={{ opacity: 0.4 }} />
                   <div className="mt-4 text-body-relaxed text-sm text-tan-light/85 space-y-3 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:text-sm">
                     {answer}
                   </div>

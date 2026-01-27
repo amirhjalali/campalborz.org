@@ -26,24 +26,17 @@ export function FramedCTA({
   primary,
   secondary,
 }: FramedCTAProps) {
-  const renderButton = (button: CTAButton, index: number) => {
-    const content = (
-      <>
-        {button.icon}
-        {button.label}
-        {button.variant === 'primary' && <ArrowRight size={18} />}
-      </>
-    );
-
-    const className =
-      button.variant === 'secondary' ? 'cta-secondary' : 'cta-primary';
+  function renderButton(button: CTAButton) {
+    const className = button.variant === 'secondary' ? 'cta-secondary' : 'cta-primary cta-shimmer';
 
     return (
-      <Link key={`${button.label}-${index}`} href={button.href} className={className}>
-        {content}
+      <Link key={button.label} href={button.href} className={className}>
+        {button.icon}
+        {button.label}
+        {button.variant !== 'secondary' && <ArrowRight size={18} />}
       </Link>
     );
-  };
+  }
 
   return (
     <section className="section-base section-contained">
@@ -60,11 +53,10 @@ export function FramedCTA({
         </p>
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-          {renderButton(primary, 0)}
-          {secondary && renderButton({ ...secondary, variant: 'secondary' }, 1)}
+          {renderButton(primary)}
+          {secondary && renderButton({ ...secondary, variant: 'secondary' })}
         </div>
       </div>
     </section>
   );
 }
-
