@@ -112,10 +112,10 @@ module.exports = {
       },
       fontFamily: {
         display: ['Cinzel', 'serif'],                    // Elegant serif for headings
-        accent: ['Cormorant', 'serif'],                  // Italic serif for subheadings
-        body: ['Source Sans 3', 'Inter', 'sans-serif'], // Refined sans-serif for body
-        editorial: ['Libre Baskerville', 'Georgia', 'serif'], // Classic serif for special text
-        ui: ['Source Sans 3', 'Inter', 'sans-serif'],   // UI elements
+        accent: ['Cormorant', 'serif'],                  // Italic serif for subheadings/quotes
+        body: ['Inter', 'system-ui', 'sans-serif'],     // Clean sans-serif for body
+        editorial: ['Cormorant', 'Georgia', 'serif'],   // Elegant serif for special text
+        ui: ['Inter', 'system-ui', 'sans-serif'],       // UI elements
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

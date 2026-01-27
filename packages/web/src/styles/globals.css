@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@100;200;300;400;500;600&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Source+Sans+3:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@100;200;300;400;500;600&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -87,8 +87,8 @@
   }
 
   body {
-    font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
-    font-family: 'Source Sans 3', 'Inter', sans-serif;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    font-family: 'Inter', system-ui, sans-serif;
     background-color: rgb(var(--color-cream));
     color: rgb(var(--color-ink));
     letter-spacing: 0.01em;
@@ -160,10 +160,10 @@
   }
 
   p {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 400;
     color: rgb(var(--color-ink));
-    letter-spacing: 0.015em;
+    letter-spacing: 0.01em;
     line-height: 1.75;
   }
 
@@ -185,7 +185,7 @@
 
   /* Editorial serif for special body text */
   .font-editorial {
-    font-family: 'Libre Baskerville', 'Georgia', serif;
+    font-family: 'Cormorant', Georgia, serif;
     font-weight: 400;
     line-height: 1.85;
     letter-spacing: 0.01em;
@@ -193,7 +193,7 @@
 
   .font-body,
   .font-ui {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 400;
   }
 
@@ -212,18 +212,18 @@
   }
 
   .text-body-relaxed {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 400;
-    line-height: 1.85;
-    letter-spacing: 0.02em;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
   }
 
   /* Refined small text for labels and captions */
   .text-caption {
-    font-family: 'Source Sans 3', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 500;
     font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 

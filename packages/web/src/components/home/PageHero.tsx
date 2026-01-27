@@ -49,10 +49,7 @@ export function PageHero() {
             {hero.title}
           </h1>
 
-          <p
-            className="text-sm md:text-base lg:text-lg text-white/80 tracking-[0.35em] uppercase font-light"
-            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}
-          >
+          <p className="text-sm md:text-base lg:text-lg text-white/80 tracking-[0.3em] uppercase font-light font-body">
             {hero.subtitle}
           </p>
         </div>
