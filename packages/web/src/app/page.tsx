@@ -169,12 +169,24 @@ export default function HomePage() {
                 <p className="text-body-relaxed text-base md:text-lg text-ink-soft/90">{home.gallery.description}</p>
               </div>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {home.gallery.images.map((image) => (
-                  <figure key={image.src} className="relative overflow-hidden rounded-3xl shadow-xl border border-dust-khaki/30">
-                    <div className="relative h-64 w-full">
-                      <Image src={image.src} alt={image.caption} fill className="object-cover" sizes="(min-width: 1024px) 33vw, 100vw" />
+                {home.gallery.images.map((image, idx) => (
+                  <figure
+                    key={image.src}
+                    className="relative overflow-hidden rounded-2xl shadow-xl border border-tan-300/40 group"
+                  >
+                    <div className="relative h-72 w-full overflow-hidden">
+                      <Image
+                        src={image.src}
+                        alt={image.caption}
+                        fill
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        quality={85}
+                        loading={idx === 0 ? 'eager' : 'lazy'}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
-                    <figcaption className="p-4 text-sm text-ink-soft/90">
+                    <figcaption className="p-5 text-sm text-ink-soft/90 leading-relaxed bg-white/80 backdrop-blur-sm">
                       {image.caption}
                     </figcaption>
                   </figure>

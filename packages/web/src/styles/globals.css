@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@100;200;300;400;500;600&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@100;200;300;400;500;600&family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Source+Sans+3:wght@300;400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -87,13 +87,17 @@
   }
 
   body {
-    font-feature-settings: 'kern' 1, 'liga' 1;
-    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
+    font-family: 'Source Sans 3', 'Inter', sans-serif;
     background-color: rgb(var(--color-cream));
     color: rgb(var(--color-ink));
-    letter-spacing: -0.005em;
+    letter-spacing: 0.01em;
+    line-height: 1.7;
     transition: background-color 0.5s ease, color 0.5s ease;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body::before {
@@ -156,19 +160,21 @@
   }
 
   p {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-weight: 400;
     color: rgb(var(--color-ink));
-    letter-spacing: 0.01em;
+    letter-spacing: 0.015em;
+    line-height: 1.75;
   }
 
   .dark p {
     color: rgb(var(--color-ink-soft));
   }
-  
+
   .font-display {
     font-family: 'Cinzel', serif;
     font-weight: 300;
+    letter-spacing: 0.06em;
   }
 
   .font-accent {
@@ -177,9 +183,17 @@
     font-weight: 400;
   }
 
+  /* Editorial serif for special body text */
+  .font-editorial {
+    font-family: 'Libre Baskerville', 'Georgia', serif;
+    font-weight: 400;
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+  }
+
   .font-body,
   .font-ui {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-weight: 400;
   }
 
@@ -198,10 +212,19 @@
   }
 
   .text-body-relaxed {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Source Sans 3', sans-serif;
     font-weight: 400;
-    line-height: 1.8;
+    line-height: 1.85;
     letter-spacing: 0.02em;
+  }
+
+  /* Refined small text for labels and captions */
+  .text-caption {
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .dark .text-body-relaxed {
@@ -830,6 +853,80 @@
   .dark .nav-pill-floating {
     background: rgba(var(--color-sage-800), 0.95);
     border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Refined image containers with elegant borders */
+  .image-frame {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+      0 4px 6px rgba(44, 36, 22, 0.06),
+      0 20px 40px rgba(44, 36, 22, 0.1);
+  }
+
+  .image-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(var(--color-line-rgb), 0.3);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Subtle film grain overlay for cinematic images */
+  .image-grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Optical font sizing for headings */
+  .text-optical-h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 200;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    letter-spacing: 0.1em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .text-optical-h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 300;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  /* Refined number styling for stats */
+  .text-stat-number {
+    font-family: 'Cinzel', serif;
+    font-weight: 300;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: 0.02em;
+  }
+
+  /* Smooth image loading fade-in */
+  img[data-loaded="true"] {
+    animation: imageReveal 0.6s ease-out forwards;
+  }
+
+  @keyframes imageReveal {
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
   }
 }
 

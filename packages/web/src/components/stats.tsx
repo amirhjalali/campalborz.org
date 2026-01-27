@@ -82,14 +82,14 @@ export function Stats() {
                 whileHover={{ y: -8, rotateX: 2, rotateY: -2, transition: { duration: 0.3 } }}
                 className="luxury-card card-tilt group cursor-default"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   <motion.div
                     className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/10 to-gold/5 text-gold group-hover:border-gold/50 transition-colors duration-300"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                   >
                     <Icon className="h-6 w-6" />
                   </motion.div>
-                  <div className="text-display-thin text-4xl text-gold">
+                  <div className="text-stat-number text-4xl md:text-5xl text-gold tracking-tight">
                     <AnimatedNumber value={stat.value} />
                   </div>
                 </div>

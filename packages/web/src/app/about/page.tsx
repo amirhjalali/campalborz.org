@@ -125,10 +125,12 @@ export default function AboutPage() {
           >
             <Image
               src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
-              alt="Camp Alborz Community"
+              alt="Camp Alborz community members at night in Black Rock City"
               fill
-              className="object-cover"
+              className="object-cover object-center"
               priority
+              quality={90}
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
             <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />

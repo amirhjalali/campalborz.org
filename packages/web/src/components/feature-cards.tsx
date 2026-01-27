@@ -45,16 +45,18 @@ export function FeatureCards() {
               whileHover={{ y: -8, transition: { duration: 0.3 } }}
               className="group relative overflow-hidden rounded-2xl bg-white border border-line/40 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              {/* Image */}
+              {/* Image - optimized with proper sizing */}
               {feature.image && (
-                <div className="relative h-48 w-full overflow-hidden">
+                <div className="relative h-52 w-full overflow-hidden">
                   <Image
                     src={feature.image}
                     alt={feature.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    quality={85}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
                   {/* Icon Badge */}
                   <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-gold/30 shadow-lg">

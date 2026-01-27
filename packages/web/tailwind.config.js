@@ -111,10 +111,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ['Cinzel', 'serif'],          // Elegant serif for headings (Style Guide)
-        accent: ['Cormorant', 'serif'],        // Italic serif for subheadings (Style Guide)
-        body: ['Inter', 'sans-serif'],         // Clean sans-serif for body (Style Guide)
-        ui: ['Inter', 'sans-serif'],           // UI elements
+        display: ['Cinzel', 'serif'],                    // Elegant serif for headings
+        accent: ['Cormorant', 'serif'],                  // Italic serif for subheadings
+        body: ['Source Sans 3', 'Inter', 'sans-serif'], // Refined sans-serif for body
+        editorial: ['Libre Baskerville', 'Georgia', 'serif'], // Classic serif for special text
+        ui: ['Source Sans 3', 'Inter', 'sans-serif'],   // UI elements
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
