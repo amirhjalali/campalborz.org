@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '../lib/utils';
@@ -39,17 +39,20 @@ export function Navigation() {
   const campConfig = useCampConfig();
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showFloatingPill, setShowFloatingPill] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    setIsScrolled(latest > 10);
+    setShowFloatingPill(latest > 400);
+  });
+
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -262,6 +265,41 @@ export function Navigation() {
                 </Link>
               </motion.div>
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Navigation Pill */}
+      <AnimatePresence>
+        {showFloatingPill && (
+          <motion.div
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -100, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] hidden lg:flex items-center gap-6 px-6 py-3 bg-white/95 dark:bg-sage-800/95 backdrop-blur-lg rounded-full border border-tan-300/50 dark:border-sage-light/30 shadow-xl"
+          >
+            <Link href="/" className="text-sm font-display font-medium text-sage-dark dark:text-tan-light">
+              {campConfig.name}
+            </Link>
+            <div className="h-4 w-px bg-tan-300 dark:bg-sage-light/30" />
+            <div className="flex items-center gap-4">
+              {navItems.slice(0, 4).map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-xs font-medium text-sage-dark/70 dark:text-tan-light/70 hover:text-gold transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <Link
+              href="/donate"
+              className="ml-2 px-4 py-1.5 text-xs font-display font-semibold bg-gold text-white rounded-full hover:bg-gold-dark transition-colors"
+            >
+              Donate
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

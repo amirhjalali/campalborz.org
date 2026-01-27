@@ -43,14 +43,14 @@ export default function SearchPage() {
             </p>
 
             {/* Search Bar */}
-            <div className="relative max-w-2xl mx-auto">
-              <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-neutral-400" />
+            <div className="relative max-w-2xl mx-auto input-glow rounded-2xl">
+              <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-ink-soft/50 z-10" />
               <input
                 type="text"
                 placeholder={search.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-4 py-4 text-lg rounded-2xl border border-neutral-200 bg-white dark:bg-midnight-light dark:border-neutral-700 text-neutral-800 dark:text-white placeholder-neutral-500 focus:outline-none focus:ring-4 focus:ring-persian-purple/20"
+                className="relative w-full pl-14 pr-4 py-4 text-lg rounded-2xl border-0 bg-transparent text-ink placeholder-ink-soft/50 focus:outline-none"
               />
             </div>
           </motion.div>

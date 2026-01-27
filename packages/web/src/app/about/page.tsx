@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
@@ -8,6 +8,85 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
+
+function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useContentConfig>['about']> }) {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start center', 'end center'],
+  });
+
+  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+
+  return (
+    <section className="section-base">
+      <div className="section-contained">
+        <motion.div
+          initial={{ y: 20 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center space-y-4 mb-14"
+        >
+          <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
+            15+ YEARS OF MAGIC
+          </p>
+          <h2 className="text-display-thin text-3xl md:text-4xl">
+            Our Journey
+          </h2>
+        </motion.div>
+
+        <div ref={timelineRef} className="relative max-w-3xl mx-auto">
+          {/* Timeline Line Background */}
+          <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px bg-tan-300/50" />
+
+          {/* Animated Timeline Line */}
+          <motion.div
+            className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 w-px bg-gradient-to-b from-gold-500 via-gold-500 to-gold-500 origin-top"
+            style={{ scaleY, height: '100%' }}
+          />
+
+          <div className="space-y-12">
+            {about.timeline.map((milestone, index) => (
+              <motion.div
+                key={milestone.year}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+              >
+                {/* Timeline Dot */}
+                <motion.div
+                  className="absolute left-8 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-gold-500 border-4 border-cream z-10"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
+                />
+
+                {/* Content Card */}
+                <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'}`}>
+                  <motion.div
+                    className="luxury-card card-tilt"
+                    whileHover={{ y: -4 }}
+                  >
+                    <p className="text-display-wide text-xs tracking-[0.3em] text-gold-600 mb-2">
+                      {milestone.year}
+                    </p>
+                    <p className="text-body-relaxed text-ink-soft">
+                      {milestone.event}
+                    </p>
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function AboutPage() {
   const { about } = useContentConfig();
@@ -180,57 +259,7 @@ export default function AboutPage() {
         </section>
 
         {/* Timeline Section */}
-        <section className="section-base">
-          <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                15+ YEARS OF MAGIC
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl">
-                Our Journey
-              </h2>
-            </motion.div>
-
-            <div className="relative max-w-3xl mx-auto">
-              {/* Timeline Line */}
-              <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold-500/50 via-gold-500 to-gold-500/50" />
-
-              <div className="space-y-12">
-                {about.timeline.map((milestone, index) => (
-                  <motion.div
-                    key={milestone.year}
-                    initial={{ x: index % 2 === 0 ? -20 : 20 }}
-                    whileInView={{ x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-                  >
-                    {/* Timeline Dot */}
-                    <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 w-4 h-4 rounded-full bg-gold-500 border-4 border-cream z-10" />
-
-                    {/* Content Card */}
-                    <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'}`}>
-                      <div className="luxury-card">
-                        <p className="text-display-wide text-xs tracking-[0.3em] text-gold-600 mb-2">
-                          {milestone.year}
-                        </p>
-                        <p className="text-body-relaxed text-ink-soft">
-                          {milestone.event}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <TimelineSection about={about} />
 
         {/* Team Section */}
         <section className="section-alt">
