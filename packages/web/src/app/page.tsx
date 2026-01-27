@@ -12,33 +12,33 @@ const campQAs = [
   {
     question: 'What is Camp Alborz?',
     answer:
-      'Camp Alborz is a Burning Man theme camp that celebrates Persian culture, art, and community. We blend ancient Persian traditions with the innovative spirit of Black Rock City, creating a unique space for connection, creativity, and cultural exchange.',
+      "We're a theme camp that's been around since 2008. Persian hospitality, art cars, tea, sound systems, and a shaded spot to hang out. Open to everyone.",
   },
   {
     question: "What does 'TOMORROW-TODAY' mean?",
     answer:
-      "TOMORROW-TODAY represents our philosophy of bringing the future into the present moment. We honor ancient Persian wisdom while embracing cutting-edge art, technology, and radical self-expression. It's about creating the world we want to see, right now.",
+      "It's a reminder that the future isn't somewhere out there—it's what we're building right now. Less philosophy, more doing stuff together.",
   },
   {
     question: 'What do you offer at camp?',
     answer: (
       <>
-        <p>Camp Alborz provides a welcoming oasis with:</p>
+        <p>Stop by anytime. We've got:</p>
         <ul className="mt-4 space-y-2 list-disc list-inside">
           <li>
-            <strong>Persian Tea Service:</strong> Traditional chai and refreshments throughout the day
+            <strong>Tea:</strong> Hot chai, all day, every day
           </li>
           <li>
-            <strong>Hookah Lounge:</strong> Relaxing smoke sessions under shade structures
+            <strong>Hookah:</strong> Shaded lounge area to chill
           </li>
           <li>
-            <strong>Art Cars:</strong> HOMA and DAMAVAND mobile sound stages
+            <strong>Art Cars:</strong> HOMA and DAMAVAND—mobile sound stages
           </li>
           <li>
-            <strong>Cultural Workshops:</strong> Calligraphy, poetry, music, and more
+            <strong>Workshops:</strong> Calligraphy, cooking, poetry readings
           </li>
           <li>
-            <strong>Community Meals:</strong> Shared dinners celebrating Persian cuisine
+            <strong>Meals:</strong> Camp dinners with Persian food
           </li>
         </ul>
       </>
@@ -63,16 +63,16 @@ export default function HomePage() {
         <section className="section-base section-contained vignette">
           <div className="frame-panel text-center space-y-6">
             <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-              MISSION STATEMENT
+              WHAT WE DO
             </p>
             <h2 className="text-display-thin text-3xl md:text-4xl">
-              Building Bridges Between Cultures
+              Tea, Art Cars, and Good Company
             </h2>
             <p className="drop-cap text-body-relaxed text-base md:text-lg text-ink-soft/90 max-w-3xl mx-auto text-left">
-              Camp Alborz exists to celebrate and share Persian culture within the transformative environment
-              of Burning Man. We create immersive experiences that honor our heritage while embracing radical
-              inclusion, gifting, and communal effort. Through art, music, food, and hospitality, we build bridges
-              between ancient traditions and contemporary expression.
+              We run a hospitality camp at Burning Man. Every day we serve tea, fire up the hookah lounge,
+              and keep our shaded space open to anyone who walks by. Throughout the year we throw fundraisers,
+              build art cars, and look for excuses to hang out. Persian culture runs through everything we do—the
+              food, the music, the way we welcome strangers. But you don't need to be Persian to be here.
             </p>
           </div>
         </section>
@@ -187,11 +187,11 @@ export default function HomePage() {
         <FeatureCards />
 
         <FramedCTA
-          kicker="JOIN THE COMMUNITY"
-          heading="Come for the tea, stay for the community."
-          description="Whether you're Persian or simply curious about the culture, Camp Alborz welcomes you."
-          primary={{ label: 'Learn More', href: '/about', variant: 'primary' }}
-          secondary={{ label: 'Support Our Mission', href: '/donate', variant: 'secondary' }}
+          kicker="GET INVOLVED"
+          heading="Come for the tea, stay for the people."
+          description="Swing by a fundraiser, help out at an event, or just show up. Everyone's welcome."
+          primary={{ label: 'About Us', href: '/about', variant: 'primary' }}
+          secondary={{ label: 'Donate', href: '/donate', variant: 'secondary' }}
         />
       </main>
     </>

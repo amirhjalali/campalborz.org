@@ -9,18 +9,18 @@ import { ContentConfig } from './types';
 export const contentConfig: ContentConfig = {
   // Hero Section
   hero: {
-    title: "Camp Alborz · Persian Hospitality in Black Rock City",
-    subtitle: "501(c)(3) Non-Profit • HOMA & DAMAVAND Art Cars • 15+ Years of Community",
+    title: "Camp Alborz",
+    subtitle: "Persian Hospitality in Black Rock City Since 2008",
     description:
-      "Camp Alborz is a 501(c)(3) music and arts organization celebrating Persian culture through hospitality, immersive art installations, and year-round community gatherings from Brooklyn to the playa.",
+      "We throw parties, build art cars, serve endless tea, and bring people together—from Brooklyn warehouses to the Nevada desert.",
     cta: {
       primary: {
-        text: "Explore Our Story",
+        text: "See What We're About",
         icon: "arrow-right",
         link: "/about",
       },
       secondary: {
-        text: "Support Our Art",
+        text: "Support the Art",
         icon: "flame",
         link: "/donate",
       },
@@ -30,15 +30,15 @@ export const contentConfig: ContentConfig = {
   home: {
     rumiQuote: {
       text:
-        "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there. When the soul lies down in that grass, the world is too full to talk about.",
+        "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there.",
       attribution: "Rumi · translated by Coleman Barks",
       context:
-        "This verse captures the spirit of Camp Alborz—a space where boundaries dissolve and genuine human connection flourishes.",
+        "800-year-old Persian poetry, still relevant at 4am on the playa.",
     },
     mediaSpotlight: {
       title: "THE CLIMB — [ALBORZ FILM 2022]",
       description:
-        "A short film capturing our art cars, tea house, and the people who bring Alborz magic to life every year.",
+        "A short film capturing our art cars, tea house, and the people behind it all.",
       videoUrl: "https://player.vimeo.com/video/752805495",
       cta: {
         text: "Watch on Vimeo",
@@ -73,52 +73,52 @@ export const contentConfig: ContentConfig = {
 
   // Footer
   footer: {
-    tagline: "Building community through art, culture, and radical hospitality",
+    tagline: "Tea, sound systems, and good company since 2008",
     copyright: "Camp Alborz",
   },
 
   // Stats - Customize these numbers for your camp
   stats: [
     {
-      label: "Years of Magic",
+      label: "Years Running",
       value: "15+",
       icon: "flame",
-      description: "Creating unforgettable experiences",
+      description: "Still going strong since 2008",
       color: "from-persian-purple to-persian-violet",
     },
     {
       label: "Members Worldwide",
       value: "500+",
       icon: "users",
-      description: "A global community united",
+      description: "From LA to Tehran to Brooklyn",
       color: "from-desert-gold to-saffron",
     },
     {
-      label: "Raised for Charity",
-      value: "$50K",
+      label: "Raised for Art",
+      value: "$50K+",
       icon: "dollar-sign",
-      description: "Supporting arts and education",
+      description: "Poured directly into projects",
       color: "from-persian-violet to-pink-500",
     },
     {
       label: "Events Per Year",
       value: "20+",
       icon: "calendar",
-      description: "Year-round gatherings",
+      description: "Fundraisers, cleanups, parties",
       color: "from-saffron to-desert-orange",
     },
     {
-      label: "Art Projects Funded",
-      value: "5",
-      icon: "heart",
-      description: "Major installations created",
+      label: "Art Cars Built",
+      value: "2",
+      icon: "truck",
+      description: "HOMA and DAMAVAND",
       color: "from-persian-purple to-desert-gold",
     },
     {
-      label: "Countries Reached",
+      label: "Countries Represented",
       value: "12",
       icon: "globe",
-      description: "International community",
+      description: "It's a global crew",
       color: "from-desert-orange to-persian-violet",
     },
   ],
@@ -178,34 +178,33 @@ export const contentConfig: ContentConfig = {
   // About Page
   about: {
     title: "About Camp Alborz",
-    subtitle: "Celebrating Persian culture, community, and creativity in Black Rock City since 2008",
+    subtitle: "A crew of Persian-Americans, friends, and fellow travelers building stuff together since 2008",
     mission: {
-      title: "Our Mission",
+      title: "What We Do",
       paragraphs: [
-        "Camp Alborz is a 501(c)(3) non-profit music and arts organization supporting an inclusive community of performers and artists through events, partnerships, and mentorship.",
-        "Founded to celebrate Persian culture worldwide through music, food, and art, we bring hospitality traditions to new communities.",
-        "Our events foster cross-cultural understanding and engagement. We leverage our community reach to support efforts focused on our local neighborhoods, cultural preservation, and environmental stewardship.",
-        "We gather across the globe but unite around hosting friends—new and returning—at our home in Black Rock City.",
-        "Many of us live far from our ancestral lands. We share the best parts of our cultural heritage with one another and the broader community.",
+        "Camp Alborz is a 501(c)(3) that builds art cars, throws fundraisers, and runs a hospitality camp at Burning Man. We're a crew of builders, DJs, engineers, artists, and people who just really like making tea for strangers.",
+        "We started as a group of Persian burners who wanted to bring some of our culture's hospitality traditions to the playa. Fifteen years later, we've built two art cars, hosted thousands of guests, and become a year-round community.",
+        "Throughout the year, we organize fundraisers in LA and NYC, run community cleanup projects, and generally look for excuses to get together. The playa is the centerpiece, but the friendships extend far beyond it.",
+        "Our camp is home base—shaded, air-conditioned, and stocked with endless tea. We feed anyone who walks in, no questions asked.",
       ],
     },
     values: [
       {
-        icon: "heart",
-        title: "Radical Hospitality",
-        description: "The Persian tradition of mehmān-navāzī—everyone is welcome at our table.",
+        icon: "coffee",
+        title: "Open Hospitality",
+        description: "Come in, sit down, have some tea. It's a Persian thing—we can't help it.",
         gradient: "from-persian-purple to-persian-violet",
       },
       {
         icon: "users",
-        title: "Community First",
-        description: "Building relationships that extend year-round, far beyond Black Rock City.",
+        title: "Year-Round Crew",
+        description: "The burn is one week. The friendships last the rest of the year.",
         gradient: "from-desert-gold to-saffron",
       },
       {
-        icon: "globe",
-        title: "Cultural Exchange",
-        description: "Sharing Persian heritage through art, food, and collaborative experiences.",
+        icon: "wrench",
+        title: "Build Together",
+        description: "We make stuff with our hands—art cars, shade structures, sound systems, feasts.",
         gradient: "from-persian-violet to-pink-500",
       },
     ],
@@ -241,10 +240,10 @@ export const contentConfig: ContentConfig = {
     ],
     nonprofit: {
       title: "501(c)(3) Non-Profit",
-      description: "Camp Alborz is a registered 501(c)(3) non-profit organization dedicated to promoting cultural exchange, artistic expression, and community building. Your donations are tax-deductible and directly support our mission.",
+      description: "We're a registered 501(c)(3). That means your donations are tax-deductible and go straight into art cars, sound systems, and the infrastructure that keeps our camp running.",
       cta: {
-        donate: "Support Our Mission",
-        join: "Join Our Camp",
+        donate: "Chip In",
+        join: "Join the Camp",
       },
     },
   },
@@ -462,11 +461,11 @@ export const contentConfig: ContentConfig = {
       ],
     },
     cta: {
-      title: "Join Our Next Event",
-      description: "New to Camp Alborz? Attending an event is the perfect way to meet our community and see if we're a good fit for each other.",
+      title: "Come to an Event",
+      description: "New around here? Show up to something—that's the best way to meet people and see what we're about.",
       buttons: {
-        primary: { text: "See Upcoming Events", link: "/events" },
-        secondary: { text: "Learn More About Us", link: "/about" },
+        primary: { text: "Upcoming Events", link: "/events" },
+        secondary: { text: "About Us", link: "/about" },
       },
     },
   },
@@ -474,7 +473,7 @@ export const contentConfig: ContentConfig = {
   // Donate Page
   donate: {
     title: "Support Camp Alborz",
-    subtitle: "Help us create transformative experiences, build beautiful art, and share Persian culture with the Burning Man community",
+    subtitle: "Help us build art cars, throw parties, and keep the tea flowing",
     impactStats: [
       {
         number: "$45,000",
@@ -500,36 +499,36 @@ export const contentConfig: ContentConfig = {
     donationTiers: [
       {
         amount: 25,
-        title: "Tea Ceremony Supporter",
-        description: "Helps fund our daily Persian tea ceremonies",
+        title: "Tea Fund",
+        description: "Keeps the chai pot full all week",
         perks: ["Camp sticker", "Thank you email"],
         popular: false,
       },
       {
         amount: 75,
-        title: "Art Build Contributor",
-        description: "Supports materials for community art projects",
+        title: "Build Crew",
+        description: "Buys materials for our art projects",
         perks: ["Camp sticker", "Thank you email", "Progress updates"],
         popular: false,
       },
       {
         amount: 150,
-        title: "Community Builder",
-        description: "Funds workshops and community events",
+        title: "Sound System Sponsor",
+        description: "Helps keep the music going",
         perks: ["Camp sticker", "Thank you email", "Progress updates", "Invite to donor meetup"],
         popular: true,
       },
       {
         amount: 300,
-        title: "Infrastructure Champion",
-        description: "Helps with camp setup and infrastructure",
+        title: "Shade Structure Hero",
+        description: "Funds the infrastructure that keeps us cool",
         perks: ["Camp sticker", "Thank you email", "Progress updates", "Invite to donor meetup", "Camp t-shirt"],
         popular: false,
       },
       {
         amount: 500,
-        title: "Cultural Ambassador",
-        description: "Sponsors cultural education programs",
+        title: "Art Car Patron",
+        description: "Directly funds HOMA and DAMAVAND",
         perks: ["All previous perks", "Recognition on camp website", "Camp hoodie"],
         popular: false,
       },
@@ -632,15 +631,15 @@ export const contentConfig: ContentConfig = {
     ],
     donorRecognition: {
       title: "Thank You to Our 2023 Supporters",
-      description: "We're grateful to everyone who made our vision possible",
+      description: "Shoutout to everyone who helped make this happen",
       tiers: [
         {
-          title: "Cultural Ambassadors ($500+)",
-          description: "Special thanks to our major donors who enable our largest initiatives",
+          title: "Art Car Patrons ($500+)",
+          description: "Major contributors who fund the big stuff",
         },
         {
-          title: "Community Builders ($150+)",
-          description: "And to all our community builders who support our regular programming",
+          title: "Sound System Sponsors ($150+)",
+          description: "Everyone else who chips in to keep things running",
         },
       ],
     },
@@ -650,8 +649,8 @@ export const contentConfig: ContentConfig = {
       ein: "XX-XXXXXXX",
     },
     donationForm: {
-      title: "Make a Difference Today",
-      description: "Your support helps us continue sharing Persian culture, building incredible art, and creating transformative experiences for our community.",
+      title: "Pitch In",
+      description: "Every dollar goes directly into the camp—art cars, sound systems, shade structures, and endless tea.",
       campaigns: [
         "Art & Installations",
         "Camp Infrastructure",
@@ -704,9 +703,9 @@ export const contentConfig: ContentConfig = {
       },
     ],
     gratitude: {
-      title: "Thank you for your generous contribution!",
+      title: "Thanks for chipping in!",
       message:
-        "We stretch every dollar to keep Persian pride, unity, and joy alive at Camp Alborz. Check back soon for updates on the projects you helped bring to life.",
+        "Every dollar goes into the art cars, sound systems, and infrastructure that make the camp run. We'll keep you posted on what we build.",
     },
     cta: {
       title: "Other Ways to Support",
@@ -721,7 +720,7 @@ export const contentConfig: ContentConfig = {
   // Culture Page
   culture: {
     title: "Persian Culture & Heritage",
-    subtitle: "Discover the rich traditions, values, and artistic heritage of Persian culture through immersive experiences and community learning",
+    subtitle: "The traditions, food, music, and poetry that inspire what we do",
     culturalElements: [
       {
         title: "Persian Poetry",
@@ -871,10 +870,10 @@ export const contentConfig: ContentConfig = {
       },
     ],
     culturalBridge: {
-      missionTitle: "Our Mission",
+      missionTitle: "Why We Do This",
       mission: [
-        "We believe in the power of cultural exchange to build understanding, break down barriers, and create meaningful connections between people from all backgrounds.",
-        "Through our cultural programs, we share the beauty of Persian heritage while learning from and celebrating the diversity of the Burning Man community.",
+        "Persian culture has a long tradition of welcoming strangers with food, tea, and conversation. We bring that to the playa.",
+        "You don't need to be Persian to hang out with us. Come for the tea, stay for the music, leave with some new friends.",
       ],
       howWeDoItTitle: "How We Do It",
       howWeDoIt: [
@@ -885,11 +884,11 @@ export const contentConfig: ContentConfig = {
       ],
     },
     cta: {
-      title: "Explore Persian Culture With Us",
-      description: "Whether you have Persian heritage or are simply curious about the culture, you're welcome to join our learning community and cultural celebrations.",
+      title: "Come Hang Out",
+      description: "Persian or not, curious or just hungry—everyone's welcome. Swing by an event and see what we're about.",
       buttons: {
-        primary: { text: "Attend Cultural Events", link: "/events" },
-        secondary: { text: "About Camp Alborz", link: "/about" },
+        primary: { text: "See Events", link: "/events" },
+        secondary: { text: "About Us", link: "/about" },
       },
     },
   },
@@ -897,7 +896,7 @@ export const contentConfig: ContentConfig = {
   // Members Page
   members: {
     title: "Member Portal",
-    subtitle: "Join our global community of artists, builders, and dreamers creating magic in the desert and beyond",
+    subtitle: "Info for camp members, payment details, and resources",
     loginSection: {
       title: "Member Login",
       emailLabel: "Email",
@@ -1058,19 +1057,19 @@ export const contentConfig: ContentConfig = {
       ],
     },
     cta: {
-      title: "Get Involved",
-      description: "Connect with a community that celebrates creativity, culture, and connection",
+      title: "Want to Help Out?",
+      description: "We're always looking for people who want to build stuff, throw parties, or just help out",
       buttons: {
-        primary: { text: "Support Our Mission", link: "/donate" },
-        secondary: { text: "Learn More", link: "/about" },
+        primary: { text: "Donate", link: "/donate" },
+        secondary: { text: "About Us", link: "/about" },
       },
     },
   },
 
   // Apply Page
   apply: {
-    title: "Join Camp Alborz",
-    subtitle: "We're excited to learn about you and how you'd like to contribute to our community",
+    title: "Join the Camp",
+    subtitle: "Fill out the form, tell us about yourself, and we'll be in touch",
     form: {
       title: "Membership Application",
       fields: {
@@ -1099,12 +1098,12 @@ export const contentConfig: ContentConfig = {
         dietaryPlaceholder: "Any dietary restrictions or allergies we should know about?",
       },
       beforeYouApply: {
-        title: "Before You Apply",
+        title: "Good to Know",
         items: [
-          "Membership includes camp dues to cover shared expenses",
-          "All members are expected to participate in camp setup and teardown",
-          "We operate on the principles of radical inclusion and respect",
-          "Camp participation requires commitment to our community values",
+          "Dues are $1,200 and cover shade, food, infrastructure, and camp operations",
+          "Everyone helps with setup and teardown—no exceptions",
+          "We welcome everyone, but you have to actually participate",
+          "Show up ready to pitch in and hang out",
         ],
       },
       submitButton: "Submit Application",
@@ -1116,18 +1115,18 @@ export const contentConfig: ContentConfig = {
       steps: [
         {
           stepNumber: 1,
-          title: "Application Review",
-          description: "Our camp leads will review your application",
+          title: "We Read It",
+          description: "Someone on the team reviews your application",
         },
         {
           stepNumber: 2,
-          title: "Meet & Greet",
-          description: "We'll invite you to a virtual or in-person meetup",
+          title: "We Chat",
+          description: "Quick call or meetup to say hi",
         },
         {
           stepNumber: 3,
-          title: "Welcome to the Family",
-          description: "Join our planning activities and camp community",
+          title: "You're In",
+          description: "Welcome to the camp—time to start planning",
         },
       ],
     },
@@ -1182,11 +1181,11 @@ export const contentConfig: ContentConfig = {
       title: "Popular Searches",
       terms: [
         "burning man",
-        "persian poetry",
-        "art installations",
-        "cultural events",
-        "tea ceremony",
-        "membership application",
+        "art cars",
+        "HOMA",
+        "DAMAVAND",
+        "fundraiser",
+        "join the camp",
       ],
     },
   },
