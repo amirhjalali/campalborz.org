@@ -45,10 +45,14 @@ export default function CulturePage() {
           >
             <Image
               src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
-              alt="Persian Culture"
+              alt="Traditional Persian cultural celebration featuring music, dance, and authentic decorations at Camp Alborz"
               fill
               className="object-cover"
               priority
+              quality={90}
+              sizes="100vw"
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIRAAAgICAgEFAAAAAAAAAAAAAQIDBAAFERIGEyExcZH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABkRAAIDAQAAAAAAAAAAAAAAAAECABEhMf/aAAwDAQACEQMRAD8Aw/XaZd0knsWp2rIhVFhRQCx9yT8ZZ0dSTXaxq1LMsLMpcy9eRcfnGMZFAFTJP//Z"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
             <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />

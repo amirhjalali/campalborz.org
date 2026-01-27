@@ -36,9 +36,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${crimson.variable} ${montserrat.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            {children}
+            <main id="main-content">
+              {children}
+            </main>
             <Footer />
           </AuthProvider>
         </ThemeProvider>

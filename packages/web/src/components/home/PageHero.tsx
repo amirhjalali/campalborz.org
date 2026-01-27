@@ -65,7 +65,7 @@ export function PageHero() {
           </Link>
           <Link
             href={hero.cta.secondary.link}
-            className="cta-secondary bg-white/10 backdrop-blur-md border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 text-base"
+            className="cta-secondary bg-white/20 backdrop-blur-md border-white/40 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 text-base shadow-lg"
           >
             {hero.cta.secondary.text}
           </Link>

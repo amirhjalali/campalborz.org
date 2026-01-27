@@ -1,50 +1,49 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useSpring, useTransform } from 'framer-motion';
 import { useContentConfig } from '../hooks/useConfig';
 import { getIcon } from '../lib/icons';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 
-function AnimatedNumber({ value, duration = 2 }: { value: string; duration?: number }) {
-  const [displayValue, setDisplayValue] = useState('0');
-  const ref = useRef<HTMLDivElement>(null);
+function AnimatedNumber({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
 
-  useEffect(() => {
-    if (!isInView) return;
+  // Extract numeric part and suffix
+  const match = value.match(/^([0-9.]+)(.*)$/);
+  const numericPart = match ? parseFloat(match[1]) : 0;
+  const suffix = match ? match[2] : '';
+  const hasDecimal = numericPart % 1 !== 0;
 
-    // Extract numeric part and suffix
-    const match = value.match(/^([0-9.]+)(.*)$/);
-    if (!match) {
-      setDisplayValue(value);
-      return;
+  const springValue = useSpring(0, {
+    stiffness: 50,
+    damping: 20,
+    duration: 1.5,
+  });
+
+  const displayValue = useTransform(springValue, (current) => {
+    if (numericPart >= 100) {
+      return Math.floor(current);
     }
+    return hasDecimal ? current.toFixed(1) : Math.floor(current);
+  });
 
-    const numericPart = parseFloat(match[1]);
-    const suffix = match[2] || '';
-    const startTime = Date.now();
+  useEffect(() => {
+    if (isInView) {
+      springValue.set(numericPart);
+    }
+  }, [isInView, numericPart, springValue]);
 
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / (duration * 1000), 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+  if (!match) {
+    return <span ref={ref}>{value}</span>;
+  }
 
-      const current = numericPart * easeProgress;
-      const formatted = numericPart >= 100 ? Math.floor(current) : current.toFixed(numericPart % 1 !== 0 ? 1 : 0);
-
-      setDisplayValue(`${formatted}${suffix}`);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setDisplayValue(value);
-      }
-    };
-
-    animate();
-  }, [isInView, value, duration]);
-
-  return <div ref={ref}>{displayValue}</div>;
+  return (
+    <span ref={ref}>
+      <motion.span>{displayValue}</motion.span>
+      {suffix}
+    </span>
+  );
 }
 
 export function Stats() {
@@ -53,13 +52,13 @@ export function Stats() {
     <section className="section-alt">
       <div className="section-contained space-y-14">
         <motion.div
-          initial={{ y: 16 }}
-          whileInView={{ y: 0 }}
+          initial={{ y: 16, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           className="text-center space-y-4"
         >
-          <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
+          <p className="text-display-wide text-xs tracking-[0.3em] text-ink-soft/80">
             LEGACY & IMPACT
           </p>
           <h2 className="text-display-thin text-3xl md:text-4xl">In Numbers</h2>
@@ -75,26 +74,25 @@ export function Stats() {
             return (
               <motion.article
                 key={stat.label}
-                initial={{ y: 30, scale: 0.95, opacity: 0 }}
-                whileInView={{ y: 0, scale: 1, opacity: 1 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.7, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -8, rotateX: 2, rotateY: -2, transition: { duration: 0.3 } }}
-                className="luxury-card card-tilt group cursor-default"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: 'easeOut' }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="luxury-card group cursor-default"
               >
                 <div className="flex items-center gap-5">
-                  <motion.div
+                  <div
                     className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gradient-to-br from-gold/10 to-gold/5 text-gold group-hover:border-gold/50 transition-colors duration-300"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
                   >
-                    <Icon className="h-6 w-6" />
-                  </motion.div>
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
                   <div className="text-stat-number text-4xl md:text-5xl text-gold tracking-tight">
                     <AnimatedNumber value={stat.value} />
                   </div>
                 </div>
 
-                <h3 className="mt-6 text-display-wide text-xs tracking-[0.4em] text-ink-soft">
+                <h3 className="mt-6 text-display-wide text-xs tracking-[0.25em] text-ink-soft">
                   {stat.label}
                 </h3>
 
@@ -106,12 +104,6 @@ export function Stats() {
               </motion.article>
             );
           })}
-        </div>
-
-        <div className="text-center">
-          <a href="/donate" className="cta-primary inline-flex">
-            Support Our Mission
-          </a>
         </div>
       </div>
     </section>

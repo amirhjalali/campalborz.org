@@ -4,6 +4,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global focus styles for accessibility */
+@layer base {
+  /* Skip link for keyboard users */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    z-index: 9999;
+    padding: 1rem 1.5rem;
+    background-color: rgb(var(--color-gold-500));
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0.5rem;
+  }
+
+  .skip-link:focus {
+    left: 1rem;
+    top: 1rem;
+  }
+
+  /* Global focus-visible styles */
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-gold-500));
+    outline-offset: 2px;
+  }
+
+  /* Ensure buttons and links have good focus states */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid rgb(var(--color-gold-500));
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+}
+
 @layer base {
   :root {
     --color-sage-50: 244 246 245;
@@ -207,7 +246,7 @@
   .text-display-wide {
     font-family: 'Cinzel', serif;
     font-weight: 300;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
   }
 
@@ -723,30 +762,12 @@
     left: 100%;
   }
 
-  /* Decorative chapter markers */
-  .chapter-marker {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    padding: 2rem 0;
-  }
-
-  .chapter-marker::before,
-  .chapter-marker::after {
-    content: '';
-    flex: 1;
-    max-width: 120px;
+  /* Simple section divider */
+  .section-divider {
+    width: min(200px, 40%);
     height: 1px;
+    margin: 2rem auto;
     background: var(--gradient-divider);
-  }
-
-  .chapter-marker span {
-    font-family: 'Cinzel', serif;
-    font-size: 1.25rem;
-    font-weight: 300;
-    letter-spacing: 0.15em;
-    color: rgb(var(--color-gold-500));
   }
 
   /* Elegant blockquote styling */

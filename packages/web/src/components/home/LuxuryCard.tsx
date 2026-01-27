@@ -26,10 +26,10 @@ export function LuxuryCard({
 }: LuxuryCardProps) {
   const content = (
     <motion.article
-      whileHover={{ y: -6, rotateX: 2, rotateY: -2 }}
-      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.2 }}
       className={cn(
-        'luxury-card card-tilt relative overflow-hidden',
+        'luxury-card relative overflow-hidden',
         accent === 'sage' && 'bg-sage-50'
       )}
     >

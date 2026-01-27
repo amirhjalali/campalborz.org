@@ -14,13 +14,13 @@ export function FeatureCards() {
   return (
     <section className="section-base section-contained">
       <motion.div
-        initial={{ y: 16 }}
-        whileInView={{ y: 0 }}
+        initial={{ y: 16, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.5 }}
         className="text-center space-y-4 mb-14"
       >
-        <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
+        <p className="text-display-wide text-xs tracking-[0.3em] text-ink-soft/80">
           CAMP OFFERINGS
         </p>
         <h2 className="text-display-thin text-3xl md:text-4xl">
@@ -38,29 +38,29 @@ export function FeatureCards() {
 
           const CardContent = (
             <motion.article
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
+              initial={{ y: 16, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
+              transition={{ duration: 0.4, delay: index * 0.06 }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="group relative overflow-hidden rounded-2xl bg-white border border-line/40 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              {/* Image - optimized with proper sizing */}
+              {/* Image - fixed aspect ratio container */}
               {feature.image && (
-                <div className="relative h-52 w-full overflow-hidden">
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
                     src={feature.image}
-                    alt={feature.title}
+                    alt={`${feature.title} - ${feature.description?.slice(0, 50) || 'Camp Alborz offering'}`}
                     fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     quality={85}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
                   {/* Icon Badge */}
                   <div className="absolute bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm border border-gold/30 shadow-lg">
-                    <Icon className="h-5 w-5 text-gold" />
+                    <Icon className="h-5 w-5 text-gold" aria-hidden="true" />
                   </div>
                 </div>
               )}

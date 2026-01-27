@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
@@ -39,21 +39,79 @@ export function Navigation() {
   const campConfig = useCampConfig();
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showFloatingPill, setShowFloatingPill] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     setIsScrolled(latest > 10);
-    setShowFloatingPill(latest > 400);
   });
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Handle keyboard navigation for dropdowns
+  const handleDropdownKeyDown = useCallback((e: React.KeyboardEvent, item: typeof navItems[0]) => {
+    if (!item.children) return;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setActiveDropdown(activeDropdown === item.label ? null : item.label);
+    } else if (e.key === 'Escape') {
+      setActiveDropdown(null);
+    } else if (e.key === 'ArrowDown' && activeDropdown === item.label) {
+      e.preventDefault();
+      const firstChild = document.querySelector(`[data-dropdown="${item.label}"] a`) as HTMLElement;
+      firstChild?.focus();
+    }
+  }, [activeDropdown]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const menuElement = mobileMenuRef.current;
+    if (!menuElement) return;
+
+    const focusableElements = menuElement.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleTabKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement?.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement?.focus();
+      }
+    };
+
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        mobileMenuButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTabKey);
+    document.addEventListener('keydown', handleEscKey);
+    firstElement?.focus();
+
+    return () => {
+      document.removeEventListener('keydown', handleTabKey);
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <nav
@@ -80,7 +138,7 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => (
               <div
                 key={item.label}
@@ -91,15 +149,18 @@ export function Navigation() {
                 <Link
                   href={item.href}
                   className={cn(
-                    'nav-link-gold px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1',
+                    'nav-link-gold px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                     isScrolled
                       ? 'text-sage-dark dark:text-tan-light hover:text-gold'
                       : 'text-sage-dark hover:text-gold'
                   )}
+                  onKeyDown={(e) => handleDropdownKeyDown(e, item)}
+                  aria-expanded={item.children ? activeDropdown === item.label : undefined}
+                  aria-haspopup={item.children ? 'true' : undefined}
                 >
                   {item.label}
                   {item.children && (
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="h-3 w-3" aria-hidden="true" />
                   )}
                 </Link>
 
@@ -107,26 +168,29 @@ export function Navigation() {
                 <AnimatePresence>
                   {activeDropdown === item.label && item.children && (
                     <motion.div
+                      data-dropdown={item.label}
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
                       className="absolute top-full left-0 mt-2 w-56 bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg rounded-lg shadow-xl border border-tan-300 dark:border-sage-light overflow-hidden"
+                      role="menu"
+                      aria-label={`${item.label} submenu`}
                     >
                       {item.children.map((child, index) => (
-                        <motion.div
+                        <Link
                           key={child.href}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.2, delay: index * 0.05 }}
+                          href={child.href}
+                          className="block px-4 py-3 text-sm text-sage-dark dark:text-tan-light hover:bg-gold/10 hover:text-gold transition-colors duration-200 focus:outline-none focus-visible:bg-gold/10 focus-visible:text-gold"
+                          role="menuitem"
+                          onKeyDown={(e) => {
+                            if (e.key === 'Escape') {
+                              setActiveDropdown(null);
+                            }
+                          }}
                         >
-                          <Link
-                            href={child.href}
-                            className="block px-4 py-3 text-sm text-sage-dark dark:text-tan-light hover:bg-gold/10 hover:text-gold transition-all duration-200 hover:translate-x-1"
-                          >
-                            {child.label}
-                          </Link>
-                        </motion.div>
+                          {child.label}
+                        </Link>
                       ))}
                     </motion.div>
                   )}
@@ -142,21 +206,21 @@ export function Navigation() {
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className={cn(
-                  'p-2 rounded-lg transition-colors',
+                  'p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                   isScrolled
                     ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
                     : 'text-sage-dark hover:bg-gold/10'
                 )}
-                aria-label="Toggle dark mode"
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               >
-                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {theme === 'dark' ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
               </button>
             )}
 
             {/* Donate button */}
             <Link
               href="/donate"
-              className="hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:scale-105"
+              className="hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
             >
               Donate
             </Link>
@@ -165,7 +229,7 @@ export function Navigation() {
             <Link
               href="/members"
               className={cn(
-                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300',
+                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                 isScrolled
                   ? 'border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark'
                   : 'border-2 border-sage text-sage-dark hover:bg-sage hover:text-tan-light'
@@ -176,15 +240,19 @@ export function Navigation() {
 
             {/* Mobile menu toggle */}
             <button
+              ref={mobileMenuButtonRef}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                'lg:hidden p-2 rounded-lg transition-colors',
+                'lg:hidden p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                 isScrolled
                   ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
                   : 'text-sage-dark hover:bg-gold/10'
               )}
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -194,112 +262,60 @@ export function Navigation() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            ref={mobileMenuRef}
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
             className="lg:hidden bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg border-t border-tan-300 dark:border-sage-light"
+            role="navigation"
+            aria-label="Mobile navigation"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.08 }}
-                >
+                <div key={item.label}>
                   <Link
                     href={item.href}
-                    className="block py-2 text-sage-dark dark:text-tan-light font-medium hover:text-gold transition-colors duration-200"
+                    className="block py-2 text-sage-dark dark:text-tan-light font-medium hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </Link>
                   {item.children && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      transition={{ duration: 0.25, delay: index * 0.08 + 0.1 }}
-                      className="ml-4 mt-2 space-y-2"
-                    >
-                      {item.children.map((child, childIndex) => (
-                        <motion.div
+                    <div className="ml-4 mt-2 space-y-2">
+                      {item.children.map((child) => (
+                        <Link
                           key={child.href}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.2, delay: index * 0.08 + childIndex * 0.05 + 0.15 }}
+                          href={child.href}
+                          className="block py-1 text-sm text-sage dark:text-tan-200 hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200"
+                          onClick={() => setIsMobileMenuOpen(false)}
                         >
-                          <Link
-                            href={child.href}
-                            className="block py-1 text-sm text-sage dark:text-tan-200 hover:text-gold transition-colors duration-200"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            {child.label}
-                          </Link>
-                        </motion.div>
+                          {child.label}
+                        </Link>
                       ))}
-                    </motion.div>
+                    </div>
                   )}
-                </motion.div>
+                </div>
               ))}
 
-              <motion.div
-                initial={{ y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: navItems.length * 0.08 + 0.2 }}
-                className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light"
-              >
+              <div className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light">
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-lg font-display font-semibold hover:bg-gold-dark hover:shadow-lg transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-lg font-display font-semibold hover:bg-gold-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan rounded-lg font-display font-semibold hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan rounded-lg font-display font-semibold hover:bg-sage hover:text-tan-light focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 dark:hover:bg-tan dark:hover:text-sage-dark transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Member Login
                 </Link>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Floating Navigation Pill */}
-      <AnimatePresence>
-        {showFloatingPill && (
-          <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] hidden lg:flex items-center gap-6 px-6 py-3 bg-white/95 dark:bg-sage-800/95 backdrop-blur-lg rounded-full border border-tan-300/50 dark:border-sage-light/30 shadow-xl"
-          >
-            <Link href="/" className="text-sm font-display font-medium text-sage-dark dark:text-tan-light">
-              {campConfig.name}
-            </Link>
-            <div className="h-4 w-px bg-tan-300 dark:bg-sage-light/30" />
-            <div className="flex items-center gap-4">
-              {navItems.slice(0, 4).map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="text-xs font-medium text-sage-dark/70 dark:text-tan-light/70 hover:text-gold transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-            <Link
-              href="/donate"
-              className="ml-2 px-4 py-1.5 text-xs font-display font-semibold bg-gold text-white rounded-full hover:bg-gold-dark transition-colors"
-            >
-              Donate
-            </Link>
           </motion.div>
         )}
       </AnimatePresence>

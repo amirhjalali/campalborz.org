@@ -55,12 +55,7 @@ export default function HomePage() {
         <PageHero />
         <Stats />
 
-        {/* Chapter I Marker */}
-        <div className="chapter-marker">
-          <span>I</span>
-        </div>
-
-        <section className="section-base section-contained vignette">
+        <section className="section-base section-contained">
           <div className="frame-panel text-center space-y-6">
             <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               WHAT WE DO
@@ -126,11 +121,6 @@ export default function HomePage() {
             </div>
           </section>
         )}
-
-        {/* Chapter II Marker */}
-        <div className="chapter-marker">
-          <span>II</span>
-        </div>
 
         <section className="section-contrast">
           <div className="section-contained space-y-10">
