@@ -1,28 +1,32 @@
 import { ReactNode } from "react";
 import "../styles/globals.css";
-import { Playfair_Display, Crimson_Text, Montserrat } from 'next/font/google';
+import { Cinzel, Cormorant, Inter } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
 import { AuthProvider } from '../contexts/AuthContext';
 import { Footer } from '../components/footer';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
 
-const playfair = Playfair_Display({
+const cinzel = Cinzel({
   subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['400', '700', '900'],
+  variable: '--font-cinzel',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
-const crimson = Crimson_Text({
+const cormorant = Cormorant({
   subsets: ['latin'],
-  variable: '--font-crimson',
-  weight: ['400', '600', '700'],
+  variable: '--font-cormorant',
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  display: 'swap',
 });
 
-const montserrat = Montserrat({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-montserrat',
+  variable: '--font-inter',
   weight: ['300', '400', '500', '600'],
+  display: 'swap',
 });
 
 // Use centralized metadata configuration
@@ -34,7 +38,7 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${crimson.variable} ${montserrat.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${cinzel.variable} ${cormorant.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <body className="font-body antialiased">
         <a href="#main-content" className="skip-link">
           Skip to main content

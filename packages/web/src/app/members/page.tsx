@@ -362,37 +362,43 @@ export default function MembersPage() {
 
               <form onSubmit={handleLogin} className="space-y-5">
                 <div>
-                  <label className="form-label">
+                  <label htmlFor="login-email" className="form-label">
                     {members.loginSection.emailLabel}
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="form-input"
-                    placeholder="your@email.com"
-                    required
-                  />
+                  <div className="input-glow rounded-xl">
+                    <input
+                      type="email"
+                      id="login-email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="form-input border-0 bg-transparent"
+                      placeholder="your@email.com"
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="form-label mb-0">
+                    <label htmlFor="login-password" className="form-label mb-0">
                       {members.loginSection.passwordLabel}
                     </label>
                     <Link href="#" className="text-sm text-gold hover:text-gold/80 transition-colors">
                       Forgot Password?
                     </Link>
                   </div>
-                  <div className="relative">
+                  <div className="relative input-glow rounded-xl">
                     <input
                       type={showPassword ? 'text' : 'password'}
+                      id="login-password"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="form-input pr-12"
+                      className="form-input border-0 bg-transparent pr-12"
                       placeholder="••••••••"
                       required
+                      autoComplete="current-password"
                     />
                     <button
                       type="button"
@@ -424,7 +430,7 @@ export default function MembersPage() {
                   disabled={isSubmitting || authLoading}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full cta-primary cta-shimmer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Signing in...' : members.loginSection.submitButton}
                 </motion.button>

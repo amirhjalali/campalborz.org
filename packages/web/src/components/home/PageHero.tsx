@@ -40,11 +40,7 @@ export function PageHero() {
         {/* Title + Subtitle - refined typography */}
         <div className="space-y-6">
           <h1
-            className="text-display-thin text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] text-white leading-[0.9] tracking-[0.08em]"
-            style={{
-              textShadow: '0 2px 20px rgba(0,0,0,0.5), 0 8px 40px rgba(0,0,0,0.3)',
-              letterSpacing: '0.12em'
-            }}
+            className="text-display-thin text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] text-white leading-[0.9] drop-shadow-[0_2px_20px_rgba(0,0,0,0.5)]"
           >
             {hero.title}
           </h1>

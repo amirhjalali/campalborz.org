@@ -26,30 +26,30 @@ export function Footer() {
 
   return (
     <footer className="bg-ink text-tan-light/80">
-      <div className="section-contained py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div className="section-contained py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Brand Column */}
           <div className="space-y-4">
             <h3 className="text-display-thin text-2xl text-tan-light">{campConfig.name}</h3>
-            <p className="text-body-relaxed text-sm text-tan-light/60">
+            <p className="text-body-relaxed text-sm text-tan-light/60 max-w-xs">
               {footer?.tagline || campConfig.tagline}
             </p>
-            <p className="text-xs text-tan-light/40">
+            <p className="text-caption text-tan-light/35">
               {campConfig.taxStatus} Non-Profit Organization
             </p>
           </div>
 
           {/* Navigation Column */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-semibold tracking-[0.3em] uppercase text-tan-light/50">
+          <div className="space-y-5">
+            <h4 className="text-caption text-tan-light/45">
               Navigation
             </h4>
-            <nav className="grid grid-cols-2 gap-2">
+            <nav className="grid grid-cols-2 gap-x-4 gap-y-2.5">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-tan-light/70 hover:text-gold-400 transition-colors"
+                  className="text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -58,18 +58,18 @@ export function Footer() {
           </div>
 
           {/* Connect Column */}
-          <div className="space-y-4">
-            <h4 className="text-xs font-semibold tracking-[0.3em] uppercase text-tan-light/50">
+          <div className="space-y-5">
+            <h4 className="text-caption text-tan-light/45">
               Connect
             </h4>
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-sm text-tan-light/70 hover:text-gold-400 transition-colors"
+                  className="block text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
                 >
                   {link.label}
                 </a>
@@ -77,7 +77,7 @@ export function Footer() {
               {campConfig.email && (
                 <a
                   href={`mailto:${campConfig.email}`}
-                  className="block text-sm text-tan-light/70 hover:text-gold-400 transition-colors"
+                  className="block text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
                 >
                   {campConfig.email}
                 </a>
@@ -87,15 +87,15 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/10">
+        <div className="mt-14 pt-8 border-t border-white/8">
           <div className="flex justify-center mb-6">
             <span className="simurgh-accent" aria-hidden="true" />
           </div>
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-tan-light/40">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p className="text-xs text-tan-light/35">
               &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
             </p>
-            <p className="text-xs text-tan-light/30">
+            <p className="text-xs text-tan-light/25 tracking-wider">
               Black Rock City, Nevada
             </p>
           </div>

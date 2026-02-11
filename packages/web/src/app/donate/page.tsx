@@ -299,7 +299,7 @@ export default function DonatePage() {
                     ))}
                   </ul>
 
-                  <button className={`w-full ${tier.popular ? 'cta-primary' : 'cta-secondary'}`}>
+                  <button className={`w-full ${tier.popular ? 'cta-primary cta-shimmer' : 'cta-secondary'}`}>
                     Donate ${tier.amount}
                     <ArrowRight size={18} />
                   </button>
@@ -593,12 +593,30 @@ export default function DonatePage() {
                 </p>
               </motion.div>
 
-              <DonationForm
-                campaigns={donate.donationForm.campaigns}
-                onSuccess={(donationId) => {
-                  console.log('Donation successful:', donationId);
-                }}
-              />
+              <div className="frame-panel">
+                <DonationForm
+                  campaigns={donate.donationForm.campaigns}
+                  onSuccess={(donationId) => {
+                    console.log('Donation successful:', donationId);
+                  }}
+                />
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs text-ink-soft/70">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-sage-600" />
+                  <span>Secure Payment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4 text-sage-600" />
+                  <span>501(c)(3) Tax-Deductible</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4 text-sage-600" />
+                  <span>100% Goes to Community</span>
+                </div>
+              </div>
             </div>
           </section>
         )}
@@ -643,7 +661,7 @@ export default function DonatePage() {
                   {donate.cta.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={donate.cta.buttons.primary.link} className="cta-primary">
+                  <Link href={donate.cta.buttons.primary.link} className="cta-primary cta-shimmer">
                     {donate.cta.buttons.primary.text}
                     <ArrowRight size={18} />
                   </Link>

@@ -1,205 +1,238 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Navigation } from '../../../components/navigation';
+import { motion } from 'framer-motion';
 import {
-  CheckCircleIcon,
-  EnvelopeIcon,
-  DocumentTextIcon,
-  HeartIcon,
-  HomeIcon,
-} from '@heroicons/react/24/outline';
+  CheckCircle,
+  Mail,
+  FileText,
+  Heart,
+  Home,
+} from 'lucide-react';
 
 export default function DonationSuccessPage() {
   const searchParams = useSearchParams();
-  const [donationDetails, setDonationDetails] = useState({
-    amount: searchParams.get('amount') || '0',
-    email: searchParams.get('email') || '',
-    paymentIntentId: searchParams.get('payment_intent') || '',
-    donationType: searchParams.get('type') || 'one-time',
-  });
+  const amount = searchParams.get('amount') || '0';
+  const email = searchParams.get('email') || '';
+  const paymentIntentId = searchParams.get('payment_intent') || '';
+  const donationType = searchParams.get('type') || 'one-time';
 
-  useEffect(() => {
-    // In production, verify the payment with Stripe
-    // const verifyPayment = async () => {
-    //   const response = await fetch('/api/verify-payment', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ paymentIntentId: donationDetails.paymentIntentId }),
-    //   });
-    //   const data = await response.json();
-    //   setDonationDetails(prev => ({ ...prev, ...data }));
-    // };
-    // verifyPayment();
-  }, []);
-
-  const formattedAmount = parseFloat(donationDetails.amount) / 100;
+  const formattedAmount = parseFloat(amount) / 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Success Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-            <CheckCircleIcon className="h-12 w-12 text-green-600" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Thank You for Your Generosity!
-          </h1>
-          <p className="text-xl text-gray-600">
-            Your donation has been received successfully
-          </p>
-        </div>
+    <>
+      <Navigation />
+      <main className="min-h-screen bg-cream">
+        {/* Hero / Success Confirmation */}
+        <section className="relative pt-32 pb-16 overflow-hidden">
+          <div className="pattern-persian opacity-20 absolute inset-0" />
+          <motion.div
+            initial={{ y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative section-contained text-center"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5, type: 'spring' }}
+              className="inline-flex p-5 rounded-full bg-sage-100 border border-sage-300 mb-8"
+            >
+              <CheckCircle className="h-14 w-14 text-sage-600" />
+            </motion.div>
+            <motion.h1
+              initial={{ y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-display-thin text-4xl md:text-5xl mb-4"
+            >
+              Thank You for Your Generosity
+            </motion.h1>
+            <motion.p
+              initial={{ y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto"
+            >
+              Your donation has been received successfully. Your support helps us build a stronger community.
+            </motion.p>
+          </motion.div>
+        </section>
 
-        {/* Donation Details Card */}
-        <Card className="mb-8">
-          <CardContent className="p-8">
-            <div className="space-y-6">
-              {/* Amount */}
-              <div className="text-center border-b pb-6">
-                <p className="text-sm text-gray-600 mb-2">Donation Amount</p>
-                <p className="text-5xl font-bold text-primary-600">
+        {/* Donation Details */}
+        <section className="section-base">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="frame-panel"
+            >
+              {/* Amount Display */}
+              <div className="text-center pb-8 mb-8 border-b border-line/30">
+                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-3">
+                  DONATION AMOUNT
+                </p>
+                <p className="text-5xl font-display text-gold-600">
                   ${formattedAmount.toFixed(2)}
                 </p>
-                {donationDetails.donationType === 'recurring' && (
-                  <p className="text-sm text-gray-500 mt-2">Monthly recurring donation</p>
+                {donationType === 'recurring' && (
+                  <p className="text-sm text-ink-soft mt-2">Monthly recurring donation</p>
                 )}
               </div>
 
               {/* Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-start space-x-3">
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-gold-500/20">
+                    <Mail className="h-5 w-5 text-gold-600" />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Email Confirmation</p>
-                    <p className="text-sm text-gray-600">
-                      {donationDetails.email || 'Receipt sent to your email'}
+                    <p className="text-sm font-medium text-ink">Email Confirmation</p>
+                    <p className="text-sm text-ink-soft">
+                      {email || 'Receipt sent to your email'}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <DocumentTextIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-gold-500/20">
+                    <FileText className="h-5 w-5 text-gold-600" />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Transaction ID</p>
-                    <p className="text-sm text-gray-600 font-mono">
-                      {donationDetails.paymentIntentId.substring(0, 20)}...
+                    <p className="text-sm font-medium text-ink">Transaction ID</p>
+                    <p className="text-sm text-ink-soft font-mono">
+                      {paymentIntentId ? `${paymentIntentId.substring(0, 20)}...` : 'N/A'}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <CheckCircleIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-sage-100">
+                    <CheckCircle className="h-5 w-5 text-sage-600" />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Status</p>
-                    <p className="text-sm text-green-600 font-medium">Completed</p>
+                    <p className="text-sm font-medium text-ink">Status</p>
+                    <p className="text-sm text-sage-600 font-medium">Completed</p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <HeartIcon className="h-5 w-5 text-gray-400 mt-0.5" />
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-lg bg-gold-500/20">
+                    <Heart className="h-5 w-5 text-gold-600" />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-700">Tax Deductible</p>
-                    <p className="text-sm text-gray-600">501(c)(3) eligible</p>
+                    <p className="text-sm font-medium text-ink">Tax Deductible</p>
+                    <p className="text-sm text-ink-soft">501(c)(3) eligible</p>
                   </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </motion.div>
+          </div>
+        </section>
 
-        {/* What's Next */}
-        <Card className="mb-8">
-          <CardContent className="p-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">What Happens Next?</h2>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-sm font-semibold">
-                  1
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">Receipt Email</p>
-                  <p className="text-sm text-gray-600">
-                    You'll receive a detailed receipt via email within the next few minutes.
-                    Save this for your tax records.
-                  </p>
-                </div>
+        {/* What Happens Next */}
+        <section className="section-alt">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="luxury-card"
+            >
+              <h2 className="text-display-thin text-2xl mb-6">What Happens Next</h2>
+              <div className="space-y-6">
+                {[
+                  {
+                    step: '1',
+                    title: 'Receipt Email',
+                    description: 'You will receive a detailed receipt via email within the next few minutes. Save this for your tax records.',
+                  },
+                  {
+                    step: '2',
+                    title: 'Impact Updates',
+                    description: 'We will keep you informed about how your donation is making a difference in our community.',
+                  },
+                  {
+                    step: '3',
+                    title: 'Tax Documentation',
+                    description: 'Your donation is tax-deductible. Keep the receipt for your tax filing.',
+                  },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/20 border border-gold-500/30 flex items-center justify-center">
+                      <span className="text-sm font-display text-gold-600">{item.step}</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-ink">{item.title}</p>
+                      <p className="text-sm text-ink-soft mt-1">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-sm font-semibold">
-                  2
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">Impact Updates</p>
-                  <p className="text-sm text-gray-600">
-                    We'll keep you informed about how your donation is making a difference in
-                    our community.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center text-sm font-semibold">
-                  3
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900">Tax Documentation</p>
-                  <p className="text-sm text-gray-600">
-                    Your donation is tax-deductible. Keep the receipt for your tax filing.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </motion.div>
+          </div>
+        </section>
 
         {/* Community Impact */}
-        <Card className="mb-8 bg-gradient-to-br from-primary-50 to-secondary-50 border-primary-200">
-          <CardContent className="p-8 text-center">
-            <HeartIcon className="h-12 w-12 text-primary-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              You're Making a Difference
-            </h3>
-            <p className="text-gray-700 mb-4">
-              Your generous contribution helps us build and nurture our vibrant community. Together,
-              we create unforgettable experiences that celebrate art, culture, and connection.
-            </p>
-            <p className="text-sm text-gray-600 italic">
-              "Alone we can do so little; together we can do so much."
-            </p>
-          </CardContent>
-        </Card>
+        <section className="section-base">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ y: 20 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="luxury-card text-center"
+            >
+              <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
+                <Heart className="h-10 w-10 text-gold-500" />
+              </div>
+              <h3 className="text-display-thin text-xl mb-3">
+                You Are Making a Difference
+              </h3>
+              <p className="text-body-relaxed text-ink-soft mb-6 max-w-lg mx-auto">
+                Your generous contribution helps us build and nurture our vibrant community.
+                Together, we create unforgettable experiences that celebrate art, culture, and connection.
+              </p>
+              <div className="ornate-divider" />
+            </motion.div>
+          </div>
+        </section>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" variant="primary">
-            <Link href="/" className="flex items-center">
-              <HomeIcon className="h-5 w-5 mr-2" />
-              Return Home
-            </Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/donate">
-              <HeartIcon className="h-5 w-5 mr-2" />
-              Make Another Donation
-            </Link>
-          </Button>
-        </div>
+        <section className="section-base">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/" className="cta-primary">
+                <Home className="h-5 w-5" />
+                Return Home
+              </Link>
+              <Link href="/donate" className="cta-secondary">
+                <Heart className="h-5 w-5" />
+                Make Another Donation
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* Support Contact */}
-        <div className="mt-12 text-center text-sm text-gray-500">
-          <p>
-            Questions about your donation?{' '}
-            <a href="mailto:donations@campalborz.org" className="text-primary-600 hover:text-primary-700 underline">
-              Contact our support team
-            </a>
-          </p>
-        </div>
-      </div>
-    </div>
+        <section className="pb-16">
+          <div className="text-center">
+            <p className="text-sm text-ink-soft">
+              Questions about your donation?{' '}
+              <a
+                href="mailto:donations@campalborz.org"
+                className="text-gold-600 hover:text-gold-500 underline transition-colors"
+              >
+                Contact our support team
+              </a>
+            </p>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

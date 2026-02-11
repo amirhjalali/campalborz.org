@@ -138,9 +138,9 @@ export default function CulturePage() {
                   whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="luxury-card"
+                  className="luxury-card group"
                 >
-                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
+                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5 transition-transform duration-300 group-hover:scale-110">
                     <ElementIcon className="h-6 w-6 text-gold-500" />
                   </div>
                   <h3 className="text-display-thin text-lg mb-3">{element.title}</h3>
@@ -158,6 +158,28 @@ export default function CulturePage() {
                 </motion.div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Persian Proverb */}
+        <section className="section-base">
+          <div className="section-contained">
+            <motion.div
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <blockquote className="blockquote-elegant max-w-2xl mx-auto">
+                <p className="font-accent text-xl md:text-2xl text-ink/80 leading-relaxed">
+                  The wound is the place where the Light enters you.
+                </p>
+                <footer className="mt-4 text-caption text-gold-600">
+                  Rumi
+                </footer>
+              </blockquote>
+            </motion.div>
           </div>
         </section>
 
@@ -206,7 +228,7 @@ export default function CulturePage() {
                         <p className="text-body-relaxed text-sm text-tan-light/80">
                           {value.description}
                         </p>
-                        <p className="text-sm text-gold-400 italic">
+                        <p className="font-accent text-sm text-gold-400">
                           In Practice: {value.example}
                         </p>
                       </div>
@@ -262,26 +284,26 @@ export default function CulturePage() {
 
                   <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
                     <div>
-                      <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Level</span>
+                      <span className="text-caption text-ink-soft/80">Level</span>
                       <p className="text-ink">{workshop.level}</p>
                     </div>
                     <div>
-                      <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Duration</span>
+                      <span className="text-caption text-ink-soft/80">Duration</span>
                       <p className="text-ink">{workshop.duration}</p>
                     </div>
                   </div>
 
                   <div className="mb-6">
-                    <span className="text-xs text-ink-soft/80 uppercase tracking-[0.1em]">Materials</span>
+                    <span className="text-caption text-ink-soft/80">Materials</span>
                     <p className="text-sm text-ink">{workshop.materials}</p>
                   </div>
 
                   <Link
                     href="/events"
-                    className="inline-flex items-center gap-2 text-sm text-gold-600 hover:text-gold-500 transition-colors"
+                    className="inline-flex items-center gap-2 text-sm text-gold-600 hover:text-gold-500 transition-colors group/link"
                   >
                     View Schedule
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
                   </Link>
                 </motion.div>
               ))}
@@ -338,7 +360,7 @@ export default function CulturePage() {
                   </p>
 
                   <div className="pl-0 md:pl-16">
-                    <p className="text-xs text-ink-soft/80 uppercase tracking-[0.1em] mb-3">Traditions</p>
+                    <p className="text-caption text-ink-soft/80 mb-3">Traditions</p>
                     <div className="flex flex-wrap gap-2">
                       {celebration.traditions.map((tradition, idx) => (
                         <span
@@ -440,7 +462,7 @@ export default function CulturePage() {
                   </h3>
                   <div className="space-y-4">
                     {culture.culturalBridge.mission.map((paragraph, index) => (
-                      <p key={index} className="text-body-relaxed text-tan-light/80">
+                      <p key={index} className={`text-body-relaxed text-tan-light/80 ${index === 0 ? 'drop-cap' : ''}`}>
                         {paragraph}
                       </p>
                     ))}
@@ -482,6 +504,8 @@ export default function CulturePage() {
         {culture.cta && (
           <section className="section-base">
             <div className="section-contained">
+              <div className="ornate-divider mb-12" />
+
               <motion.div
                 initial={{ y: 20 }}
                 whileInView={{ y: 0 }}
@@ -492,11 +516,14 @@ export default function CulturePage() {
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {culture.cta.title}
                 </h2>
+                <p className="font-accent text-lg text-ink/70 max-w-xl mx-auto">
+                  Where strangers become friends over a cup of tea.
+                </p>
                 <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
                   {culture.cta.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={culture.cta.buttons.primary.link} className="cta-primary">
+                  <Link href={culture.cta.buttons.primary.link} className="cta-primary cta-shimmer">
                     {culture.cta.buttons.primary.text}
                     <ArrowRight size={18} />
                   </Link>

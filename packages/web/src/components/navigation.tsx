@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -37,6 +38,7 @@ const navItems = [
 
 export function Navigation() {
   const campConfig = useCampConfig();
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -44,6 +46,8 @@ export function Navigation() {
   const [mounted, setMounted] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   const { scrollY } = useScroll();
 
@@ -54,6 +58,23 @@ export function Navigation() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
 
   // Handle keyboard navigation for dropdowns
   const handleDropdownKeyDown = useCallback((e: React.KeyboardEvent, item: typeof navItems[0]) => {
@@ -152,15 +173,17 @@ export function Navigation() {
                     'nav-link-gold px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                     isScrolled
                       ? 'text-sage-dark dark:text-tan-light hover:text-gold'
-                      : 'text-sage-dark hover:text-gold'
+                      : 'text-sage-dark hover:text-gold',
+                    isActive(item.href) && 'text-gold'
                   )}
                   onKeyDown={(e) => handleDropdownKeyDown(e, item)}
                   aria-expanded={item.children ? activeDropdown === item.label : undefined}
                   aria-haspopup={item.children ? 'true' : undefined}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
                 >
                   {item.label}
                   {item.children && (
-                    <ChevronDown className="h-3 w-3" aria-hidden="true" />
+                    <ChevronDown className={cn('h-3 w-3 transition-transform duration-200', activeDropdown === item.label && 'rotate-180')} aria-hidden="true" />
                   )}
                 </Link>
 
@@ -220,7 +243,7 @@ export function Navigation() {
             {/* Donate button */}
             <Link
               href="/donate"
-              className="hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+              className="hidden md:inline-flex items-center px-5 py-2 rounded-full font-display text-sm font-semibold tracking-wider uppercase transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:shadow-gold/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
             >
               Donate
             </Link>
@@ -229,13 +252,13 @@ export function Navigation() {
             <Link
               href="/members"
               className={cn(
-                'hidden md:inline-flex items-center px-6 py-2 rounded-lg font-display font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
+                'hidden md:inline-flex items-center px-5 py-2 rounded-full font-display text-sm tracking-wider uppercase transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
                 isScrolled
-                  ? 'border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan hover:bg-sage hover:text-tan-light dark:hover:bg-tan dark:hover:text-sage-dark'
-                  : 'border-2 border-sage text-sage-dark hover:bg-sage hover:text-tan-light'
+                  ? 'border border-sage-300 text-sage-dark dark:text-tan-light dark:border-tan-600 hover:bg-sage/10 dark:hover:bg-tan/10'
+                  : 'border border-sage-300 text-sage-dark hover:bg-sage/10'
               )}
             >
-              Member Login
+              Members
             </Link>
 
             {/* Mobile menu toggle */}
@@ -274,11 +297,22 @@ export function Navigation() {
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item, index) => (
-                <div key={item.label}>
+                <motion.div
+                  key={item.label}
+                  initial={{ x: -16, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.2, delay: index * 0.05 }}
+                >
                   <Link
                     href={item.href}
-                    className="block py-2 text-sage-dark dark:text-tan-light font-medium hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200"
+                    className={cn(
+                      'block py-2 font-medium hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200',
+                      isActive(item.href)
+                        ? 'text-gold'
+                        : 'text-sage-dark dark:text-tan-light'
+                    )}
                     onClick={() => setIsMobileMenuOpen(false)}
+                    aria-current={isActive(item.href) ? 'page' : undefined}
                   >
                     {item.label}
                   </Link>
@@ -288,7 +322,12 @@ export function Navigation() {
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block py-1 text-sm text-sage dark:text-tan-200 hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200"
+                          className={cn(
+                            'block py-1 text-sm hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200',
+                            isActive(child.href)
+                              ? 'text-gold'
+                              : 'text-sage dark:text-tan-200'
+                          )}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           {child.label}
@@ -296,23 +335,23 @@ export function Navigation() {
                       ))}
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
 
               <div className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light">
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-lg font-display font-semibold hover:bg-gold-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-full font-display text-sm font-semibold tracking-wider uppercase hover:bg-gold-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border-2 border-sage text-sage-dark dark:text-tan-light dark:border-tan rounded-lg font-display font-semibold hover:bg-sage hover:text-tan-light focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 dark:hover:bg-tan dark:hover:text-sage-dark transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 border border-sage-300 text-sage-dark dark:text-tan-light dark:border-tan-600 rounded-full font-display text-sm tracking-wider uppercase hover:bg-sage/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 dark:hover:bg-tan/10 transition-all duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Member Login
+                  Members
                 </Link>
               </div>
             </div>

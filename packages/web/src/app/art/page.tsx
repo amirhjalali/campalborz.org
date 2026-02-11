@@ -161,11 +161,11 @@ export default function ArtPage() {
               whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
+              className="text-center space-y-6 mb-14"
             >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                MOBILE ART
-              </p>
+              <div className="flex justify-center">
+                <span className="pill-header text-sm">Our Art Cars</span>
+              </div>
               <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
                 Featured Installations
               </h2>
@@ -188,20 +188,22 @@ export default function ArtPage() {
                     className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
                   >
                     <div className="flex flex-col lg:flex-row gap-8">
-                      {/* Image placeholder for art car */}
                       {installation.slug && (
-                        <div className="lg:w-1/3 flex-shrink-0">
-                          <div className="relative aspect-video rounded-xl overflow-hidden">
-                            <Image
-                              src={installation.slug === 'homa'
-                                ? '/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg'
-                                : '/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg'
-                              }
-                              alt={installation.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                        <div className="lg:w-2/5 flex-shrink-0">
+                          <Link href={`/art/${installation.slug}`}>
+                            <div className="image-frame image-grain relative aspect-[4/3] group">
+                              <Image
+                                src={installation.slug === 'homa'
+                                  ? '/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg'
+                                  : '/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg'
+                                }
+                                alt={installation.title}
+                                fill
+                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                sizes="(max-width: 1024px) 100vw, 40vw"
+                              />
+                            </div>
+                          </Link>
                         </div>
                       )}
 
@@ -246,9 +248,9 @@ export default function ArtPage() {
                         {detailUrl && (
                           <Link
                             href={detailUrl}
-                            className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors"
+                            className="cta-shimmer inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-gold-500/40 text-sm text-gold-400 hover:text-gold-300 hover:border-gold-400/60 transition-colors"
                           >
-                            Learn More
+                            Explore {installation.title.split(' ')[0]}
                             <ArrowRight className="h-4 w-4" />
                           </Link>
                         )}

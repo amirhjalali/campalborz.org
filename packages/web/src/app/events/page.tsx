@@ -138,13 +138,13 @@ export default function EventsPage() {
                   whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="luxury-card text-center"
+                  className="luxury-card text-center group"
                 >
-                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
+                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6 transition-transform duration-300 group-hover:scale-110">
                     <TypeIcon className="h-7 w-7 text-gold-500" />
                   </div>
                   <h3 className="text-display-thin text-lg mb-2">{type.name}</h3>
-                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-3">
+                  <p className="text-caption text-gold-600 mb-3">
                     {type.count} events yearly
                   </p>
                   <p className="text-body-relaxed text-sm text-ink-soft">
@@ -154,6 +154,8 @@ export default function EventsPage() {
               );
             })}
           </div>
+
+          <div className="ornate-divider mt-8" />
         </section>
 
         {/* Upcoming Events */}
@@ -181,6 +183,7 @@ export default function EventsPage() {
               {events.upcomingEvents.map((event, index) => {
                 const EventIcon = getIcon(event.icon);
                 const isExternalLink = event.linkUrl?.startsWith('http');
+                const isFeatured = index === 0;
 
                 return (
                   <motion.div
@@ -189,7 +192,11 @@ export default function EventsPage() {
                     whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
+                    className={`border rounded-2xl p-8 backdrop-blur-sm transition-all duration-300 hover:border-gold-500/30 ${
+                      isFeatured
+                        ? 'border-gold-500/25 bg-white/8 lg:col-span-2'
+                        : 'border-white/10 bg-white/5'
+                    }`}
                   >
                     <div className="flex items-start gap-5">
                       <div className="flex-shrink-0 p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
@@ -197,15 +204,15 @@ export default function EventsPage() {
                       </div>
                       <div className="flex-1 space-y-4">
                         <div>
-                          <span className="text-xs text-gold-400 tracking-[0.2em] uppercase">
+                          <span className="text-caption text-gold-400">
                             {event.type}
                           </span>
-                          <h3 className="text-display-thin text-xl text-tan-light mt-1">
+                          <h3 className={`text-display-thin text-tan-light mt-1 ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
                             {event.title}
                           </h3>
                         </div>
 
-                        <div className="space-y-2 text-sm text-tan-light/70">
+                        <div className={`flex flex-wrap gap-x-6 gap-y-2 text-sm text-tan-light/70`}>
                           <div className="flex items-center gap-3">
                             <Calendar className="h-4 w-4 text-gold-500/70" />
                             <span>{event.date}</span>
@@ -229,10 +236,10 @@ export default function EventsPage() {
                             href={event.linkUrl}
                             target={isExternalLink ? '_blank' : undefined}
                             rel={isExternalLink ? 'noreferrer' : undefined}
-                            className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors"
+                            className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors group"
                           >
                             {event.linkText || 'View Details'}
-                            <ExternalLink className="h-4 w-4" />
+                            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                           </Link>
                         )}
                       </div>
@@ -282,7 +289,7 @@ export default function EventsPage() {
                     <div className="space-y-6">
                       {day.events.map((scheduleEvent, eventIndex) => (
                         <div key={eventIndex} className="flex gap-4">
-                          <div className="flex-shrink-0 w-16 text-xs text-gold-600 tracking-[0.1em] uppercase font-medium">
+                          <div className="flex-shrink-0 w-16 text-caption text-gold-600">
                             {scheduleEvent.time}
                           </div>
                           <div>
@@ -356,6 +363,8 @@ export default function EventsPage() {
         {events.cta && (
           <section className="section-base">
             <div className="section-contained">
+              <div className="ornate-divider mb-12" />
+
               <motion.div
                 initial={{ y: 20 }}
                 whileInView={{ y: 0 }}
@@ -366,11 +375,14 @@ export default function EventsPage() {
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {events.cta.title}
                 </h2>
+                <p className="font-accent text-lg text-ink/70 max-w-xl mx-auto">
+                  The best way to know a community is to show up.
+                </p>
                 <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
                   {events.cta.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={events.cta.buttons.primary.link} className="cta-primary">
+                  <Link href={events.cta.buttons.primary.link} className="cta-primary cta-shimmer">
                     {events.cta.buttons.primary.text}
                     <ArrowRight size={18} />
                   </Link>

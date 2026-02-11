@@ -204,13 +204,29 @@ export default function AboutPage() {
             </h2>
             <div className="max-w-3xl mx-auto space-y-6">
               {about.mission.paragraphs.map((paragraph, index) => (
-                <p key={index} className="text-body-relaxed text-base md:text-lg text-ink-soft">
+                <p key={index} className={`text-body-relaxed text-base md:text-lg text-ink-soft text-left ${index === 0 ? 'drop-cap' : ''}`}>
                   {paragraph}
                 </p>
               ))}
             </div>
+
+            <div className="ornate-divider" />
+
+            <blockquote className="blockquote-elegant max-w-2xl mx-auto">
+              <p className="font-accent text-xl md:text-2xl text-ink/80 leading-relaxed">
+                Out beyond ideas of wrongdoing and rightdoing, there is a field. I&apos;ll meet you there.
+              </p>
+              <footer className="mt-4 text-caption text-gold-600">
+                Rumi
+              </footer>
+            </blockquote>
           </motion.div>
         </section>
+
+        {/* Ornate Section Break */}
+        <div className="section-base">
+          <div className="ornate-divider" />
+        </div>
 
         {/* Values Section */}
         <section className="section-contrast">
@@ -244,9 +260,9 @@ export default function AboutPage() {
                     whileInView={{ y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.15 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center"
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center group"
                   >
-                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
+                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6 transition-transform duration-300 group-hover:scale-110">
                       <ValueIcon className="h-8 w-8 text-gold-400" />
                     </div>
                     <h3 className="text-display-thin text-xl text-tan-light mb-4">
@@ -294,15 +310,15 @@ export default function AboutPage() {
                   whileInView={{ y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="luxury-card text-center"
+                  className="luxury-card text-center group"
                 >
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-400 to-sage-600 flex items-center justify-center">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-400 to-sage-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                     <span className="text-2xl font-display text-white">
                       {member.name.charAt(0)}
                     </span>
                   </div>
                   <h3 className="text-display-thin text-lg mb-1">{member.name}</h3>
-                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-3">
+                  <p className="text-caption text-gold-600 mb-3">
                     {member.role}
                   </p>
                   <p className="text-body-relaxed text-sm text-ink-soft">
@@ -313,6 +329,11 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+
+        {/* Ornate Section Break */}
+        <div className="py-4">
+          <div className="ornate-divider" />
+        </div>
 
         {/* 501(c)(3) CTA Section */}
         <section className="section-base">
@@ -341,7 +362,7 @@ export default function AboutPage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/donate" className="cta-primary">
+                <Link href="/donate" className="cta-primary cta-shimmer">
                   {about.nonprofit.cta.donate}
                   <ArrowRight size={18} />
                 </Link>

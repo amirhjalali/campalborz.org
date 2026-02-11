@@ -308,117 +308,150 @@ export default function ApplyPage() {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="form-label">
-                        {apply.form.fields.personalInfo.nameLabel}
+                      <label htmlFor="apply-name" className="form-label">
+                        {apply.form.fields.personalInfo.nameLabel} <span className="text-error">*</span>
                       </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        className="form-input"
-                        value={formData.name}
-                        onChange={handleChange}
-                      />
+                      <div className="input-glow rounded-xl">
+                        <input
+                          type="text"
+                          id="apply-name"
+                          name="name"
+                          required
+                          className="form-input border-0 bg-transparent"
+                          value={formData.name}
+                          onChange={handleChange}
+                          autoComplete="name"
+                        />
+                      </div>
                     </div>
                     <div>
-                      <label className="form-label">
-                        {apply.form.fields.personalInfo.emailLabel}
+                      <label htmlFor="apply-email" className="form-label">
+                        {apply.form.fields.personalInfo.emailLabel} <span className="text-error">*</span>
                       </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        className="form-input"
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
+                      <div className="input-glow rounded-xl">
+                        <input
+                          type="email"
+                          id="apply-email"
+                          name="email"
+                          required
+                          className="form-input border-0 bg-transparent"
+                          value={formData.email}
+                          onChange={handleChange}
+                          autoComplete="email"
+                        />
+                      </div>
                     </div>
                     <div>
-                      <label className="form-label">
-                        {apply.form.fields.personalInfo.phoneLabel}
+                      <label htmlFor="apply-phone" className="form-label">
+                        {apply.form.fields.personalInfo.phoneLabel} <span className="text-error">*</span>
                       </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
-                        className="form-input"
-                        value={formData.phone}
-                        onChange={handleChange}
-                      />
+                      <div className="input-glow rounded-xl">
+                        <input
+                          type="tel"
+                          id="apply-phone"
+                          name="phone"
+                          required
+                          className="form-input border-0 bg-transparent"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          autoComplete="tel"
+                        />
+                      </div>
                     </div>
                     <div>
-                      <label className="form-label">
-                        {apply.form.fields.personalInfo.emergencyContactLabel}
+                      <label htmlFor="apply-emergency" className="form-label">
+                        {apply.form.fields.personalInfo.emergencyContactLabel} <span className="text-error">*</span>
                       </label>
-                      <input
-                        type="text"
-                        name="emergency_contact"
-                        required
-                        className="form-input"
-                        placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
-                        value={formData.emergency_contact}
-                        onChange={handleChange}
-                      />
+                      <div className="input-glow rounded-xl">
+                        <input
+                          type="text"
+                          id="apply-emergency"
+                          name="emergency_contact"
+                          required
+                          className="form-input border-0 bg-transparent"
+                          placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
+                          value={formData.emergency_contact}
+                          onChange={handleChange}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Experience */}
                 <div>
-                  <label className="form-label">{apply.form.fields.experienceLabel}</label>
-                  <select
-                    name="experience"
-                    className="form-input"
-                    value={formData.experience}
-                    onChange={handleChange}
-                  >
-                    {apply.form.fields.experienceOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <label htmlFor="apply-experience" className="form-label">{apply.form.fields.experienceLabel}</label>
+                  <div className="input-glow rounded-xl">
+                    <select
+                      id="apply-experience"
+                      name="experience"
+                      className="form-input border-0 bg-transparent"
+                      value={formData.experience}
+                      onChange={handleChange}
+                    >
+                      {apply.form.fields.experienceOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 {/* Interests */}
                 <div>
-                  <label className="form-label">{apply.form.fields.interestsLabel}</label>
-                  <textarea
-                    name="interests"
-                    required
-                    rows={4}
-                    className="form-input"
-                    placeholder={apply.form.fields.interestsPlaceholder}
-                    value={formData.interests}
-                    onChange={handleChange}
-                  />
+                  <label htmlFor="apply-interests" className="form-label">
+                    {apply.form.fields.interestsLabel} <span className="text-error">*</span>
+                  </label>
+                  <div className="input-glow rounded-xl">
+                    <textarea
+                      id="apply-interests"
+                      name="interests"
+                      required
+                      rows={4}
+                      className="form-input border-0 bg-transparent"
+                      placeholder={apply.form.fields.interestsPlaceholder}
+                      value={formData.interests}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <p className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
                 </div>
 
                 {/* Contribution */}
                 <div>
-                  <label className="form-label">{apply.form.fields.contributionLabel}</label>
-                  <textarea
-                    name="contribution"
-                    required
-                    rows={4}
-                    className="form-input"
-                    placeholder={apply.form.fields.contributionPlaceholder}
-                    value={formData.contribution}
-                    onChange={handleChange}
-                  />
+                  <label htmlFor="apply-contribution" className="form-label">
+                    {apply.form.fields.contributionLabel} <span className="text-error">*</span>
+                  </label>
+                  <div className="input-glow rounded-xl">
+                    <textarea
+                      id="apply-contribution"
+                      name="contribution"
+                      required
+                      rows={4}
+                      className="form-input border-0 bg-transparent"
+                      placeholder={apply.form.fields.contributionPlaceholder}
+                      value={formData.contribution}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <p className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
                 </div>
 
                 {/* Dietary */}
                 <div>
-                  <label className="form-label">{apply.form.fields.dietaryLabel}</label>
-                  <textarea
-                    name="dietary"
-                    rows={3}
-                    className="form-input"
-                    placeholder={apply.form.fields.dietaryPlaceholder}
-                    value={formData.dietary}
-                    onChange={handleChange}
-                  />
+                  <label htmlFor="apply-dietary" className="form-label">{apply.form.fields.dietaryLabel}</label>
+                  <div className="input-glow rounded-xl">
+                    <textarea
+                      id="apply-dietary"
+                      name="dietary"
+                      rows={3}
+                      className="form-input border-0 bg-transparent"
+                      placeholder={apply.form.fields.dietaryPlaceholder}
+                      value={formData.dietary}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
                 {/* Terms */}
@@ -443,7 +476,7 @@ export default function ApplyPage() {
                     disabled={isSubmitting}
                     whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                     whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                    className="w-full cta-primary disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full cta-primary cta-shimmer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
