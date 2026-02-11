@@ -4,11 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Camp Alborz is a Burning Man theme camp focused on Persian culture and community building. This repository contains the modernized website for campalborz.org, redesigned with an Ethereum.org-inspired aesthetic combined with Persian cultural elements.
-
-## Current State
-
-The project has been redesigned from a multi-tenant platform to a focused Camp Alborz website with modern design inspired by Ethereum.org. The website features Persian cultural colors and smooth animations while maintaining clean, professional aesthetics.
+Camp Alborz is a Burning Man theme camp focused on Persian culture and community building. This is a focused single-camp website for campalborz.org with a refined Persian-modern design aesthetic.
 
 ## Repository Structure
 
@@ -19,27 +15,29 @@ campalborz.org/
 │   │   ├── src/
 │   │   │   ├── app/     # App router pages
 │   │   │   ├── components/ # Reusable React components
-│   │   │   ├── lib/     # Utility functions
-│   │   │   └── styles/  # Global CSS and Tailwind config
+│   │   │   ├── contexts/   # React contexts (AuthContext)
+│   │   │   ├── hooks/      # Custom hooks (useConfig)
+│   │   │   ├── lib/        # Utility functions
+│   │   │   └── styles/     # Global CSS and Tailwind config
 │   │   └── package.json
 │   ├── api/             # Express.js backend API
 │   │   ├── src/
 │   │   └── package.json
 │   └── database/        # Prisma schema and migrations
-├── plan.md              # Original modernization plan
-├── WEBSITE_REDESIGN_PLAN.md # Ethereum.org-inspired redesign plan
-├── PAGE_ERRORS_TRACKING.md  # Page error tracking and fixes
-└── OLD/                 # Archive of the previous website
+├── config/              # Brand, camp, and content configuration
+├── CLAUDE.md
+└── README.md
 ```
 
-## Current Technology Stack
+## Technology Stack
 
 ### Frontend
 - Next.js 14 with App Router
 - TypeScript
-- Tailwind CSS with custom Persian-inspired theme
+- Tailwind CSS with custom design tokens
 - Framer Motion for animations
 - Lucide React for icons
+- next-themes for dark mode
 
 ### Backend
 - Node.js with Express.js
@@ -48,10 +46,19 @@ campalborz.org/
 - Simple REST API (port 3005)
 
 ### Design System
-- **Colors:** Persian Purple (#6B46C1), Desert Gold (#F59E0B), Saffron (#FCD34D), Midnight (#1E293B)
-- **Typography:** Inter for body text, Space Grotesk for headings
-- **Animations:** Framer Motion with smooth transitions
-- **Icons:** Lucide React icon library
+- **Colors:** Sage (#4A5D5A), Desert Tan (#D4C4A8), Antique Gold (#D4AF37), Cream (#FAF7F2), Ink (#2C2416)
+- **Typography:** Cinzel (display/headings), Cormorant (accent/quotes), Inter (body/UI) - loaded via next/font/google
+- **Animations:** Framer Motion with scroll-triggered reveals
+- **Icons:** Lucide React
+
+### Key CSS Classes
+- Sections: `section-base`, `section-alt`, `section-contrast`, `section-contained`
+- Cards: `luxury-card`, `frame-panel`
+- Typography: `text-display-thin`, `text-display-wide`, `text-body-relaxed`, `text-caption`, `text-optical-h1`, `text-optical-h2`
+- Fonts: `font-display`, `font-accent`, `font-editorial`, `font-body`
+- Buttons: `cta-primary`, `cta-secondary`, `cta-shimmer`
+- Forms: `form-input`, `form-label`, `input-glow`
+- Decorative: `ornate-divider`, `pill-header`, `blockquote-elegant`, `drop-cap`, `pattern-persian`, `mountain-silhouette`, `image-frame`, `image-grain`
 
 ## Development Commands
 
@@ -61,7 +68,6 @@ From the `packages/web` directory:
 - Development server: `npm run dev` (runs on port 3006)
 - Build: `npm run build`
 - Production: `npm run start`
-- Type checking: `npm run typecheck`
 - Linting: `npm run lint`
 
 ### API Server
@@ -70,61 +76,43 @@ From the `packages/api` directory:
 - Development server: `npm run dev` (runs on port 3005)
 - Build: `npm run build`
 
-## IMPORTANT: Server Verification Process
+## Components
 
-**ALWAYS verify the Next.js development server is compiling correctly before claiming a page is working:**
+```
+components/
+├── navigation.tsx       # Top nav with active states, mobile menu, dark mode toggle
+├── footer.tsx           # Site footer with links and social
+├── stats.tsx            # Animated statistics counters
+├── feature-cards.tsx    # Feature showcase cards
+├── theme-provider.tsx   # Dark mode provider
+├── donation/
+│   └── DonationForm.tsx # Multi-step donation form
+└── home/
+    ├── PageHero.tsx     # Homepage parallax hero
+    └── FramedCTA.tsx    # Call-to-action sections
+```
 
-1. **Check the terminal output** after making changes
-2. **Look for compilation errors** like:
-   - `Module not found: Can't resolve`
-   - `Failed to compile`
-   - Type errors
-3. **Navigate to each page** in the browser to confirm it loads
-4. **Only mark a page as "Working"** in tracking documents after:
-   - No compilation errors in terminal
-   - Page loads successfully in browser
-   - No console errors in browser DevTools
+## Pages
 
-### Common Issues to Check:
-- **Missing component imports** (especially `@/components/ui/*` - these don't exist anymore)
-- **Incorrect import paths** (use relative paths like `../../components/navigation`)
-- **Missing npm packages** (check package.json)
-- **TypeScript type errors**
-
-### Before Claiming a Fix is Complete:
-1. Save all files
-2. Check Next.js dev server output for compilation errors
-3. Refresh the browser page
-4. Check browser console for runtime errors
-5. Only then update tracking documents
-
-## Available Components
-
-The new design system includes these components:
-- `Navigation` - Top navigation bar with dropdowns
-- `Hero` - Hero section with gradient background
-- `Stats` - Statistics display section
-- `FeatureCards` - Feature showcase cards
-
-## Pages Status
-
-All pages have been redesigned to use the new Ethereum.org-inspired design system:
-- Homepage (`/`)
-- About (`/about`)
-- Art (`/art`)
-- Events (`/events`)
-- Donate (`/donate`)
-- Members (`/members`)
-- Apply (`/apply`)
-- Culture (`/culture`)
-- Admin (`/admin`)
-- Search (`/search`)
+- `/` - Homepage
+- `/about` - About Camp Alborz
+- `/art` - Art overview
+- `/art/homa` - HOMA art car
+- `/art/damavand` - DAMAVAND art car
+- `/events` - Events listing
+- `/culture` - Persian culture
+- `/donate` - Donation form
+- `/donate/success` - Donation confirmation
+- `/members` - Member login
+- `/apply` - Membership application
+- `/search` - Site search
+- `/admin` - Admin dashboard
+- `/register` - Registration
 
 ## Important Considerations
 
-- The site must maintain 501(c)(3) non-profit compliance
-- Accessibility standards (WCAG 2.1) must be followed
-- Performance target: sub-3-second load times
-- Mobile-first design approach
-- Persian cultural elements should be tastefully integrated
-- Clean, professional aesthetic inspired by Ethereum.org
+- 501(c)(3) non-profit compliance required
+- WCAG 2.1 accessibility standards
+- Mobile-first responsive design
+- Persian cultural elements integrated tastefully
+- All fonts self-hosted via next/font/google (no CDN imports)
