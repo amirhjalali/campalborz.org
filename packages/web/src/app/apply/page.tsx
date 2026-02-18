@@ -7,7 +7,7 @@ import { Navigation } from '../../components/navigation';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useContentConfig } from '../../hooks/useConfig';
 import { toast } from 'sonner';
-import { CheckCircle, Loader2, ChevronDown, ArrowRight, ExternalLink, FileText, Users, MessageSquare, Clock } from 'lucide-react';
+import { CheckCircle, Loader2, ArrowRight, ExternalLink, FileText, Users, MessageSquare, Clock } from 'lucide-react';
 
 interface ApplicationFormData {
   name: string;
@@ -29,7 +29,7 @@ export default function ApplyPage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '24%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
@@ -165,23 +165,12 @@ export default function ApplyPage() {
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
           </motion.div>
-
-          <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
 
           <motion.div
             className="relative z-10 section-contained text-center py-24"
             style={{ y: textY, opacity }}
           >
-            <motion.p
-              className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              JOIN OUR COMMUNITY
-            </motion.p>
             <motion.h1
               className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
@@ -191,29 +180,13 @@ export default function ApplyPage() {
               {apply.title}
             </motion.h1>
             <motion.p
-              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto italic"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
               {apply.subtitle}
             </motion.p>
-
-            <motion.div
-              className="ornate-divider mt-8"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              style={{ filter: 'brightness(1.5)' }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
           </motion.div>
         </section>
 
@@ -243,18 +216,9 @@ export default function ApplyPage() {
         {/* Legacy Form Option */}
         {apply.externalApplication && (
           <section className="section-base section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card"
-            >
+            <div className="frame-panel">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div>
-                  <p className="text-xs text-gold-600 tracking-[0.2em] uppercase mb-2">
-                    Alternative Option
-                  </p>
                   <h3 className="text-display-thin text-xl mb-2">
                     Prefer the Google Form?
                   </h3>
@@ -277,24 +241,15 @@ export default function ApplyPage() {
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
           </section>
         )}
 
         {/* Application Form */}
         <section className="section-base">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card"
-            >
-              <div className="text-center mb-10">
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-3">
-                  ONLINE APPLICATION
-                </p>
+            <div className="frame-panel">
+              <div className="mb-10">
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {apply.form.title}
                 </h2>
@@ -495,43 +450,34 @@ export default function ApplyPage() {
                   </p>
                 </div>
               </form>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Application Process */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                WHAT TO EXPECT
-              </p>
+            <div className="mb-14">
               <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
                 {apply.process.title}
               </h2>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {apply.process.steps.map((step, index) => {
                 const StepIcon = processIcons[index] || FileText;
                 return (
-                  <motion.div
+                  <div
                     key={step.stepNumber}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center"
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5 text-center"
                   >
-                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
-                      <StepIcon className="h-6 w-6 text-gold-400" />
-                    </div>
+                    {index % 2 === 0 ? (
+                      <StepIcon className="h-6 w-6 text-gold-400 mx-auto mb-5" />
+                    ) : (
+                      <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
+                        <StepIcon className="h-6 w-6 text-gold-400" />
+                      </div>
+                    )}
                     <div className="text-3xl font-display text-gold-500 mb-2">
                       {step.stepNumber}
                     </div>
@@ -541,41 +487,26 @@ export default function ApplyPage() {
                     <p className="text-body-relaxed text-sm text-tan-light/70">
                       {step.description}
                     </p>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* Questions */}
         <section className="section-base">
-          <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="frame-panel text-center space-y-8"
-            >
-              <h2 className="text-display-thin text-2xl md:text-3xl">
-                Questions About Applying?
-              </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
-                If you have any questions about the application process or camp membership,
-                don't hesitate to reach out. We're here to help.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/about" className="cta-secondary">
-                  Learn More About Us
-                  <ArrowRight size={18} />
-                </Link>
-                <Link href="/culture" className="cta-secondary">
-                  Explore Our Culture
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.div>
+          <div className="section-contained text-center space-y-6">
+            <h2 className="text-display-thin text-2xl md:text-3xl">
+              Questions About Applying?
+            </h2>
+            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              Learn more about who we are and what drives our community.
+            </p>
+            <Link href="/about" className="cta-secondary inline-flex">
+              About Camp Alborz
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </section>
       </main>

@@ -58,9 +58,6 @@ export function Stats() {
           transition={{ duration: 0.5 }}
           className="text-center space-y-4"
         >
-          <p className="text-display-wide text-xs tracking-[0.3em] text-ink-soft/80">
-            LEGACY & IMPACT
-          </p>
           <h2 className="text-display-thin text-3xl md:text-4xl">In Numbers</h2>
           <p className="text-body-relaxed text-base md:text-lg text-ink-soft mx-auto max-w-2xl">
             Each metric reflects our commitment to building community through art, culture, and hospitality.
@@ -78,8 +75,8 @@ export function Stats() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: index * 0.08, ease: 'easeOut' }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="luxury-card group cursor-default"
+                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                className="luxury-card group cursor-default hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="flex items-center gap-5">
                   <div

@@ -4,8 +4,8 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, ChevronDown } from 'lucide-react';
-import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
+import { ArrowRight } from 'lucide-react';
+import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
 
@@ -21,20 +21,14 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
   return (
     <section className="section-base">
       <div className="section-contained">
-        <motion.div
-          initial={{ y: 20 }}
-          whileInView={{ y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-4 mb-14"
-        >
+        <div className="space-y-4 mb-14">
           <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
             15+ YEARS OF MAGIC
           </p>
-          <h2 className="text-display-thin text-3xl md:text-4xl">
+          <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
             Our Journey
           </h2>
-        </motion.div>
+        </div>
 
         <div ref={timelineRef} className="relative max-w-3xl mx-auto">
           {/* Timeline Line Background */}
@@ -53,7 +47,7 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
                 initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
                 {/* Timeline Dot */}
@@ -90,7 +84,6 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
 
 export default function AboutPage() {
   const { about } = useContentConfig();
-  const campConfig = useCampConfig();
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -98,7 +91,7 @@ export default function AboutPage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
@@ -135,7 +128,6 @@ export default function AboutPage() {
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAMH/8QAIRAAAgEDBAMBAAAAAAAAAAAAAQIDAAQRBRIhMQZBUWH/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAv/EABcRAQEBAQAAAAAAAAAAAAAAAAEAESH/2gAMAwEAAhEDEEA/AKWkWq6bCJH3G4kOZGJ5OOwPgGtItdOS8gFwlw8Mb5CJGQAM9kj81UtJNxp9pcNazyW5ljV2MTlSR8yKn/lKU4x//9k="
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
           </motion.div>
 
           <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
@@ -153,18 +145,18 @@ export default function AboutPage() {
               OUR STORY
             </motion.p>
             <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {about.title}
             </motion.h1>
             <motion.p
-              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {about.subtitle}
             </motion.p>
@@ -173,44 +165,26 @@ export default function AboutPage() {
               className="ornate-divider mt-8"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{ filter: 'brightness(1.5)' }}
             />
           </motion.div>
 
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
-          </motion.div>
         </section>
 
         {/* Mission Statement */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="frame-panel text-center space-y-8"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-              WHY WE EXIST
-            </p>
-            <h2 className="text-display-thin text-3xl md:text-4xl">
+          <div className="text-center space-y-8">
+            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
               {about.mission.title}
             </h2>
             <div className="max-w-3xl mx-auto space-y-6">
               {about.mission.paragraphs.map((paragraph, index) => (
-                <p key={index} className={`text-body-relaxed text-base md:text-lg text-ink-soft text-left ${index === 0 ? 'drop-cap' : ''}`}>
+                <p key={index} className={`text-body-relaxed text-base md:text-lg text-ink-soft text-left ${index === 0 ? 'drop-cap font-accent' : ''}`}>
                   {paragraph}
                 </p>
               ))}
             </div>
-
-            <div className="ornate-divider" />
 
             <blockquote className="blockquote-elegant max-w-2xl mx-auto">
               <p className="font-accent text-xl md:text-2xl text-ink/80 leading-relaxed">
@@ -220,34 +194,17 @@ export default function AboutPage() {
                 Rumi
               </footer>
             </blockquote>
-          </motion.div>
+          </div>
         </section>
-
-        {/* Ornate Section Break */}
-        <div className="section-base">
-          <div className="ornate-divider" />
-        </div>
 
         {/* Values Section */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                WHAT WE BELIEVE
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+            <div className="mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                 Our Core Values
               </h2>
-              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
-                The principles that guide everything we create and share
-              </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {about.values.map((value, index) => {
@@ -256,13 +213,13 @@ export default function AboutPage() {
                 return (
                   <motion.div
                     key={value.title}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.15 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm text-center group"
+                    transition={{ duration: 0.6, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                    className={`border border-white/10 rounded-2xl p-8 bg-white/5 text-center group transition-shadow duration-300 hover:shadow-lg hover:shadow-gold-500/10 ${index === 0 ? 'md:col-span-2' : ''}`}
                   >
-                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6 transition-transform duration-300 group-hover:scale-110">
+                    <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
                       <ValueIcon className="h-8 w-8 text-gold-400" />
                     </div>
                     <h3 className="text-display-thin text-xl text-tan-light mb-4">
@@ -284,32 +241,21 @@ export default function AboutPage() {
         {/* Team Section */}
         <section className="section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                THE PEOPLE
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl">
+            <div className="mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                 Our Leadership
               </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
-                The passionate people who make {campConfig.name} possible
-              </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {about.team.map((member, index) => (
                 <motion.div
                   key={member.name}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -3 }}
                   className="luxury-card text-center group"
                 >
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-400 to-sage-600 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
@@ -330,48 +276,21 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Ornate Section Break */}
-        <div className="py-4">
-          <div className="ornate-divider" />
-        </div>
-
         {/* 501(c)(3) CTA Section */}
         <section className="section-base">
-          <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="frame-panel text-center space-y-8"
-            >
-              <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
-                {(() => {
-                  const AwardIcon = getIcon('award');
-                  return <AwardIcon className="h-10 w-10 text-gold-500" />;
-                })()}
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-display-thin text-2xl md:text-3xl">
-                  {about.nonprofit.title}
-                </h2>
-                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
-                  {about.nonprofit.description}
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/donate" className="cta-primary cta-shimmer">
-                  {about.nonprofit.cta.donate}
-                  <ArrowRight size={18} />
-                </Link>
-                <Link href="/events" className="cta-secondary">
-                  See Upcoming Events
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.div>
+          <div className="section-contained text-center space-y-6">
+            <h2 className="text-display-thin text-2xl md:text-3xl">
+              {about.nonprofit.title}
+            </h2>
+            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              {about.nonprofit.description}
+            </p>
+            <div>
+              <Link href="/donate" className="cta-primary cta-shimmer">
+                {about.nonprofit.cta.donate}
+                <ArrowRight size={18} />
+              </Link>
+            </div>
           </div>
         </section>
       </main>

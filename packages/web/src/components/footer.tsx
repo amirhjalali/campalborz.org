@@ -88,9 +88,6 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-14 pt-8 border-t border-white/8">
-          <div className="flex justify-center mb-6">
-            <span className="simurgh-accent" aria-hidden="true" />
-          </div>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
             <p className="text-xs text-tan-light/35">
               &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.

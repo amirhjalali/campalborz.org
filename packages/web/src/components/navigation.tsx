@@ -196,7 +196,7 @@ export function Navigation() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg rounded-lg shadow-xl border border-tan-300 dark:border-sage-light overflow-hidden"
+                      className="absolute top-full left-0 mt-2 w-56 bg-warm-white dark:bg-sage rounded-lg shadow-xl border border-tan-300 dark:border-sage-light overflow-hidden"
                       role="menu"
                       aria-label={`${item.label} submenu`}
                     >
@@ -290,8 +290,8 @@ export function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="lg:hidden bg-warm-white/95 dark:bg-sage/95 backdrop-blur-lg border-t border-tan-300 dark:border-sage-light"
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden bg-warm-white dark:bg-sage border-t border-tan-300 dark:border-sage-light"
             role="navigation"
             aria-label="Mobile navigation"
           >

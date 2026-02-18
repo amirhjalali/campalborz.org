@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Navigation } from '../../../components/navigation';
-import { motion } from 'framer-motion';
 import {
   CheckCircle,
   Mail,
@@ -25,51 +24,25 @@ export default function DonationSuccessPage() {
     <>
       <Navigation />
       <main className="min-h-screen bg-cream">
-        {/* Hero / Success Confirmation */}
-        <section className="relative pt-32 pb-16 overflow-hidden">
-          <div className="pattern-persian opacity-20 absolute inset-0" />
-          <motion.div
-            initial={{ y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative section-contained text-center"
-          >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5, type: 'spring' }}
-              className="inline-flex p-5 rounded-full bg-sage-100 border border-sage-300 mb-8"
-            >
+        {/* Success Confirmation */}
+        <section className="pt-32 pb-16">
+          <div className="section-contained text-center">
+            <div className="inline-flex p-5 rounded-full bg-sage-100 border border-sage-300 mb-8">
               <CheckCircle className="h-14 w-14 text-sage-600" />
-            </motion.div>
-            <motion.h1
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-display-thin text-4xl md:text-5xl mb-4"
-            >
+            </div>
+            <h1 className="text-display-thin text-4xl md:text-5xl mb-4">
               Thank You for Your Generosity
-            </motion.h1>
-            <motion.p
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto"
-            >
+            </h1>
+            <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
               Your donation has been received successfully. Your support helps us build a stronger community.
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
         </section>
 
         {/* Donation Details */}
         <section className="section-base">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="frame-panel"
-            >
+            <div className="frame-panel">
               {/* Amount Display */}
               <div className="text-center pb-8 mb-8 border-b border-line/30">
                 <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-3">
@@ -129,20 +102,14 @@ export default function DonationSuccessPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* What Happens Next */}
         <section className="section-alt">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card"
-            >
+            <div className="luxury-card">
               <h2 className="text-display-thin text-2xl mb-6">What Happens Next</h2>
               <div className="space-y-6">
                 {[
@@ -173,20 +140,14 @@ export default function DonationSuccessPage() {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Community Impact */}
         <section className="section-base">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card text-center"
-            >
+            <div className="luxury-card text-center">
               <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
                 <Heart className="h-10 w-10 text-gold-500" />
               </div>
@@ -198,7 +159,7 @@ export default function DonationSuccessPage() {
                 Together, we create unforgettable experiences that celebrate art, culture, and connection.
               </p>
               <div className="ornate-divider" />
-            </motion.div>
+            </div>
           </div>
         </section>
 

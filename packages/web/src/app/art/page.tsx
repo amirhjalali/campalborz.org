@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, ChevronDown, MapPin, Users, Eye, ExternalLink, Calendar } from 'lucide-react';
+import { ArrowRight, MapPin, Users, Eye, ExternalLink, Calendar } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
@@ -73,18 +73,18 @@ export default function ArtPage() {
               CREATIVE EXPRESSION
             </motion.p>
             <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {art.title}
             </motion.h1>
             <motion.p
-              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+              className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {art.subtitle}
             </motion.p>
@@ -93,36 +93,23 @@ export default function ArtPage() {
               className="ornate-divider mt-8"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{ filter: 'brightness(1.5)' }}
             />
           </motion.div>
 
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
-          </motion.div>
         </section>
 
         {/* Art Categories */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-14"
-          >
+          <div className="text-center space-y-4 mb-14">
             <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
               OUR WORK
             </p>
-            <h2 className="text-display-thin text-3xl md:text-4xl">
+            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
               Art Categories
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {art.categories.map((category, index) => {
@@ -134,7 +121,7 @@ export default function ArtPage() {
                   initial={{ y: 20 }}
                   whileInView={{ y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                   className="luxury-card text-center"
                 >
                   <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
@@ -156,23 +143,17 @@ export default function ArtPage() {
         {/* Featured Art Cars */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-6 mb-14"
-            >
+            <div className="text-center space-y-6 mb-14">
               <div className="flex justify-center">
                 <span className="pill-header text-sm">Our Art Cars</span>
               </div>
-              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                 Featured Installations
               </h2>
-              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
+              <p className="font-accent text-lg text-tan-light/80 max-w-2xl mx-auto">
                 Our signature artistic contributions to Black Rock City
               </p>
-            </motion.div>
+            </div>
 
             <div className="space-y-8">
               {art.installations.map((installation, index) => {
@@ -184,7 +165,7 @@ export default function ArtPage() {
                     initial={{ y: 20 }}
                     whileInView={{ y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
                   >
                     <div className="flex flex-col lg:flex-row gap-8">
@@ -267,23 +248,14 @@ export default function ArtPage() {
         {art.collaborations && art.collaborations.length > 0 && (
           <section className="section-base">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-4 mb-14"
-              >
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  COMMUNITY PARTNERSHIPS
-                </p>
-                <h2 className="text-display-thin text-3xl md:text-4xl">
+              <div className="text-center space-y-4 mb-14">
+                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                   Collaborations & Sponsored Projects
                 </h2>
                 <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
                   Art we've helped finance, transport, or host through the Camp Alborz network
                 </p>
-              </motion.div>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {art.collaborations.map((collab, index) => (
@@ -292,7 +264,7 @@ export default function ArtPage() {
                     initial={{ y: 20 }}
                     whileInView={{ y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="luxury-card"
                   >
                     <span className="text-xs text-gold-600 tracking-[0.2em] uppercase">
@@ -328,23 +300,17 @@ export default function ArtPage() {
         {/* Creative Process Timeline */}
         <section className="section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
+            <div className="space-y-4 mb-14">
               <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
                 FROM CONCEPT TO PLAYA
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                 Our Creative Process
               </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              <p className="font-accent text-lg text-ink-soft max-w-2xl">
                 How we bring art to life together
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
@@ -355,12 +321,8 @@ export default function ArtPage() {
                 { phase: 'Installation', time: 'August', description: 'Setting up on the playa' },
                 { phase: 'Legacy', time: 'Sep-Oct', description: 'Documentation and future planning' },
               ].map((phase, index) => (
-                <motion.div
+                <div
                   key={phase.phase}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card"
                 >
                   <div className="flex items-center gap-4 mb-4">
@@ -378,7 +340,7 @@ export default function ArtPage() {
                   <p className="text-body-relaxed text-sm text-ink-soft">
                     {phase.description}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -386,31 +348,17 @@ export default function ArtPage() {
 
         {/* CTA Section */}
         <section className="section-base">
-          <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="frame-panel text-center space-y-8"
-            >
-              <h2 className="text-display-thin text-2xl md:text-3xl">
-                Create Art With Us
-              </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
-                Whether you're an experienced artist or just curious about creating, there's a place for you in our artistic community.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/events" className="cta-primary">
-                  See Art Events
-                  <ArrowRight size={18} />
-                </Link>
-                <Link href="/events" className="cta-secondary">
-                  Attend Art Build
-                  <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.div>
+          <div className="section-contained text-center space-y-6">
+            <h2 className="text-display-thin text-2xl md:text-3xl">
+              Create Art With Us
+            </h2>
+            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              Whether you're an experienced artist or just curious about creating, there's a place for you in our artistic community.
+            </p>
+            <Link href="/events" className="cta-primary inline-flex">
+              See Art Events
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </section>
       </main>

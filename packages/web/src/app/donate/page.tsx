@@ -11,7 +11,6 @@ import { getIcon } from '../../lib/icons';
 import {
   Heart,
   CheckCircle,
-  ChevronDown,
   ArrowRight,
   ExternalLink,
   Award
@@ -27,7 +26,7 @@ export default function DonatePage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
@@ -77,15 +76,15 @@ export default function DonatePage() {
               className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               SUPPORT OUR MISSION
             </motion.p>
             <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {donate.title}
             </motion.h1>
@@ -93,7 +92,7 @@ export default function DonatePage() {
               className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {donate.subtitle}
             </motion.p>
@@ -102,47 +101,27 @@ export default function DonatePage() {
               className="ornate-divider mt-8"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{ filter: 'brightness(1.5)' }}
             />
           </motion.div>
 
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
-          </motion.div>
         </section>
 
         {/* Impact Stats */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-14"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-              YOUR IMPACT
-            </p>
-            <h2 className="text-display-thin text-3xl md:text-4xl">
+          <div className="text-center space-y-4 mb-14">
+            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
               How Donations Help
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {donate.impactStats.map((stat, index) => {
               const StatIcon = getIcon(stat.icon);
               return (
-                <motion.div
+                <div
                   key={stat.label}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="luxury-card text-center"
                 >
                   <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5">
@@ -154,7 +133,7 @@ export default function DonatePage() {
                   <p className="text-sm text-ink-soft">
                     {stat.label}
                   </p>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -164,35 +143,19 @@ export default function DonatePage() {
         {donate.paymentOptions && donate.paymentOptions.length > 0 && (
           <section className="section-contrast">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-4 mb-14"
-              >
-                <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                  WAYS TO GIVE
-                </p>
+              <div className="text-center space-y-4 mb-14">
                 <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
                   Preferred Ways to Give
                 </h2>
-                <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
-                  Send dues, grid fees, and contributions using any of these methods
-                </p>
-              </motion.div>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {donate.paymentOptions.map((option, index) => {
                   const OptionIcon = getIcon(option.icon || 'heart');
                   return (
-                    <motion.div
+                    <div
                       key={option.method}
-                      initial={{ y: 20 }}
-                      whileInView={{ y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
-                      className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
+                      className="border border-white/10 rounded-2xl p-8 bg-white/5"
                     >
                       <div className="flex items-start justify-between gap-4 mb-6">
                         <div className="flex items-center gap-4">
@@ -235,7 +198,7 @@ export default function DonatePage() {
                           <ExternalLink className="h-4 w-4" />
                         </Link>
                       )}
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
@@ -246,32 +209,19 @@ export default function DonatePage() {
         {/* Donation Tiers */}
         <section className="section-base">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                SUPPORT LEVELS
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl">
+            <div className="space-y-4 mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                 Choose Your Support Level
               </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              <p className="font-accent text-lg text-ink-soft max-w-2xl">
                 Every contribution helps us build a stronger, more vibrant community
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {donate.donationTiers.map((tier, index) => (
-                <motion.div
+                <div
                   key={tier.amount}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className={`relative luxury-card ${tier.popular ? 'ring-2 ring-gold-500' : ''}`}
                 >
                   {tier.popular && (
@@ -287,7 +237,7 @@ export default function DonatePage() {
                       ${tier.amount}
                     </p>
                     <h3 className="text-display-thin text-xl mb-2">{tier.title}</h3>
-                    <p className="text-sm text-ink-soft">{tier.description}</p>
+                    <p className="font-accent text-sm text-ink-soft">{tier.description}</p>
                   </div>
 
                   <ul className="space-y-3 mb-8">
@@ -303,7 +253,7 @@ export default function DonatePage() {
                     Donate ${tier.amount}
                     <ArrowRight size={18} />
                   </button>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -320,35 +270,19 @@ export default function DonatePage() {
         {/* Funding Priorities */}
         <section className="section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="frame-panel"
-            >
-              <div className="text-center space-y-4 mb-10">
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  TRANSPARENCY
-                </p>
+            <div className="frame-panel">
+              <div className="text-center mb-10">
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   2024 Funding Priorities
                 </h2>
-                <p className="text-body-relaxed text-sm text-ink-soft">
-                  See how your donations will be allocated
-                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {donate.fundingPriorities.map((priority, index) => {
                   const PriorityIcon = getIcon(priority.icon);
                   return (
-                    <motion.div
+                    <div
                       key={priority.title}
-                      initial={{ y: 14 }}
-                      whileInView={{ y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="space-y-4"
                     >
                       <div className="flex items-center justify-between">
@@ -368,48 +302,35 @@ export default function DonatePage() {
                       </div>
                       <div className="w-full bg-tan-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${priority.color || 'bg-gold-500'}`}
+                          className={`h-2 rounded-full transition-all duration-1000 ease-out ${priority.color || 'bg-gold-500'}`}
                           style={{ width: `${priority.percentage}%` }}
                         />
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Financial Transparency */}
         <section className="section-base">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card"
-            >
+            <div className="luxury-card">
               <div className="text-center space-y-4 mb-10">
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  ACCOUNTABILITY
-                </p>
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   Financial Transparency
                 </h2>
                 <p className="text-body-relaxed text-sm text-ink-soft">
-                  2023 budget breakdown - see exactly how donations were used
+                  2023 budget breakdown — see exactly how donations were used
                 </p>
               </div>
 
               <div className="space-y-6">
                 {donate.transparencyItems.map((item, index) => (
-                  <motion.div
+                  <div
                     key={item.category}
-                    initial={{ x: -14 }}
-                    whileInView={{ x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="border-b border-line/30 pb-6 last:border-b-0"
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -422,46 +343,33 @@ export default function DonatePage() {
                     <p className="text-sm text-ink-soft mb-3">{item.description}</p>
                     <div className="w-full bg-tan-100 rounded-full h-1.5">
                       <div
-                        className="bg-gold-500 h-1.5 rounded-full"
+                        className="bg-gold-500 h-1.5 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${item.percentage}%` }}
                       />
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Other Ways to Help */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                BEYOND DONATIONS
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+            <div className="space-y-4 mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                 Other Ways to Support Us
               </h2>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {donate.otherWaysToHelp.map((option, index) => {
                 const OptionIcon = getIcon(option.icon);
                 return (
-                  <motion.div
+                  <div
                     key={option.title}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5"
                   >
                     <div className="flex items-center gap-4 mb-4">
                       <div className="p-3 rounded-full bg-gold-500/20 border border-gold-500/30">
@@ -484,7 +392,7 @@ export default function DonatePage() {
                       Learn More
                       <ArrowRight className="h-4 w-4" />
                     </Link>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -495,13 +403,7 @@ export default function DonatePage() {
         {donate.taxInfo && (
           <section className="section-base">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="frame-panel"
-              >
+              <div className="frame-panel">
                 <div className="flex flex-col md:flex-row items-start gap-6">
                   <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
                     <Award className="h-8 w-8 text-gold-500" />
@@ -521,7 +423,7 @@ export default function DonatePage() {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </section>
         )}
@@ -530,13 +432,7 @@ export default function DonatePage() {
         {donate.donorRecognition && (
           <section className="section-alt">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="luxury-card text-center"
-              >
+              <div className="luxury-card text-center">
                 <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
                   <Heart className="h-10 w-10 text-gold-500" />
                 </div>
@@ -549,24 +445,20 @@ export default function DonatePage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {donate.donorRecognition.tiers.map((tier, index) => (
-                    <motion.div
+                    <div
                       key={tier.title}
-                      initial={{ y: 14 }}
-                      whileInView={{ y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="p-6 bg-tan-50 rounded-xl"
                     >
                       <h4 className="text-display-thin text-lg mb-2">{tier.title}</h4>
                       <p className="text-sm text-ink-soft">{tier.description}</p>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
 
                 <p className="text-sm text-ink-soft mt-8">
                   Full donor recognition list available upon request. We respect donor privacy preferences.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </section>
         )}
@@ -575,23 +467,14 @@ export default function DonatePage() {
         {donate.donationForm && (
           <section className="section-base">
             <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-4 mb-10"
-              >
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  ONLINE DONATION
-                </p>
+              <div className="text-center space-y-4 mb-10">
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {donate.donationForm.title}
                 </h2>
                 <p className="text-body-relaxed text-sm text-ink-soft">
                   {donate.donationForm.description}
                 </p>
-              </motion.div>
+              </div>
 
               <div className="frame-panel">
                 <DonationForm
@@ -625,20 +508,14 @@ export default function DonatePage() {
         {donate.gratitude && (
           <section className="section-base">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="frame-panel text-center"
-              >
+              <div className="frame-panel text-center">
                 <h2 className="text-display-thin text-2xl md:text-3xl mb-6">
                   {donate.gratitude.title}
                 </h2>
-                <p className="text-body-relaxed text-lg text-ink-soft max-w-3xl mx-auto">
+                <p className="font-accent italic text-lg text-ink-soft max-w-3xl mx-auto">
                   {donate.gratitude.message}
                 </p>
-              </motion.div>
+              </div>
             </div>
           </section>
         )}
@@ -647,30 +524,18 @@ export default function DonatePage() {
         {donate.cta && (
           <section className="section-contrast">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-8"
-              >
-                <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+              <div className="text-center space-y-6">
+                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                   {donate.cta.title}
                 </h2>
                 <p className="text-body-relaxed text-lg text-tan-light/80 max-w-2xl mx-auto">
                   {donate.cta.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={donate.cta.buttons.primary.link} className="cta-primary cta-shimmer">
-                    {donate.cta.buttons.primary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                  <Link href={donate.cta.buttons.secondary.link} className="cta-secondary border-tan-light/30 text-tan-light hover:bg-tan-light/10">
-                    {donate.cta.buttons.secondary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                </div>
-              </motion.div>
+                <Link href={donate.cta.buttons.primary.link} className="cta-primary cta-shimmer">
+                  {donate.cta.buttons.primary.text}
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
             </div>
           </section>
         )}

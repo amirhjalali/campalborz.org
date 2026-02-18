@@ -20,9 +20,6 @@ export function FeatureCards() {
         transition={{ duration: 0.5 }}
         className="text-center space-y-4 mb-14"
       >
-        <p className="text-display-wide text-xs tracking-[0.3em] text-ink-soft/80">
-          CAMP OFFERINGS
-        </p>
         <h2 className="text-display-thin text-3xl md:text-4xl">
           Discover {campConfig.name}
         </h2>
@@ -42,8 +39,8 @@ export function FeatureCards() {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.4, delay: index * 0.06 }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="group relative overflow-hidden rounded-2xl bg-white border border-line/40 shadow-lg hover:shadow-xl transition-shadow duration-300"
+              whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+              className={`group relative overflow-hidden rounded-2xl bg-white border border-line/40 shadow-lg hover:shadow-xl hover:border-gold/30 transition-all duration-300 ${index === 0 ? 'md:col-span-2 lg:col-span-2' : ''}`}
             >
               {/* Image - fixed aspect ratio container */}
               {feature.image && (

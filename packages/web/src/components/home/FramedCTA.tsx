@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 interface CTAButton {
@@ -39,7 +40,13 @@ export function FramedCTA({
   }
 
   return (
-    <section className="section-base section-contained">
+    <motion.section
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="section-base section-contained"
+    >
       <div className="frame-panel space-y-8 text-center">
         {kicker && (
           <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
@@ -57,6 +64,6 @@ export function FramedCTA({
           {secondary && renderButton({ ...secondary, variant: 'secondary' })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -79,7 +79,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
   if (step === "success") {
     return (
       <div className="text-center py-12">
-        <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+        <CheckCircle className="h-16 w-16 text-sage-600 mx-auto mb-4" />
         <h2 className="text-display-thin text-2xl mb-2">Thank You!</h2>
         <p className="text-body-relaxed text-ink-soft mb-6">
           Your donation of ${(amount! / 100).toFixed(2)} has been processed successfully.
@@ -114,7 +114,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
         {["amount", "details", "payment"].map((s, index) => (
           <div
             key={s}
-            className={`flex-1 h-1.5 rounded-full transition-colors ${
+            className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${
               step === s
                 ? "bg-gold"
                 : index < ["amount", "details", "payment"].indexOf(step)
@@ -173,7 +173,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               ))}
             </div>
 
-            <div className="relative input-glow">
+            <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span className="text-ink-soft">$</span>
               </div>
@@ -204,7 +204,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
               {error}
             </div>
           )}
@@ -241,7 +241,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
             <div className="space-y-4">
               <div>
                 <label htmlFor="donorName" className="form-label">Your Name</label>
-                <div className="input-glow">
+                <div>
                   <input
                     type="text"
                     id="donorName"
@@ -255,9 +255,9 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
               </div>
               <div>
                 <label htmlFor="donorEmail" className="form-label">
-                  Email Address <span className="text-red-500">*</span>
+                  Email Address <span className="text-gold-600">*</span>
                 </label>
-                <div className="input-glow">
+                <div>
                   <input
                     type="email"
                     id="donorEmail"
@@ -278,7 +278,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
 
           <div>
             <label className="form-label">Add a Message (Optional)</label>
-            <div className="input-glow">
+            <div>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -302,12 +302,12 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
             </label>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div className="bg-tan-50 border border-tan-300 rounded-xl p-4">
             <div className="flex">
-              <Info className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0" />
+              <Info className="h-5 w-5 text-sage-600 mr-2 flex-shrink-0" />
               <div>
-                <p className="text-sm text-blue-900 font-medium">Tax Deductible</p>
-                <p className="text-sm text-blue-700 mt-1">
+                <p className="text-sm text-ink font-medium">Tax Deductible</p>
+                <p className="text-sm text-ink-soft mt-1">
                   Your donation is tax-deductible. You&apos;ll receive a receipt via email.
                 </p>
               </div>
@@ -315,7 +315,7 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
               {error}
             </div>
           )}

@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Navigation } from '../../components/navigation';
 import { ArrowRight, LogIn, Eye, EyeOff, User, LogOut, AlertCircle } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
@@ -13,7 +11,6 @@ import { useAuth } from '../../contexts/AuthContext';
 export default function MembersPage() {
   const { members } = useContentConfig();
   const { user, isAuthenticated, isLoading: authLoading, error, login, logout, clearError } = useAuth();
-  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -28,7 +25,7 @@ export default function MembersPage() {
     setIsSubmitting(true);
 
     try {
-      await login(formData.email, formData.password, rememberMe);
+      await login(formData.email, formData.password);
     } catch {
       // Error is handled by context
     } finally {
@@ -36,8 +33,8 @@ export default function MembersPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,21 +64,14 @@ export default function MembersPage() {
         <Navigation />
         <main className="min-h-screen bg-cream">
           {/* Member Dashboard Header */}
-          <section className="relative pt-32 pb-16 overflow-hidden">
-            <div className="pattern-persian opacity-20 absolute inset-0" />
-            <motion.div
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="relative section-contained"
-            >
+          <section className="pt-32 pb-16">
+            <div className="section-contained">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border-2 border-gold/40 flex items-center justify-center">
                     <User className="h-8 w-8 text-gold" />
                   </div>
                   <div>
-                    <p className="text-display-wide text-xs tracking-[0.4em] text-ink-soft/80">WELCOME BACK</p>
                     <h1 className="text-display-thin text-3xl text-ink">{user.name}</h1>
                     <p className="text-body-relaxed text-sm text-ink-soft">{user.email}</p>
                   </div>
@@ -94,7 +84,7 @@ export default function MembersPage() {
                   Sign Out
                 </button>
               </div>
-            </motion.div>
+            </div>
           </section>
 
           {portalInfo && (
@@ -102,28 +92,18 @@ export default function MembersPage() {
               {/* Portal Highlights */}
               <section className="py-16">
                 <div className="section-contained">
-                  <motion.div
-                    initial={{ y: 14 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-10"
-                  >
+                  <div className="text-center mb-10">
                     <h2 className="text-display-thin text-3xl text-ink mb-3">
                       {portalInfo.welcomeTitle}
                     </h2>
                     <p className="text-body-relaxed text-ink-soft">
                       Two simple steps to lock in your placement.
                     </p>
-                  </motion.div>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {portalInfo.highlights.map((item, index) => (
-                      <motion.div
+                    {portalInfo.highlights.map((item) => (
+                      <div
                         key={item.title}
-                        initial={{ y: 14 }}
-                        whileInView={{ y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="luxury-card p-6"
                       >
                         <h3 className="text-display-thin text-xl text-ink mb-2">{item.title}</h3>
@@ -139,7 +119,7 @@ export default function MembersPage() {
                             <ArrowRight className="h-4 w-4 ml-2" />
                           </Link>
                         )}
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -159,7 +139,7 @@ export default function MembersPage() {
                         <ul className="space-y-2 text-body-relaxed text-ink-soft">
                           {portalInfo.dues.breakdown.map((item, index) => (
                             <li key={index} className="flex items-start">
-                              <span className="text-gold mr-2">•</span>
+                              <span className="text-gold mr-2">&#8226;</span>
                               {item}
                             </li>
                           ))}
@@ -200,15 +180,11 @@ export default function MembersPage() {
                       </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {portalInfo.paymentOptions.map((option, index) => {
+                      {portalInfo.paymentOptions.map((option) => {
                         const OptionIcon = getIcon(option.icon || 'heart');
                         return (
-                          <motion.div
+                          <div
                             key={option.method}
-                            initial={{ y: 14 }}
-                            whileInView={{ y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
                             className="luxury-card p-6"
                           >
                             <div className="flex items-center mb-3">
@@ -223,7 +199,7 @@ export default function MembersPage() {
                             <ul className="space-y-2 text-sm text-ink-soft">
                               {option.details.map((detail, detailIdx) => (
                                 <li key={detailIdx} className="flex items-start">
-                                  <span className="text-gold mr-2">•</span>
+                                  <span className="text-gold mr-2">&#8226;</span>
                                   {detail}
                                 </li>
                               ))}
@@ -239,7 +215,7 @@ export default function MembersPage() {
                                 <ArrowRight className="h-4 w-4 ml-2" />
                               </Link>
                             )}
-                          </motion.div>
+                          </div>
                         );
                       })}
                     </div>
@@ -308,36 +284,21 @@ export default function MembersPage() {
       <Navigation />
       <main className="min-h-screen bg-cream">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-16 overflow-hidden">
-          <div className="pattern-persian opacity-20 absolute inset-0" />
-          <motion.div
-            initial={{ y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative section-contained text-center"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-4">
-              MEMBER PORTAL
-            </p>
+        <section className="pt-32 pb-16">
+          <div className="section-contained text-center">
             <h1 className="text-display-thin text-4xl md:text-5xl text-ink mb-4">
               {members.title}
             </h1>
             <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
               {members.subtitle}
             </p>
-          </motion.div>
+          </div>
         </section>
 
         {/* Login Section */}
         <section className="py-16">
           <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ y: 14 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="luxury-card p-8"
-            >
+            <div className="luxury-card p-8">
               <div className="flex justify-center mb-6">
                 <div className="p-3 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full border border-gold/30">
                   <LogIn className="h-8 w-8 text-gold" />
@@ -348,16 +309,12 @@ export default function MembersPage() {
               </h2>
 
               {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
-                >
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                    <p className="text-red-700 text-sm">{error}</p>
+                    <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <p className="text-amber-800 text-sm">{error}</p>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               <form onSubmit={handleLogin} className="space-y-5">
@@ -365,38 +322,36 @@ export default function MembersPage() {
                   <label htmlFor="login-email" className="form-label">
                     {members.loginSection.emailLabel}
                   </label>
-                  <div className="input-glow rounded-xl">
-                    <input
-                      type="email"
-                      id="login-email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="form-input border-0 bg-transparent"
-                      placeholder="your@email.com"
-                      required
-                      autoComplete="email"
-                    />
-                  </div>
+                  <input
+                    type="email"
+                    id="login-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="your@email.com"
+                    required
+                    autoComplete="email"
+                  />
                 </div>
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label htmlFor="login-password" className="form-label mb-0">
                       {members.loginSection.passwordLabel}
                     </label>
-                    <Link href="#" className="text-sm text-gold hover:text-gold/80 transition-colors">
+                    <Link href="/forgot-password" className="text-sm text-gold hover:text-gold/80 transition-colors">
                       Forgot Password?
                     </Link>
                   </div>
-                  <div className="relative input-glow rounded-xl">
+                  <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       id="login-password"
                       name="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className="form-input border-0 bg-transparent pr-12"
-                      placeholder="••••••••"
+                      className="form-input pr-12"
+                      placeholder="Enter your password"
                       required
                       autoComplete="current-password"
                     />
@@ -425,72 +380,47 @@ export default function MembersPage() {
                   </label>
                 </div>
 
-                <motion.button
+                <button
                   type="submit"
                   disabled={isSubmitting || authLoading}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full cta-primary cta-shimmer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Signing in...' : members.loginSection.submitButton}
-                </motion.button>
+                </button>
               </form>
-              <div className="mt-6 space-y-3">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-line/40" />
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-3 bg-white text-ink-soft">or</span>
-                  </div>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-ink-soft">
-                    {members.loginSection.notMemberText}{' '}
-                    <Link href="/register" className="text-gold font-medium hover:text-gold/80 transition-colors">
-                      Create an account
-                    </Link>
-                  </p>
-                </div>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-ink-soft">
+                  Membership is by invitation only.{' '}
+                  <Link href="/apply" className="text-gold font-medium hover:text-gold/80 transition-colors">
+                    Apply to join
+                  </Link>
+                </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Member Benefits */}
         <section className="py-16 section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 14 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-4">
-                WHY JOIN
-              </p>
+            <div className="text-center mb-12">
               <h2 className="text-display-thin text-3xl text-ink mb-4">
                 {members.benefits.title}
               </h2>
               <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
                 {members.benefits.subtitle}
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {members.benefits.items.map((benefit, index) => {
+              {members.benefits.items.map((benefit) => {
                 const BenefitIcon = getIcon(benefit.icon);
                 return (
-                  <motion.div
+                  <div
                     key={benefit.title}
-                    initial={{ y: 14 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="luxury-card p-6 group"
+                    className="luxury-card p-6"
                   >
-                    <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-gold/20 to-gold/10 border border-gold/30 mb-4 group-hover:border-gold/50 transition-colors">
+                    <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-gold/20 to-gold/10 border border-gold/30 mb-4">
                       <BenefitIcon className="h-6 w-6 text-gold" />
                     </div>
                     <h3 className="text-display-thin text-lg text-ink mb-2">
@@ -499,7 +429,7 @@ export default function MembersPage() {
                     <p className="text-body-relaxed text-sm text-ink-soft">
                       {benefit.description}
                     </p>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -509,35 +439,22 @@ export default function MembersPage() {
         {/* Member Spotlight */}
         <section className="py-16">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 14 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-4">
-                OUR COMMUNITY
-              </p>
+            <div className="text-center mb-12">
               <h2 className="text-display-thin text-3xl text-ink mb-4">
                 {members.spotlight.title}
               </h2>
               <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
                 {members.spotlight.subtitle}
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {members.spotlight.members.map((member, index) => (
-                <motion.div
+              {members.spotlight.members.map((member) => (
+                <div
                   key={member.name}
-                  initial={{ y: 14 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="text-center"
                 >
-                  <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-sage-mist/30 border-2 border-gold/30" />
+                  <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-sage-light/30 border-2 border-gold/30" />
                   <h3 className="text-display-thin text-xl text-ink mb-1">
                     {member.name}
                   </h3>
@@ -550,7 +467,7 @@ export default function MembersPage() {
                   <p className="text-body-relaxed text-sm text-ink-soft">
                     {member.contribution}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -560,16 +477,10 @@ export default function MembersPage() {
         <section className="py-16 section-alt">
           <div className="section-contained">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-              {members.communityStats.map((stat, index) => {
+              {members.communityStats.map((stat) => {
                 const StatIcon = getIcon(stat.icon);
                 return (
-                  <motion.div
-                    key={stat.label}
-                    initial={{ scale: 0.95 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
+                  <div key={stat.label}>
                     <StatIcon className="h-8 w-8 text-gold mx-auto mb-3" />
                     <div className="text-display-thin text-4xl text-gold mb-1">
                       {stat.value}
@@ -577,7 +488,7 @@ export default function MembersPage() {
                     <div className="text-body-relaxed text-ink-soft">
                       {stat.label}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -587,13 +498,7 @@ export default function MembersPage() {
         {/* CTA Section */}
         {members.cta && (
           <section className="py-16">
-            <motion.div
-              initial={{ y: 14 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="section-contained text-center"
-            >
+            <div className="section-contained text-center">
               <div className="frame-panel max-w-4xl mx-auto">
                 <h2 className="text-display-thin text-3xl text-ink mb-4">
                   {members.cta.title}
@@ -612,7 +517,7 @@ export default function MembersPage() {
                   </Link>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </section>
         )}
       </main>

@@ -1,0 +1,502 @@
+// Camp Alborz Member Management System
+// Single-camp schema for a ~130-165 member Burning Man theme camp
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum MemberRole {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum ConfirmationStatus {
+  INTERESTED
+  MAYBE
+  CONFIRMED
+  CANCELLED
+}
+
+enum HousingType {
+  TENT
+  SHIFTPOD
+  RV
+  TRAILER
+  DORM
+  SHARED
+  HEXAYURT
+  OTHER
+}
+
+enum PreApprovalStatus {
+  YES
+  MAYBE
+  NO
+}
+
+enum PaymentType {
+  DUES
+  GRID
+  FOOD
+  DONATION
+  RV_VOUCHER
+  BEER_FUND
+  TENT
+  TICKET
+  STRIKE_DONATION
+  FUNDRAISING
+  OTHER
+}
+
+enum PaymentMethod {
+  VENMO
+  ZELLE
+  CASH
+  CARD
+  PAYPAL
+  GIVEBUTTER
+  OTHER
+}
+
+enum TicketType {
+  DGS
+  HOMA
+  BOOFER
+  OTHER
+}
+
+enum InventoryCategory {
+  SHADE
+  TENT
+  AC_UNIT
+  MATTRESS
+  COT
+  KITCHEN
+  BIKE
+  RUG
+  OTHER
+}
+
+enum InventoryRequestStatus {
+  REQUESTED
+  APPROVED
+  FULFILLED
+  DENIED
+}
+
+enum BudgetCategory {
+  GENERATOR
+  FUEL
+  STORAGE
+  TRUCKS
+  SOUND
+  FOOD
+  CONTAINERS
+  BATHROOMS
+  WATER
+  GREY_WATER
+  SHOWERS
+  DECORATION
+  TRASH
+  MISC
+}
+
+enum GridFeeType {
+  AMP_30
+  AMP_50
+  NONE
+}
+
+// ─────────────────────────────────────────────
+// CORE MODELS
+// ─────────────────────────────────────────────
+
+/// Burning Man season (one per year)
+model Season {
+  id        String   @id @default(uuid())
+  year      Int      @unique
+  name      String   // e.g. "Burning Man 2026"
+  startDate DateTime? // Event start
+  endDate   DateTime? // Event end
+  isActive  Boolean  @default(false) // Current active season
+  settings  Json?    // Flexible season-level config (dues amount, grid fees, etc.)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seasonMembers    SeasonMember[]
+  tickets          Ticket[]
+  buildDays        BuildDay[]
+  strikeAssignments StrikeAssignment[]
+  earlyArrivalPasses EarlyArrivalPass[]
+  expenses         Expense[]
+  budgetItems      BudgetItem[]
+  committeeRoles   CommitteeRole[]
+  shifts           Shift[]
+
+  @@map("seasons")
+}
+
+/// A person who is or was a Camp Alborz member
+model Member {
+  id             String     @id @default(uuid())
+  email          String     @unique
+  passwordHash   String?
+  firstName      String
+  lastName       String
+  playaName      String?
+  phone          String?
+  gender         String?
+  isAlborzVirgin Boolean    @default(true) // First time at Camp Alborz
+  isBMVirgin     Boolean    @default(false) // First time at Burning Man
+  role           MemberRole @default(MEMBER)
+  isActive       Boolean    @default(true)
+  profileImageUrl String?
+  emergencyContact String?  // Name and phone
+  notes          String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  seasonMembers  SeasonMember[]
+  tickets        Ticket[]
+  committeeRoles CommitteeRole[]
+
+  @@map("members")
+}
+
+/// A member's participation in a specific season — the central join table
+model SeasonMember {
+  id                 String             @id @default(uuid())
+  seasonId           String
+  memberId           String
+  confirmationStatus ConfirmationStatus @default(INTERESTED)
+
+  // Housing
+  housingType        HousingType?
+  housingSize        String?            // e.g. "10x12", "25ft"
+  sharedWithId       String?            // Another SeasonMember (couples/shared housing)
+
+  // Grid / Power
+  gridFeeType        GridFeeType        @default(NONE)
+  gridFeeAmount      Decimal?           @db.Decimal(10, 2)
+  gridPower          String?            // Power allocation description
+  mapObject          String?            // Grid placement reference
+
+  // Dues
+  duesPaid           Boolean            @default(false)
+  duesAmount         Decimal?           @db.Decimal(10, 2)
+  duesMethod         PaymentMethod?
+  duesPaidDate       DateTime?
+
+  // Logistics
+  arrivalDate        DateTime?
+  departureDate      DateTime?
+  rideDetails        String?
+  dietaryPlan        String?
+
+  // Tickets & Passes
+  hasTicket          Boolean            @default(false)
+  vehiclePass        Boolean            @default(false)
+  preApprovalForm    PreApprovalStatus?
+
+  // Crew
+  buildCrew          Boolean            @default(false)
+  strikeCrew         Boolean            @default(false)
+
+  // Notes
+  specialRequests    String?            // "want armenian square", "next to each other", etc.
+  notes              String?
+
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  season             Season             @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  member             Member             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  sharedWith         SeasonMember?      @relation("SharedHousing", fields: [sharedWithId], references: [id])
+  sharedBy           SeasonMember[]     @relation("SharedHousing")
+
+  payments           Payment[]
+  buildAssignments   BuildAssignment[]
+  strikeAssignments  StrikeAssignment[]
+  earlyArrivalPasses EarlyArrivalPass[]
+  shiftAssignments   ShiftAssignment[]
+  inventoryRequests  InventoryRequest[]
+
+  @@unique([seasonId, memberId])
+  @@index([seasonId])
+  @@index([memberId])
+  @@index([confirmationStatus])
+  @@map("season_members")
+}
+
+// ─────────────────────────────────────────────
+// FINANCIAL
+// ─────────────────────────────────────────────
+
+/// Individual payment transaction
+model Payment {
+  id             String        @id @default(uuid())
+  seasonMemberId String
+  type           PaymentType
+  amount         Decimal       @db.Decimal(10, 2)
+  method         PaymentMethod?
+  paidTo         String?       // Who collected the payment
+  paidDate       DateTime      @default(now())
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  seasonMember   SeasonMember  @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+
+  @@index([seasonMemberId])
+  @@index([type])
+  @@map("payments")
+}
+
+/// Camp expense tracking
+model Expense {
+  id                 String   @id @default(uuid())
+  seasonId           String
+  paidBy             String   // Person name or "ALBORZ"
+  description        String
+  amount             Decimal  @db.Decimal(10, 2)
+  date               DateTime
+  category           String?  // Freeform category
+  notes              String?
+  needsReimbursement Boolean  @default(false)
+  reimbursed         Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  season             Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@index([seasonId])
+  @@map("expenses")
+}
+
+/// Season budget line items
+model BudgetItem {
+  id              String         @id @default(uuid())
+  seasonId        String
+  category        BudgetCategory
+  estimatedAmount Decimal        @db.Decimal(10, 2)
+  actualAmount    Decimal?       @db.Decimal(10, 2)
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  season          Season         @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, category])
+  @@map("budget_items")
+}
+
+// ─────────────────────────────────────────────
+// TICKETS & PASSES
+// ─────────────────────────────────────────────
+
+/// DGS ticket allocation per member per season
+model Ticket {
+  id                String     @id @default(uuid())
+  seasonId          String
+  memberId          String
+  ticketType        TicketType @default(DGS)
+  ticketCount       Int        @default(1)
+  purchaseConfirmed Boolean    @default(false)
+  vehiclePass       Boolean    @default(false)
+  notes             String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  season            Season     @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  member            Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([seasonId])
+  @@index([memberId])
+  @@map("tickets")
+}
+
+/// Early arrival pass allocation
+model EarlyArrivalPass {
+  id             String       @id @default(uuid())
+  seasonId       String
+  seasonMemberId String
+  date           DateTime     // EA date
+  ticketId       String?      // WAP/EA ticket ID string
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  season         Season       @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  seasonMember   SeasonMember @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+
+  @@index([seasonId])
+  @@map("early_arrival_passes")
+}
+
+// ─────────────────────────────────────────────
+// BUILD & STRIKE
+// ─────────────────────────────────────────────
+
+/// A scheduled build day
+model BuildDay {
+  id        String   @id @default(uuid())
+  seasonId  String
+  date      DateTime
+  name      String   // e.g. "Tuesday Build Day"
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  season      Season            @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  assignments BuildAssignment[]
+
+  @@index([seasonId])
+  @@map("build_days")
+}
+
+/// Member assigned to a build day
+model BuildAssignment {
+  id             String       @id @default(uuid())
+  buildDayId     String
+  seasonMemberId String
+  ticketId       String?      // WAP/EA ticket ID
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  buildDay       BuildDay     @relation(fields: [buildDayId], references: [id], onDelete: Cascade)
+  seasonMember   SeasonMember @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([buildDayId, seasonMemberId])
+  @@map("build_assignments")
+}
+
+/// Member assigned to strike
+model StrikeAssignment {
+  id             String       @id @default(uuid())
+  seasonId       String
+  seasonMemberId String
+  departureDate  DateTime?
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  season         Season       @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  seasonMember   SeasonMember @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, seasonMemberId])
+  @@map("strike_assignments")
+}
+
+// ─────────────────────────────────────────────
+// INVENTORY
+// ─────────────────────────────────────────────
+
+/// Camp equipment and supplies
+model InventoryItem {
+  id          String            @id @default(uuid())
+  category    InventoryCategory
+  name        String
+  description String?
+  quantity    Int               @default(1)
+  dimensions  String?           // e.g. "10x20"
+  assignedTo  String?           // Person or location
+  notes       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  requests    InventoryRequest[]
+
+  @@index([category])
+  @@map("inventory_items")
+}
+
+/// Member request for camp equipment
+model InventoryRequest {
+  id              String                 @id @default(uuid())
+  seasonMemberId  String
+  inventoryItemId String?
+  category        InventoryCategory?     // If requesting by category rather than specific item
+  description     String?                // What they need
+  status          InventoryRequestStatus @default(REQUESTED)
+  notes           String?
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  seasonMember    SeasonMember           @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem?         @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+
+  @@index([seasonMemberId])
+  @@map("inventory_requests")
+}
+
+// ─────────────────────────────────────────────
+// COMMITTEES & SHIFTS
+// ─────────────────────────────────────────────
+
+/// Committee/leadership role assignment per season
+model CommitteeRole {
+  id        String   @id @default(uuid())
+  seasonId  String
+  memberId  String
+  role      String   // e.g. "SHIFT_MANAGER", "ONBOARDING_DIRECTOR", "KITCHEN_LEAD"
+  title     String?  // Display-friendly title
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  season    Season   @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([seasonId, memberId, role])
+  @@index([seasonId])
+  @@map("committee_roles")
+}
+
+/// Volunteer shift definition
+model Shift {
+  id          String   @id @default(uuid())
+  seasonId    String
+  name        String   // e.g. "Greeter Shift", "Kitchen Duty"
+  description String?
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  capacity    Int?     // Max number of volunteers
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  season      Season           @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  assignments ShiftAssignment[]
+
+  @@index([seasonId])
+  @@index([date])
+  @@map("shifts")
+}
+
+/// Member assigned to a shift
+model ShiftAssignment {
+  id             String       @id @default(uuid())
+  shiftId        String
+  seasonMemberId String
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  shift          Shift        @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+  seasonMember   SeasonMember @relation(fields: [seasonMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([shiftId, seasonMemberId])
+  @@map("shift_assignments")
+}

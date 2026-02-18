@@ -23,18 +23,12 @@ export function PageHero() {
           placeholder="blur"
           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIhAAAgICAQMFAAAAAAAAAAAAAQIDEQQFBgAhMRITQVFh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQCEAwA/ALOp1+J2Z3t8dOZQGWNR6QD3/c8TxxyMDBw9llLJkIqxyEfqpB8n78cdlB//2Q=="
         />
-        {/* Cinematic gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-85" />
-        {/* Warm color grade overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-transparent to-sage-900/10 mix-blend-overlay" />
+        {/* Single gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-cream/90" />
       </div>
 
       {/* Mountain Silhouette */}
       <div className="mountain-silhouette z-[1]" />
-
-      {/* Persian Pattern Overlay - subtle geometric texture */}
-      <div className="absolute inset-0 pattern-persian opacity-10 z-[2]" />
 
       <div className="relative z-[5] section-contained flex flex-col items-center text-center gap-12 py-32 animate-fade-in">
         {/* Title + Subtitle - refined typography */}

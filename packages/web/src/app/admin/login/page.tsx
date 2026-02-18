@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useAuth } from '../../../contexts/AuthContext';
 import {
   Shield,
@@ -52,24 +51,12 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center p-4">
-      <div className="absolute inset-0 pattern-persian opacity-10" />
-
-      <motion.div
-        initial={{ y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative w-full max-w-md"
-      >
+      <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="inline-flex p-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 mb-6"
-          >
+          <div className="inline-flex p-4 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 mb-6">
             <Shield className="w-10 h-10 text-gold" />
-          </motion.div>
+          </div>
           <h1 className="text-display-thin text-3xl text-ink mb-2">
             Admin Login
           </h1>
@@ -85,16 +72,12 @@ export default function AdminLoginPage() {
           </h2>
 
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
-            >
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                <p className="text-red-700 text-sm">{error}</p>
+                <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                <p className="text-amber-800 text-sm">{error}</p>
               </div>
-            </motion.div>
+            </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -156,11 +139,9 @@ export default function AdminLoginPage() {
             </div>
 
             {/* Submit Button */}
-            <motion.button
+            <button
               type="submit"
               disabled={isSubmitting || authLoading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
@@ -174,20 +155,14 @@ export default function AdminLoginPage() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </>
               )}
-            </motion.button>
+            </button>
           </form>
 
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gold/5 border border-gold/20 rounded-xl">
-            <p className="text-sm text-ink font-medium mb-1">
-              Demo Credentials
-            </p>
-            <p className="text-xs text-ink-soft">
-              Email: <span className="font-mono text-gold">admin@campalborz.org</span>
-            </p>
-            <p className="text-xs text-ink-soft">
-              Password: <span className="font-mono text-gold">admin123</span>
-            </p>
+          {/* Forgot password */}
+          <div className="mt-6 text-center">
+            <Link href="/forgot-password" className="text-sm text-ink-soft hover:text-gold transition-colors">
+              Forgot password?
+            </Link>
           </div>
         </div>
 
@@ -208,7 +183,7 @@ export default function AdminLoginPage() {
             Secured with SSL encryption
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

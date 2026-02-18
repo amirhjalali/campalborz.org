@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, ChevronDown, Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
@@ -18,8 +18,8 @@ export default function EventsPage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '22%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   if (!events) {
@@ -68,15 +68,15 @@ export default function EventsPage() {
               className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               GATHER WITH US
             </motion.p>
             <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {events.title}
             </motion.h1>
@@ -84,48 +84,24 @@ export default function EventsPage() {
               className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {events.subtitle}
             </motion.p>
 
-            <motion.div
-              className="ornate-divider mt-8"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              style={{ filter: 'brightness(1.5)' }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
           </motion.div>
         </section>
 
         {/* Event Types */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-14"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-              WHAT WE DO
-            </p>
-            <h2 className="text-display-thin text-3xl md:text-4xl">
+          <div className="text-center space-y-3 mb-14">
+            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
               Event Categories
             </h2>
-            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+            <p className="font-accent text-lg text-ink-soft max-w-2xl mx-auto">
               Discover the diverse range of experiences we offer year-round
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {events.eventTypes.map((type, index) => {
@@ -134,10 +110,10 @@ export default function EventsPage() {
               return (
                 <motion.div
                   key={type.name}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
+                  initial={{ y: 16, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.12 + (index > 2 ? 0.05 : 0), ease: [0.22, 1, 0.36, 1] }}
                   className="luxury-card text-center group"
                 >
                   <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6 transition-transform duration-300 group-hover:scale-110">
@@ -154,30 +130,22 @@ export default function EventsPage() {
               );
             })}
           </div>
-
-          <div className="ornate-divider mt-8" />
         </section>
 
         {/* Upcoming Events */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
+            <div className="text-center space-y-4 mb-14">
               <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
                 MARK YOUR CALENDAR
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                 Upcoming Events
               </h2>
               <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
                 Join us for these exciting upcoming gatherings
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {events.upcomingEvents.map((event, index) => {
@@ -186,13 +154,9 @@ export default function EventsPage() {
                 const isFeatured = index === 0;
 
                 return (
-                  <motion.div
+                  <div
                     key={event.id}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className={`border rounded-2xl p-8 backdrop-blur-sm transition-all duration-300 hover:border-gold-500/30 ${
+                    className={`border rounded-2xl p-8 transition-all duration-300 hover:border-gold-500/30 ${
                       isFeatured
                         ? 'border-gold-500/25 bg-white/8 lg:col-span-2'
                         : 'border-white/10 bg-white/5'
@@ -227,7 +191,7 @@ export default function EventsPage() {
                           </div>
                         </div>
 
-                        <p className="text-body-relaxed text-sm text-tan-light/80">
+                        <p className="font-accent text-sm text-tan-light/80">
                           {event.description}
                         </p>
 
@@ -244,7 +208,7 @@ export default function EventsPage() {
                         )}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -255,33 +219,17 @@ export default function EventsPage() {
         {events.burningManSchedule && events.burningManSchedule.length > 0 && (
           <section className="section-base">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-4 mb-14"
-              >
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  ON THE PLAYA
-                </p>
-                <h2 className="text-display-thin text-3xl md:text-4xl">
+              <div className="mb-14">
+                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                   Burning Man Schedule
                 </h2>
-                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
-                  Daily activities and workshops during our time at Black Rock City
-                </p>
-              </motion.div>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {events.burningManSchedule.map((day, dayIndex) => (
-                  <motion.div
+                  <div
                     key={day.day}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: dayIndex * 0.15 }}
-                    className="luxury-card"
+                    className={dayIndex % 2 === 0 ? 'luxury-card' : 'py-6'}
                   >
                     <h3 className="text-display-thin text-xl mb-6 pb-4 border-b border-line/30">
                       {day.day}
@@ -296,14 +244,14 @@ export default function EventsPage() {
                             <h4 className="font-display text-sm text-ink mb-1">
                               {scheduleEvent.title}
                             </h4>
-                            <p className="text-body-relaxed text-xs text-ink-soft">
+                            <p className="font-accent text-xs text-ink-soft">
                               {scheduleEvent.description}
                             </p>
                           </div>
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -314,17 +262,8 @@ export default function EventsPage() {
         {events.guidelines && (
           <section className="section-alt">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="frame-panel"
-              >
-                <div className="text-center space-y-4 mb-10">
-                  <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                    GOOD TO KNOW
-                  </p>
+              <div className="frame-panel">
+                <div className="mb-10">
                   <h2 className="text-display-thin text-2xl md:text-3xl">
                     Event Guidelines
                   </h2>
@@ -354,7 +293,7 @@ export default function EventsPage() {
                     </ul>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </section>
         )}
@@ -363,35 +302,18 @@ export default function EventsPage() {
         {events.cta && (
           <section className="section-base">
             <div className="section-contained">
-              <div className="ornate-divider mb-12" />
-
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="frame-panel text-center space-y-8"
-              >
+              <div className="text-center space-y-6 max-w-2xl mx-auto py-8">
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {events.cta.title}
                 </h2>
-                <p className="font-accent text-lg text-ink/70 max-w-xl mx-auto">
-                  The best way to know a community is to show up.
-                </p>
-                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                <p className="text-body-relaxed text-base text-ink-soft">
                   {events.cta.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={events.cta.buttons.primary.link} className="cta-primary cta-shimmer">
-                    {events.cta.buttons.primary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                  <Link href={events.cta.buttons.secondary.link} className="cta-secondary">
-                    {events.cta.buttons.secondary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                </div>
-              </motion.div>
+                <Link href={events.cta.buttons.primary.link} className="cta-primary inline-flex">
+                  {events.cta.buttons.primary.text}
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
             </div>
           </section>
         )}

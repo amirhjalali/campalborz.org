@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Navigation } from "../../components/navigation";
-import { motion } from "framer-motion";
 import { Search as SearchIcon } from "lucide-react";
 import { useContentConfig } from "../../hooks/useConfig";
 import { getIcon } from "../../lib/icons";
@@ -28,17 +27,8 @@ export default function SearchPage() {
       <Navigation />
       <main className="min-h-screen bg-cream">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 overflow-hidden">
-          <div className="pattern-persian opacity-20 absolute inset-0" />
-          <motion.div
-            initial={{ y: 14, opacity: 0 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative section-contained text-center"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-4">
-              EXPLORE
-            </p>
+        <section className="pt-32 pb-20">
+          <div className="section-contained text-center">
             <h1 className="text-display-thin text-4xl md:text-5xl mb-4">
               {search.title}
             </h1>
@@ -47,48 +37,38 @@ export default function SearchPage() {
             </p>
 
             {/* Search Bar */}
-            <div className="relative max-w-2xl mx-auto input-glow rounded-2xl">
+            <div className="relative max-w-2xl mx-auto">
               <SearchIcon className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-ink-soft/50 z-10" />
               <input
                 type="text"
                 placeholder={search.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="relative w-full pl-14 pr-5 py-4 text-lg rounded-2xl border-0 bg-transparent text-ink placeholder-ink-soft/50 focus:outline-none"
+                className="w-full pl-14 pr-5 py-4 text-lg rounded-2xl border border-tan/40 bg-white text-ink placeholder-ink-soft/50 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold/50 transition-colors"
                 aria-label="Search Camp Alborz"
               />
             </div>
-          </motion.div>
+          </div>
         </section>
 
         {/* Search Categories */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 14, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-center mb-10"
-          >
+          <div className="text-center mb-10">
             <h2 className="text-display-thin text-2xl md:text-3xl mb-3">
               {search.categories.title}
             </h2>
             <p className="text-body-relaxed text-base text-ink-soft">
               {search.categories.subtitle}
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {search.categories.items.map((category, index) => {
+            {search.categories.items.map((category) => {
               const CategoryIcon = getIcon(category.icon);
               const isActive = searchType === category.id;
               return (
-                <motion.button
+                <button
                   key={category.id}
-                  initial={{ y: 14, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: '-30px' }}
-                  transition={{ duration: 0.4, delay: index * 0.06 }}
                   onClick={() => setSearchType(category.id)}
                   className={`luxury-card text-center cursor-pointer transition-all duration-300 ${
                     isActive
@@ -110,7 +90,7 @@ export default function SearchPage() {
                   <p className="text-xs text-ink-soft">
                     {category.count} items
                   </p>
-                </motion.button>
+                </button>
               );
             })}
           </div>
@@ -119,41 +99,32 @@ export default function SearchPage() {
         {/* Search Results */}
         {searchQuery && (
           <section className="section-base section-contained">
-            <motion.div
-              initial={{ y: 14, opacity: 0 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h3 className="text-display-thin text-2xl mb-6">
-                {search.results.title}
-              </h3>
-              <div className="space-y-4">
-                {search.results.mockResults.map((result, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ x: -14, opacity: 0 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.35, delay: index * 0.08 }}
-                    className="luxury-card hover:border-gold/30 transition-all duration-300"
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="text-display-thin text-lg">
-                        {result.title}
-                      </h4>
-                      <span className="px-3 py-1 bg-gold/10 text-gold rounded-full text-xs uppercase tracking-wider">
-                        {result.type}
-                      </span>
-                    </div>
-                    <p className="text-body-relaxed text-sm text-ink-soft mb-2">
-                      {result.excerpt}
-                    </p>
-                    <p className="text-xs text-ink-soft/70">
-                      {result.date}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+            <h3 className="text-display-thin text-2xl mb-6">
+              {search.results.title}
+            </h3>
+            <div className="space-y-4">
+              {search.results.mockResults.map((result, index) => (
+                <div
+                  key={index}
+                  className="luxury-card hover:border-gold/30 transition-colors duration-200"
+                >
+                  <div className="flex justify-between items-start mb-2">
+                    <h4 className="text-display-thin text-lg">
+                      {result.title}
+                    </h4>
+                    <span className="px-3 py-1 bg-gold/10 text-gold rounded-full text-xs uppercase tracking-wider">
+                      {result.type}
+                    </span>
+                  </div>
+                  <p className="text-body-relaxed text-sm text-ink-soft mb-2">
+                    {result.excerpt}
+                  </p>
+                  <p className="text-xs text-ink-soft/70">
+                    {result.date}
+                  </p>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
@@ -173,13 +144,7 @@ export default function SearchPage() {
         {/* Popular Searches */}
         <section className="section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 14, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="frame-panel text-center"
-            >
+            <div className="frame-panel text-center">
               <h3 className="text-display-thin text-2xl mb-6">
                 {search.popularSearches.title}
               </h3>
@@ -194,7 +159,7 @@ export default function SearchPage() {
                   </button>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>

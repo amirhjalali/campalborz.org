@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Navigation } from '../../components/navigation';
-import { ArrowRight, ChevronDown, Calendar, Star, BookOpen, Users } from 'lucide-react';
+import { ArrowRight, Calendar, Star, BookOpen } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
@@ -18,8 +18,8 @@ export default function CulturePage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
+  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   if (!culture) {
@@ -68,15 +68,15 @@ export default function CulturePage() {
               className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               HERITAGE & TRADITIONS
             </motion.p>
             <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
               initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
               {culture.title}
             </motion.h1>
@@ -84,48 +84,24 @@ export default function CulturePage() {
               className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
               initial={{ y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {culture.subtitle}
             </motion.p>
 
-            <motion.div
-              className="ornate-divider mt-8"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              style={{ filter: 'brightness(1.5)' }}
-            />
-          </motion.div>
-
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-8 h-8 text-white/60" />
           </motion.div>
         </section>
 
         {/* Cultural Elements */}
         <section className="section-base section-contained">
-          <motion.div
-            initial={{ y: 20 }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center space-y-4 mb-14"
-          >
-            <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-              PILLARS OF OUR CAMP
-            </p>
-            <h2 className="text-display-thin text-3xl md:text-4xl">
+          <div className="space-y-3 mb-14">
+            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
               Cultural Elements
             </h2>
-            <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+            <p className="font-accent text-lg text-ink-soft max-w-2xl">
               The rich traditions that shape our community experience
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {culture.culturalElements.map((element, index) => {
@@ -134,10 +110,10 @@ export default function CulturePage() {
               return (
                 <motion.div
                   key={element.title}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
+                  initial={{ y: 16, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.12 + (index > 2 ? 0.05 : 0), ease: [0.22, 1, 0.36, 1] }}
                   className="luxury-card group"
                 >
                   <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-5 transition-transform duration-300 group-hover:scale-110">
@@ -164,13 +140,7 @@ export default function CulturePage() {
         {/* Persian Proverb */}
         <section className="section-base">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 14 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
+            <div className="text-center">
               <blockquote className="blockquote-elegant max-w-2xl mx-auto">
                 <p className="font-accent text-xl md:text-2xl text-ink/80 leading-relaxed">
                   The wound is the place where the Light enters you.
@@ -179,43 +149,27 @@ export default function CulturePage() {
                   Rumi
                 </footer>
               </blockquote>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Cultural Values */}
         <section className="section-contrast">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                GUIDING PRINCIPLES
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+            <div className="text-center mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
                 Core Persian Values
               </h2>
-              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
-                How traditional Persian values shape our camp culture and interactions
-              </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {culture.culturalValues.map((value, index) => {
                 const ValueIcon = getIcon(value.icon);
 
                 return (
-                  <motion.div
+                  <div
                     key={value.title}
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
+                    className="border border-white/10 rounded-2xl p-8 bg-white/5"
                   >
                     <div className="flex items-start gap-5">
                       <div className="flex-shrink-0 p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
@@ -233,7 +187,7 @@ export default function CulturePage() {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -243,15 +197,9 @@ export default function CulturePage() {
         {/* Cultural Workshops */}
         <section className="section-base">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                HANDS-ON LEARNING
+            <div className="text-center space-y-4 mb-14">
+              <p className="font-accent italic text-sm tracking-wide text-ink-soft/80">
+                Hands-On Learning
               </p>
               <h2 className="text-display-thin text-3xl md:text-4xl">
                 Cultural Workshops
@@ -259,17 +207,13 @@ export default function CulturePage() {
               <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
                 Immersive experiences to deepen your understanding of Persian culture
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {culture.workshops.map((workshop, index) => (
-                <motion.div
+                <div
                   key={workshop.title}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="luxury-card"
+                  className={`luxury-card ${index === 0 ? 'md:col-span-2' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-display-thin text-xl">{workshop.title}</h3>
@@ -278,7 +222,7 @@ export default function CulturePage() {
                     </span>
                   </div>
                   <p className="text-sm text-gold-600 mb-4">Led by {workshop.instructor}</p>
-                  <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+                  <p className="font-accent text-sm text-ink-soft mb-6">
                     {workshop.description}
                   </p>
 
@@ -305,7 +249,7 @@ export default function CulturePage() {
                     View Schedule
                     <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -314,32 +258,19 @@ export default function CulturePage() {
         {/* Persian Celebrations */}
         <section className="section-alt">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center space-y-4 mb-14"
-            >
-              <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                FESTIVALS & HOLIDAYS
-              </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl">
+            <div className="text-center space-y-3 mb-14">
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
                 Persian Celebrations We Honor
               </h2>
-              <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+              <p className="font-accent text-lg text-ink-soft max-w-2xl mx-auto">
                 Traditional festivals that bring our community together year-round
               </p>
-            </motion.div>
+            </div>
 
             <div className="space-y-8">
               {culture.celebrations.map((celebration, index) => (
-                <motion.div
+                <div
                   key={celebration.name}
-                  initial={{ y: 20 }}
-                  whileInView={{ y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="luxury-card"
                 >
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
@@ -372,7 +303,7 @@ export default function CulturePage() {
                       ))}
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -381,20 +312,11 @@ export default function CulturePage() {
         {/* Learning Resources */}
         <section className="section-base">
           <div className="section-contained">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="frame-panel"
-            >
+            <div className="frame-panel">
               <div className="text-center space-y-4 mb-10">
                 <div className="inline-flex p-3 rounded-full bg-gold-500/20 border border-gold-500/30">
                   <BookOpen className="h-6 w-6 text-gold-500" />
                 </div>
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80">
-                  EDUCATIONAL RESOURCES
-                </p>
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   Cultural Learning Topics
                 </h2>
@@ -402,13 +324,7 @@ export default function CulturePage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {culture.learningResources.map((section, index) => (
-                  <motion.div
-                    key={section.category}
-                    initial={{ y: 14 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
+                  <div key={section.category}>
                     <h3 className="text-display-thin text-lg mb-4 pb-3 border-b border-line/30">
                       {section.category}
                     </h3>
@@ -420,10 +336,10 @@ export default function CulturePage() {
                         </li>
                       ))}
                     </ul>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -431,32 +347,14 @@ export default function CulturePage() {
         {culture.culturalBridge && (
           <section className="section-contrast">
             <div className="section-contained">
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center space-y-4 mb-14"
-              >
-                <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
-                  <Users className="h-8 w-8 text-gold-400" />
-                </div>
-                <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                  OUR MISSION
-                </p>
-                <h2 className="text-display-thin text-3xl md:text-4xl text-tan-light">
+              <div className="max-w-2xl mx-auto text-center mb-14">
+                <blockquote className="font-accent text-2xl md:text-3xl text-tan-light/90 italic leading-relaxed">
                   Building Cultural Bridges
-                </h2>
-              </motion.div>
+                </blockquote>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <motion.div
-                  initial={{ x: -20 }}
-                  whileInView={{ x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
-                >
+                <div className="border border-white/10 rounded-2xl p-8 bg-white/5">
                   <h3 className="text-display-thin text-xl text-tan-light mb-6">
                     {culture.culturalBridge.missionTitle}
                   </h3>
@@ -467,15 +365,9 @@ export default function CulturePage() {
                       </p>
                     ))}
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ x: 20 }}
-                  whileInView={{ x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="border border-white/10 rounded-2xl p-8 bg-white/5 backdrop-blur-sm"
-                >
+                <div className="border border-white/10 rounded-2xl p-8 bg-white/5">
                   <h3 className="text-display-thin text-xl text-tan-light mb-6">
                     {culture.culturalBridge.howWeDoItTitle}
                   </h3>
@@ -494,7 +386,7 @@ export default function CulturePage() {
                       );
                     })}
                   </ul>
-                </motion.div>
+                </div>
               </div>
             </div>
           </section>
@@ -504,35 +396,18 @@ export default function CulturePage() {
         {culture.cta && (
           <section className="section-base">
             <div className="section-contained">
-              <div className="ornate-divider mb-12" />
-
-              <motion.div
-                initial={{ y: 20 }}
-                whileInView={{ y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="frame-panel text-center space-y-8"
-              >
+              <div className="text-center space-y-6 max-w-2xl mx-auto py-8">
                 <h2 className="text-display-thin text-2xl md:text-3xl">
                   {culture.cta.title}
                 </h2>
-                <p className="font-accent text-lg text-ink/70 max-w-xl mx-auto">
-                  Where strangers become friends over a cup of tea.
-                </p>
-                <p className="text-body-relaxed text-base text-ink-soft max-w-2xl mx-auto">
+                <p className="text-body-relaxed text-base text-ink-soft">
                   {culture.cta.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href={culture.cta.buttons.primary.link} className="cta-primary cta-shimmer">
-                    {culture.cta.buttons.primary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                  <Link href={culture.cta.buttons.secondary.link} className="cta-secondary">
-                    {culture.cta.buttons.secondary.text}
-                    <ArrowRight size={18} />
-                  </Link>
-                </div>
-              </motion.div>
+                <Link href={culture.cta.buttons.primary.link} className="cta-primary inline-flex">
+                  {culture.cta.buttons.primary.text}
+                  <ArrowRight size={18} />
+                </Link>
+              </div>
             </div>
           </section>
         )}

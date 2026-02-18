@@ -1,0 +1,152 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { Loader2, AlertCircle, CheckCircle, ArrowLeft } from 'lucide-react';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/trpc/auth.forgotPassword`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      // Always show success to prevent email enumeration
+      if (response.ok || response.status === 404) {
+        setSuccess(true);
+      } else {
+        const data = await response.json();
+        throw new Error(data.error?.json?.message || data.error?.message || 'Something went wrong');
+      }
+    } catch (err) {
+      // Still show success message to prevent email enumeration
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('Unable to connect to the server. Please try again later.');
+      } else {
+        setSuccess(true);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="w-full max-w-md animate-fade-in">
+        {/* Camp name and tagline */}
+        <div className="text-center mb-8">
+          <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+            CAMP ALBORZ
+          </h1>
+          <p className="font-accent italic text-lg text-sage">
+            Password Recovery
+          </p>
+        </div>
+
+        {/* Card */}
+        <div className="luxury-card p-8">
+          {success ? (
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-success/10 rounded-full border border-success/20">
+                  <CheckCircle className="h-8 w-8 text-success" />
+                </div>
+              </div>
+              <h2 className="text-display-thin text-xl text-ink mb-3">
+                Check Your Email
+              </h2>
+              <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+                If an account exists with that email, we&apos;ve sent a reset link.
+                Please check your inbox and spam folder.
+              </p>
+              <Link
+                href="/login"
+                className="cta-secondary inline-flex items-center gap-2 text-sm"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to login
+              </Link>
+            </div>
+          ) : (
+            <>
+              <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
+                Enter your email address and we&apos;ll send you a link to reset your password.
+              </p>
+
+              {error && (
+                <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
+                    <p className="text-error text-sm">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="reset-email" className="form-label">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="reset-email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="form-input"
+                    placeholder="your@email.com"
+                    required
+                    autoComplete="email"
+                    disabled={isSubmitting}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Reset Link'
+                  )}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+
+        {/* Back to login */}
+        {!success && (
+          <div className="mt-6 text-center">
+            <Link
+              href="/login"
+              className="text-sm text-ink-soft hover:text-gold transition-colors inline-flex items-center gap-1"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to login
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
