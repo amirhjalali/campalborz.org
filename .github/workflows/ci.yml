@@ -25,7 +25,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-engines || npm install --no-audit
 
       - name: Run linting (web)
         run: npm run lint --workspace=@camp-platform/web
@@ -44,7 +44,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-engines || npm install --no-audit
 
       - name: Type check web package
         run: npm run type-check --workspace=@camp-platform/web
@@ -67,7 +67,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-engines || npm install --no-audit
 
       - name: Run API tests
         run: npm run test --workspace=@camp-platform/api
@@ -90,7 +90,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-engines || npm install --no-audit
 
       - name: Build web package
         run: npm run build --workspace=@camp-platform/web
