@@ -135,28 +135,28 @@ export function Navigation() {
   }, [isMobileMenuOpen]);
 
   return (
-    <nav
+    <motion.nav
       aria-label="Main navigation"
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         isScrolled
-          ? 'bg-warm-white/95 dark:bg-sage-dark/95 backdrop-blur-lg shadow-lg'
+          ? 'bg-cream/90 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.05)]'
           : 'bg-transparent'
       )}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className={cn(
-                'text-2xl font-display font-light tracking-wide transition-colors',
-                isScrolled ? 'text-sage-dark dark:text-tan-light' : 'text-sage-dark'
-              )}
+          <Link href="/" className="flex items-center space-x-2 group">
+            <span
+              className="text-xl font-heading tracking-tight transition-colors duration-300 group-hover:text-terracotta"
+              style={{ color: 'var(--color-ink)' }}
             >
-              {campConfig.name.toUpperCase()}
-            </motion.div>
+              {campConfig.name}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -171,11 +171,10 @@ export function Navigation() {
                 <Link
                   href={item.href}
                   className={cn(
-                    'nav-link-gold px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
-                    isScrolled
-                      ? 'text-sage-dark dark:text-tan-light hover:text-gold'
-                      : 'text-sage-dark hover:text-gold',
-                    isActive(item.href) && 'text-gold'
+                    'px-4 py-2 text-[13px] font-medium transition-colors duration-300 flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2',
+                    isActive(item.href)
+                      ? 'text-ink'
+                      : 'text-ink-soft hover:text-ink'
                   )}
                   onKeyDown={(e) => handleDropdownKeyDown(e, item)}
                   aria-expanded={item.children ? activeDropdown === item.label : undefined}
@@ -184,28 +183,38 @@ export function Navigation() {
                 >
                   {item.label}
                   {item.children && (
-                    <ChevronDown className={cn('h-3 w-3 transition-transform duration-200', activeDropdown === item.label && 'rotate-180')} aria-hidden="true" />
+                    <ChevronDown className={cn('h-3 w-3 transition-transform duration-300', activeDropdown === item.label && 'rotate-180')} aria-hidden="true" />
                   )}
                 </Link>
+
+                {/* Active indicator */}
+                {isActive(item.href) && (
+                  <motion.div
+                    className="absolute bottom-0 left-4 right-4 h-[1.5px]"
+                    style={{ backgroundColor: 'var(--color-terracotta)' }}
+                    layoutId="nav-active"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
 
                 {/* Dropdown Menu */}
                 <AnimatePresence>
                   {activeDropdown === item.label && item.children && (
                     <motion.div
                       data-dropdown={item.label}
-                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-full left-0 mt-2 w-56 bg-warm-white dark:bg-sage rounded-lg shadow-xl border border-tan-300 dark:border-sage-light overflow-hidden"
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute top-full left-0 mt-1 w-56 bg-cream/95 backdrop-blur-md border border-warm-border shadow-lg overflow-hidden"
                       role="menu"
                       aria-label={`${item.label} submenu`}
                     >
-                      {item.children.map((child, index) => (
+                      {item.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-4 py-3 text-sm text-sage-dark dark:text-tan-light hover:bg-gold/10 hover:text-gold transition-colors duration-200 focus:outline-none focus-visible:bg-gold/10 focus-visible:text-gold"
+                          className="block px-5 py-3 text-[13px] text-ink-soft hover:text-ink hover:bg-cream-warm/60 transition-all duration-200 focus:outline-none focus-visible:bg-cream-warm focus-visible:text-ink"
                           role="menuitem"
                           onKeyDown={(e) => {
                             if (e.key === 'Escape') {
@@ -224,59 +233,36 @@ export function Navigation() {
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {/* Dark mode toggle */}
             {mounted && (
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className={cn(
-                  'p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
-                  isScrolled
-                    ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
-                    : 'text-sage-dark hover:bg-gold/10'
-                )}
+                className="p-2.5 rounded-full transition-all duration-300 text-ink-soft hover:text-ink hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                 aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               >
-                {theme === 'dark' ? <Sun className="h-5 w-5" aria-hidden="true" /> : <Moon className="h-5 w-5" aria-hidden="true" />}
+                {theme === 'dark' ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
               </button>
             )}
 
             {/* Donate button */}
             <Link
               href="/donate"
-              className="hidden md:inline-flex items-center px-5 py-2 rounded-full font-display text-sm font-semibold tracking-wider uppercase transition-all duration-300 bg-gold text-white hover:bg-gold-dark hover:shadow-lg hover:shadow-gold/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+              className="hidden md:inline-flex items-center bg-ink text-cream px-6 py-2 text-[11px] uppercase tracking-[0.14em] font-medium transition-all duration-300 hover:bg-terracotta focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
             >
               Donate
-            </Link>
-
-            {/* Member login */}
-            <Link
-              href="/members"
-              className={cn(
-                'hidden md:inline-flex items-center px-5 py-2 rounded-full font-display text-sm tracking-wider uppercase transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
-                isScrolled
-                  ? 'border border-sage-300 text-sage-dark dark:text-tan-light dark:border-tan-600 hover:bg-sage/10 dark:hover:bg-tan/10'
-                  : 'border border-sage-300 text-sage-dark hover:bg-sage/10'
-              )}
-            >
-              Members
             </Link>
 
             {/* Mobile menu toggle */}
             <button
               ref={mobileMenuButtonRef}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={cn(
-                'lg:hidden p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2',
-                isScrolled
-                  ? 'text-sage-dark dark:text-tan-light hover:bg-gold/10'
-                  : 'text-sage-dark hover:bg-gold/10'
-              )}
+              className="lg:hidden p-2 text-ink-soft hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
+              {isMobileMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -291,25 +277,25 @@ export function Navigation() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden bg-warm-white dark:bg-sage border-t border-tan-300 dark:border-sage-light"
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden bg-cream/98 backdrop-blur-md border-t border-warm-border"
             aria-label="Mobile navigation menu"
           >
-            <div className="px-4 py-6 space-y-4">
-              {navItems.map((item, index) => (
+            <div className="px-5 py-8 space-y-1">
+              {navItems.map((item, i) => (
                 <motion.div
                   key={item.label}
-                  initial={{ x: -16, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ duration: 0.2, delay: index * 0.05 }}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.3 }}
                 >
                   <Link
                     href={item.href}
                     className={cn(
-                      'block py-2 font-medium hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200',
+                      'block py-3 text-lg font-heading transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
                       isActive(item.href)
-                        ? 'text-gold'
-                        : 'text-sage-dark dark:text-tan-light'
+                        ? 'text-ink'
+                        : 'text-ink-soft'
                     )}
                     onClick={() => setIsMobileMenuOpen(false)}
                     aria-current={isActive(item.href) ? 'page' : undefined}
@@ -317,16 +303,16 @@ export function Navigation() {
                     {item.label}
                   </Link>
                   {item.children && (
-                    <div className="ml-4 mt-2 space-y-2">
+                    <div className="ml-4 space-y-1">
                       {item.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
                           className={cn(
-                            'block py-1 text-sm hover:text-gold focus:outline-none focus-visible:text-gold transition-colors duration-200',
+                            'block py-2 text-sm transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
                             isActive(child.href)
-                              ? 'text-gold'
-                              : 'text-sage dark:text-tan-200'
+                              ? 'text-ink'
+                              : 'text-ink-faint'
                           )}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
@@ -338,26 +324,31 @@ export function Navigation() {
                 </motion.div>
               ))}
 
-              <div className="pt-4 space-y-3 border-t border-tan-300 dark:border-sage-light">
+              <motion.div
+                className="pt-6 space-y-3 border-t border-warm-border mt-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
                 <Link
                   href="/donate"
-                  className="block w-full text-center px-6 py-3 bg-gold text-white rounded-full font-display text-sm font-semibold tracking-wider uppercase hover:bg-gold-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 transition-all duration-300"
+                  className="block w-full text-center bg-ink text-cream px-6 py-3.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 hover:bg-terracotta focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate
                 </Link>
                 <Link
                   href="/members"
-                  className="block w-full text-center px-6 py-3 border border-sage-300 text-sage-dark dark:text-tan-light dark:border-tan-600 rounded-full font-display text-sm tracking-wider uppercase hover:bg-sage/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 dark:hover:bg-tan/10 transition-all duration-300"
+                  className="block w-full text-center px-6 py-3 text-sm text-ink-soft hover:text-ink transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Members
+                  Member Login
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }

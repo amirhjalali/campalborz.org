@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import "../styles/globals.css";
-import { Cinzel, Cormorant, Inter } from 'next/font/google';
+import { Playfair_Display, Inter } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -9,17 +9,10 @@ import { Footer } from '../components/footer';
 import { StructuredData } from '../components/structured-data';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
 
-const cinzel = Cinzel({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-cinzel',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const cormorant = Cormorant({
-  subsets: ['latin'],
-  variable: '--font-cormorant',
-  weight: ['400', '500', '600'],
+  variable: '--font-playfair',
+  weight: ['400', '600'],
   style: ['normal', 'italic'],
   display: 'swap',
 });
@@ -27,7 +20,7 @@ const cormorant = Cormorant({
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500'],
   display: 'swap',
 });
 
@@ -40,11 +33,12 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={`${cinzel.variable} ${cormorant.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
         <StructuredData />
       </head>
       <body className="font-body antialiased">
+        <div className="grain-overlay" aria-hidden="true" />
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

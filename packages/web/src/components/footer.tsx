@@ -25,78 +25,122 @@ export function Footer() {
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <footer className="bg-ink text-tan-light/80" role="contentinfo">
-      <div className="section-contained py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-          {/* Brand Column */}
-          <div className="space-y-4">
-            <h3 className="text-display-thin text-2xl text-tan-light">{campConfig.name}</h3>
-            <p className="text-body-relaxed text-sm text-tan-light/60 max-w-xs">
-              {footer?.tagline || campConfig.tagline}
-            </p>
-            <p className="text-caption text-tan-light/35">
-              {campConfig.taxStatus} Non-Profit Organization
-            </p>
-          </div>
+    <footer className="relative" role="contentinfo">
+      {/* Decorative top border */}
+      <div
+        className="h-px w-full"
+        style={{
+          background: 'linear-gradient(90deg, transparent, var(--color-gold-muted) 30%, var(--color-terracotta) 50%, var(--color-gold-muted) 70%, transparent)',
+          opacity: 0.3,
+        }}
+      />
 
-          {/* Navigation Column */}
-          <div className="space-y-5">
-            <h4 className="text-caption text-tan-light/45">
-              Navigation
-            </h4>
-            <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-4 gap-y-2.5">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+      <div style={{ backgroundColor: 'var(--color-ink)', color: 'var(--color-cream)' }}>
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 py-20 md:py-24">
+          <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr_0.8fr] gap-12 md:gap-16">
+            {/* Brand Column */}
+            <div className="space-y-5">
+              <h3
+                className="font-heading text-2xl tracking-tight"
+                style={{ color: 'var(--color-cream)' }}
+              >
+                {campConfig.name}
+              </h3>
+              <p
+                className="text-sm max-w-xs leading-relaxed"
+                style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+              >
+                {footer?.tagline || campConfig.tagline}
+              </p>
+              <div
+                className="w-12 h-px"
+                style={{ backgroundColor: 'rgba(250, 247, 240, 0.15)' }}
+              />
+              <p
+                className="text-[10px] tracking-[0.2em] uppercase"
+                style={{ color: 'rgba(250, 247, 240, 0.25)' }}
+              >
+                {campConfig.taxStatus} Non-Profit Organization
+              </p>
+            </div>
 
-          {/* Connect Column */}
-          <div className="space-y-5">
-            <h4 className="text-caption text-tan-light/45">
-              Connect
-            </h4>
-            <div className="space-y-2.5">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Follow Camp Alborz on ${link.label} (opens in new tab)`}
-                  className="block text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
-                >
-                  {link.label}
-                </a>
-              ))}
-              {campConfig.email && (
-                <a
-                  href={`mailto:${campConfig.email}`}
-                  aria-label={`Send email to ${campConfig.email}`}
-                  className="block text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
-                >
-                  {campConfig.email}
-                </a>
-              )}
+            {/* Navigation Column */}
+            <div className="space-y-6">
+              <h4
+                className="text-[10px] tracking-[0.25em] uppercase font-medium"
+                style={{ color: 'rgba(250, 247, 240, 0.35)' }}
+              >
+                Navigation
+              </h4>
+              <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-6 gap-y-3">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
+                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Connect Column */}
+            <div className="space-y-6">
+              <h4
+                className="text-[10px] tracking-[0.25em] uppercase font-medium"
+                style={{ color: 'rgba(250, 247, 240, 0.35)' }}
+              >
+                Connect
+              </h4>
+              <div className="space-y-3">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Follow Camp Alborz on ${link.label} (opens in new tab)`}
+                    className="block text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
+                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                {campConfig.email && (
+                  <a
+                    href={`mailto:${campConfig.email}`}
+                    aria-label={`Send email to ${campConfig.email}`}
+                    className="block text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
+                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                  >
+                    {campConfig.email}
+                  </a>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-14 pt-8 border-t border-white/8">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-xs text-tan-light/35">
-              &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
-            </p>
-            <p className="text-xs text-tan-light/25 tracking-wider">
-              Black Rock City, Nevada
-            </p>
+          {/* Bottom Bar */}
+          <div
+            className="mt-16 pt-8"
+            style={{ borderTop: '1px solid rgba(250, 247, 240, 0.08)' }}
+          >
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+              <p
+                className="text-[11px]"
+                style={{ color: 'rgba(250, 247, 240, 0.25)' }}
+              >
+                &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
+              </p>
+              <p
+                className="text-[11px] tracking-[0.15em]"
+                style={{ color: 'rgba(250, 247, 240, 0.18)' }}
+              >
+                Black Rock City, Nevada
+              </p>
+            </div>
           </div>
         </div>
       </div>
