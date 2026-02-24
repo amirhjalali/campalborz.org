@@ -220,7 +220,7 @@ export default function AboutPage() {
                     className={`border border-white/10 rounded-2xl p-8 bg-white/5 text-center group transition-shadow duration-300 hover:shadow-lg hover:shadow-gold-500/10 ${index === 0 ? 'md:col-span-2' : ''}`}
                   >
                     <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
-                      <ValueIcon className="h-8 w-8 text-gold-400" />
+                      <ValueIcon className="h-8 w-8 text-gold-400" aria-hidden="true" />
                     </div>
                     <h3 className="text-display-thin text-xl text-tan-light mb-4">
                       {value.title}
@@ -288,7 +288,7 @@ export default function AboutPage() {
             <div>
               <Link href="/donate" className="cta-primary cta-shimmer">
                 {about.nonprofit.cta.donate}
-                <ArrowRight size={18} />
+                <ArrowRight size={18} aria-hidden="true" />
               </Link>
             </div>
           </div>

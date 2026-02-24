@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -17,37 +17,91 @@ import {
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { login, error, clearError, isLoading: authLoading } = useAuth();
+  const { login, error, clearError, isAuthenticated, isLoading: authLoading, user } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Redirect if already authenticated as admin/manager
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && user) {
+      if (user.role === 'ADMIN' || user.role === 'MANAGER') {
+        router.replace('/admin');
+      } else {
+        // Regular member -- redirect to portal
+        router.replace('/portal');
+      }
+    }
+  }, [authLoading, isAuthenticated, user, router]);
+
+  const validateForm = (): boolean => {
+    setValidationError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setValidationError('Email address is required.');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setValidationError('Please enter a valid email address.');
+      return false;
+    }
+
+    if (!password) {
+      setValidationError('Password is required.');
+      return false;
+    }
+
+    if (password.length < 6) {
+      setValidationError('Password must be at least 6 characters.');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return;
-    }
-
-    if (password.length < 6) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      await login(email, password);
-      router.push('/admin');
+      await login(email.trim().toLowerCase(), password);
+      // Redirect handled by useEffect above
     } catch {
       // Error handled by AuthContext
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const displayError = validationError || error;
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+      </div>
+    );
+  }
+
+  // Already authenticated, will redirect
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center p-4">
@@ -71,19 +125,19 @@ export default function AdminLoginPage() {
             Welcome Back
           </h2>
 
-          {error && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          {displayError && (
+            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl" role="alert" aria-live="assertive">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
-                <p className="text-amber-800 text-sm">{error}</p>
+                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" aria-hidden="true" />
+                <p className="text-error text-sm">{displayError}</p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* Email */}
             <div>
-              <label htmlFor="email" className="form-label">
+              <label htmlFor="admin-email" className="form-label">
                 Email Address
               </label>
               <div className="relative">
@@ -92,20 +146,24 @@ export default function AdminLoginPage() {
                 </div>
                 <input
                   type="email"
-                  id="email"
+                  id="admin-email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (validationError) setValidationError(null);
+                  }}
                   required
                   disabled={isSubmitting}
                   className="form-input pl-12"
                   placeholder="admin@campalborz.org"
+                  autoComplete="email"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="form-label">
+              <label htmlFor="admin-password" className="form-label">
                 Password
               </label>
               <div className="relative">
@@ -114,13 +172,17 @@ export default function AdminLoginPage() {
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  id="password"
+                  id="admin-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (validationError) setValidationError(null);
+                  }}
                   required
                   disabled={isSubmitting}
                   className="form-input pl-12 pr-12"
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"

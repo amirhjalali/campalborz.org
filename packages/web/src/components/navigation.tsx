@@ -136,6 +136,7 @@ export function Navigation() {
 
   return (
     <nav
+      aria-label="Main navigation"
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
@@ -159,7 +160,7 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
+          <div className="hidden lg:flex items-center space-x-1" role="menubar" aria-label="Site pages">
             {navItems.map((item) => (
               <div
                 key={item.label}
@@ -292,8 +293,7 @@ export function Navigation() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="lg:hidden bg-warm-white dark:bg-sage border-t border-tan-300 dark:border-sage-light"
-            role="navigation"
-            aria-label="Mobile navigation"
+            aria-label="Mobile navigation menu"
           >
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item, index) => (

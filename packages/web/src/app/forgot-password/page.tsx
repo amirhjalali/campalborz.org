@@ -10,11 +10,33 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const validateForm = (): boolean => {
+    setValidationError(null);
+
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setValidationError('Email address is required.');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setValidationError('Please enter a valid email address.');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
 
     try {
@@ -23,7 +45,7 @@ export default function ForgotPasswordPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
 
       // Always show success to prevent email enumeration
@@ -35,6 +57,7 @@ export default function ForgotPasswordPage() {
       }
     } catch (err) {
       // Still show success message to prevent email enumeration
+      // Only show real error if it's a network issue
       if (err instanceof TypeError && err.message.includes('fetch')) {
         setError('Unable to connect to the server. Please try again later.');
       } else {
@@ -44,6 +67,8 @@ export default function ForgotPasswordPage() {
       setIsSubmitting(false);
     }
   };
+
+  const displayError = validationError || error;
 
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center px-4">
@@ -71,8 +96,8 @@ export default function ForgotPasswordPage() {
                 Check Your Email
               </h2>
               <p className="text-body-relaxed text-sm text-ink-soft mb-6">
-                If an account exists with that email, we&apos;ve sent a reset link.
-                Please check your inbox and spam folder.
+                If an account exists with that email, we&apos;ve sent a password reset link.
+                Please check your inbox and spam folder. The link expires in 1 hour.
               </p>
               <Link
                 href="/login"
@@ -88,16 +113,16 @@ export default function ForgotPasswordPage() {
                 Enter your email address and we&apos;ll send you a link to reset your password.
               </p>
 
-              {error && (
-                <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl">
+              {displayError && (
+                <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl" role="alert" aria-live="assertive">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
-                    <p className="text-error text-sm">{error}</p>
+                    <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" aria-hidden="true" />
+                    <p className="text-error text-sm">{displayError}</p>
                   </div>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div>
                   <label htmlFor="reset-email" className="form-label">
                     Email Address
@@ -106,7 +131,10 @@ export default function ForgotPasswordPage() {
                     type="email"
                     id="reset-email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (validationError) setValidationError(null);
+                    }}
                     className="form-input"
                     placeholder="your@email.com"
                     required

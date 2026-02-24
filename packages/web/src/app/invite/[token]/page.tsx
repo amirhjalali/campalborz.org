@@ -1,16 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Loader2, AlertCircle, Eye, EyeOff, PartyPopper } from 'lucide-react';
+import Link from 'next/link';
+import { Loader2, AlertCircle, Eye, EyeOff, PartyPopper, XCircle } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+
+/** Simple password strength indicator */
+function PasswordStrength({ password }: { password: string }) {
+  const strength = useMemo(() => {
+    if (!password) return { level: 0, label: '', color: '' };
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 1) return { level: 1, label: 'Weak', color: 'bg-red-500' };
+    if (score <= 2) return { level: 2, label: 'Fair', color: 'bg-amber-500' };
+    if (score <= 3) return { level: 3, label: 'Good', color: 'bg-yellow-500' };
+    return { level: 4, label: 'Strong', color: 'bg-green-500' };
+  }, [password]);
+
+  if (!password) return null;
+
+  return (
+    <div className="mt-2">
+      <div className="flex gap-1 mb-1">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className={`h-1 flex-1 rounded-full transition-colors ${
+              i <= strength.level ? strength.color : 'bg-tan/30'
+            }`}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-ink-soft">{strength.label}</p>
+    </div>
+  );
+}
+
+type InviteState =
+  | { status: 'loading' }
+  | { status: 'valid'; email: string; name: string }
+  | { status: 'invalid'; message: string }
+  | { status: 'already_accepted' };
 
 export default function InvitePage() {
   const router = useRouter();
   const params = useParams();
   const inviteToken = params.token as string;
+  const { register } = useAuth();
 
+  const [inviteState, setInviteState] = useState<InviteState>({ status: 'loading' });
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -18,53 +64,86 @@ export default function InvitePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Validate the invite token on mount
+  useEffect(() => {
+    const validateToken = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/trpc/auth.validateInvite`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ inviteToken }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          const message = data.error?.json?.message || data.error?.message || 'Invalid invite link';
+          if (message.toLowerCase().includes('already been accepted')) {
+            setInviteState({ status: 'already_accepted' });
+          } else {
+            setInviteState({ status: 'invalid', message });
+          }
+          return;
+        }
+
+        const result = data.result?.data;
+        if (result?.valid) {
+          setInviteState({
+            status: 'valid',
+            email: result.email,
+            name: result.name,
+          });
+        } else {
+          setInviteState({ status: 'invalid', message: 'Invalid invite link.' });
+        }
+      } catch {
+        setInviteState({
+          status: 'invalid',
+          message: 'Unable to validate invite. Please try again later.',
+        });
+      }
+    };
+
+    if (inviteToken) {
+      validateToken();
+    } else {
+      setInviteState({ status: 'invalid', message: 'No invite token provided.' });
+    }
+  }, [inviteToken]);
+
+  const validateForm = (): boolean => {
     setError(null);
 
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');
-      return;
+      return false;
+    }
+
+    if (password.length > 128) {
+      setError('Password must be at most 128 characters.');
+      return false;
     }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
-      return;
+      return false;
     }
 
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
     setIsSubmitting(true);
+    setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/trpc/auth.acceptInvite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ inviteToken, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || data.error) {
-        throw new Error(
-          data.error?.json?.message || data.error?.message || 'Failed to accept invitation'
-        );
-      }
-
-      const result = data.result?.data;
-
-      if (result?.accessToken && result?.user) {
-        // Auto-login: store tokens
-        localStorage.setItem('accessToken', result.accessToken);
-        if (result.refreshToken) {
-          localStorage.setItem('refreshToken', result.refreshToken);
-        }
-        // Redirect to portal
-        router.push('/portal');
-      } else {
-        // If API doesn't return tokens, redirect to login
-        router.push('/login');
-      }
+      await register(inviteToken, password);
+      // register in AuthContext auto-logs in, redirect to portal
+      router.push('/portal');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
       setError(message);
@@ -73,6 +152,91 @@ export default function InvitePage() {
     }
   };
 
+  // Loading state while validating token
+  if (inviteState.status === 'loading') {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+        <div className="w-full max-w-md text-center">
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+              CAMP ALBORZ
+            </h1>
+            <p className="font-accent italic text-lg text-sage">
+              Welcome Aboard
+            </p>
+          </div>
+          <div className="luxury-card p-8 flex flex-col items-center">
+            <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
+            <p className="text-body-relaxed text-sm text-ink-soft">Validating your invitation...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Invalid token
+  if (inviteState.status === 'invalid') {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+              CAMP ALBORZ
+            </h1>
+          </div>
+          <div className="luxury-card p-8 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-error/10 rounded-full border border-error/20">
+                <XCircle className="h-8 w-8 text-error" />
+              </div>
+            </div>
+            <h2 className="text-display-thin text-xl text-ink mb-3">
+              Invalid Invitation
+            </h2>
+            <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+              {inviteState.message}
+            </p>
+            <Link href="/login" className="cta-secondary inline-flex items-center gap-2 text-sm">
+              Go to Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Already accepted
+  if (inviteState.status === 'already_accepted') {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+              CAMP ALBORZ
+            </h1>
+          </div>
+          <div className="luxury-card p-8 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-gold/10 rounded-full border border-gold/30">
+                <PartyPopper className="h-8 w-8 text-gold" />
+              </div>
+            </div>
+            <h2 className="text-display-thin text-xl text-ink mb-3">
+              Already Accepted
+            </h2>
+            <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+              This invitation has already been accepted. You can sign in with your existing credentials.
+            </p>
+            <Link href="/login" className="cta-primary inline-flex text-sm">
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Valid token -- show registration form
   return (
     <div className="min-h-screen bg-cream flex items-center justify-center px-4">
       <div className="w-full max-w-md animate-fade-in">
@@ -98,20 +262,24 @@ export default function InvitePage() {
           <h2 className="text-display-thin text-xl text-center text-ink mb-2">
             You&apos;ve Been Invited
           </h2>
+          <p className="text-body-relaxed text-sm text-ink-soft text-center mb-2">
+            Welcome to Camp Alborz, <span className="font-semibold text-ink">{inviteState.name}</span>!
+          </p>
           <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
-            Welcome to Camp Alborz! Set your password below to activate your account.
+            Set your password below to activate your account for{' '}
+            <span className="font-medium text-ink">{inviteState.email}</span>.
           </p>
 
           {error && (
-            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl">
+            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl" role="alert" aria-live="assertive">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
+                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <p className="text-error text-sm">{error}</p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <div>
               <label htmlFor="invite-password" className="form-label">
                 Create Password
@@ -121,22 +289,29 @@ export default function InvitePage() {
                   type={showPassword ? 'text' : 'password'}
                   id="invite-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
                   className="form-input pr-12"
                   placeholder="Minimum 8 characters"
                   required
                   minLength={8}
+                  maxLength={128}
                   disabled={isSubmitting}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-gold transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              <PasswordStrength password={password} />
             </div>
 
             <div>
@@ -148,26 +323,34 @@ export default function InvitePage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="invite-confirm-password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
                   className="form-input pr-12"
                   placeholder="Confirm your password"
                   required
                   disabled={isSubmitting}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-gold transition-colors"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {confirmPassword && password !== confirmPassword && (
+                <p className="mt-1 text-xs text-error">Passwords do not match</p>
+              )}
             </div>
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (!!confirmPassword && password !== confirmPassword)}
               className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isSubmitting ? (
@@ -180,6 +363,16 @@ export default function InvitePage() {
               )}
             </button>
           </form>
+        </div>
+
+        {/* Already have an account */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-ink-soft">
+            Already have an account?{' '}
+            <Link href="/login" className="text-gold hover:text-gold/80 font-medium transition-colors">
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

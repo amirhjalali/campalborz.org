@@ -370,7 +370,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
                 <Text style={styles.label}>Confirm Password</Text>
                 <View style={[
                   styles.inputContainer,
-                  formData.confirmPassword && !passwordsMatch && styles.inputContainerError
+                  formData.confirmPassword.length > 0 && !passwordsMatch ? styles.inputContainerError : undefined
                 ]}>
                   <Ionicons 
                     name="lock-closed-outline" 

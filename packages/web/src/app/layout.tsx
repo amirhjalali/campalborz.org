@@ -4,6 +4,7 @@ import { Cinzel, Cormorant, Inter } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
 import { AuthProvider } from '../contexts/AuthContext';
+import { NotificationProvider } from '../contexts/NotificationContext';
 import { Footer } from '../components/footer';
 import { StructuredData } from '../components/structured-data';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
@@ -49,10 +50,12 @@ export default function RootLayout({
         </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AuthProvider>
-            <main id="main-content">
-              {children}
-            </main>
-            <Footer />
+            <NotificationProvider>
+              <div id="main-content" tabIndex={-1}>
+                {children}
+              </div>
+              <Footer />
+            </NotificationProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

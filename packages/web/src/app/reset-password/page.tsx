@@ -1,11 +1,47 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, AlertCircle, CheckCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+
+/** Simple password strength indicator */
+function PasswordStrength({ password }: { password: string }) {
+  const strength = useMemo(() => {
+    if (!password) return { level: 0, label: '', color: '' };
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 1) return { level: 1, label: 'Weak', color: 'bg-red-500' };
+    if (score <= 2) return { level: 2, label: 'Fair', color: 'bg-amber-500' };
+    if (score <= 3) return { level: 3, label: 'Good', color: 'bg-yellow-500' };
+    return { level: 4, label: 'Strong', color: 'bg-green-500' };
+  }, [password]);
+
+  if (!password) return null;
+
+  return (
+    <div className="mt-2">
+      <div className="flex gap-1 mb-1">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className={`h-1 flex-1 rounded-full transition-colors ${
+              i <= strength.level ? strength.color : 'bg-tan/30'
+            }`}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-ink-soft">{strength.label}</p>
+    </div>
+  );
+}
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -20,24 +56,35 @@ function ResetPasswordForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
+  const validateForm = (): boolean => {
     if (password.length < 8) {
       setError('Password must be at least 8 characters.');
-      return;
+      return false;
+    }
+
+    if (password.length > 128) {
+      setError('Password must be at most 128 characters.');
+      return false;
     }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
-      return;
+      return false;
     }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
     if (!token) {
       setError('Invalid or missing reset token.');
       return;
     }
+
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
@@ -113,19 +160,19 @@ function ResetPasswordForm() {
       ) : (
         <>
           <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
-            Enter your new password below.
+            Enter your new password below. Choose a strong password with at least 8 characters.
           </p>
 
           {error && (
-            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl">
+            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl" role="alert" aria-live="assertive">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
+                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" aria-hidden="true" />
                 <p className="text-error text-sm">{error}</p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <div>
               <label htmlFor="new-password" className="form-label">
                 New Password
@@ -135,22 +182,29 @@ function ResetPasswordForm() {
                   type={showPassword ? 'text' : 'password'}
                   id="new-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
                   className="form-input pr-12"
                   placeholder="Minimum 8 characters"
                   required
                   minLength={8}
+                  maxLength={128}
                   disabled={isSubmitting}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-gold transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              <PasswordStrength password={password} />
             </div>
 
             <div>
@@ -162,21 +216,29 @@ function ResetPasswordForm() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirm-password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
                   className="form-input pr-12"
                   placeholder="Confirm your new password"
                   required
                   disabled={isSubmitting}
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-gold transition-colors"
                   aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {confirmPassword && password !== confirmPassword && (
+                <p className="mt-1 text-xs text-error">Passwords do not match</p>
+              )}
             </div>
 
             <button

@@ -178,7 +178,7 @@ export default function ArtPage() {
                                   ? '/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg'
                                   : '/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg'
                                 }
-                                alt={installation.title}
+                                alt={`${installation.title} art car by ${installation.artist}`}
                                 fill
                                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -213,15 +213,15 @@ export default function ArtPage() {
 
                         <div className="flex flex-wrap gap-6 text-sm text-tan-light/60">
                           <div className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-gold-500/70" />
+                            <MapPin className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             {installation.location}
                           </div>
                           <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-gold-500/70" />
+                            <Users className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             {installation.participants}
                           </div>
                           <div className="flex items-center gap-2">
-                            <Eye className="h-4 w-4 text-gold-500/70" />
+                            <Eye className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             {installation.impact}
                           </div>
                         </div>
@@ -232,7 +232,7 @@ export default function ArtPage() {
                             className="cta-shimmer inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-gold-500/40 text-sm text-gold-400 hover:text-gold-300 hover:border-gold-400/60 transition-colors"
                           >
                             Explore {installation.title.split(' ')[0]}
-                            <ArrowRight className="h-4 w-4" />
+                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
                           </Link>
                         )}
                       </div>
@@ -357,7 +357,7 @@ export default function ArtPage() {
             </p>
             <Link href="/events" className="cta-primary inline-flex">
               See Art Events
-              <ArrowRight size={18} />
+              <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </div>
         </section>

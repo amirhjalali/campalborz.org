@@ -13,6 +13,11 @@ export const forestCampTheme: BrandConfig = {
     primary: 'rgb(27, 94, 32)',       // Deep forest green
     secondary: 'rgb(121, 85, 72)',    // Warm brown/wood
     accent: 'rgb(205, 220, 57)',      // Fresh lime/leaf green
+    background: 'rgb(250, 250, 249)',
+    text: {
+      primary: 'rgb(28, 25, 23)',
+      secondary: 'rgb(68, 64, 60)',
+    },
   },
 
   fonts: {
@@ -126,9 +131,9 @@ export const forestCampTheme: BrandConfig = {
       hero: 'linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(27, 94, 32) 50%, rgb(121, 85, 72) 100%)',
       card: 'linear-gradient(135deg, rgb(27, 94, 32) 0%, rgb(56, 142, 60) 100%)',
       button: 'linear-gradient(135deg, rgb(56, 142, 60) 0%, rgb(76, 175, 80) 100%)',
-      overlay: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(27, 94, 32, 0.8) 100%)',
-      border: 'linear-gradient(135deg, rgb(76, 175, 80) 0%, rgb(205, 220, 57) 100%)',
-      text: 'linear-gradient(135deg, rgb(56, 142, 60) 0%, rgb(121, 85, 72) 100%)',
+      primary: 'linear-gradient(135deg, rgb(27, 94, 32) 0%, rgb(76, 175, 80) 100%)',
+      secondary: 'linear-gradient(135deg, rgb(121, 85, 72) 0%, rgb(161, 136, 127) 100%)',
+      accent: 'linear-gradient(135deg, rgb(205, 220, 57) 0%, rgb(220, 231, 117) 100%)',
       decorative: 'linear-gradient(135deg, rgb(27, 94, 32) 0%, rgb(76, 175, 80) 50%, rgb(205, 220, 57) 100%)',
     },
 
@@ -169,9 +174,11 @@ export const forestCampTheme: BrandConfig = {
 
   assets: {
     logo: '/assets/forest-camp-logo.svg',
+    logoLight: '/assets/forest-camp-logo-light.svg',
+    logoDark: '/assets/forest-camp-logo-dark.svg',
     favicon: '/assets/forest-camp-favicon.ico',
     ogImage: '/assets/forest-camp-og.jpg',
-    heroImage: '/assets/forest-camp-hero.jpg',
+    heroBackground: '/assets/forest-camp-hero.jpg',
   },
 };
 

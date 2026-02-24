@@ -34,7 +34,7 @@ export function FramedCTA({
       <Link key={button.label} href={button.href} className={className}>
         {button.icon}
         {button.label}
-        {button.variant !== 'secondary' && <ArrowRight size={18} />}
+        {button.variant !== 'secondary' && <ArrowRight size={18} aria-hidden="true" />}
       </Link>
     );
   }

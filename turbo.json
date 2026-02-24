@@ -12,9 +12,7 @@
     },
     "lint": {},
     "type-check": {},
-    "test": {
-      "dependsOn": ["build"]
-    },
+    "test": {},
     "clean": {
       "cache": false
     }

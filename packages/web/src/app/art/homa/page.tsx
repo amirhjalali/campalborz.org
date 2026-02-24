@@ -59,7 +59,7 @@ export default function HomaPage() {
                 href="/art"
                 className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors mb-8"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 Back to Art
               </Link>
             </motion.div>
@@ -225,11 +225,11 @@ export default function HomaPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/donate" className="cta-primary cta-shimmer">
                   Support the Build
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </Link>
                 <Link href="/art/damavand" className="cta-secondary">
                   Meet DAMAVAND
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
             </div>

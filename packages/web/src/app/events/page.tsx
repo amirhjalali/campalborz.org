@@ -178,15 +178,15 @@ export default function EventsPage() {
 
                         <div className={`flex flex-wrap gap-x-6 gap-y-2 text-sm text-tan-light/70`}>
                           <div className="flex items-center gap-3">
-                            <Calendar className="h-4 w-4 text-gold-500/70" />
+                            <Calendar className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             <span>{event.date}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <Clock className="h-4 w-4 text-gold-500/70" />
+                            <Clock className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             <span>{event.time}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <MapPin className="h-4 w-4 text-gold-500/70" />
+                            <MapPin className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
                             <span>{event.location}</span>
                           </div>
                         </div>
@@ -203,7 +203,7 @@ export default function EventsPage() {
                             className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors group"
                           >
                             {event.linkText || 'View Details'}
-                            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                           </Link>
                         )}
                       </div>
@@ -311,7 +311,7 @@ export default function EventsPage() {
                 </p>
                 <Link href={events.cta.buttons.primary.link} className="cta-primary inline-flex">
                   {events.cta.buttons.primary.text}
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
             </div>

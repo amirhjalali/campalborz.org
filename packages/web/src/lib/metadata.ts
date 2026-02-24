@@ -206,6 +206,20 @@ export const pageMetadata = {
     noIndex: true,
   }),
 
+  resetPassword: generateMetadata({
+    title: 'Reset Password | Camp Alborz',
+    description: 'Set a new password for your Camp Alborz account.',
+    path: '/reset-password',
+    noIndex: true,
+  }),
+
+  invite: generateMetadata({
+    title: 'Accept Invitation | Camp Alborz',
+    description: 'Accept your invitation to join Camp Alborz.',
+    path: '/invite',
+    noIndex: true,
+  }),
+
   admin: generateMetadata({
     title: 'Admin Dashboard | Camp Alborz',
     description: 'Camp Alborz admin dashboard for managing content, members, and operations.',

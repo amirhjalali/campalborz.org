@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   Users,
   UserPlus,
@@ -15,28 +15,20 @@ import {
   AlertCircle,
   Copy,
   Check,
+  RefreshCw,
+  Download,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/shared/StatusBadge';
 import { SearchInput } from '../../../components/shared/SearchInput';
 import { EmptyState } from '../../../components/shared/EmptyState';
 import { useAdminSeason } from '../../../contexts/AdminSeasonContext';
+import {
+  fetchSeasonMembers,
+  inviteMember,
+  type SeasonMember,
+} from '../../../lib/adminApi';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 const PAGE_SIZE = 50;
-
-interface SeasonMember {
-  id: string;
-  status: string;
-  memberId: string;
-  member: {
-    id: string;
-    name: string;
-    email: string;
-    playaName?: string;
-    role: string;
-  };
-  housingType?: string;
-}
 
 type SortField = 'name' | 'email' | 'status' | 'role' | 'housing';
 type SortDir = 'asc' | 'desc';
@@ -52,7 +44,6 @@ export default function MembersPage() {
   // Filters & search
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [roleFilter, setRoleFilter] = useState('all');
   const [page, setPage] = useState(0);
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
@@ -66,34 +57,18 @@ export default function MembersPage() {
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const fetchMembers = useCallback(async () => {
+  const loadMembers = useCallback(async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('accessToken');
-      const params = {
-        limit: PAGE_SIZE,
-        offset: page * PAGE_SIZE,
+      const result = await fetchSeasonMembers({
+        seasonId: selectedSeasonId || undefined,
         search: search || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
-        role: roleFilter !== 'all' ? roleFilter : undefined,
-        sortField,
-        sortDir,
-        seasonId: selectedSeasonId || undefined,
-      };
-      const input = encodeURIComponent(JSON.stringify(params));
-      const res = await fetch(
-        `${API_BASE_URL}/api/trpc/seasonMembers.list?input=${input}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        }
-      );
-      if (!res.ok) throw new Error('Failed to load members');
-      const json = await res.json();
-      const result = json.result?.data;
-      if (result) {
-        setMembers(result.items || []);
-        setTotalCount(result.total || 0);
-      }
+        limit: PAGE_SIZE,
+        offset: page * PAGE_SIZE,
+      });
+      setMembers(result.seasonMembers);
+      setTotalCount(result.total);
       setError(null);
     } catch {
       setError('Unable to load members. The server may not be running.');
@@ -102,16 +77,16 @@ export default function MembersPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, statusFilter, roleFilter, sortField, sortDir, selectedSeasonId]);
+  }, [page, search, statusFilter, selectedSeasonId]);
 
   useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
+    loadMembers();
+  }, [loadMembers]);
 
   // Reset page when filters change
   useEffect(() => {
     setPage(0);
-  }, [search, statusFilter, roleFilter]);
+  }, [search, statusFilter]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -121,6 +96,29 @@ export default function MembersPage() {
       setSortDir('asc');
     }
   };
+
+  // Client-side sort (since server sort only supports member name ordering)
+  const sortedMembers = [...members].sort((a, b) => {
+    let cmp = 0;
+    switch (sortField) {
+      case 'name':
+        cmp = a.member.name.localeCompare(b.member.name);
+        break;
+      case 'email':
+        cmp = a.member.email.localeCompare(b.member.email);
+        break;
+      case 'status':
+        cmp = a.status.localeCompare(b.status);
+        break;
+      case 'role':
+        cmp = a.member.role.localeCompare(b.member.role);
+        break;
+      case 'housing':
+        cmp = (a.housingType || '').localeCompare(b.housingType || '');
+        break;
+    }
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) return null;
@@ -136,19 +134,9 @@ export default function MembersPage() {
     try {
       setInviteLoading(true);
       setInviteError(null);
-      const token = localStorage.getItem('accessToken');
-      const res = await fetch(`${API_BASE_URL}/api/trpc/members.invite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ email: inviteEmail, name: inviteName }),
-      });
-      if (!res.ok) throw new Error('Failed to send invite');
-      const json = await res.json();
-      const result = json.result?.data;
-      setInviteResult(result?.inviteLink || result?.token || 'Invitation sent successfully.');
+
+      const result = await inviteMember(inviteEmail, inviteName);
+      setInviteResult(result.inviteToken || 'Invitation sent successfully.');
     } catch {
       setInviteError('Failed to send invitation. Please try again.');
     } finally {
@@ -179,6 +167,12 @@ export default function MembersPage() {
   const startItem = page * PAGE_SIZE + 1;
   const endItem = Math.min((page + 1) * PAGE_SIZE, totalCount);
 
+  // Stats summary
+  const statusCounts = members.reduce<Record<string, number>>((acc, m) => {
+    acc[m.status] = (acc[m.status] || 0) + 1;
+    return acc;
+  }, {});
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -186,17 +180,47 @@ export default function MembersPage() {
         <div>
           <h1 className="text-display-thin text-3xl text-ink">Members</h1>
           <p className="text-body-relaxed text-sm text-ink-soft mt-1">
-            {totalCount} member{totalCount !== 1 ? 's' : ''}{selectedSeason ? ` in ${selectedSeason.name}` : ''}
+            {totalCount} member{totalCount !== 1 ? 's' : ''}
+            {selectedSeason ? ` in ${selectedSeason.name}` : ''}
           </p>
         </div>
-        <button
-          onClick={() => setShowInvite(true)}
-          className="cta-primary text-sm px-5 py-2.5 flex items-center gap-2"
-        >
-          <UserPlus className="h-4 w-4" />
-          Invite Member
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={loadMembers}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-tan/40 text-ink-soft hover:bg-cream disabled:opacity-50 transition-colors"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+          </button>
+          <button
+            onClick={() => setShowInvite(true)}
+            className="cta-primary text-sm px-5 py-2.5 flex items-center gap-2"
+          >
+            <UserPlus className="h-4 w-4" />
+            Invite Member
+          </button>
+        </div>
       </div>
+
+      {/* Status Summary Bar */}
+      {totalCount > 0 && !loading && (
+        <div className="flex flex-wrap gap-3">
+          {Object.entries(statusCounts).map(([status, count]) => (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(statusFilter === status ? 'all' : status)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                statusFilter === status
+                  ? 'bg-sage text-white'
+                  : 'bg-white border border-tan/30 text-ink-soft hover:bg-cream'
+              }`}
+            >
+              <StatusBadge status={status} variant="season" />
+              <span className="tabular-nums">{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -219,16 +243,6 @@ export default function MembersPage() {
           <option value="WAITLISTED">Waitlisted</option>
           <option value="CANCELLED">Cancelled</option>
         </select>
-        <select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="form-input w-auto min-w-[130px]"
-        >
-          <option value="all">All Roles</option>
-          <option value="ADMIN">Admin</option>
-          <option value="MANAGER">Manager</option>
-          <option value="MEMBER">Member</option>
-        </select>
       </div>
 
       {/* Error */}
@@ -236,31 +250,37 @@ export default function MembersPage() {
         <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
           <AlertCircle className="h-5 w-5 text-amber-500 shrink-0" />
           <p className="text-sm text-amber-700">{error}</p>
+          <button
+            onClick={loadMembers}
+            className="ml-auto text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors"
+          >
+            Retry
+          </button>
         </div>
       )}
 
       {/* Table */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
+          <p className="text-sm text-ink-soft">Loading members...</p>
         </div>
       ) : members.length === 0 ? (
         <EmptyState
           icon={Users}
           title="No Members Found"
           description={
-            search || statusFilter !== 'all' || roleFilter !== 'all'
+            search || statusFilter !== 'all'
               ? 'No members match your current filters. Try adjusting your search or filters.'
               : 'No members have been added to the current season yet.'
           }
           action={
-            search || statusFilter !== 'all' || roleFilter !== 'all'
+            search || statusFilter !== 'all'
               ? {
                   label: 'Clear Filters',
                   onClick: () => {
                     setSearch('');
                     setStatusFilter('all');
-                    setRoleFilter('all');
                   },
                 }
               : undefined
@@ -305,9 +325,12 @@ export default function MembersPage() {
                 </tr>
               </thead>
               <tbody>
-                {members.map((sm) => (
-                  <tr
+                {sortedMembers.map((sm, idx) => (
+                  <motion.tr
                     key={sm.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: idx * 0.02, duration: 0.2 }}
                     onClick={() => router.push(`/admin/members/${sm.member.id}`)}
                     className="border-b border-sage/5 hover:bg-sage/[0.03] cursor-pointer transition-colors"
                   >
@@ -339,7 +362,7 @@ export default function MembersPage() {
                         ? sm.housingType.charAt(0) + sm.housingType.slice(1).toLowerCase()
                         : '\u2014'}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -360,6 +383,9 @@ export default function MembersPage() {
                   <ChevronLeft className="h-4 w-4" />
                   Previous
                 </button>
+                <span className="text-sm text-ink-soft tabular-nums">
+                  Page {page + 1} of {totalPages}
+                </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                   disabled={page >= totalPages - 1}
@@ -382,7 +408,7 @@ export default function MembersPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40"
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
               onClick={closeInviteModal}
             />
             <motion.div
@@ -411,7 +437,7 @@ export default function MembersPage() {
                     <p className="text-sm text-green-700">Invitation created successfully.</p>
                   </div>
                   <div className="space-y-2">
-                    <label className="form-label">Invite Link / Token</label>
+                    <label className="form-label">Invite Token</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -432,7 +458,10 @@ export default function MembersPage() {
                     </div>
                   </div>
                   <button
-                    onClick={closeInviteModal}
+                    onClick={() => {
+                      closeInviteModal();
+                      loadMembers();
+                    }}
                     className="w-full px-4 py-2.5 rounded-lg text-sm font-medium bg-sage text-white hover:bg-sage-700 transition-colors"
                   >
                     Done

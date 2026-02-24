@@ -7,6 +7,9 @@ import { ArrowRight, LogIn, Eye, EyeOff, User, LogOut, AlertCircle } from 'lucid
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useAuth } from '../../contexts/AuthContext';
+import { NotificationBell } from '../../components/notifications/NotificationBell';
+import { OnlineMembers } from '../../components/notifications/OnlineMembers';
+import { ChatRoom } from '../../components/chat/ChatRoom';
 
 export default function MembersPage() {
   const { members } = useContentConfig();
@@ -76,13 +79,17 @@ export default function MembersPage() {
                     <p className="text-body-relaxed text-sm text-ink-soft">{user.email}</p>
                   </div>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="cta-secondary flex items-center gap-2"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </button>
+                <div className="flex items-center gap-3">
+                  <NotificationBell />
+                  <OnlineMembers compact />
+                  <button
+                    onClick={handleLogout}
+                    className="cta-secondary flex items-center gap-2"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Sign Out
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -271,6 +278,28 @@ export default function MembersPage() {
                   </div>
                 </div>
               </section>
+
+              {/* Camp Chat & Online Members */}
+              <section className="py-16">
+                <div className="section-contained">
+                  <div className="text-center mb-10">
+                    <h2 className="text-display-thin text-3xl text-ink mb-3">
+                      Camp Community
+                    </h2>
+                    <p className="text-body-relaxed text-ink-soft">
+                      Chat with your campmates and see who is online.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2">
+                      <ChatRoom />
+                    </div>
+                    <div>
+                      <OnlineMembers />
+                    </div>
+                  </div>
+                </div>
+              </section>
             </>
           )}
         </main>
@@ -309,9 +338,9 @@ export default function MembersPage() {
               </h2>
 
               {error && (
-                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl" role="alert" aria-live="assertive">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                    <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" aria-hidden="true" />
                     <p className="text-amber-800 text-sm">{error}</p>
                   </div>
                 </div>

@@ -132,9 +132,9 @@ export default function HomePage() {
           </section>
         )}
 
-        <section className="section-contrast">
+        <section className="section-contrast" aria-labelledby="faq-heading">
           <div className="section-contained space-y-10">
-            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light text-center">
+            <h2 id="faq-heading" className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light text-center">
               Frequently Asked Questions
             </h2>
 

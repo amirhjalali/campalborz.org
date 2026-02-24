@@ -13,6 +13,11 @@ export const oceanCampTheme: BrandConfig = {
     primary: 'rgb(13, 71, 161)',      // Deep blue
     secondary: 'rgb(0, 150, 136)',    // Teal/aqua
     accent: 'rgb(255, 138, 101)',     // Coral
+    background: 'rgb(250, 250, 250)',
+    text: {
+      primary: 'rgb(33, 33, 33)',
+      secondary: 'rgb(97, 97, 97)',
+    },
   },
 
   fonts: {
@@ -126,9 +131,9 @@ export const oceanCampTheme: BrandConfig = {
       hero: 'linear-gradient(135deg, rgb(33, 150, 243) 0%, rgb(0, 150, 136) 50%, rgb(255, 138, 101) 100%)',
       card: 'linear-gradient(135deg, rgb(13, 71, 161) 0%, rgb(0, 150, 136) 100%)',
       button: 'linear-gradient(135deg, rgb(0, 150, 136) 0%, rgb(38, 166, 154) 100%)',
-      overlay: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(13, 71, 161, 0.8) 100%)',
-      border: 'linear-gradient(135deg, rgb(0, 150, 136) 0%, rgb(255, 138, 101) 100%)',
-      text: 'linear-gradient(135deg, rgb(33, 150, 243) 0%, rgb(0, 150, 136) 100%)',
+      primary: 'linear-gradient(135deg, rgb(13, 71, 161) 0%, rgb(33, 150, 243) 100%)',
+      secondary: 'linear-gradient(135deg, rgb(0, 150, 136) 0%, rgb(38, 166, 154) 100%)',
+      accent: 'linear-gradient(135deg, rgb(255, 138, 101) 0%, rgb(255, 171, 145) 100%)',
       decorative: 'linear-gradient(135deg, rgb(13, 71, 161) 0%, rgb(0, 150, 136) 50%, rgb(255, 138, 101) 100%)',
     },
 
@@ -169,9 +174,11 @@ export const oceanCampTheme: BrandConfig = {
 
   assets: {
     logo: '/assets/ocean-camp-logo.svg',
+    logoLight: '/assets/ocean-camp-logo-light.svg',
+    logoDark: '/assets/ocean-camp-logo-dark.svg',
     favicon: '/assets/ocean-camp-favicon.ico',
     ogImage: '/assets/ocean-camp-og.jpg',
-    heroImage: '/assets/ocean-camp-hero.jpg',
+    heroBackground: '/assets/ocean-camp-hero.jpg',
   },
 };
 

@@ -25,7 +25,7 @@ export function Footer() {
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <footer className="bg-ink text-tan-light/80">
+    <footer className="bg-ink text-tan-light/80" role="contentinfo">
       <div className="section-contained py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           {/* Brand Column */}
@@ -44,12 +44,12 @@ export function Footer() {
             <h4 className="text-caption text-tan-light/45">
               Navigation
             </h4>
-            <nav className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+            <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-x-4 gap-y-2.5">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
+                  className="text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -69,7 +69,8 @@ export function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
+                  aria-label={`Follow Camp Alborz on ${link.label} (opens in new tab)`}
+                  className="block text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
                 >
                   {link.label}
                 </a>
@@ -77,7 +78,8 @@ export function Footer() {
               {campConfig.email && (
                 <a
                   href={`mailto:${campConfig.email}`}
-                  className="block text-sm text-tan-light/65 hover:text-gold transition-colors duration-200"
+                  aria-label={`Send email to ${campConfig.email}`}
+                  className="block text-sm text-tan-light/65 hover:text-gold focus-visible:text-gold transition-colors duration-200"
                 >
                   {campConfig.email}
                 </a>

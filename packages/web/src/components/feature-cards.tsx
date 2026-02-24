@@ -69,7 +69,7 @@ export function FeatureCards() {
 
                 <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-gold group-hover:gap-3 transition-all duration-300">
                   {isExternal ? 'Listen' : 'Learn More'}
-                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                 </div>
               </div>
             </motion.article>

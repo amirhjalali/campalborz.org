@@ -60,7 +60,7 @@ export default function DamavandPage() {
                 href="/art"
                 className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors mb-8"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 Back to Art
               </Link>
             </motion.div>
@@ -261,12 +261,12 @@ export default function DamavandPage() {
             </p>
             <Link href="/donate" className="cta-primary inline-flex">
               Support the Build
-              <ArrowRight size={18} />
+              <ArrowRight size={18} aria-hidden="true" />
             </Link>
             <p className="text-sm text-ink-soft/70 pt-4">
               See our other art car{' '}
               <Link href="/art/homa" className="text-gold-600 hover:text-gold-500 transition-colors">
-                HOMA <ArrowRight className="inline h-3.5 w-3.5" />
+                HOMA <ArrowRight className="inline h-3.5 w-3.5" aria-hidden="true" />
               </Link>
             </p>
           </div>

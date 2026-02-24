@@ -15,11 +15,28 @@
     font-weight: 600;
     text-decoration: none;
     border-radius: 0.5rem;
+    transition: none;
   }
 
-  .skip-link:focus {
+  .skip-link:focus,
+  .skip-link:focus-visible {
     left: 1rem;
     top: 1rem;
+    outline: 3px solid rgb(var(--color-ink));
+    outline-offset: 2px;
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 
   /* Global focus-visible styles */
@@ -897,6 +914,43 @@
     to {
       opacity: 1;
       filter: blur(0);
+    }
+  }
+
+  /* Respect user preference for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .cta-shimmer::before {
+      display: none;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (forced-colors: active) {
+    .cta-primary,
+    .cta-secondary {
+      border: 2px solid ButtonText;
+    }
+
+    .luxury-card,
+    .frame-panel {
+      border: 1px solid CanvasText;
+    }
+
+    .form-input {
+      border: 1px solid CanvasText;
+    }
+
+    .form-input:focus {
+      outline: 2px solid Highlight;
     }
   }
 }

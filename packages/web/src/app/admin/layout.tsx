@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { AdminSeasonProvider, useAdminSeason } from '../../contexts/AdminSeasonContext';
+import { NotificationBell } from '../../components/notifications/NotificationBell';
 
 const sidebarItems = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -73,14 +74,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (isLoginPage) return;
     if (!isLoading && !isAuthenticated) {
-      router.replace('/login');
+      router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
     }
     if (!isLoading && isAuthenticated && user) {
       if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
         router.replace('/portal');
       }
     }
-  }, [isLoading, isAuthenticated, user, router, isLoginPage]);
+  }, [isLoading, isAuthenticated, user, router, isLoginPage, pathname]);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -217,9 +218,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </h2>
             </div>
 
-            {/* Center: season selector */}
+            {/* Right: season selector, notifications, user */}
             <div className="flex items-center gap-4">
               <SeasonSelector />
+              <NotificationBell />
               <Link
                 href="/"
                 className="text-sm text-sage hover:text-gold transition-colors hidden sm:inline"

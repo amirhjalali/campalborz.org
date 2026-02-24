@@ -159,7 +159,7 @@ export default function ApplyPage() {
           >
             <Image
               src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
-              alt="Join Camp Alborz"
+              alt="Camp Alborz community members gathering under string lights, welcoming new members"
               fill
               className="object-cover"
               priority
@@ -192,14 +192,14 @@ export default function ApplyPage() {
 
         {/* Success Message */}
         {isSubmitted && (
-          <section className="section-base section-contained">
+          <section className="section-base section-contained" role="status" aria-live="polite">
             <motion.div
               initial={{ y: -14 }}
               animate={{ opacity: 1, y: 0 }}
               className="frame-panel text-center space-y-6"
             >
               <div className="inline-flex p-4 rounded-full bg-sage-100 border border-sage-300">
-                <CheckCircle className="h-10 w-10 text-sage-600" />
+                <CheckCircle className="h-10 w-10 text-sage-600" aria-hidden="true" />
               </div>
               <h2 className="text-display-thin text-2xl md:text-3xl">
                 Application Submitted Successfully!
@@ -363,6 +363,8 @@ export default function ApplyPage() {
                       id="apply-interests"
                       name="interests"
                       required
+                      aria-required="true"
+                      aria-describedby="interests-hint"
                       rows={4}
                       className="form-input border-0 bg-transparent"
                       placeholder={apply.form.fields.interestsPlaceholder}
@@ -370,7 +372,7 @@ export default function ApplyPage() {
                       onChange={handleChange}
                     />
                   </div>
-                  <p className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
+                  <p id="interests-hint" className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
                 </div>
 
                 {/* Contribution */}
@@ -383,6 +385,8 @@ export default function ApplyPage() {
                       id="apply-contribution"
                       name="contribution"
                       required
+                      aria-required="true"
+                      aria-describedby="contribution-hint"
                       rows={4}
                       className="form-input border-0 bg-transparent"
                       placeholder={apply.form.fields.contributionPlaceholder}
@@ -390,7 +394,7 @@ export default function ApplyPage() {
                       onChange={handleChange}
                     />
                   </div>
-                  <p className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
+                  <p id="contribution-hint" className="text-xs text-ink-soft/70 mt-1">Minimum 50 characters</p>
                 </div>
 
                 {/* Dietary */}
@@ -435,13 +439,13 @@ export default function ApplyPage() {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                         Submitting Application...
                       </>
                     ) : (
                       <>
                         {apply.form.submitButton}
-                        <ArrowRight size={18} />
+                        <ArrowRight size={18} aria-hidden="true" />
                       </>
                     )}
                   </motion.button>
@@ -505,7 +509,7 @@ export default function ApplyPage() {
             </p>
             <Link href="/about" className="cta-secondary inline-flex">
               About Camp Alborz
-              <ArrowRight size={18} />
+              <ArrowRight size={18} aria-hidden="true" />
             </Link>
           </div>
         </section>

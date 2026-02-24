@@ -1,5 +1,12 @@
-import { io, Socket } from 'socket.io-client';
+import io from 'socket.io-client';
 import { getAuthToken } from './auth';
+
+/**
+ * Socket instance type. Uses ReturnType<typeof io> to match the actual
+ * return type of the io() function, avoiding conflicts between the
+ * modern socket.io-client package types and the legacy @types/socket.io-client.
+ */
+type SocketInstance = ReturnType<typeof io>;
 
 interface RealtimeEvent {
   type: string;
@@ -39,7 +46,7 @@ interface NotificationBroadcast {
 }
 
 class MobileRealtimeClient {
-  private socket: Socket | null = null;
+  private socket: SocketInstance | null = null;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectDelay = 1000;
@@ -48,27 +55,28 @@ class MobileRealtimeClient {
 
   async initialize() {
     if (this.isInitialized) return;
-    
+
     await this.connect();
     this.isInitialized = true;
   }
 
   private async connect() {
     const token = await getAuthToken();
-    
+
     if (!token) {
       console.warn('No auth token available for realtime connection');
       return;
     }
 
-    const serverUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+    const serverUrl =
+      process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
     this.socket = io(serverUrl, {
       auth: { token },
       transports: ['websocket', 'polling'],
       upgrade: true,
       rememberUpgrade: true,
-      forceNew: true
+      forceNew: true,
     });
 
     this.setupEventHandlers();
@@ -78,23 +86,23 @@ class MobileRealtimeClient {
     if (!this.socket) return;
 
     this.socket.on('connect', () => {
-      console.log('✅ Mobile connected to realtime server');
+      console.log('Mobile connected to realtime server');
       this.reconnectAttempts = 0;
       this.emit('connected', { socketId: this.socket?.id });
     });
 
-    this.socket.on('disconnect', (reason) => {
-      console.log('❌ Mobile disconnected from realtime server:', reason);
+    this.socket.on('disconnect', (reason: string) => {
+      console.log('Mobile disconnected from realtime server:', reason);
       this.emit('disconnected', { reason });
-      
+
       if (reason === 'io server disconnect') {
         return;
       }
-      
+
       this.handleReconnection();
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.error('Mobile connection error:', error);
       this.emit('connection_error', { error: error.message });
       this.handleReconnection();
@@ -111,9 +119,12 @@ class MobileRealtimeClient {
     });
 
     // Notification events
-    this.socket.on('notification:broadcast', (notification: NotificationBroadcast) => {
-      this.emit('notification:broadcast', notification);
-    });
+    this.socket.on(
+      'notification:broadcast',
+      (notification: NotificationBroadcast) => {
+        this.emit('notification:broadcast', notification);
+      },
+    );
 
     // Event update events
     this.socket.on('event:update', (eventUpdate: any) => {
@@ -135,10 +146,13 @@ class MobileRealtimeClient {
     }
 
     this.reconnectAttempts++;
-    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-    
-    console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms`);
-    
+    const delay =
+      this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+
+    console.log(
+      `Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms`,
+    );
+
     setTimeout(async () => {
       await this.connect();
     }, delay);
@@ -162,11 +176,14 @@ class MobileRealtimeClient {
   private emit(event: string, data: any) {
     const handlers = this.eventHandlers.get(event);
     if (handlers) {
-      handlers.forEach(handler => {
+      handlers.forEach((handler) => {
         try {
           handler(data);
         } catch (error) {
-          console.error(`Error in mobile event handler for ${event}:`, error);
+          console.error(
+            `Error in mobile event handler for ${event}:`,
+            error,
+          );
         }
       });
     }
@@ -199,7 +216,11 @@ class MobileRealtimeClient {
   }
 
   // Activity tracking
-  trackActivity(activity: { page: string; action: string; metadata?: any }) {
+  trackActivity(activity: {
+    page: string;
+    action: string;
+    metadata?: any;
+  }) {
     if (this.socket?.connected) {
       this.socket.emit('activity:update', activity);
     }
@@ -228,7 +249,7 @@ class MobileRealtimeClient {
     if (this.socket) {
       const newToken = await getAuthToken();
       if (newToken) {
-        this.socket.auth = { token: newToken };
+        (this.socket as any).auth = { token: newToken };
         await this.reconnect();
       }
     }
@@ -240,8 +261,8 @@ class MobileRealtimeClient {
       connected: this.isConnected(),
       socketId: this.socket?.id,
       reconnectAttempts: this.reconnectAttempts,
-      transport: this.socket?.io.engine?.transport?.name,
-      initialized: this.isInitialized
+      transport: (this.socket?.io as any)?.engine?.transport?.name,
+      initialized: this.isInitialized,
     };
   }
 
@@ -254,10 +275,10 @@ class MobileRealtimeClient {
       }
     } else if (nextAppState === 'background') {
       // App went to background - keep connection but reduce activity
-      this.trackActivity({ 
-        page: 'background', 
+      this.trackActivity({
+        page: 'background',
         action: 'app_backgrounded',
-        metadata: { timestamp: new Date().toISOString() }
+        metadata: { timestamp: new Date().toISOString() },
       });
     }
   }
@@ -265,12 +286,12 @@ class MobileRealtimeClient {
   // Push notification integration
   registerForPushNotifications(pushToken: string) {
     if (this.socket?.connected) {
-      this.socket.emit('push:register_token', { 
-        token: pushToken, 
+      this.socket.emit('push:register_token', {
+        token: pushToken,
         platform: 'mobile',
         deviceInfo: {
           // Add device info if needed
-        }
+        },
       });
     }
   }
@@ -291,7 +312,7 @@ export const useMobileRealtime = () => {
     client: mobileRealtimeClient,
     initialize: mobileRealtimeClient.initialize.bind(mobileRealtimeClient),
     isConnected: mobileRealtimeClient.isConnected(),
-    connectionInfo: mobileRealtimeClient.getConnectionInfo()
+    connectionInfo: mobileRealtimeClient.getConnectionInfo(),
   };
 };
 
@@ -308,21 +329,22 @@ export const useMobileChat = (roomId?: string) => {
     joinRoom,
     leaveRoom,
     sendMessage,
-    isConnected: mobileRealtimeClient.isConnected()
+    isConnected: mobileRealtimeClient.isConnected(),
   };
 };
 
 export const useMobilePresence = () => {
   return {
-    trackActivity: mobileRealtimeClient.trackActivity.bind(mobileRealtimeClient),
-    isConnected: mobileRealtimeClient.isConnected()
+    trackActivity:
+      mobileRealtimeClient.trackActivity.bind(mobileRealtimeClient),
+    isConnected: mobileRealtimeClient.isConnected(),
   };
 };
 
 export { mobileRealtimeClient };
-export type { 
-  RealtimeEvent, 
-  ChatMessage, 
-  PresenceUpdate, 
-  NotificationBroadcast 
+export type {
+  RealtimeEvent,
+  ChatMessage,
+  PresenceUpdate,
+  NotificationBroadcast,
 };

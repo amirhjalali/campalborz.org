@@ -1,60 +1,141 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, memberProcedure, adminProcedure } from '../trpc';
+import { notifyAll } from '../lib/socket';
+import logger from '../lib/logger';
+
+// --- Validation schemas ---
+
+const priorityEnum = z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']);
+
+const createAnnouncementInput = z.object({
+  title: z.string().min(1, 'Title is required').max(200),
+  content: z.string().min(1, 'Content is required').max(10000),
+  priority: priorityEnum.optional().default('NORMAL'),
+  isPublished: z.boolean().optional().default(true),
+  expiresAt: z.string().datetime({ message: 'Invalid expiration date' }).optional(),
+});
+
+const updateAnnouncementInput = z.object({
+  id: z.string().uuid('Invalid announcement ID'),
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().min(1).max(10000).optional(),
+  priority: priorityEnum.optional(),
+  isPublished: z.boolean().optional(),
+  expiresAt: z.string().datetime().nullable().optional(),
+});
+
+// --- Router ---
 
 export const announcementsRouter = router({
+  /** List published, non-expired announcements for members */
   list: memberProcedure
-    .query(async ({ ctx }) => {
-      return ctx.prisma.announcement.findMany({
-        where: {
-          isPublished: true,
-          OR: [
-            { expiresAt: null },
-            { expiresAt: { gt: new Date() } },
+    .input(z.object({
+      includeExpired: z.boolean().optional().default(false),
+      includeUnpublished: z.boolean().optional().default(false),
+      limit: z.number().int().min(1).max(100).optional().default(50),
+      offset: z.number().int().min(0).optional().default(0),
+    }).optional().default({}))
+    .query(async ({ ctx, input }) => {
+      const where: any = {};
+
+      // Non-admin members only see published, non-expired announcements
+      const isManager = ctx.user.role === 'ADMIN' || ctx.user.role === 'MANAGER';
+
+      if (!isManager || !input.includeUnpublished) {
+        where.isPublished = true;
+      }
+
+      if (!isManager || !input.includeExpired) {
+        where.OR = [
+          { expiresAt: null },
+          { expiresAt: { gt: new Date() } },
+        ];
+      }
+
+      const [announcements, total] = await Promise.all([
+        ctx.prisma.announcement.findMany({
+          where,
+          include: {
+            author: { select: { id: true, name: true, playaName: true } },
+          },
+          orderBy: [
+            { priority: 'desc' },
+            { createdAt: 'desc' },
           ],
-        },
+          take: input.limit,
+          skip: input.offset,
+        }),
+        ctx.prisma.announcement.count({ where }),
+      ]);
+
+      return { announcements, total };
+    }),
+
+  /** Get a single announcement by ID */
+  getById: memberProcedure
+    .input(z.object({ id: z.string().uuid('Invalid announcement ID') }))
+    .query(async ({ ctx, input }) => {
+      const announcement = await ctx.prisma.announcement.findUnique({
+        where: { id: input.id },
         include: {
           author: { select: { id: true, name: true, playaName: true } },
         },
-        orderBy: [
-          { priority: 'desc' },
-          { createdAt: 'desc' },
-        ],
       });
+
+      if (!announcement) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Announcement not found' });
+      }
+
+      // Non-admin members can only see published announcements
+      const isManager = ctx.user.role === 'ADMIN' || ctx.user.role === 'MANAGER';
+      if (!isManager && !announcement.isPublished) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Announcement not found' });
+      }
+
+      return announcement;
     }),
 
+  /** Create a new announcement (admin only) */
   create: adminProcedure
-    .input(z.object({
-      title: z.string().min(1),
-      content: z.string().min(1),
-      priority: z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']).optional().default('NORMAL'),
-      expiresAt: z.string().datetime().optional(),
-    }))
+    .input(createAnnouncementInput)
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.announcement.create({
+      const announcement = await ctx.prisma.announcement.create({
         data: {
           title: input.title,
           content: input.content,
           authorId: ctx.user.id,
           priority: input.priority,
-          isPublished: true,
-          publishedAt: new Date(),
+          isPublished: input.isPublished,
+          publishedAt: input.isPublished ? new Date() : null,
           expiresAt: input.expiresAt ? new Date(input.expiresAt) : null,
         },
+        include: {
+          author: { select: { id: true, name: true, playaName: true } },
+        },
       });
+
+      // Push real-time notification to all connected members
+      if (input.isPublished) {
+        notifyAll({
+          id: announcement.id,
+          type: 'announcement',
+          title: 'New Announcement',
+          message: input.title,
+          link: '/members',
+        });
+      }
+
+      logger.info(`Announcement created: "${input.title}" by ${ctx.user.email}`);
+
+      return announcement;
     }),
 
+  /** Update an existing announcement (admin only) */
   update: adminProcedure
-    .input(z.object({
-      id: z.string().uuid(),
-      title: z.string().min(1).optional(),
-      content: z.string().min(1).optional(),
-      priority: z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']).optional(),
-      isPublished: z.boolean().optional(),
-      expiresAt: z.string().datetime().nullable().optional(),
-    }))
+    .input(updateAnnouncementInput)
     .mutation(async ({ ctx, input }) => {
-      const { id, expiresAt, ...rest } = input;
+      const { id, expiresAt, isPublished, ...rest } = input;
 
       const existing = await ctx.prisma.announcement.findUnique({ where: { id } });
       if (!existing) {
@@ -62,16 +143,35 @@ export const announcementsRouter = router({
       }
 
       const data: any = { ...rest };
-      if (expiresAt !== undefined) data.expiresAt = expiresAt ? new Date(expiresAt) : null;
 
-      return ctx.prisma.announcement.update({
+      if (expiresAt !== undefined) {
+        data.expiresAt = expiresAt ? new Date(expiresAt) : null;
+      }
+
+      if (isPublished !== undefined) {
+        data.isPublished = isPublished;
+        // Set publishedAt when publishing for the first time
+        if (isPublished && !existing.publishedAt) {
+          data.publishedAt = new Date();
+        }
+      }
+
+      const updated = await ctx.prisma.announcement.update({
         where: { id },
         data,
+        include: {
+          author: { select: { id: true, name: true, playaName: true } },
+        },
       });
+
+      logger.info(`Announcement updated: "${updated.title}" by ${ctx.user.email}`);
+
+      return updated;
     }),
 
+  /** Delete an announcement (admin only) */
   delete: adminProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().uuid('Invalid announcement ID') }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.prisma.announcement.findUnique({ where: { id: input.id } });
       if (!existing) {
@@ -79,6 +179,9 @@ export const announcementsRouter = router({
       }
 
       await ctx.prisma.announcement.delete({ where: { id: input.id } });
+
+      logger.info(`Announcement deleted: "${existing.title}" by ${ctx.user.email}`);
+
       return { success: true };
     }),
 });

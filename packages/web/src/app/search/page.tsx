@@ -37,10 +37,12 @@ export default function SearchPage() {
             </p>
 
             {/* Search Bar */}
-            <div className="relative max-w-2xl mx-auto">
-              <SearchIcon className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-ink-soft/50 z-10" />
+            <div className="relative max-w-2xl mx-auto" role="search" aria-label="Site search">
+              <SearchIcon className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-ink-soft/50 z-10" aria-hidden="true" />
+              <label htmlFor="site-search" className="sr-only">Search Camp Alborz</label>
               <input
-                type="text"
+                type="search"
+                id="site-search"
                 placeholder={search.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

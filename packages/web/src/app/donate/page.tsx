@@ -251,7 +251,7 @@ export default function DonatePage() {
 
                   <button className={`w-full ${tier.popular ? 'cta-primary cta-shimmer' : 'cta-secondary'}`}>
                     Donate ${tier.amount}
-                    <ArrowRight size={18} />
+                    <ArrowRight size={18} aria-hidden="true" />
                   </button>
                 </div>
               ))}
@@ -261,7 +261,7 @@ export default function DonatePage() {
               <p className="text-ink-soft mb-4">Want to contribute a different amount?</p>
               <button className="cta-secondary">
                 Custom Donation
-                <ArrowRight size={18} />
+                <ArrowRight size={18} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -300,7 +300,7 @@ export default function DonatePage() {
                           <p className="text-xs text-ink-soft">${priority.amount.toLocaleString()}</p>
                         </div>
                       </div>
-                      <div className="w-full bg-tan-200 rounded-full h-2">
+                      <div className="w-full bg-tan-200 rounded-full h-2" role="progressbar" aria-valuenow={priority.percentage} aria-valuemin={0} aria-valuemax={100} aria-label={`${priority.title}: ${priority.percentage}% funded`}>
                         <div
                           className={`h-2 rounded-full transition-all duration-1000 ease-out ${priority.color || 'bg-gold-500'}`}
                           style={{ width: `${priority.percentage}%` }}
@@ -341,7 +341,7 @@ export default function DonatePage() {
                       </div>
                     </div>
                     <p className="text-sm text-ink-soft mb-3">{item.description}</p>
-                    <div className="w-full bg-tan-100 rounded-full h-1.5">
+                    <div className="w-full bg-tan-100 rounded-full h-1.5" role="progressbar" aria-valuenow={item.percentage} aria-valuemin={0} aria-valuemax={100} aria-label={`${item.category}: ${item.percentage}%`}>
                       <div
                         className="bg-gold-500 h-1.5 rounded-full transition-all duration-1000 ease-out"
                         style={{ width: `${item.percentage}%` }}
@@ -390,7 +390,7 @@ export default function DonatePage() {
                       className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors"
                     >
                       Learn More
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   </div>
                 );
@@ -533,7 +533,7 @@ export default function DonatePage() {
                 </p>
                 <Link href={donate.cta.buttons.primary.link} className="cta-primary cta-shimmer">
                   {donate.cta.buttons.primary.text}
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
             </div>

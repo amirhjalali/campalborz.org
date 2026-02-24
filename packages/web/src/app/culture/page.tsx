@@ -247,7 +247,7 @@ export default function CulturePage() {
                     className="inline-flex items-center gap-2 text-sm text-gold-600 hover:text-gold-500 transition-colors group/link"
                   >
                     View Schedule
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
                   </Link>
                 </div>
               ))}
@@ -405,7 +405,7 @@ export default function CulturePage() {
                 </p>
                 <Link href={culture.cta.buttons.primary.link} className="cta-primary inline-flex">
                   {culture.cta.buttons.primary.text}
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
             </div>

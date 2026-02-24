@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   User,
@@ -15,49 +15,24 @@ import {
   AlertCircle,
   UserX,
   Plus,
+  CheckCircle,
+  Mail,
+  Phone,
+  MapPin,
 } from 'lucide-react';
 import { StatusBadge } from '../../../../components/shared/StatusBadge';
 import { ConfirmDialog } from '../../../../components/shared/ConfirmDialog';
+import {
+  fetchMemberById,
+  updateMemberRole,
+  updateSeasonMemberStatus,
+  updateSeasonMemberHousing,
+  recordPayment,
+  type MemberData,
+  type PaymentData,
+} from '../../../../lib/adminApi';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
-
-interface MemberData {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  playaName?: string;
-  gender?: string;
-  role: string;
-  isActive: boolean;
-  emergencyContactName?: string;
-  emergencyContactPhone?: string;
-  dietaryRestrictions?: string;
-  notes?: string;
-}
-
-interface SeasonMemberData {
-  id: string;
-  status: string;
-  housingType?: string;
-  housingSize?: string;
-  gridPower: string;
-  arrivalDate?: string;
-  departureDate?: string;
-  buildCrew: boolean;
-  strikeCrew: boolean;
-  specialRequests?: string;
-  payments: PaymentData[];
-}
-
-interface PaymentData {
-  id: string;
-  type: string;
-  amount: number;
-  method: string;
-  paidAt: string;
-  notes?: string;
-}
 
 type Tab = 'season' | 'payments' | 'profile';
 
@@ -67,12 +42,15 @@ export default function MemberDetailPage() {
   const memberId = params.id as string;
 
   const [member, setMember] = useState<MemberData | null>(null);
-  const [seasonMember, setSeasonMember] = useState<SeasonMemberData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('season');
   const [saving, setSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  // Active season member (first active season entry from the member's seasonMembers)
+  const activeSeasonMember = member?.seasonMembers?.find((sm) => sm.season.isActive) || member?.seasonMembers?.[0] || null;
+  const payments: PaymentData[] = activeSeasonMember?.payments || [];
 
   // Editable season fields
   const [editStatus, setEditStatus] = useState('');
@@ -109,57 +87,35 @@ export default function MemberDetailPage() {
   const [paymentNotes, setPaymentNotes] = useState('');
   const [recordingPayment, setRecordingPayment] = useState(false);
 
-  const fetchMember = useCallback(async () => {
+  const loadMember = useCallback(async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('accessToken');
-      const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
+      const data = await fetchMemberById(memberId);
+      setMember(data);
 
-      // Fetch member
-      const memberInput = encodeURIComponent(JSON.stringify({ id: memberId }));
-      const memberRes = await fetch(
-        `${API_BASE_URL}/api/trpc/members.getById?input=${memberInput}`,
-        { headers }
-      );
-      if (!memberRes.ok) throw new Error('Failed to load member');
-      const memberJson = await memberRes.json();
-      const memberData = memberJson.result?.data;
+      // Populate profile fields
+      setEditName(data.name || '');
+      setEditEmail(data.email || '');
+      setEditPhone(data.phone || '');
+      setEditPlayaName(data.playaName || '');
+      setEditGender(data.gender || '');
+      setEditEmergencyName(data.emergencyContactName || '');
+      setEditEmergencyPhone(data.emergencyContactPhone || '');
+      setEditDietary(data.dietaryRestrictions || '');
+      setEditNotes(data.notes || '');
 
-      if (memberData) {
-        setMember(memberData);
-        setEditName(memberData.name || '');
-        setEditEmail(memberData.email || '');
-        setEditPhone(memberData.phone || '');
-        setEditPlayaName(memberData.playaName || '');
-        setEditGender(memberData.gender || '');
-        setEditEmergencyName(memberData.emergencyContactName || '');
-        setEditEmergencyPhone(memberData.emergencyContactPhone || '');
-        setEditDietary(memberData.dietaryRestrictions || '');
-        setEditNotes(memberData.notes || '');
-      }
-
-      // Fetch season member data
-      const smInput = encodeURIComponent(JSON.stringify({ memberId }));
-      const smRes = await fetch(
-        `${API_BASE_URL}/api/trpc/seasonMembers.list?input=${smInput}`,
-        { headers }
-      );
-      if (smRes.ok) {
-        const smJson = await smRes.json();
-        const smResult = smJson.result?.data;
-        const smData = smResult?.items?.[0] || smResult;
-        if (smData && smData.id) {
-          setSeasonMember(smData);
-          setEditStatus(smData.status || '');
-          setEditHousingType(smData.housingType || '');
-          setEditHousingSize(smData.housingSize || '');
-          setEditGridPower(smData.gridPower || 'NONE');
-          setEditArrival(smData.arrivalDate ? smData.arrivalDate.split('T')[0] : '');
-          setEditDeparture(smData.departureDate ? smData.departureDate.split('T')[0] : '');
-          setEditBuildCrew(smData.buildCrew || false);
-          setEditStrikeCrew(smData.strikeCrew || false);
-          setEditSpecialRequests(smData.specialRequests || '');
-        }
+      // Populate season fields from active season member
+      const sm = data.seasonMembers?.find((s) => s.season.isActive) || data.seasonMembers?.[0];
+      if (sm) {
+        setEditStatus(sm.status || '');
+        setEditHousingType(sm.housingType || '');
+        setEditHousingSize(sm.housingSize || '');
+        setEditGridPower(sm.gridPower || 'NONE');
+        setEditArrival(sm.arrivalDate ? sm.arrivalDate.split('T')[0] : '');
+        setEditDeparture(sm.departureDate ? sm.departureDate.split('T')[0] : '');
+        setEditBuildCrew(sm.buildCrew || false);
+        setEditStrikeCrew(sm.strikeCrew || false);
+        setEditSpecialRequests(sm.specialRequests || '');
       }
 
       setError(null);
@@ -171,56 +127,29 @@ export default function MemberDetailPage() {
   }, [memberId]);
 
   useEffect(() => {
-    fetchMember();
-  }, [fetchMember]);
+    loadMember();
+  }, [loadMember]);
 
-  const showSaveNotification = (msg: string) => {
-    setSaveMessage(msg);
+  const showSaveNotification = (text: string, type: 'success' | 'error') => {
+    setSaveMessage({ text, type });
     setTimeout(() => setSaveMessage(null), 3000);
   };
 
   const saveSeasonData = async () => {
-    if (!seasonMember) return;
+    if (!activeSeasonMember) return;
     try {
       setSaving(true);
-      const token = localStorage.getItem('accessToken');
 
-      // Update status
-      await fetch(`${API_BASE_URL}/api/trpc/seasonMembers.updateStatus`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          seasonMemberId: seasonMember.id,
-          status: editStatus,
-        }),
+      await updateSeasonMemberStatus(activeSeasonMember.id, editStatus);
+      await updateSeasonMemberHousing(activeSeasonMember.id, {
+        housingType: editHousingType || null,
+        housingSize: editHousingSize || null,
+        gridPower: editGridPower,
       });
 
-      // Update housing
-      await fetch(`${API_BASE_URL}/api/trpc/seasonMembers.updateHousing`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          seasonMemberId: seasonMember.id,
-          housingType: editHousingType || null,
-          housingSize: editHousingSize || null,
-          gridPower: editGridPower,
-          arrivalDate: editArrival || null,
-          departureDate: editDeparture || null,
-          buildCrew: editBuildCrew,
-          strikeCrew: editStrikeCrew,
-          specialRequests: editSpecialRequests || null,
-        }),
-      });
-
-      showSaveNotification('Season data saved successfully.');
+      showSaveNotification('Season data saved successfully.', 'success');
     } catch {
-      showSaveNotification('Failed to save season data.');
+      showSaveNotification('Failed to save season data.', 'error');
     } finally {
       setSaving(false);
     }
@@ -231,6 +160,7 @@ export default function MemberDetailPage() {
     try {
       setSaving(true);
       const token = localStorage.getItem('accessToken');
+      // Use direct API call for profile update since it requires different fields
       await fetch(`${API_BASE_URL}/api/trpc/members.update`, {
         method: 'POST',
         headers: {
@@ -250,9 +180,9 @@ export default function MemberDetailPage() {
           notes: editNotes || null,
         }),
       });
-      showSaveNotification('Profile saved successfully.');
+      showSaveNotification('Profile saved successfully.', 'success');
     } catch {
-      showSaveNotification('Failed to save profile.');
+      showSaveNotification('Failed to save profile.', 'error');
     } finally {
       setSaving(false);
     }
@@ -261,19 +191,11 @@ export default function MemberDetailPage() {
   const handleChangeRole = async () => {
     if (!member || !pendingRole) return;
     try {
-      const token = localStorage.getItem('accessToken');
-      await fetch(`${API_BASE_URL}/api/trpc/members.updateRole`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ id: member.id, role: pendingRole }),
-      });
+      await updateMemberRole(member.id, pendingRole as 'ADMIN' | 'MANAGER' | 'MEMBER');
       setMember({ ...member, role: pendingRole });
-      showSaveNotification('Role updated successfully.');
+      showSaveNotification('Role updated successfully.', 'success');
     } catch {
-      showSaveNotification('Failed to update role.');
+      showSaveNotification('Failed to update role.', 'error');
     }
   };
 
@@ -290,38 +212,31 @@ export default function MemberDetailPage() {
         body: JSON.stringify({ id: member.id }),
       });
       setMember({ ...member, isActive: false });
-      showSaveNotification('Member deactivated.');
+      showSaveNotification('Member deactivated.', 'success');
     } catch {
-      showSaveNotification('Failed to deactivate member.');
+      showSaveNotification('Failed to deactivate member.', 'error');
     }
   };
 
   const handleRecordPayment = async () => {
-    if (!seasonMember || !paymentAmount) return;
+    if (!activeSeasonMember || !paymentAmount) return;
     try {
       setRecordingPayment(true);
-      const token = localStorage.getItem('accessToken');
-      await fetch(`${API_BASE_URL}/api/trpc/payments.record`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          seasonMemberId: seasonMember.id,
-          type: paymentType,
-          amount: Math.round(parseFloat(paymentAmount) * 100),
-          method: paymentMethod,
-          notes: paymentNotes || null,
-        }),
+      await recordPayment({
+        seasonMemberId: activeSeasonMember.id,
+        type: paymentType,
+        amount: Math.round(parseFloat(paymentAmount) * 100),
+        method: paymentMethod,
+        paidAt: new Date().toISOString(),
+        notes: paymentNotes || undefined,
       });
       setShowRecordPayment(false);
       setPaymentAmount('');
       setPaymentNotes('');
-      showSaveNotification('Payment recorded successfully.');
-      fetchMember(); // Refresh data
+      showSaveNotification('Payment recorded successfully.', 'success');
+      loadMember(); // Refresh data
     } catch {
-      showSaveNotification('Failed to record payment.');
+      showSaveNotification('Failed to record payment.', 'error');
     } finally {
       setRecordingPayment(false);
     }
@@ -335,8 +250,9 @@ export default function MemberDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24">
-        <Loader2 className="h-8 w-8 text-[#D4AF37] animate-spin" />
+      <div className="flex flex-col items-center justify-center py-24">
+        <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
+        <p className="text-sm text-ink-soft">Loading member details...</p>
       </div>
     );
   }
@@ -345,13 +261,13 @@ export default function MemberDetailPage() {
     return (
       <div className="text-center py-16">
         <AlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
-        <h2 className="text-display-thin text-xl text-[#2C2416] mb-2">Member Not Found</h2>
-        <p className="text-body-relaxed text-sm text-[#4F4434] mb-6">
+        <h2 className="text-display-thin text-xl text-ink mb-2">Member Not Found</h2>
+        <p className="text-body-relaxed text-sm text-ink-soft mb-6">
           {error || 'The member could not be loaded.'}
         </p>
         <Link
           href="/admin/members"
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#D4AF37] hover:text-[#C79E2F]"
+          className="inline-flex items-center gap-2 text-sm font-medium text-gold hover:text-gold/80 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Members
@@ -370,58 +286,76 @@ export default function MemberDetailPage() {
       {/* Back Link */}
       <Link
         href="/admin/members"
-        className="inline-flex items-center gap-2 text-sm font-medium text-[#4F4434] hover:text-[#D4AF37] transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft hover:text-gold transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Members
       </Link>
 
       {/* Save Notification */}
-      {saveMessage && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          className={`rounded-xl border px-4 py-3 text-sm ${
-            saveMessage.includes('Failed')
-              ? 'border-red-200 bg-red-50 text-red-700'
-              : 'border-green-200 bg-green-50 text-green-700'
-          }`}
-        >
-          {saveMessage}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {saveMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`rounded-xl border px-4 py-3 text-sm flex items-center gap-3 ${
+              saveMessage.type === 'error'
+                ? 'border-red-200 bg-red-50 text-red-700'
+                : 'border-green-200 bg-green-50 text-green-700'
+            }`}
+          >
+            {saveMessage.type === 'error' ? (
+              <AlertCircle className="h-4 w-4 shrink-0" />
+            ) : (
+              <CheckCircle className="h-4 w-4 shrink-0" />
+            )}
+            {saveMessage.text}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Header */}
+      {/* Header Card */}
       <div className="luxury-card p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#4A5D5A]/10 border border-[#4A5D5A]/20">
-              <User className="h-7 w-7 text-[#4A5D5A]" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-sage/10 border border-sage/20">
+              <User className="h-7 w-7 text-sage" />
             </div>
             <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-display-thin text-2xl text-[#2C2416]">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-display-thin text-2xl text-ink">
                   {member.name}
                 </h1>
-                <span className="inline-flex items-center rounded-md bg-[#4A5D5A]/10 px-2 py-0.5 text-xs font-medium text-[#4A5D5A]">
+                <span className="inline-flex items-center rounded-md bg-sage/10 px-2 py-0.5 text-xs font-medium text-sage">
                   {member.role}
                 </span>
                 {!member.isActive && (
-                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600">
+                  <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600 border border-red-200">
                     Inactive
                   </span>
                 )}
+                {activeSeasonMember && (
+                  <StatusBadge status={activeSeasonMember.status} variant="season" />
+                )}
               </div>
               {member.playaName && (
-                <p className="text-sm text-[#4F4434]">
+                <p className="text-sm text-ink-soft">
                   &ldquo;{member.playaName}&rdquo;
                 </p>
               )}
-              <p className="text-sm text-[#4F4434]">{member.email}</p>
-              {member.phone && (
-                <p className="text-xs text-[#4F4434]">{member.phone}</p>
-              )}
+              <div className="flex items-center gap-4 mt-1 text-sm text-ink-soft">
+                <span className="flex items-center gap-1">
+                  <Mail className="h-3.5 w-3.5" />
+                  {member.email}
+                </span>
+                {member.phone && (
+                  <span className="flex items-center gap-1">
+                    <Phone className="h-3.5 w-3.5" />
+                    {member.phone}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -431,7 +365,7 @@ export default function MemberDetailPage() {
                 setPendingRole(member.role === 'ADMIN' ? 'MEMBER' : member.role === 'MANAGER' ? 'ADMIN' : 'MANAGER');
                 setShowRoleDialog(true);
               }}
-              className="px-3 py-2 rounded-lg text-sm font-medium border border-[#D4C4A8]/40 text-[#4F4434] hover:bg-[#FAF7F2] transition-colors flex items-center gap-1.5"
+              className="px-3 py-2 rounded-lg text-sm font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors flex items-center gap-1.5"
             >
               <Shield className="h-4 w-4" />
               Change Role
@@ -450,24 +384,29 @@ export default function MemberDetailPage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex gap-1 border-b border-[#D4C4A8]/30">
+      <div className="flex gap-1 border-b border-tan/30">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-[#D4AF37] text-[#D4AF37]'
-                : 'border-transparent text-[#4F4434] hover:text-[#2C2416] hover:border-[#D4C4A8]/50'
+                ? 'border-gold text-gold'
+                : 'border-transparent text-ink-soft hover:text-ink hover:border-tan/50'
             }`}
           >
             <tab.icon className="h-4 w-4" />
             {tab.label}
+            {tab.id === 'payments' && payments.length > 0 && (
+              <span className="ml-1 text-xs bg-sage/10 text-sage px-1.5 py-0.5 rounded-full">
+                {payments.length}
+              </span>
+            )}
           </button>
         ))}
       </div>
 
-      {/* Tab Content */}
+      {/* Season Tab */}
       {activeTab === 'season' && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -475,18 +414,23 @@ export default function MemberDetailPage() {
           className="luxury-card p-6 space-y-6"
         >
           <div className="flex items-center justify-between">
-            <h2 className="text-display-thin text-lg text-[#2C2416]">
+            <h2 className="text-display-thin text-lg text-ink">
               Season Enrollment
             </h2>
-            {seasonMember && (
-              <StatusBadge status={seasonMember.status} variant="season" />
+            {activeSeasonMember && (
+              <span className="text-sm text-ink-soft">
+                {activeSeasonMember.season.name}
+              </span>
             )}
           </div>
 
-          {!seasonMember ? (
-            <p className="text-sm text-[#4F4434] py-4">
-              This member is not enrolled in the current season.
-            </p>
+          {!activeSeasonMember ? (
+            <div className="text-center py-8">
+              <Calendar className="h-10 w-10 text-ink-soft/30 mx-auto mb-3" />
+              <p className="text-sm text-ink-soft mb-4">
+                This member is not enrolled in any season.
+              </p>
+            </div>
           ) : (
             <>
               {/* Status */}
@@ -578,18 +522,18 @@ export default function MemberDetailPage() {
                     type="checkbox"
                     checked={editBuildCrew}
                     onChange={(e) => setEditBuildCrew(e.target.checked)}
-                    className="h-4 w-4 rounded border-[#D4C4A8] text-[#D4AF37] focus:ring-[#D4AF37]"
+                    className="h-4 w-4 rounded border-tan text-gold focus:ring-gold"
                   />
-                  <span className="text-sm font-medium text-[#2C2416]">Build Crew</span>
+                  <span className="text-sm font-medium text-ink">Build Crew</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={editStrikeCrew}
                     onChange={(e) => setEditStrikeCrew(e.target.checked)}
-                    className="h-4 w-4 rounded border-[#D4C4A8] text-[#D4AF37] focus:ring-[#D4AF37]"
+                    className="h-4 w-4 rounded border-tan text-gold focus:ring-gold"
                   />
-                  <span className="text-sm font-medium text-[#2C2416]">Strike Crew</span>
+                  <span className="text-sm font-medium text-ink">Strike Crew</span>
                 </label>
               </div>
 
@@ -610,7 +554,7 @@ export default function MemberDetailPage() {
                 <button
                   onClick={saveSeasonData}
                   disabled={saving}
-                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#4A5D5A] text-white hover:bg-[#3B4A48] disabled:opacity-50 transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-lg text-sm font-medium bg-sage text-white hover:bg-sage-700 disabled:opacity-50 transition-colors flex items-center gap-2"
                 >
                   {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   Save Season Data
@@ -621,6 +565,7 @@ export default function MemberDetailPage() {
         </motion.div>
       )}
 
+      {/* Payments Tab */}
       {activeTab === 'payments' && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -628,166 +573,200 @@ export default function MemberDetailPage() {
           className="luxury-card p-6 space-y-5"
         >
           <div className="flex items-center justify-between">
-            <h2 className="text-display-thin text-lg text-[#2C2416]">
+            <h2 className="text-display-thin text-lg text-ink">
               Payment History
             </h2>
-            <button
-              onClick={() => setShowRecordPayment(!showRecordPayment)}
-              className="px-3 py-2 rounded-lg text-sm font-medium bg-[#4A5D5A] text-white hover:bg-[#3B4A48] transition-colors flex items-center gap-1.5"
-            >
-              <Plus className="h-4 w-4" />
-              Record Payment
-            </button>
+            {activeSeasonMember && (
+              <button
+                onClick={() => setShowRecordPayment(!showRecordPayment)}
+                className="px-3 py-2 rounded-lg text-sm font-medium bg-sage text-white hover:bg-sage-700 transition-colors flex items-center gap-1.5"
+              >
+                <Plus className="h-4 w-4" />
+                Record Payment
+              </button>
+            )}
           </div>
 
           {/* Record Payment Form */}
-          {showRecordPayment && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="border border-[#D4C4A8]/30 rounded-xl p-4 space-y-4"
-            >
-              <h3 className="text-sm font-medium text-[#2C2416]">New Payment</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="form-label">Type</label>
-                  <select
-                    value={paymentType}
-                    onChange={(e) => setPaymentType(e.target.value)}
-                    className="form-input"
+          <AnimatePresence>
+            {showRecordPayment && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="border border-tan/30 rounded-xl p-4 space-y-4 overflow-hidden"
+              >
+                <h3 className="text-sm font-medium text-ink">New Payment</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="form-label">Type</label>
+                    <select
+                      value={paymentType}
+                      onChange={(e) => setPaymentType(e.target.value)}
+                      className="form-input"
+                    >
+                      <option value="DUES">Dues</option>
+                      <option value="GRID">Grid</option>
+                      <option value="FOOD">Food</option>
+                      <option value="RV_VOUCHER">RV Voucher</option>
+                      <option value="BEER_FUND">Beer Fund</option>
+                      <option value="TENT">Tent</option>
+                      <option value="TICKET">Ticket</option>
+                      <option value="FUNDRAISING">Fundraising</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="form-label">Amount ($)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={paymentAmount}
+                      onChange={(e) => setPaymentAmount(e.target.value)}
+                      placeholder="0.00"
+                      className="form-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="form-label">Method</label>
+                    <select
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="form-input"
+                    >
+                      <option value="VENMO">Venmo</option>
+                      <option value="ZELLE">Zelle</option>
+                      <option value="CASH">Cash</option>
+                      <option value="CARD">Card</option>
+                      <option value="PAYPAL">PayPal</option>
+                      <option value="GIVEBUTTER">Givebutter</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="form-label">Notes</label>
+                    <input
+                      type="text"
+                      value={paymentNotes}
+                      onChange={(e) => setPaymentNotes(e.target.value)}
+                      placeholder="Optional notes"
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={() => setShowRecordPayment(false)}
+                    className="px-3 py-2 rounded-lg text-sm font-medium text-ink-soft border border-tan/40 hover:bg-cream transition-colors"
                   >
-                    <option value="DUES">Dues</option>
-                    <option value="GRID">Grid</option>
-                    <option value="FOOD">Food</option>
-                    <option value="DONATION">Donation</option>
-                    <option value="RV_VOUCHER">RV Voucher</option>
-                    <option value="BEER_FUND">Beer Fund</option>
-                    <option value="TENT">Tent</option>
-                    <option value="TICKET">Ticket</option>
-                    <option value="STRIKE_DONATION">Strike Donation</option>
-                    <option value="FUNDRAISING">Fundraising</option>
-                    <option value="OTHER">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="form-label">Amount ($)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={paymentAmount}
-                    onChange={(e) => setPaymentAmount(e.target.value)}
-                    placeholder="0.00"
-                    className="form-input"
-                  />
-                </div>
-                <div>
-                  <label className="form-label">Method</label>
-                  <select
-                    value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="form-input"
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleRecordPayment}
+                    disabled={recordingPayment || !paymentAmount}
+                    className="px-4 py-2 rounded-lg text-sm font-medium bg-sage text-white hover:bg-sage-700 disabled:opacity-50 transition-colors flex items-center gap-2"
                   >
-                    <option value="VENMO">Venmo</option>
-                    <option value="ZELLE">Zelle</option>
-                    <option value="CASH">Cash</option>
-                    <option value="CARD">Card</option>
-                    <option value="PAYPAL">PayPal</option>
-                    <option value="GIVEBUTTER">Givebutter</option>
-                    <option value="OTHER">Other</option>
-                  </select>
+                    {recordingPayment && <Loader2 className="h-4 w-4 animate-spin" />}
+                    Record
+                  </button>
                 </div>
-                <div>
-                  <label className="form-label">Notes</label>
-                  <input
-                    type="text"
-                    value={paymentNotes}
-                    onChange={(e) => setPaymentNotes(e.target.value)}
-                    placeholder="Optional notes"
-                    className="form-input"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setShowRecordPayment(false)}
-                  className="px-3 py-2 rounded-lg text-sm font-medium text-[#4F4434] border border-[#D4C4A8]/40 hover:bg-[#FAF7F2] transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleRecordPayment}
-                  disabled={recordingPayment || !paymentAmount}
-                  className="px-4 py-2 rounded-lg text-sm font-medium bg-[#4A5D5A] text-white hover:bg-[#3B4A48] disabled:opacity-50 transition-colors flex items-center gap-2"
-                >
-                  {recordingPayment && <Loader2 className="h-4 w-4 animate-spin" />}
-                  Record
-                </button>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Payments Table */}
-          {(!seasonMember?.payments || seasonMember.payments.length === 0) ? (
-            <p className="text-sm text-[#4F4434] text-center py-8">
-              No payments recorded for this member.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[#4A5D5A]/10">
-                    <th className="text-left py-3 px-2 text-xs font-medium text-[#4F4434] uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="text-left py-3 px-2 text-xs font-medium text-[#4F4434] uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="text-left py-3 px-2 text-xs font-medium text-[#4F4434] uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="text-left py-3 px-2 text-xs font-medium text-[#4F4434] uppercase tracking-wider">
-                      Method
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {seasonMember.payments.map((payment) => (
-                    <tr
-                      key={payment.id}
-                      className="border-b border-[#4A5D5A]/5 hover:bg-[#4A5D5A]/[0.03] transition-colors"
-                    >
-                      <td className="py-3 px-2 text-[#4F4434]">
-                        {new Date(payment.paidAt).toLocaleDateString()}
-                      </td>
-                      <td className="py-3 px-2 text-[#2C2416] font-medium">
-                        {payment.type.replace(/_/g, ' ')}
-                      </td>
-                      <td className="py-3 px-2 text-[#2C2416]">
-                        {(payment.amount / 100).toLocaleString('en-US', {
-                          style: 'currency',
-                          currency: 'USD',
-                        })}
-                      </td>
-                      <td className="py-3 px-2 text-[#4F4434]">
-                        {payment.method}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {payments.length === 0 ? (
+            <div className="text-center py-10">
+              <CreditCard className="h-10 w-10 text-ink-soft/30 mx-auto mb-3" />
+              <p className="text-sm text-ink-soft">
+                No payments recorded for this member.
+              </p>
             </div>
+          ) : (
+            <>
+              {/* Payment Summary */}
+              <div className="flex flex-wrap gap-4 p-4 rounded-xl bg-cream border border-tan/20">
+                <div>
+                  <p className="text-xs font-medium text-ink-soft uppercase tracking-wider">Total Paid</p>
+                  <p className="text-lg font-semibold text-ink tabular-nums">
+                    {(payments.reduce((sum, p) => sum + p.amount, 0) / 100).toLocaleString('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-ink-soft uppercase tracking-wider">Payments</p>
+                  <p className="text-lg font-semibold text-ink tabular-nums">{payments.length}</p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-sage/10">
+                      <th className="text-left py-3 px-2 text-xs font-medium text-ink-soft uppercase tracking-wider">
+                        Date
+                      </th>
+                      <th className="text-left py-3 px-2 text-xs font-medium text-ink-soft uppercase tracking-wider">
+                        Type
+                      </th>
+                      <th className="text-left py-3 px-2 text-xs font-medium text-ink-soft uppercase tracking-wider">
+                        Amount
+                      </th>
+                      <th className="text-left py-3 px-2 text-xs font-medium text-ink-soft uppercase tracking-wider">
+                        Method
+                      </th>
+                      <th className="text-left py-3 px-2 text-xs font-medium text-ink-soft uppercase tracking-wider hidden sm:table-cell">
+                        Notes
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.map((payment) => (
+                      <tr
+                        key={payment.id}
+                        className="border-b border-sage/5 hover:bg-sage/[0.03] transition-colors"
+                      >
+                        <td className="py-3 px-2 text-ink-soft">
+                          {new Date(payment.paidAt).toLocaleDateString()}
+                        </td>
+                        <td className="py-3 px-2">
+                          <span className="inline-flex items-center rounded-md bg-sage/5 px-2 py-0.5 text-xs font-medium text-sage">
+                            {payment.type.replace(/_/g, ' ')}
+                          </span>
+                        </td>
+                        <td className="py-3 px-2 text-ink font-medium tabular-nums">
+                          {(payment.amount / 100).toLocaleString('en-US', {
+                            style: 'currency',
+                            currency: 'USD',
+                          })}
+                        </td>
+                        <td className="py-3 px-2 text-ink-soft">
+                          {payment.method}
+                        </td>
+                        <td className="py-3 px-2 text-ink-soft text-xs hidden sm:table-cell">
+                          {payment.notes || '\u2014'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </motion.div>
       )}
 
+      {/* Profile Tab */}
       {activeTab === 'profile' && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="luxury-card p-6 space-y-6"
         >
-          <h2 className="text-display-thin text-lg text-[#2C2416]">
+          <h2 className="text-display-thin text-lg text-ink">
             Personal Information
           </h2>
 
@@ -847,8 +826,11 @@ export default function MemberDetailPage() {
             </div>
           </div>
 
-          <div className="border-t border-[#D4C4A8]/30 pt-6">
-            <h3 className="text-sm font-medium text-[#2C2416] mb-4">Emergency Contact</h3>
+          <div className="border-t border-tan/30 pt-6">
+            <h3 className="text-sm font-medium text-ink mb-4 flex items-center gap-2">
+              <Phone className="h-4 w-4 text-gold" />
+              Emergency Contact
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="form-label">Contact Name</label>
@@ -899,13 +881,45 @@ export default function MemberDetailPage() {
             <button
               onClick={saveProfileData}
               disabled={saving}
-              className="px-5 py-2.5 rounded-lg text-sm font-medium bg-[#4A5D5A] text-white hover:bg-[#3B4A48] disabled:opacity-50 transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 rounded-lg text-sm font-medium bg-sage text-white hover:bg-sage-700 disabled:opacity-50 transition-colors flex items-center gap-2"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
               Save Profile
             </button>
           </div>
         </motion.div>
+      )}
+
+      {/* Season History */}
+      {member.seasonMembers && member.seasonMembers.length > 1 && activeTab === 'season' && (
+        <div className="luxury-card p-6">
+          <h2 className="text-display-thin text-lg text-ink mb-4">
+            Season History
+          </h2>
+          <div className="space-y-2">
+            {member.seasonMembers.map((sm) => (
+              <div
+                key={sm.id}
+                className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${
+                  sm.season.isActive
+                    ? 'border-gold/30 bg-gold/5'
+                    : 'border-tan/20 bg-cream/50'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-4 w-4 text-ink-soft" />
+                  <div>
+                    <p className="text-sm font-medium text-ink">{sm.season.name}</p>
+                    {sm.season.isActive && (
+                      <span className="text-xs text-gold font-medium">Current Season</span>
+                    )}
+                  </div>
+                </div>
+                <StatusBadge status={sm.status} variant="season" />
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Change Role Dialog */}

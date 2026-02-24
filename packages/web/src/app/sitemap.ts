@@ -56,6 +56,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
     },
     {
+      url: '/members',
+      priority: 0.5,
+      changeFrequency: 'monthly' as const,
+    },
+    {
       url: '/search',
       priority: 0.3,
       changeFrequency: 'monthly' as const,

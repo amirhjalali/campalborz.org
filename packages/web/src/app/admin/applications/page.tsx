@@ -12,32 +12,16 @@ import {
   Loader2,
   AlertCircle,
   Send,
+  RefreshCw,
+  Search,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/shared/StatusBadge';
 import { EmptyState } from '../../../components/shared/EmptyState';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
-
-interface Application {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  playaName?: string;
-  referredBy?: string;
-  experience: string;
-  interests?: string;
-  contribution?: string;
-  dietaryRestrictions?: string;
-  emergencyContactName?: string;
-  emergencyContactPhone?: string;
-  housingPreference?: string;
-  message?: string;
-  status: string;
-  reviewedBy?: string;
-  reviewNotes?: string;
-  createdAt: string;
-}
+import {
+  fetchApplications,
+  reviewApplication,
+  type Application,
+} from '../../../lib/adminApi';
 
 type FilterStatus = 'all' | 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'WAITLISTED';
 
@@ -57,70 +41,52 @@ const experienceLabels: Record<string, string> = {
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterStatus>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [reviewNotes, setReviewNotes] = useState<Record<string, string>>({});
   const [reviewLoading, setReviewLoading] = useState<string | null>(null);
-  const [notification, setNotification] = useState<string | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const pendingCount = applications.filter((a) => a.status === 'PENDING').length;
 
-  const fetchApplications = useCallback(async () => {
+  const loadApplications = useCallback(async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('accessToken');
-      const params: Record<string, string | undefined> = {};
-      if (filter !== 'all') params.status = filter;
-      const input = encodeURIComponent(JSON.stringify(params));
-      const res = await fetch(
-        `${API_BASE_URL}/api/trpc/applications.list?input=${input}`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        }
-      );
-      if (!res.ok) throw new Error('Failed to load applications');
-      const json = await res.json();
-      const result = json.result?.data;
-      if (result) {
-        setApplications(Array.isArray(result) ? result : result.items || []);
-      }
+      const result = await fetchApplications({
+        status: filter !== 'all' ? filter : undefined,
+        limit: 100,
+        offset: 0,
+      });
+      setApplications(result.applications);
+      setTotalCount(result.total);
       setError(null);
     } catch {
       setError('Unable to load applications. The server may not be running.');
       setApplications([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
   }, [filter]);
 
   useEffect(() => {
-    fetchApplications();
-  }, [fetchApplications]);
+    loadApplications();
+  }, [loadApplications]);
 
-  const showNotification = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(null), 3000);
+  const showNotification = (message: string, type: 'success' | 'error') => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 4000);
   };
 
   const handleReview = async (applicationId: string, decision: 'ACCEPTED' | 'REJECTED' | 'WAITLISTED') => {
     try {
       setReviewLoading(applicationId);
-      const token = localStorage.getItem('accessToken');
-      const res = await fetch(`${API_BASE_URL}/api/trpc/applications.review`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          applicationId,
-          status: decision,
-          reviewNotes: reviewNotes[applicationId] || null,
-        }),
-      });
-      if (!res.ok) throw new Error('Review failed');
+
+      await reviewApplication(applicationId, decision, reviewNotes[applicationId]);
 
       // Update local state
       setApplications((prev) =>
@@ -132,13 +98,17 @@ export default function ApplicationsPage() {
       );
 
       const decisionLabel = decision.charAt(0) + decision.slice(1).toLowerCase();
-      showNotification(`Application ${decisionLabel.toLowerCase()} successfully.`);
 
       if (decision === 'ACCEPTED') {
-        showNotification('Application accepted. You can now send an invite from the Members page.');
+        showNotification(
+          `Application accepted. You can now send an invite from the Members page.`,
+          'success',
+        );
+      } else {
+        showNotification(`Application ${decisionLabel.toLowerCase()} successfully.`, 'success');
       }
     } catch {
-      showNotification('Failed to submit review. Please try again.');
+      showNotification('Failed to submit review. Please try again.', 'error');
     } finally {
       setReviewLoading(null);
     }
@@ -148,18 +118,42 @@ export default function ApplicationsPage() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  const filtered = filter === 'all' ? applications : applications.filter((a) => a.status === filter);
+  // Client-side search filter (name, email, playa name)
+  const filtered = applications.filter((a) => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    return (
+      a.name.toLowerCase().includes(term) ||
+      a.email.toLowerCase().includes(term) ||
+      (a.playaName && a.playaName.toLowerCase().includes(term))
+    );
+  });
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <h1 className="text-display-thin text-3xl text-ink">Applications</h1>
-        {pendingCount > 0 && (
-          <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 border border-amber-200">
-            {pendingCount} pending
-          </span>
-        )}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <h1 className="text-display-thin text-3xl text-ink">Applications</h1>
+          {pendingCount > 0 && (
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 border border-amber-200">
+              {pendingCount} pending
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-ink-soft">
+            {totalCount} total application{totalCount !== 1 ? 's' : ''}
+          </p>
+          <button
+            onClick={loadApplications}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border border-tan/40 text-ink-soft hover:bg-cream disabled:opacity-50 transition-colors"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Notification */}
@@ -168,33 +162,50 @@ export default function ApplicationsPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className={`rounded-xl border px-4 py-3 text-sm ${
-              notification.includes('Failed')
-                ? 'border-amber-200 bg-amber-50 text-amber-700'
+            exit={{ opacity: 0, y: -10 }}
+            className={`rounded-xl border px-4 py-3 text-sm flex items-center gap-3 ${
+              notification.type === 'error'
+                ? 'border-red-200 bg-red-50 text-red-700'
                 : 'border-green-200 bg-green-50 text-green-700'
             }`}
           >
-            {notification}
+            {notification.type === 'error' ? (
+              <AlertCircle className="h-4 w-4 shrink-0" />
+            ) : (
+              <CheckCircle className="h-4 w-4 shrink-0" />
+            )}
+            {notification.message}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2">
-        {filterButtons.map((btn) => (
-          <button
-            key={btn.id}
-            onClick={() => setFilter(btn.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              filter === btn.id
-                ? 'bg-sage text-white'
-                : 'bg-white border border-tan/40 text-ink-soft hover:bg-cream'
-            }`}
-          >
-            {btn.label}
-          </button>
-        ))}
+      {/* Toolbar: Filter + Search */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-wrap gap-2">
+          {filterButtons.map((btn) => (
+            <button
+              key={btn.id}
+              onClick={() => setFilter(btn.id)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                filter === btn.id
+                  ? 'bg-sage text-white'
+                  : 'bg-white border border-tan/40 text-ink-soft hover:bg-cream'
+              }`}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-soft/50" />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by name or email..."
+            className="form-input pl-10"
+          />
+        </div>
       </div>
 
       {/* Error */}
@@ -202,26 +213,41 @@ export default function ApplicationsPage() {
         <div className="flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
           <AlertCircle className="h-5 w-5 text-amber-500 shrink-0" />
           <p className="text-sm text-amber-700">{error}</p>
+          <button
+            onClick={loadApplications}
+            className="ml-auto text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors"
+          >
+            Retry
+          </button>
         </div>
       )}
 
       {/* Loading */}
       {loading ? (
-        <div className="flex items-center justify-center py-16">
-          <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <div className="flex flex-col items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
+          <p className="text-sm text-ink-soft">Loading applications...</p>
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={FileText}
           title="No Applications"
           description={
-            filter !== 'all'
-              ? `No ${filter.toLowerCase()} applications found.`
-              : 'No applications have been submitted yet.'
+            searchTerm
+              ? `No applications match "${searchTerm}".`
+              : filter !== 'all'
+                ? `No ${filter.toLowerCase()} applications found.`
+                : 'No applications have been submitted yet.'
           }
           action={
-            filter !== 'all'
-              ? { label: 'View All', onClick: () => setFilter('all') }
+            filter !== 'all' || searchTerm
+              ? {
+                  label: 'Clear Filters',
+                  onClick: () => {
+                    setFilter('all');
+                    setSearchTerm('');
+                  },
+                }
               : undefined
           }
         />
@@ -237,8 +263,14 @@ export default function ApplicationsPage() {
             <div className="col-span-1"></div>
           </div>
 
-          {filtered.map((app) => (
-            <div key={app.id} className="luxury-card p-0 overflow-hidden">
+          {filtered.map((app, idx) => (
+            <motion.div
+              key={app.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.03, duration: 0.3 }}
+              className="luxury-card p-0 overflow-hidden"
+            >
               {/* Row */}
               <button
                 onClick={() => toggleExpand(app.id)}
@@ -325,7 +357,10 @@ export default function ApplicationsPage() {
                       {/* Review Section */}
                       {app.status === 'PENDING' && (
                         <div className="border-t border-tan/30 pt-5 space-y-4">
-                          <h4 className="text-sm font-medium text-ink">Review Application</h4>
+                          <h4 className="text-sm font-medium text-ink flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-gold" />
+                            Review Application
+                          </h4>
                           <div>
                             <label className="form-label">Review Notes</label>
                             <textarea
@@ -402,7 +437,7 @@ export default function ApplicationsPage() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
