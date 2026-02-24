@@ -7,7 +7,7 @@ import { MetadataRoute } from 'next';
  * See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
  */
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://www.campalborz.org';
+  const baseUrl = 'https://campalborz.org';
 
   return {
     rules: [

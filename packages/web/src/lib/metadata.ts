@@ -9,18 +9,21 @@ import { Metadata } from 'next';
 
 export const siteConfig = {
   name: 'Camp Alborz',
-  description: 'A vibrant Burning Man theme camp celebrating Persian culture, art, and radical self-expression. Join our community of artists, musicians, and cultural explorers.',
-  url: 'https://www.campalborz.org',
-  ogImage: 'https://www.campalborz.org/og-image.jpg',
+  description: 'Camp Alborz is a 501(c)(3) nonprofit celebrating Persian culture through music, art, and radical hospitality — from Brooklyn to Black Rock City.',
+  url: 'https://campalborz.org',
+  ogImage: 'https://campalborz.org/og-image.jpg',
   links: {
-    twitter: 'https://twitter.com/campalborz',
-    instagram: 'https://instagram.com/campalborz',
-    facebook: 'https://facebook.com/campalborz',
+    instagram: 'https://www.instagram.com/campalborz/',
+    youtube: 'https://www.youtube.com/@campalborz',
+    soundcloud: 'https://soundcloud.com/camp_alborz',
   },
   keywords: [
+    'Camp Alborz',
     'Burning Man',
     'Theme Camp',
     'Persian Culture',
+    'Persian Music',
+    'Persian Arts',
     'Art Camp',
     'Black Rock City',
     'Community',
@@ -28,7 +31,11 @@ export const siteConfig = {
     'Culture',
     'Art Installation',
     'Persian Art',
-    'Alborz',
+    'Nonprofit',
+    '501c3',
+    'Art Car',
+    'HOMA',
+    'DAMAVAND',
   ],
 };
 
@@ -100,74 +107,110 @@ export function generateMetadata({
  */
 export const pageMetadata = {
   home: generateMetadata({
-    title: 'Camp Alborz - Persian Culture Meets Burning Man',
-    description: 'Experience the intersection of Persian heritage and radical self-expression at Camp Alborz. A Burning Man theme camp celebrating art, music, and community.',
+    title: 'Camp Alborz | Persian Culture, Music & Arts Community | 501(c)(3) Nonprofit',
+    description: 'Camp Alborz is a 501(c)(3) nonprofit Burning Man theme camp celebrating Persian culture through art cars, music, tea service, and radical hospitality since 2008.',
     path: '/',
-    keywords: ['Home', 'Main'],
+    keywords: ['Home', 'Persian hospitality', 'tea service', 'hookah lounge'],
   }),
 
   about: generateMetadata({
-    title: 'About Us',
-    description: 'Learn about Camp Alborz, our mission to celebrate Persian culture on the playa, and the vibrant community that makes it all possible.',
+    title: 'About Camp Alborz | Our Story, Mission & 501(c)(3) Nonprofit Status',
+    description: 'Learn about Camp Alborz, a 501(c)(3) nonprofit celebrating Persian culture at Burning Man since 2008. Meet our leadership team and discover our core values.',
     path: '/about',
-    keywords: ['About', 'History', 'Mission', 'Values'],
+    keywords: ['About', 'History', 'Mission', 'Values', '501(c)(3)', 'nonprofit'],
   }),
 
   art: generateMetadata({
-    title: 'Art & Installations',
-    description: 'Explore our stunning Persian-inspired art installations, interactive exhibits, and cultural experiences at Burning Man.',
+    title: 'Art | Camp Alborz — Persian and Contemporary Visual Arts',
+    description: 'Explore HOMA and DAMAVAND art cars and Persian-inspired installations by Camp Alborz. Interactive art experiences blending ancient Persian motifs with modern design.',
     path: '/art',
-    keywords: ['Art', 'Installations', 'Gallery', 'Exhibits', 'Persian Art'],
+    keywords: ['Art', 'Installations', 'Gallery', 'Exhibits', 'Persian Art', 'art car', 'HOMA', 'DAMAVAND'],
+  }),
+
+  artHoma: generateMetadata({
+    title: 'HOMA Art Car | Camp Alborz — Persian Mythical Bird Mobile Stage',
+    description: 'HOMA is Camp Alborz\'s flagship art car — a Persian mythical bird brought to life as a mobile sound stage and illuminated sculpture at Burning Man.',
+    path: '/art/homa',
+    keywords: ['HOMA', 'art car', 'mobile stage', 'sound system', 'Persian mythology', 'Burning Man art'],
+  }),
+
+  artDamavand: generateMetadata({
+    title: 'DAMAVAND Art Car | Camp Alborz — Mountain-Inspired Mobile Installation',
+    description: 'DAMAVAND is Camp Alborz\'s mountain-inspired art car, named after Iran\'s tallest peak. A mobile installation and sound stage built by community volunteers.',
+    path: '/art/damavand',
+    keywords: ['DAMAVAND', 'art car', 'Mount Damavand', 'mobile installation', 'sound stage', 'Burning Man art'],
   }),
 
   events: generateMetadata({
-    title: 'Events & Calendar',
-    description: 'Join us for workshops, performances, DJ sets, and cultural celebrations. Check out our event calendar for what\'s happening at Camp Alborz.',
+    title: 'Events | Camp Alborz — Persian Music, Dance & Cultural Gatherings',
+    description: 'Join Camp Alborz events: Persian music nights, DJ sets, cultural workshops, fundraisers, and Burning Man gatherings. Open to everyone year-round.',
     path: '/events',
-    keywords: ['Events', 'Calendar', 'Workshops', 'Performances', 'DJ Sets'],
+    keywords: ['Events', 'Calendar', 'Workshops', 'Performances', 'DJ Sets', 'Persian music', 'fundraiser'],
   }),
 
   culture: generateMetadata({
-    title: 'Persian Culture',
-    description: 'Discover the rich tapestry of Persian culture, from ancient traditions to modern expressions, as celebrated at Camp Alborz.',
+    title: 'Persian Culture | Camp Alborz — Heritage, Traditions & Modern Expression',
+    description: 'Discover Persian culture through Camp Alborz: poetry, calligraphy, cuisine, music traditions, and the living heritage that inspires our community.',
     path: '/culture',
-    keywords: ['Culture', 'Persian', 'Traditions', 'Heritage', 'History'],
+    keywords: ['Culture', 'Persian', 'Traditions', 'Heritage', 'History', 'poetry', 'calligraphy', 'cuisine'],
   }),
 
   donate: generateMetadata({
-    title: 'Support Our Camp',
-    description: 'Help us create unforgettable experiences and celebrate Persian culture at Burning Man. Your donation supports our art, events, and community.',
+    title: 'Support Camp Alborz | Donate to Persian Arts & Culture',
+    description: 'Support Camp Alborz, a 501(c)(3) nonprofit. Your tax-deductible donation funds art cars, cultural events, and Persian arts programming at Burning Man and beyond.',
     path: '/donate',
-    keywords: ['Donate', 'Support', 'Fundraising', 'Contribution', '501c3'],
+    keywords: ['Donate', 'Support', 'Fundraising', 'Contribution', '501c3', 'tax-deductible', 'nonprofit'],
+  }),
+
+  donateSuccess: generateMetadata({
+    title: 'Thank You for Your Donation | Camp Alborz',
+    description: 'Thank you for supporting Camp Alborz! Your tax-deductible donation helps fund Persian arts, culture, and community programming.',
+    path: '/donate/success',
+    keywords: ['Thank you', 'Donation', 'Receipt'],
+    noIndex: true,
   }),
 
   apply: generateMetadata({
-    title: 'Join Our Camp',
-    description: 'Apply to become a member of Camp Alborz. We welcome passionate individuals who want to contribute to our vibrant community.',
+    title: 'Join Camp Alborz | Apply for Membership',
+    description: 'Apply to join Camp Alborz at Burning Man. We welcome people of all backgrounds who share our passion for Persian culture, art, and community.',
     path: '/apply',
-    keywords: ['Apply', 'Join', 'Membership', 'Application', 'Community'],
+    keywords: ['Apply', 'Join', 'Membership', 'Application', 'Community', 'Burning Man camp'],
   }),
 
   members: generateMetadata({
-    title: 'Member Portal',
-    description: 'Member area for Camp Alborz participants. Access resources, connect with fellow members, and stay updated.',
+    title: 'Member Portal | Camp Alborz',
+    description: 'Camp Alborz member portal. Access resources, connect with fellow members, and manage your camp membership.',
     path: '/members',
     keywords: ['Members', 'Portal', 'Login', 'Resources'],
-    noIndex: true, // Don't index login-required pages
+    noIndex: true,
   }),
 
   search: generateMetadata({
-    title: 'Search',
-    description: 'Search Camp Alborz website for events, content, and resources.',
+    title: 'Search | Camp Alborz',
+    description: 'Search Camp Alborz for events, art installations, cultural content, and community resources.',
     path: '/search',
     keywords: ['Search', 'Find'],
   }),
 
+  login: generateMetadata({
+    title: 'Log In | Camp Alborz',
+    description: 'Log in to your Camp Alborz member account.',
+    path: '/login',
+    noIndex: true,
+  }),
+
+  forgotPassword: generateMetadata({
+    title: 'Reset Password | Camp Alborz',
+    description: 'Reset your Camp Alborz account password.',
+    path: '/forgot-password',
+    noIndex: true,
+  }),
+
   admin: generateMetadata({
-    title: 'Admin Dashboard',
+    title: 'Admin Dashboard | Camp Alborz',
     description: 'Camp Alborz admin dashboard for managing content, members, and operations.',
     path: '/admin',
-    noIndex: true, // Don't index admin pages
+    noIndex: true,
   }),
 };
 
@@ -177,17 +220,25 @@ export const pageMetadata = {
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'NonprofitOrganization',
     name: siteConfig.name,
+    legalName: 'Camp Alborz Inc.',
     description: siteConfig.description,
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo.png`,
+    foundingDate: '2008',
+    nonprofitStatus: '501(c)(3)',
     sameAs: Object.values(siteConfig.links),
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'US',
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'info@campalborz.org',
       contactType: 'General Inquiries',
     },
+    keywords: 'Persian culture, Burning Man, art cars, music, community, nonprofit',
   };
 }
 

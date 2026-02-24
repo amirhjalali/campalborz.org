@@ -7,14 +7,13 @@ import { MetadataRoute } from 'next';
  * See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.campalborz.org';
+  const baseUrl = 'https://campalborz.org';
 
-  // Static pages with their priorities and change frequencies
   const staticPages = [
     {
       url: '',
       priority: 1.0,
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'weekly' as const,
     },
     {
       url: '/about',
@@ -24,12 +23,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: '/art',
       priority: 0.8,
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'monthly' as const,
+    },
+    {
+      url: '/art/homa',
+      priority: 0.7,
+      changeFrequency: 'monthly' as const,
+    },
+    {
+      url: '/art/damavand',
+      priority: 0.7,
+      changeFrequency: 'monthly' as const,
     },
     {
       url: '/events',
       priority: 0.9,
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'weekly' as const,
     },
     {
       url: '/culture',
@@ -47,14 +56,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
     },
     {
-      url: '/members',
-      priority: 0.6,
-      changeFrequency: 'weekly' as const,
-    },
-    {
       url: '/search',
-      priority: 0.5,
-      changeFrequency: 'daily' as const,
+      priority: 0.3,
+      changeFrequency: 'monthly' as const,
     },
   ];
 
@@ -64,21 +68,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
-
-  // In production, you would also dynamically generate URLs for:
-  // - Individual events: /events/[slug]
-  // - Blog posts: /blog/[slug]
-  // - Art pieces: /art/[slug]
-  // - Member profiles: /members/[id]
-  //
-  // Example:
-  // const events = await fetchAllEvents();
-  // const eventPages = events.map(event => ({
-  //   url: `${baseUrl}/events/${event.slug}`,
-  //   lastModified: event.updatedAt,
-  //   changeFrequency: 'weekly' as const,
-  //   priority: 0.7,
-  // }));
-  //
-  // return [...staticPages, ...eventPages];
 }

@@ -5,6 +5,7 @@ import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
 import { AuthProvider } from '../contexts/AuthContext';
 import { Footer } from '../components/footer';
+import { StructuredData } from '../components/structured-data';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
 
 const cinzel = Cinzel({
@@ -39,6 +40,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${cinzel.variable} ${cormorant.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
+      <head>
+        <StructuredData />
+      </head>
       <body className="font-body antialiased">
         <a href="#main-content" className="skip-link">
           Skip to main content
