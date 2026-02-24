@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Navigation } from '../../components/navigation';
+import { Reveal } from '../../components/reveal';
 import { ArrowRight, Calendar, Clock, MapPin, ExternalLink } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
@@ -24,174 +24,187 @@ export default function EventsPage() {
 
   if (!events) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen flex items-center justify-center bg-cream">
-          <p className="text-ink-soft">Events page configuration not found</p>
-        </main>
-      </>
+      <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-cream)' }}>
+        <p style={{ color: 'var(--color-ink-soft)' }}>Events page configuration not found</p>
+      </main>
     );
   }
 
   return (
-    <>
-      <Navigation />
-      <main className="bg-cream">
-        {/* Hero Section with Parallax */}
-        <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
-          <motion.div
-            className="absolute inset-0 z-0"
-            style={{ y: backgroundY }}
+    <main style={{ backgroundColor: 'var(--color-cream)' }}>
+      {/* Hero Section with Parallax */}
+      <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
+        <motion.div
+          className="absolute inset-0 z-0"
+          style={{ y: backgroundY }}
+        >
+          <Image
+            src="/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg"
+            alt="Camp Alborz community event with participants enjoying Persian cuisine and festivities"
+            fill
+            className="object-cover"
+            priority
+            quality={90}
+            sizes="100vw"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQH/8QAIBAAAgICAgIDAAAAAAAAAAAAAQIDEQAEBSESMRNBYf/EABUBAQEAAAAAAAAAAAAAAAAAAAID/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECAxEh/9oADAMBEQIRAxEAPwCbt8Rw24hTf2mCPKhYswUfXX5jPIe+4mK8o+sYzpy0YqmH//Z"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--color-cream), transparent, transparent)` }} />
+        </motion.div>
+
+        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+
+        <motion.div
+          className="relative z-10 text-center py-24 max-w-[1200px] mx-auto px-5 md:px-10"
+          style={{ y: textY, opacity }}
+        >
+          <motion.p
+            className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
+            initial={{ y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Image
-              src="/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg"
-              alt="Camp Alborz community event with participants enjoying Persian cuisine and festivities"
-              fill
-              className="object-cover"
-              priority
-              quality={90}
-              sizes="100vw"
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQH/8QAIBAAAgICAgIDAAAAAAAAAAAAAQIDEQAEBSESMRNBYf/EABUBAQEAAAAAAAAAAAAAAAAAAAID/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECAxEh/9oADAMBEQCEAPwCbt8Rw24hTf2mCPKhYswUfXX5jPIe+4mK8o+sYzpy0YqmH//Z"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-            <div className="absolute inset-0 bg-gradient-to-t from-cream via-transparent to-transparent opacity-90" />
-          </motion.div>
-
-          <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
-
-          <motion.div
-            className="relative z-10 section-contained text-center py-24"
-            style={{ y: textY, opacity }}
+            GATHER WITH US
+          </motion.p>
+          <motion.h1
+            className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
+            initial={{ y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
-            <motion.p
-              className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            >
-              GATHER WITH US
-            </motion.p>
-            <motion.h1
-              className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
-              initial={{ y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {events.title}
-            </motion.h1>
-            <motion.p
-              className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
-              initial={{ y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            >
-              {events.subtitle}
-            </motion.p>
+            {events.title}
+          </motion.h1>
+          <motion.p
+            className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+            initial={{ y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {events.subtitle}
+          </motion.p>
+        </motion.div>
+      </section>
 
-          </motion.div>
-        </section>
-
-        {/* Event Types */}
-        <section className="section-base section-contained">
-          <div className="text-center space-y-3 mb-14">
-            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
-              Event Categories
-            </h2>
-            <p className="font-accent text-lg text-ink-soft max-w-2xl mx-auto">
-              Discover the diverse range of experiences we offer year-round
-            </p>
-          </div>
+      {/* Event Types */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="text-center space-y-3 mb-14">
+              <p className="text-eyebrow">UPCOMING EVENTS</p>
+              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
+                Event Categories
+              </h2>
+              <p className="font-accent text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
+                Discover the diverse range of experiences we offer year-round
+              </p>
+            </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {events.eventTypes.map((type, index) => {
               const TypeIcon = getIcon(type.icon);
 
               return (
-                <motion.div
-                  key={type.name}
-                  initial={{ y: 16, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.12 + (index > 2 ? 0.05 : 0), ease: [0.22, 1, 0.36, 1] }}
-                  className="luxury-card text-center group"
-                >
-                  <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6 transition-transform duration-300 group-hover:scale-110">
-                    <TypeIcon className="h-7 w-7 text-gold-500" />
+                <Reveal key={type.name} delay={index * 0.1}>
+                  <div className="luxury-card text-center group h-full">
+                    <div
+                      className="inline-flex p-4 rounded-full mb-6 transition-transform duration-300 group-hover:scale-110"
+                      style={{
+                        backgroundColor: 'rgba(184, 150, 12, 0.15)',
+                        border: '1px solid rgba(184, 150, 12, 0.25)',
+                      }}
+                    >
+                      <TypeIcon className="h-7 w-7" style={{ color: 'var(--color-gold)' }} />
+                    </div>
+                    <h3 className="font-display text-lg mb-2" style={{ color: 'var(--color-ink)' }}>{type.name}</h3>
+                    <p className="text-caption mb-3" style={{ color: 'var(--color-gold)' }}>
+                      {type.count} events yearly
+                    </p>
+                    <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                      {type.description}
+                    </p>
                   </div>
-                  <h3 className="text-display-thin text-lg mb-2">{type.name}</h3>
-                  <p className="text-caption text-gold-600 mb-3">
-                    {type.count} events yearly
-                  </p>
-                  <p className="text-body-relaxed text-sm text-ink-soft">
-                    {type.description}
-                  </p>
-                </motion.div>
+                </Reveal>
               );
             })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Upcoming Events */}
-        <section className="section-contrast">
-          <div className="section-contained">
+      {/* Upcoming Events */}
+      <section className="section-contrast py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
             <div className="text-center space-y-4 mb-14">
-              <p className="text-display-wide text-xs tracking-[0.5em] text-tan-light/70">
-                MARK YOUR CALENDAR
+              <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>
+                PLAYA SCHEDULE
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight text-tan-light">
+              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                 Upcoming Events
               </h2>
-              <p className="text-body-relaxed text-base text-tan-light/80 max-w-2xl mx-auto">
+              <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-tan-50), 0.8)' }}>
                 Join us for these exciting upcoming gatherings
               </p>
             </div>
+          </Reveal>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {events.upcomingEvents.map((event, index) => {
-                const EventIcon = getIcon(event.icon);
-                const isExternalLink = event.linkUrl?.startsWith('http');
-                const isFeatured = index === 0;
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {events.upcomingEvents.map((event, index) => {
+              const EventIcon = getIcon(event.icon);
+              const isExternalLink = event.linkUrl?.startsWith('http');
+              const isFeatured = index === 0;
 
-                return (
+              return (
+                <Reveal key={event.id} delay={index * 0.1}>
                   <div
-                    key={event.id}
-                    className={`border rounded-2xl p-8 transition-all duration-300 hover:border-gold-500/30 ${
-                      isFeatured
-                        ? 'border-gold-500/25 bg-white/8 lg:col-span-2'
-                        : 'border-white/10 bg-white/5'
+                    className={`luxury-card group transition-all duration-300 ${
+                      isFeatured ? 'lg:col-span-2' : ''
                     }`}
+                    style={{
+                      backgroundColor: isFeatured ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.05)',
+                      borderColor: isFeatured ? 'rgba(184, 150, 12, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                    }}
                   >
                     <div className="flex items-start gap-5">
-                      <div className="flex-shrink-0 p-4 rounded-full bg-gold-500/20 border border-gold-500/30">
-                        <EventIcon className="h-6 w-6 text-gold-400" />
+                      <div
+                        className="flex-shrink-0 p-4 rounded-full"
+                        style={{
+                          backgroundColor: 'rgba(184, 150, 12, 0.15)',
+                          border: '1px solid rgba(184, 150, 12, 0.25)',
+                        }}
+                      >
+                        <EventIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
                       <div className="flex-1 space-y-4">
                         <div>
-                          <span className="text-caption text-gold-400">
+                          <span className="text-caption" style={{ color: 'var(--color-gold-muted)' }}>
                             {event.type}
                           </span>
-                          <h3 className={`text-display-thin text-tan-light mt-1 ${isFeatured ? 'text-2xl' : 'text-xl'}`}>
+                          <h3
+                            className={`font-display mt-1 ${isFeatured ? 'text-2xl' : 'text-xl'}`}
+                            style={{ color: 'var(--color-cream)' }}
+                          >
                             {event.title}
                           </h3>
                         </div>
 
-                        <div className={`flex flex-wrap gap-x-6 gap-y-2 text-sm text-tan-light/70`}>
+                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm" style={{ color: 'rgba(var(--color-tan-50), 0.7)' }}>
                           <div className="flex items-center gap-3">
-                            <Calendar className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
+                            <Calendar className="h-4 w-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
                             <span>{event.date}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <Clock className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
+                            <Clock className="h-4 w-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
                             <span>{event.time}</span>
                           </div>
                           <div className="flex items-center gap-3">
-                            <MapPin className="h-4 w-4 text-gold-500/70" aria-hidden="true" />
+                            <MapPin className="h-4 w-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
                             <span>{event.location}</span>
                           </div>
                         </div>
 
-                        <p className="font-accent text-sm text-tan-light/80">
+                        <p className="font-accent text-sm" style={{ color: 'rgba(var(--color-tan-50), 0.8)' }}>
                           {event.description}
                         </p>
 
@@ -200,51 +213,57 @@ export default function EventsPage() {
                             href={event.linkUrl}
                             target={isExternalLink ? '_blank' : undefined}
                             rel={isExternalLink ? 'noreferrer' : undefined}
-                            className="inline-flex items-center gap-2 text-sm text-gold-400 hover:text-gold-300 transition-colors group"
+                            className="inline-flex items-center gap-2 text-sm transition-colors group/link"
+                            style={{ color: 'var(--color-gold-muted)' }}
                           >
                             {event.linkText || 'View Details'}
-                            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                            <ExternalLink className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
                           </Link>
                         )}
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </Reveal>
+              );
+            })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Burning Man Schedule */}
-        {events.burningManSchedule && events.burningManSchedule.length > 0 && (
-          <section className="section-base">
-            <div className="section-contained">
-              <div className="mb-14">
-                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+      {/* Burning Man Schedule */}
+      {events.burningManSchedule && events.burningManSchedule.length > 0 && (
+        <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="mb-14 text-center">
+                <p className="text-eyebrow mb-3">PLAYA SCHEDULE</p>
+                <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
                   Burning Man Schedule
                 </h2>
               </div>
+            </Reveal>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {events.burningManSchedule.map((day, dayIndex) => (
-                  <div
-                    key={day.day}
-                    className={dayIndex % 2 === 0 ? 'luxury-card' : 'py-6'}
-                  >
-                    <h3 className="text-display-thin text-xl mb-6 pb-4 border-b border-line/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {events.burningManSchedule.map((day, dayIndex) => (
+                <Reveal key={day.day} delay={dayIndex * 0.1}>
+                  <div className="luxury-card h-full">
+                    <h3
+                      className="font-display text-xl mb-6 pb-4"
+                      style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)', color: 'var(--color-ink)' }}
+                    >
                       {day.day}
                     </h3>
                     <div className="space-y-6">
                       {day.events.map((scheduleEvent, eventIndex) => (
                         <div key={eventIndex} className="flex gap-4">
-                          <div className="flex-shrink-0 w-16 text-caption text-gold-600">
+                          <div className="flex-shrink-0 w-16 text-caption" style={{ color: 'var(--color-gold)' }}>
                             {scheduleEvent.time}
                           </div>
                           <div>
-                            <h4 className="font-display text-sm text-ink mb-1">
+                            <h4 className="font-display text-sm mb-1" style={{ color: 'var(--color-ink)' }}>
                               {scheduleEvent.title}
                             </h4>
-                            <p className="font-accent text-xs text-ink-soft">
+                            <p className="font-accent text-xs" style={{ color: 'var(--color-ink-soft)' }}>
                               {scheduleEvent.description}
                             </p>
                           </div>
@@ -252,41 +271,43 @@ export default function EventsPage() {
                       ))}
                     </div>
                   </div>
-                ))}
-              </div>
+                </Reveal>
+              ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* Event Guidelines */}
-        {events.guidelines && (
-          <section className="section-alt">
-            <div className="section-contained">
+      {/* Event Guidelines */}
+      {events.guidelines && (
+        <section className="py-24 md:py-32">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
               <div className="frame-panel">
                 <div className="mb-10">
-                  <h2 className="text-display-thin text-2xl md:text-3xl">
+                  <h2 className="font-display text-2xl md:text-3xl" style={{ color: 'var(--color-ink)' }}>
                     Event Guidelines
                   </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <div>
-                    <h3 className="text-display-thin text-lg mb-5">Before Attending</h3>
+                    <h3 className="font-display text-lg mb-5" style={{ color: 'var(--color-ink)' }}>Before Attending</h3>
                     <ul className="space-y-3">
                       {events.guidelines.beforeAttending.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm text-ink-soft">
-                          <span className="text-gold-500 mt-1">◆</span>
+                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                          <span className="mt-1" style={{ color: 'var(--color-gold)' }}>&#9670;</span>
                           {item}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <h3 className="text-display-thin text-lg mb-5">Community Values</h3>
+                    <h3 className="font-display text-lg mb-5" style={{ color: 'var(--color-ink)' }}>Community Values</h3>
                     <ul className="space-y-3">
                       {events.guidelines.communityValues.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm text-ink-soft">
-                          <span className="text-gold-500 mt-1">◆</span>
+                        <li key={index} className="flex items-start gap-3 text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                          <span className="mt-1" style={{ color: 'var(--color-gold)' }}>&#9670;</span>
                           {item}
                         </li>
                       ))}
@@ -294,30 +315,57 @@ export default function EventsPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        )}
+            </Reveal>
+          </div>
+        </section>
+      )}
 
-        {/* CTA Section */}
-        {events.cta && (
-          <section className="section-base">
-            <div className="section-contained">
+      {/* Ornate Divider */}
+      <div className="ornate-divider" style={{ color: 'var(--color-gold-muted)' }}>&#9670;</div>
+
+      {/* Config-driven CTA Section */}
+      {events.cta && (
+        <section className="py-24 md:py-32">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
               <div className="text-center space-y-6 max-w-2xl mx-auto py-8">
-                <h2 className="text-display-thin text-2xl md:text-3xl">
+                <p className="text-eyebrow">JOIN US</p>
+                <h2 className="font-display text-2xl md:text-3xl" style={{ color: 'var(--color-ink)' }}>
                   {events.cta.title}
                 </h2>
-                <p className="text-body-relaxed text-base text-ink-soft">
+                <p className="text-body-relaxed text-base" style={{ color: 'var(--color-ink-soft)' }}>
                   {events.cta.description}
                 </p>
                 <Link href={events.cta.buttons.primary.link} className="cta-primary inline-flex">
-                  {events.cta.buttons.primary.text}
+                  <span>{events.cta.buttons.primary.text}</span>
                   <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* Final CTA - Apply Now */}
+      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="text-center space-y-6 max-w-2xl mx-auto">
+              <p className="text-eyebrow">JOIN US</p>
+              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
+                Don&apos;t Miss Out &mdash; Apply Now
+              </h2>
+              <p className="font-accent text-lg" style={{ color: 'var(--color-ink-soft)' }}>
+                Become part of our community and experience the magic of Camp Alborz firsthand.
+              </p>
+              <Link href="/apply" className="cta-primary inline-flex">
+                <span>Apply for Membership</span>
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
             </div>
-          </section>
-        )}
-      </main>
-    </>
+          </Reveal>
+        </div>
+      </section>
+    </main>
   );
 }

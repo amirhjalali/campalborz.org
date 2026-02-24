@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from "react";
-import { Navigation } from "../../components/navigation";
 import { Search as SearchIcon } from "lucide-react";
 import { useContentConfig } from "../../hooks/useConfig";
 import { getIcon } from "../../lib/icons";
@@ -13,18 +12,13 @@ export default function SearchPage() {
 
   if (!search) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen flex items-center justify-center bg-cream">
-          <p className="text-ink-soft">Search page configuration not found</p>
-        </main>
-      </>
+      <main className="min-h-screen flex items-center justify-center bg-cream">
+        <p className="text-ink-soft">Search page configuration not found</p>
+      </main>
     );
   }
 
   return (
-    <>
-      <Navigation />
       <main className="min-h-screen bg-cream">
         {/* Hero Section */}
         <section className="pt-32 pb-20">
@@ -165,6 +159,5 @@ export default function SearchPage() {
           </div>
         </section>
       </main>
-    </>
   );
 }

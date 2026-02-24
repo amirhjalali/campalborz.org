@@ -132,7 +132,7 @@ function ResetPasswordForm() {
           This password reset link is invalid or has expired. Please request a new one.
         </p>
         <Link href="/forgot-password" className="cta-primary inline-flex text-sm">
-          Request New Link
+          <span>Request New Link</span>
         </Link>
       </div>
     );
@@ -248,11 +248,11 @@ function ResetPasswordForm() {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Updating...
+                  <span><Loader2 className="h-5 w-5 mr-2 animate-spin" /></span>
+                  <span>Updating...</span>
                 </>
               ) : (
-                'Reset Password'
+                <span>Reset Password</span>
               )}
             </button>
           </form>

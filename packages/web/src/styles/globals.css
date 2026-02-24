@@ -83,6 +83,10 @@
     --color-tan-50: 26, 31, 26;
     --color-surface: #222822;
     --color-surface-alt: #2a302a;
+    --color-success: #4caf50;
+    --color-warning: #e0a82e;
+    --color-error: #e05a4f;
+    --color-info: #5a8fa8;
   }
 
   ::selection {

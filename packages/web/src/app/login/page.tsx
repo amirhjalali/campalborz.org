@@ -178,11 +178,11 @@ function LoginForm() {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Signing in...
+                  <span><Loader2 className="h-5 w-5 mr-2 animate-spin" /></span>
+                  <span>Signing in...</span>
                 </>
               ) : (
-                'Sign In'
+                <span>Sign In</span>
               )}
             </button>
           </form>

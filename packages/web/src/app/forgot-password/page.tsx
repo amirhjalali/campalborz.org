@@ -150,11 +150,11 @@ export default function ForgotPasswordPage() {
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Sending...
+                      <span><Loader2 className="h-5 w-5 mr-2 animate-spin" /></span>
+                      <span>Sending...</span>
                     </>
                   ) : (
-                    'Send Reset Link'
+                    <span>Send Reset Link</span>
                   )}
                 </button>
               </form>

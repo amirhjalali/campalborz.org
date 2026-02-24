@@ -51,12 +51,12 @@ export default function NotFound() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Link href="/" className="cta-primary text-sm">
-            <Home className="h-4 w-4" />
-            Go to Homepage
+            <span><Home className="h-4 w-4" /></span>
+            <span>Go to Homepage</span>
           </Link>
           <Link href="/search" className="cta-secondary text-sm">
-            <Search className="h-4 w-4" />
-            Search Site
+            <span><Search className="h-4 w-4" /></span>
+            <span>Search Site</span>
           </Link>
         </div>
 

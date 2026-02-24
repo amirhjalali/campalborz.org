@@ -228,7 +228,7 @@ export default function InvitePage() {
               This invitation has already been accepted. You can sign in with your existing credentials.
             </p>
             <Link href="/login" className="cta-primary inline-flex text-sm">
-              Sign In
+              <span>Sign In</span>
             </Link>
           </div>
         </div>
@@ -355,11 +355,11 @@ export default function InvitePage() {
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Setting up...
+                  <span><Loader2 className="h-5 w-5 mr-2 animate-spin" /></span>
+                  <span>Setting up...</span>
                 </>
               ) : (
-                'Join Camp Alborz'
+                <span>Join Camp Alborz</span>
               )}
             </button>
           </form>

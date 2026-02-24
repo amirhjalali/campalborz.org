@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Navigation } from '../../../components/navigation';
+import { Reveal } from '../../../components/reveal';
 import {
   CheckCircle,
   Mail,
@@ -21,95 +21,105 @@ export default function DonationSuccessPage() {
   const formattedAmount = parseFloat(amount) / 100;
 
   return (
-    <>
-      <Navigation />
-      <main className="min-h-screen bg-cream">
-        {/* Success Confirmation */}
-        <section className="pt-32 pb-16">
-          <div className="section-contained text-center">
-            <div className="inline-flex p-5 rounded-full bg-sage-100 border border-sage-300 mb-8">
-              <CheckCircle className="h-14 w-14 text-sage-600" />
+    <main className="min-h-screen" style={{ backgroundColor: 'var(--color-cream)' }}>
+      {/* Success Confirmation */}
+      <section className="pt-32 pb-16">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 text-center">
+          <Reveal direction="none">
+            <div className="inline-flex p-5 rounded-full mb-8" style={{ backgroundColor: 'rgba(90, 107, 90, 0.12)', border: '1px solid rgba(90, 107, 90, 0.25)' }}>
+              <CheckCircle className="h-14 w-14" style={{ color: 'var(--color-sage)' }} />
             </div>
+          </Reveal>
+          <Reveal delay={0.15}>
             <h1 className="text-display-thin text-4xl md:text-5xl mb-4">
               Thank You for Your Generosity
             </h1>
-            <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
+          </Reveal>
+          <Reveal delay={0.25}>
+            <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
               Your donation has been received successfully. Your support helps us build a stronger community.
             </p>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* Donation Details */}
-        <section className="section-base">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Donation Details */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-2xl mx-auto px-5 md:px-10">
+          <Reveal direction="none" delay={0.1}>
             <div className="frame-panel">
               {/* Amount Display */}
-              <div className="text-center pb-8 mb-8 border-b border-line/30">
-                <p className="text-display-wide text-xs tracking-[0.5em] text-ink-soft/80 mb-3">
+              <div className="text-center pb-8 mb-8" style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                <p className="text-eyebrow mb-3">
                   DONATION AMOUNT
                 </p>
-                <p className="text-5xl font-display text-gold-600">
+                <p className="text-5xl font-display" style={{ color: 'var(--color-gold)' }}>
                   ${formattedAmount.toFixed(2)}
                 </p>
                 {donationType === 'recurring' && (
-                  <p className="text-sm text-ink-soft mt-2">Monthly recurring donation</p>
+                  <p className="text-sm mt-2" style={{ color: 'var(--color-ink-soft)' }}>Monthly recurring donation</p>
                 )}
               </div>
 
               {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-gold-500/20">
-                    <Mail className="h-5 w-5 text-gold-600" />
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                    <Mail className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-ink">Email Confirmation</p>
-                    <p className="text-sm text-ink-soft">
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>Email Confirmation</p>
+                    <p className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>
                       {email || 'Receipt sent to your email'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-gold-500/20">
-                    <FileText className="h-5 w-5 text-gold-600" />
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                    <FileText className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-ink">Transaction ID</p>
-                    <p className="text-sm text-ink-soft font-mono">
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>Transaction ID</p>
+                    <p className="text-sm font-mono" style={{ color: 'var(--color-ink-soft)' }}>
                       {paymentIntentId ? `${paymentIntentId.substring(0, 20)}...` : 'N/A'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-sage-100">
-                    <CheckCircle className="h-5 w-5 text-sage-600" />
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(90, 107, 90, 0.12)' }}>
+                    <CheckCircle className="h-5 w-5" style={{ color: 'var(--color-sage)' }} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-ink">Status</p>
-                    <p className="text-sm text-sage-600 font-medium">Completed</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>Status</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-sage)' }}>Completed</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-gold-500/20">
-                    <Heart className="h-5 w-5 text-gold-600" />
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                    <Heart className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-ink">Tax Deductible</p>
-                    <p className="text-sm text-ink-soft">501(c)(3) eligible</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--color-ink)' }}>Tax Deductible</p>
+                    <p className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>501(c)(3) eligible</p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* What Happens Next */}
-        <section className="section-alt">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="ornate-divider" />
+
+      {/* What Happens Next */}
+      <section className="section-alt">
+        <div className="max-w-2xl mx-auto px-5 md:px-10">
+          <Reveal>
             <div className="luxury-card">
+              <p className="text-eyebrow mb-3">NEXT STEPS</p>
               <h2 className="text-display-thin text-2xl mb-6">What Happens Next</h2>
               <div className="space-y-6">
                 {[
@@ -130,70 +140,75 @@ export default function DonationSuccessPage() {
                   },
                 ].map((item) => (
                   <div key={item.step} className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gold-500/20 border border-gold-500/30 flex items-center justify-center">
-                      <span className="text-sm font-display text-gold-600">{item.step}</span>
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                      <span className="text-sm font-display" style={{ color: 'var(--color-gold)' }}>{item.step}</span>
                     </div>
                     <div>
-                      <p className="font-medium text-ink">{item.title}</p>
-                      <p className="text-sm text-ink-soft mt-1">{item.description}</p>
+                      <p className="font-medium" style={{ color: 'var(--color-ink)' }}>{item.title}</p>
+                      <p className="text-sm mt-1" style={{ color: 'var(--color-ink-soft)' }}>{item.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* Community Impact */}
-        <section className="section-base">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Community Impact */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-2xl mx-auto px-5 md:px-10">
+          <Reveal direction="none">
             <div className="luxury-card text-center">
-              <div className="inline-flex p-4 rounded-full bg-gold-500/20 border border-gold-500/30 mb-6">
-                <Heart className="h-10 w-10 text-gold-500" />
+              <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
               </div>
               <h3 className="text-display-thin text-xl mb-3">
                 You Are Making a Difference
               </h3>
-              <p className="text-body-relaxed text-ink-soft mb-6 max-w-lg mx-auto">
+              <p className="text-body-relaxed mb-6 max-w-lg mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
                 Your generous contribution helps us build and nurture our vibrant community.
                 Together, we create unforgettable experiences that celebrate art, culture, and connection.
               </p>
               <div className="ornate-divider" />
             </div>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* Actions */}
-        <section className="section-base">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Actions */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-2xl mx-auto px-5 md:px-10">
+          <Reveal>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/" className="cta-primary">
-                <Home className="h-5 w-5" />
-                Return Home
+                <span><Home className="h-5 w-5" /></span>
+                <span>Return Home</span>
               </Link>
               <Link href="/donate" className="cta-secondary">
-                <Heart className="h-5 w-5" />
-                Make Another Donation
+                <span><Heart className="h-5 w-5" /></span>
+                <span>Make Another Donation</span>
               </Link>
             </div>
-          </div>
-        </section>
+          </Reveal>
+        </div>
+      </section>
 
-        {/* Support Contact */}
-        <section className="pb-16">
-          <div className="text-center">
-            <p className="text-sm text-ink-soft">
-              Questions about your donation?{' '}
-              <a
-                href="mailto:donations@campalborz.org"
-                className="text-gold-600 hover:text-gold-500 underline transition-colors"
-              >
-                Contact our support team
-              </a>
-            </p>
-          </div>
-        </section>
-      </main>
-    </>
+      {/* Support Contact */}
+      <section className="pb-16">
+        <div className="text-center">
+          <p className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+            Questions about your donation?{' '}
+            <a
+              href="mailto:donations@campalborz.org"
+              className="underline transition-colors"
+              style={{ color: 'var(--color-gold)' }}
+            >
+              Contact our support team
+            </a>
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

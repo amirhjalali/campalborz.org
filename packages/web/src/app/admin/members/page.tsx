@@ -196,8 +196,8 @@ export default function MembersPage() {
             onClick={() => setShowInvite(true)}
             className="cta-primary text-sm px-5 py-2.5 flex items-center gap-2"
           >
-            <UserPlus className="h-4 w-4" />
-            Invite Member
+            <span><UserPlus className="h-4 w-4" /></span>
+            <span>Invite Member</span>
           </button>
         </div>
       </div>

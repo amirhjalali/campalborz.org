@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Navigation } from '../components/navigation';
 import { Reveal } from '../components/reveal';
 import { useContentConfig } from '../hooks/useConfig';
 import {
@@ -22,7 +21,7 @@ const artists = [
     medium: 'Miniature Painting · Neo-classical Persian',
     era: 'b. 1930, Isfahan',
     bio: 'The undisputed master of contemporary Persian miniature painting. His luminous compositions bridge centuries of tradition with modern sensibility.',
-    image: '/images/farshchian_tribute.jpg',
+    image: '/images/farshchian_tribute.webp',
   },
   {
     number: '002',
@@ -30,7 +29,7 @@ const artists = [
     medium: 'Sculpture · Heech Series',
     era: 'b. 1937, Tehran',
     bio: 'Father of modern Iranian sculpture. His iconic "Heech" (Nothingness) series explores the void between existence and absence.',
-    image: '/images/tanavoli_tribute.jpg',
+    image: '/images/tanavoli_tribute.webp',
   },
   {
     number: '003',
@@ -38,7 +37,7 @@ const artists = [
     medium: 'Mirror Mosaic · Geometric Abstraction',
     era: '1924 – 2019, Tehran',
     bio: 'Fused traditional Iranian mirror mosaic (aineh-kari) with Western geometric abstraction to create something entirely new.',
-    image: '/images/mirror_mosaic.jpg',
+    image: '/images/mirror_mosaic.webp',
   },
 ];
 
@@ -146,8 +145,6 @@ export default function HomePage() {
 
   return (
     <>
-      <Navigation />
-
       <main>
         {/* ============================================ */}
         {/* 1. HERO — Full viewport split grid            */}
@@ -162,8 +159,7 @@ export default function HomePage() {
             style={{ opacity: heroOpacity }}
           >
             <motion.p
-              className="text-[11px] tracking-[0.3em] uppercase font-medium mb-8"
-              style={{ color: 'var(--color-terracotta)' }}
+              className="text-eyebrow mb-8"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
@@ -201,10 +197,9 @@ export default function HomePage() {
             >
               <Link
                 href="/apply"
-                className="group relative inline-block bg-ink text-cream px-10 py-4 text-xs tracking-[0.14em] uppercase font-medium overflow-hidden transition-transform hover:-translate-y-0.5"
+                className="cta-primary text-xs"
               >
-                <span className="relative z-10">Join Our Camp</span>
-                <span className="absolute inset-0 bg-terracotta transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+                <span>Join Our Camp</span>
               </Link>
               <Link
                 href="/about"
@@ -218,7 +213,7 @@ export default function HomePage() {
             {/* Decorative watermark */}
             <div className="absolute bottom-10 right-16 w-[120px] h-[120px] opacity-[0.06] pointer-events-none hidden lg:block">
               <Image
-                src="/images/persian_pattern.jpg"
+                src="/images/persian_pattern.webp"
                 alt=""
                 fill
                 className="object-contain"
@@ -229,23 +224,23 @@ export default function HomePage() {
 
           {/* Right: Full-bleed image with parallax */}
           <div className="relative min-h-[450px] overflow-hidden">
-            <div className="absolute inset-0">
+            <motion.div className="absolute inset-0 -top-[15%] -bottom-[15%]" style={{ y: heroImageY }}>
               <Image
-                src="/images/playa_camp.jpg"
+                src="/images/playa_camp.webp"
                 alt="Camp Alborz at golden hour on the playa"
                 fill
                 priority
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              {/* Image overlay for depth */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(to right, var(--color-cream) 0%, transparent 12%)',
-                }}
-              />
-            </div>
+            </motion.div>
+            {/* Image overlay for depth */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(to right, var(--color-cream) 0%, transparent 12%)',
+              }}
+            />
           </div>
 
           {/* Scroll indicator */}
@@ -325,7 +320,7 @@ export default function HomePage() {
                   >
                     01
                   </p>
-                  <p className="text-xs tracking-[0.25em] uppercase font-medium">
+                  <p className="text-eyebrow">
                     Our Story
                   </p>
                 </div>
@@ -369,6 +364,8 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="h-px" style={{ backgroundColor: 'var(--color-warm-border)' }} />
+
         {/* ============================================ */}
         {/* 4. OFFERINGS — What We Bring to the Playa    */}
         {/* ============================================ */}
@@ -379,10 +376,7 @@ export default function HomePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="text-center mb-16">
-                <p
-                  className="text-[11px] tracking-[0.3em] uppercase font-medium mb-4"
-                  style={{ color: 'var(--color-terracotta)' }}
-                >
+                <p className="text-eyebrow mb-4">
                   What We Bring
                 </p>
                 <h2 className="font-display font-light text-3xl md:text-4xl tracking-wide">
@@ -430,7 +424,7 @@ export default function HomePage() {
           {/* Parallax background */}
           <motion.div className="absolute inset-0 -top-20 -bottom-20" style={{ y: quoteBgY }}>
             <Image
-              src="/images/hero_texture.jpg"
+              src="/images/hero_texture.webp"
               alt=""
               fill
               className="object-cover opacity-30"
@@ -489,7 +483,7 @@ export default function HomePage() {
             style={{ y: panoramaY }}
           >
             <Image
-              src="/images/playa_camp.jpg"
+              src="/images/playa_camp.webp"
               alt="Camp Alborz panoramic view at Black Rock City"
               fill
               className="object-cover"
@@ -525,10 +519,7 @@ export default function HomePage() {
                 className="flex items-center justify-between pb-6 mb-14"
               >
                 <div>
-                  <p
-                    className="text-[11px] tracking-[0.3em] uppercase font-medium mb-2"
-                    style={{ color: 'var(--color-terracotta)' }}
-                  >
+                  <p className="text-eyebrow mb-2">
                     Inspiration
                   </p>
                   <h2 className="font-display font-light text-2xl md:text-3xl tracking-wide">
@@ -630,7 +621,7 @@ export default function HomePage() {
         {/* ============================================ */}
         <div className="relative w-full h-48 md:h-56 overflow-hidden">
           <Image
-            src="/images/mountain_ink.jpg"
+            src="/images/mountain_ink.webp"
             alt=""
             fill
             className="object-cover opacity-50"
@@ -655,10 +646,7 @@ export default function HomePage() {
         >
           <div className="max-w-2xl mx-auto px-5 md:px-10 text-center">
             <Reveal>
-              <p
-                className="text-[11px] tracking-[0.3em] uppercase font-medium mb-6"
-                style={{ color: 'var(--color-terracotta)' }}
-              >
+              <p className="text-eyebrow mb-6">
                 2026 Season
               </p>
             </Reveal>
@@ -692,12 +680,14 @@ export default function HomePage() {
                   <span>Apply to Join</span>
                 </Link>
                 <Link href="/donate" className="cta-secondary text-sm">
-                  Support Our Camp
+                  <span>Support Our Camp</span>
                 </Link>
               </div>
             </Reveal>
           </div>
         </section>
+
+        <div className="h-px" style={{ backgroundColor: 'var(--color-warm-border)' }} />
 
         {/* ============================================ */}
         {/* 10. FAQ SECTION                              */}
@@ -707,10 +697,7 @@ export default function HomePage() {
             <Reveal>
               <div className="flex items-end justify-between mb-14">
                 <div>
-                  <p
-                    className="text-[11px] tracking-[0.3em] uppercase font-medium mb-2"
-                    style={{ color: 'var(--color-terracotta)' }}
-                  >
+                  <p className="text-eyebrow mb-2">
                     Common Questions
                   </p>
                   <h2
@@ -732,7 +719,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
               {campQAs.map(({ question, answer }, i) => (
-                <Reveal key={question} delay={i * 0.08}>
+                <Reveal key={question} delay={i * 0.12}>
                   <div className="group">
                     <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta" style={{ fontStyle: 'italic' }}>
                       {question}

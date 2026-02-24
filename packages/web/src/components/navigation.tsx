@@ -140,7 +140,7 @@ export function Navigation() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         isScrolled
-          ? 'bg-cream/90 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.05)]'
+          ? 'bg-cream/90 dark:bg-[#1a1f1a]/90 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.05)]'
           : 'bg-transparent'
       )}
       initial={{ opacity: 0 }}
@@ -206,7 +206,7 @@ export function Navigation() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute top-full left-0 mt-1 w-56 bg-cream/95 backdrop-blur-md border border-warm-border shadow-lg overflow-hidden"
+                      className="absolute top-full left-0 mt-1 w-56 bg-cream/95 dark:bg-[#1a1f1a]/95 backdrop-blur-md border border-warm-border dark:border-[#3a3830] shadow-lg overflow-hidden"
                       role="menu"
                       aria-label={`${item.label} submenu`}
                     >
@@ -214,7 +214,7 @@ export function Navigation() {
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-5 py-3 text-[13px] text-ink-soft hover:text-ink hover:bg-cream-warm/60 transition-all duration-200 focus:outline-none focus-visible:bg-cream-warm focus-visible:text-ink"
+                          className="block px-5 py-3 text-[13px] text-ink-soft dark:text-[#b8b4aa] hover:text-ink dark:hover:text-[#e8e4dc] hover:bg-cream-warm/60 dark:hover:bg-white/10 transition-all duration-200 focus:outline-none focus-visible:bg-cream-warm dark:focus-visible:bg-white/10 focus-visible:text-ink dark:focus-visible:text-[#e8e4dc]"
                           role="menuitem"
                           onKeyDown={(e) => {
                             if (e.key === 'Escape') {
@@ -248,7 +248,7 @@ export function Navigation() {
             {/* Donate button */}
             <Link
               href="/donate"
-              className="hidden md:inline-flex items-center bg-ink text-cream px-6 py-2 text-[11px] uppercase tracking-[0.14em] font-medium transition-all duration-300 hover:bg-terracotta focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
+              className="hidden md:inline-flex items-center bg-ink dark:bg-[#e8e4dc] text-cream dark:text-[#1a1f1a] px-6 py-2 text-[11px] uppercase tracking-[0.14em] font-medium transition-all duration-300 hover:bg-terracotta dark:hover:bg-[#c47040] hover:text-cream dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
             >
               Donate
             </Link>
@@ -278,7 +278,7 @@ export function Navigation() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden bg-cream/98 backdrop-blur-md border-t border-warm-border"
+            className="lg:hidden bg-cream/98 dark:bg-[#1a1f1a]/98 backdrop-blur-md border-t border-warm-border dark:border-[#3a3830]"
             aria-label="Mobile navigation menu"
           >
             <div className="px-5 py-8 space-y-1">
@@ -332,7 +332,7 @@ export function Navigation() {
               >
                 <Link
                   href="/donate"
-                  className="block w-full text-center bg-ink text-cream px-6 py-3.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 hover:bg-terracotta focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
+                  className="block w-full text-center bg-ink dark:bg-[#e8e4dc] text-cream dark:text-[#1a1f1a] px-6 py-3.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-colors duration-300 hover:bg-terracotta dark:hover:bg-[#c47040] hover:text-cream dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Donate

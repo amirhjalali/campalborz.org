@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Navigation } from '../../components/navigation';
 import { ArrowRight, LogIn, Eye, EyeOff, User, LogOut, AlertCircle } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
@@ -51,23 +50,18 @@ export default function MembersPage() {
 
   if (!members) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen flex items-center justify-center">
-          <p>Members page configuration not found</p>
-        </main>
-      </>
+      <main className="min-h-screen flex items-center justify-center">
+        <p>Members page configuration not found</p>
+      </main>
     );
   }
 
   // Authenticated member view
   if (isAuthenticated && user) {
     return (
-      <>
-        <Navigation />
-        <main className="min-h-screen bg-cream">
-          {/* Member Dashboard Header */}
-          <section className="pt-32 pb-16">
+      <main className="min-h-screen bg-cream">
+        {/* Member Dashboard Header */}
+        <section className="pt-32 pb-16">
             <div className="section-contained">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
@@ -303,14 +297,11 @@ export default function MembersPage() {
             </>
           )}
         </main>
-      </>
     );
   }
 
   // Login view (not authenticated)
   return (
-    <>
-      <Navigation />
       <main className="min-h-screen bg-cream">
         {/* Hero Section */}
         <section className="pt-32 pb-16">
@@ -414,7 +405,7 @@ export default function MembersPage() {
                   disabled={isSubmitting || authLoading}
                   className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Signing in...' : members.loginSection.submitButton}
+                  <span>{isSubmitting ? 'Signing in...' : members.loginSection.submitButton}</span>
                 </button>
               </form>
               <div className="mt-6 text-center">
@@ -537,12 +528,12 @@ export default function MembersPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href={members.cta.buttons.primary.link} className="cta-primary">
-                    {members.cta.buttons.primary.text}
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <span>{members.cta.buttons.primary.text}</span>
+                    <span><ArrowRight className="ml-2 h-5 w-5" /></span>
                   </Link>
                   <Link href={members.cta.buttons.secondary.link} className="cta-secondary">
-                    {members.cta.buttons.secondary.text}
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                    <span>{members.cta.buttons.secondary.text}</span>
+                    <span><ArrowRight className="ml-2 h-5 w-5" /></span>
                   </Link>
                 </div>
               </div>
@@ -550,6 +541,5 @@ export default function MembersPage() {
           </section>
         )}
       </main>
-    </>
   );
 }

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Loader2, LogOut, LayoutDashboard, Calendar, CreditCard, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { Navigation } from '../../components/navigation';
 
 const portalNavItems = [
   { label: 'Dashboard', href: '/portal', icon: LayoutDashboard },
@@ -34,12 +33,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
   if (isLoading) {
     return (
-      <>
-        <Navigation />
-        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center pt-20">
-          <Loader2 className="h-8 w-8 text-[#D4AF37] animate-spin" />
-        </div>
-      </>
+      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center pt-20">
+        <Loader2 className="h-8 w-8 text-[#D4AF37] animate-spin" />
+      </div>
     );
   }
 
@@ -58,8 +54,6 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
   };
 
   return (
-    <>
-      <Navigation />
       <div className="min-h-screen bg-[#FAF7F2] pt-20">
         {/* Portal sub-navigation */}
         <div className="border-b border-[#D4C4A8]/40 bg-white/80 backdrop-blur-sm sticky top-16 md:top-20 z-40">
@@ -155,6 +149,5 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           {children}
         </div>
       </div>
-    </>
   );
 }
