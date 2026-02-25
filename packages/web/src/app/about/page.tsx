@@ -207,10 +207,10 @@ export default function AboutPage() {
             <Reveal delay={0.2}>
               <blockquote className="blockquote-elegant max-w-2xl mx-auto">
                 <p className="font-accent text-xl md:text-2xl leading-relaxed" style={{ color: 'var(--color-ink)', opacity: 0.8 }}>
-                  Out beyond ideas of wrongdoing and rightdoing, there is a field. I&apos;ll meet you there.
+                  A good name is better than a golden girdle.
                 </p>
                 <footer className="mt-4 text-caption" style={{ color: 'var(--color-gold)' }}>
-                  Rumi
+                  Persian Proverb
                 </footer>
               </blockquote>
             </Reveal>
@@ -238,11 +238,7 @@ export default function AboutPage() {
 
               return (
                 <Reveal key={value.title} delay={index * 0.15} direction={index === 0 ? 'left' : index === 2 ? 'right' : 'up'}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  <div
                     className={`border rounded-2xl p-8 text-center group transition-shadow duration-300 ${index === 0 ? 'md:col-span-2' : ''}`}
                     style={{
                       borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -252,8 +248,8 @@ export default function AboutPage() {
                     <div
                       className="inline-flex p-4 rounded-full border mb-6"
                       style={{
-                        backgroundColor: 'rgba(184, 150, 12, 0.2)',
-                        borderColor: 'rgba(184, 150, 12, 0.3)',
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.2)',
+                        borderColor: 'rgba(var(--color-gold-rgb), 0.3)',
                       }}
                     >
                       <ValueIcon className="h-8 w-8" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
@@ -261,10 +257,10 @@ export default function AboutPage() {
                     <h3 className="text-display-thin text-xl mb-4" style={{ color: 'var(--color-cream)' }}>
                       {value.title}
                     </h3>
-                    <p className="text-body-relaxed text-sm" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                    <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                       {value.description}
                     </p>
-                  </motion.div>
+                  </div>
                 </Reveal>
               );
             })}
@@ -274,8 +270,6 @@ export default function AboutPage() {
 
       {/* Timeline Section */}
       <TimelineSection about={about} />
-
-      <div className="ornate-divider" />
 
       {/* Team Section */}
       <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
@@ -293,10 +287,6 @@ export default function AboutPage() {
             {about.team.map((member, index) => (
               <Reveal key={member.name} delay={index * 0.1} direction={index % 2 === 0 ? 'left' : 'right'}>
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
                   whileHover={{ y: -3 }}
                   className="luxury-card text-center group"
                 >
@@ -351,26 +341,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
-
-      {/* Join Us CTA Section */}
-      <section className="py-24 md:py-32 section-contrast">
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10 text-center">
-          <Reveal>
-            <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>GET INVOLVED</p>
-            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight mt-3 mb-6" style={{ color: 'var(--color-cream)' }}>
-              Join Us on the Playa
-            </h2>
-            <p className="font-accent text-lg md:text-xl max-w-2xl mx-auto mb-10" style={{ color: 'rgba(250, 247, 240, 0.85)' }}>
-              Whether you&apos;re a builder, a DJ, an artist, or just someone who loves good tea and better company &mdash; there&apos;s a place for you at Camp Alborz.
-            </p>
-            <Link href="/apply" className="cta-primary cta-shimmer" style={{ backgroundColor: 'var(--color-cream)', color: 'var(--color-ink)' }}>
-              <span>Apply for Membership</span>
-              <span><ArrowRight size={18} aria-hidden="true" /></span>
-            </Link>
-          </Reveal>
-        </div>
-      </section>
     </main>
   );
 }

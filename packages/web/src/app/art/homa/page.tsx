@@ -144,7 +144,7 @@ export default function HomaPage() {
             ].map((spec, index) => (
               <Reveal key={spec.label} delay={index * 0.1} direction={index % 2 === 0 ? 'left' : 'right'}>
                 <div className="flex items-start gap-4 py-4">
-                  <div className="flex-shrink-0 p-3 rounded-full border" style={{ backgroundColor: 'rgba(184,150,12,0.1)', borderColor: 'rgba(184,150,12,0.2)' }}>
+                  <div className="flex-shrink-0 p-3 rounded-full border" style={{ backgroundColor: 'rgba(var(--color-gold-rgb),0.1)', borderColor: 'rgba(var(--color-gold-rgb),0.2)' }}>
                     <spec.icon className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
@@ -170,12 +170,12 @@ export default function HomaPage() {
                 THE MYTHOLOGY
               </p>
               <div className="blockquote-elegant">
-                <p className="font-accent text-xl md:text-2xl italic leading-relaxed" style={{ color: 'rgba(250,247,240,0.9)' }}>
+                <p className="font-accent text-xl md:text-2xl italic leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb),0.9)' }}>
                   The Huma bird is a mythical creature of Persian legends and fables, a common motif in Persian art and culture. Like the phoenix, it is said to never alight on the ground, and its shadow is said to be auspicious.
                 </p>
               </div>
               <div className="ornate-divider mt-10" style={{ filter: 'brightness(1.3)' }} />
-              <p className="text-body-relaxed mt-8" style={{ color: 'rgba(250,247,240,0.7)' }}>
+              <p className="text-body-relaxed mt-8" style={{ color: 'rgba(var(--color-cream-rgb),0.7)' }}>
                 In Persian mythology, it was believed that the Huma bird could never be caught, and that anyone who spotted its shadow would be blessed with great fortune.
               </p>
             </div>

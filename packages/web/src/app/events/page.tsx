@@ -50,7 +50,7 @@ export default function EventsPage() {
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAQH/8QAIBAAAgICAgIDAAAAAAAAAAAAAQIDEQAEBSESMRNBYf/EABUBAQEAAAAAAAAAAAAAAAAAAAID/8QAGREAAwEBAQAAAAAAAAAAAAAAAAECAxEh/9oADAMBEQIRAxEAPwCbt8Rw24hTf2mCPKhYswUfXX5jPIe+4mK8o+sYzpy0YqmH//Z"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--color-cream), transparent, transparent)` }} />
+
         </motion.div>
 
         <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
@@ -111,8 +111,8 @@ export default function EventsPage() {
                     <div
                       className="inline-flex p-4 rounded-full mb-6 transition-transform duration-300 group-hover:scale-110"
                       style={{
-                        backgroundColor: 'rgba(184, 150, 12, 0.15)',
-                        border: '1px solid rgba(184, 150, 12, 0.25)',
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)',
+                        border: '1px solid rgba(var(--color-gold-rgb), 0.25)',
                       }}
                     >
                       <TypeIcon className="h-7 w-7" style={{ color: 'var(--color-gold)' }} />
@@ -163,15 +163,15 @@ export default function EventsPage() {
                     }`}
                     style={{
                       backgroundColor: isFeatured ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.05)',
-                      borderColor: isFeatured ? 'rgba(184, 150, 12, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+                      borderColor: isFeatured ? 'rgba(var(--color-gold-rgb), 0.25)' : 'rgba(255, 255, 255, 0.1)',
                     }}
                   >
                     <div className="flex items-start gap-5">
                       <div
                         className="flex-shrink-0 p-4 rounded-full"
                         style={{
-                          backgroundColor: 'rgba(184, 150, 12, 0.15)',
-                          border: '1px solid rgba(184, 150, 12, 0.25)',
+                          backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)',
+                          border: '1px solid rgba(var(--color-gold-rgb), 0.25)',
                         }}
                       >
                         <EventIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
@@ -320,9 +320,6 @@ export default function EventsPage() {
         </section>
       )}
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" style={{ color: 'var(--color-gold-muted)' }}>&#9670;</div>
-
       {/* Config-driven CTA Section */}
       {events.cta && (
         <section className="py-24 md:py-32">
@@ -346,26 +343,6 @@ export default function EventsPage() {
         </section>
       )}
 
-      {/* Final CTA - Apply Now */}
-      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
-          <Reveal>
-            <div className="text-center space-y-6 max-w-2xl mx-auto">
-              <p className="text-eyebrow">JOIN US</p>
-              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
-                Don&apos;t Miss Out &mdash; Apply Now
-              </h2>
-              <p className="font-accent text-lg" style={{ color: 'var(--color-ink-soft)' }}>
-                Become part of our community and experience the magic of Camp Alborz firsthand.
-              </p>
-              <Link href="/apply" className="cta-primary inline-flex">
-                <span>Apply for Membership</span>
-                <ArrowRight size={18} aria-hidden="true" />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </main>
   );
 }

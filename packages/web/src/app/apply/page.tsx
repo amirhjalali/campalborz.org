@@ -158,6 +158,8 @@ export default function ApplyPage() {
             fill
             className="object-cover"
             priority
+            quality={90}
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </motion.div>
@@ -519,7 +521,7 @@ export default function ApplyPage() {
                     {index % 2 === 0 ? (
                       <StepIcon className="h-6 w-6 mx-auto mb-5" style={{ color: 'var(--color-gold-muted)' }} />
                     ) : (
-                      <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                      <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                         <StepIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
                     )}
@@ -529,7 +531,7 @@ export default function ApplyPage() {
                     <h3 className="text-display-thin text-lg mb-3" style={{ color: 'var(--color-cream)' }}>
                       {step.title}
                     </h3>
-                    <p className="text-body-relaxed text-sm" style={{ color: 'rgba(250, 247, 240, 0.7)' }}>
+                    <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}>
                       {step.description}
                     </p>
                   </div>

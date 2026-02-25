@@ -111,7 +111,7 @@ export default function DamavandPage() {
                 <p>
                   Damavand is the name of the largest peak in the Alborz mountain range. For us, Damavand is our first Art Car. It is our home away from home and our way to take the Alborz spirit on the move. In 2022 Damavand made its debut appearance on the playa.
                 </p>
-                <blockquote className="font-accent text-xl md:text-2xl italic border-l-2 pl-6 py-2 my-8 text-left" style={{ color: 'var(--color-ink)', borderColor: 'rgba(184,150,12,0.4)' }}>
+                <blockquote className="font-accent text-xl md:text-2xl italic border-l-2 pl-6 py-2 my-8 text-left" style={{ color: 'var(--color-ink)', borderColor: 'rgba(var(--color-gold-rgb),0.4)' }}>
                   Our home away from home -- our way to take the Alborz spirit on the move.
                 </blockquote>
                 <p>
@@ -205,7 +205,7 @@ export default function DamavandPage() {
               <Reveal key={spec.label} delay={index * 0.1}>
                 <div className="text-center py-3">
                   <spec.icon className="h-4 w-4 mx-auto mb-2" style={{ color: 'var(--color-gold-muted)' }} />
-                  <p className="text-caption text-[10px] mb-0.5" style={{ color: 'rgba(250,247,240,0.6)' }}>{spec.label}</p>
+                  <p className="text-caption text-[11px] mb-0.5" style={{ color: 'rgba(var(--color-cream-rgb),0.6)' }}>{spec.label}</p>
                   <p className="text-display-thin text-base" style={{ color: 'var(--color-cream)' }}>{spec.value}</p>
                 </div>
               </Reveal>

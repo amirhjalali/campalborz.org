@@ -43,10 +43,10 @@ const artists = [
 
 const offerings = [
   {
-    title: 'Chai & Hospitality',
-    description: 'Hot Persian chai from dawn to dusk. Sit, sip, and connect with strangers who become family.',
+    title: 'Tea & Hospitality',
+    description: 'Hot Persian tea from dawn to dusk. Sit, sip, and connect with strangers who become family.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <path d="M8 18h24v18a6 6 0 01-6 6H14a6 6 0 01-6-6V18z" />
         <path d="M32 22h4a4 4 0 010 8h-4" />
         <path d="M14 8c0 0 2-4 6-4s6 4 6 4" strokeLinecap="round" />
@@ -58,7 +58,7 @@ const offerings = [
     title: 'Art Cars',
     description: 'HOMA and DAMAVAND roam the playa nightly — rolling temples of light, sound, and Persian geometry.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <circle cx="24" cy="24" r="18" />
         <path d="M24 6v36M6 24h36" />
         <path d="M10.1 10.1l27.8 27.8M37.9 10.1L10.1 37.9" />
@@ -70,7 +70,7 @@ const offerings = [
     title: 'Sound & Music',
     description: 'Live DJs blend Persian classical with electronic. The desert becomes a dance floor under the stars.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <path d="M20 8v28a6 6 0 11-6-6h6" />
         <path d="M20 18l16-6v22a6 6 0 11-6-6h6" />
       </svg>
@@ -80,7 +80,7 @@ const offerings = [
     title: 'Hookah Lounge',
     description: 'Traditional hookah under a hand-built shade structure. Stories exchanged, friendships forged.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <path d="M24 4v8M24 12c-6 0-10 4-10 10v2h20v-2c0-6-4-10-10-10z" />
         <path d="M14 24v8c0 2 2 4 4 4h2" strokeLinecap="round" />
         <path d="M20 36h8" strokeLinecap="round" />
@@ -95,22 +95,22 @@ const campQAs = [
   {
     question: 'What is Camp Alborz?',
     answer:
-      "A Burning Man theme camp rooted in Persian hospitality that's been on the playa since 2018. Art cars, chai, sound systems, and a shaded space for everyone.",
+      'A 501(c)(3) non-profit music and arts organization celebrating Persian culture through events, art, and community. We\'ve been on the playa since 2014.',
   },
   {
-    question: "What does 'TOMORROW-TODAY' mean?",
+    question: 'Where does the name come from?',
     answer:
-      "A reminder that the future isn't somewhere out there — it's what we're building right now. Less philosophy, more doing stuff together.",
+      'Alborz is Iran\'s greatest mountain range — a symbol of resilience and beauty. Like the mountains, we bring something enduring to the desert.',
   },
   {
-    question: 'What do you offer at camp?',
+    question: 'What happens at camp?',
     answer:
-      'Hot chai all day. Hookah lounge. HOMA and DAMAVAND art cars. Calligraphy workshops. Camp dinners with homemade Persian food.',
+      'Hot tea all day. Hookah lounge. HOMA and DAMAVAND art cars on the playa nightly. Live DJs blending Persian classical with electronic. Camp dinners with homemade Persian food.',
   },
   {
-    question: 'How can I join?',
+    question: 'How can I get involved?',
     answer:
-      'Applications open every year around March. We look for people who want to contribute — whether that means building, cooking, DJing, or just being genuinely present.',
+      'Come find us on the playa — everyone is welcome. If you\'d like to support our mission, donations help us build art, throw events, and keep the tea flowing year-round.',
   },
 ];
 
@@ -147,46 +147,64 @@ export default function HomePage() {
     <>
       <main>
         {/* ============================================ */}
-        {/* 1. HERO — Full viewport split grid            */}
+        {/* 1. HERO — Full-bleed image with text overlay  */}
         {/* ============================================ */}
         <section
           ref={heroRef}
-          className="relative min-h-screen grid grid-cols-1 lg:grid-cols-2 overflow-hidden"
+          className="relative min-h-screen overflow-hidden flex items-center"
         >
-          {/* Left: Text */}
+          {/* Full-bleed background image with parallax */}
+          <motion.div className="absolute inset-0 -top-[15%] -bottom-[15%]" style={{ y: heroImageY }}>
+            <Image
+              src="/images/playa_camp.webp"
+              alt="Camp Alborz at golden hour on the playa"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </motion.div>
+
+          {/* Dark overlay for text legibility */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.1) 100%)',
+            }}
+          />
+
+          {/* Text content */}
           <motion.div
-            className="relative flex flex-col justify-center px-8 py-24 md:px-16 md:py-20 lg:px-20 z-10"
+            className="relative z-10 px-8 md:px-16 lg:px-20 max-w-3xl"
             style={{ opacity: heroOpacity }}
           >
             <motion.p
-              className="text-eyebrow mb-8"
+              className="text-[11px] tracking-[0.25em] uppercase mb-8 text-white/70"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              Burning Man Theme Camp · Est. 2018
+              501(c)(3) Music &amp; Arts Organization
             </motion.p>
 
             <motion.h1
-              className="font-heading text-5xl md:text-6xl lg:text-[5.5rem] font-normal leading-[0.95] tracking-tight mb-10"
+              className="font-display text-5xl md:text-6xl lg:text-[5.5rem] font-normal leading-[0.95] tracking-tight mb-10 text-white"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
               Camp<br />
-              <em className="italic" style={{ color: 'var(--color-terracotta)' }}>Alborz</em>
+              <em className="italic text-[#e8a87c]">Alborz</em>
             </motion.h1>
 
             <motion.p
-              className="text-[15px] leading-[1.85] max-w-[420px] mb-12"
-              style={{ color: 'var(--color-ink-soft)' }}
+              className="text-[15px] leading-[1.85] max-w-[420px] mb-12 text-white/80"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              Persian culture, radical hospitality, and art on the playa.
-              Named after Iran&apos;s greatest mountain range — where earth
-              meets sky. We build, we gather, we transform.
+              Celebrating Persian culture worldwide through music, food, and art.
+              The legendary hospitality, without any of the baggage.
             </motion.p>
 
             <motion.div
@@ -196,52 +214,19 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               <Link
-                href="/apply"
-                className="cta-primary text-xs"
+                href="/donate"
+                className="inline-flex items-center bg-white text-[#1a1a18] px-8 py-3.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-all duration-300 hover:bg-[#e8a87c] hover:text-white"
               >
-                <span>Join Our Camp</span>
+                <span>Support Us</span>
               </Link>
               <Link
                 href="/about"
-                className="text-[13px] border-b pb-0.5 transition-colors hover:border-ink"
-                style={{ color: 'var(--color-ink-soft)', borderColor: 'var(--color-ink-soft)' }}
+                className="text-[13px] border-b pb-0.5 transition-colors text-white/70 border-white/40 hover:text-white hover:border-white"
               >
                 Our Story
               </Link>
             </motion.div>
-
-            {/* Decorative watermark */}
-            <div className="absolute bottom-10 right-16 w-[120px] h-[120px] opacity-[0.06] pointer-events-none hidden lg:block">
-              <Image
-                src="/images/persian_pattern.webp"
-                alt=""
-                fill
-                className="object-contain"
-                aria-hidden="true"
-              />
-            </div>
           </motion.div>
-
-          {/* Right: Full-bleed image with parallax */}
-          <div className="relative min-h-[450px] overflow-hidden">
-            <motion.div className="absolute inset-0 -top-[15%] -bottom-[15%]" style={{ y: heroImageY }}>
-              <Image
-                src="/images/playa_camp.webp"
-                alt="Camp Alborz at golden hour on the playa"
-                fill
-                priority
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </motion.div>
-            {/* Image overlay for depth */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(to right, var(--color-cream) 0%, transparent 12%)',
-              }}
-            />
-          </div>
 
           {/* Scroll indicator */}
           <motion.div
@@ -250,15 +235,11 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.6 }}
           >
-            <span
-              className="text-[10px] tracking-[0.3em] uppercase"
-              style={{ color: 'var(--color-ink-faint)' }}
-            >
+            <span className="text-[11px] tracking-[0.3em] uppercase text-white/50">
               Scroll
             </span>
             <motion.div
-              className="w-px h-8"
-              style={{ backgroundColor: 'var(--color-ink-faint)' }}
+              className="w-px h-8 bg-white/40"
               animate={{ scaleY: [0, 1, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
@@ -275,31 +256,30 @@ export default function HomePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <div className="grid grid-cols-2 md:grid-cols-4">
               {[
-                { value: '8', label: 'Years on Playa' },
-                { value: '45+', label: 'Camp Members' },
-                { value: '3', label: 'Art Installations' },
-                { value: '\u221E', label: 'Cups of Chai' },
+                { value: '10', label: 'Burns & Counting' },
+                { value: '150+', label: 'Alborzians' },
+                { value: '2', label: 'Art Cars' },
+                { value: '\u221E', label: 'Cups of Tea' },
               ].map((stat, i) => (
-                <Reveal key={stat.label} delay={i * 0.1}>
-                  <div
-                    className={`py-10 md:py-12 text-center${
-                      i < 3 ? ' border-r' : ''
-                    }${i < 2 ? ' max-md:border-b' : ''}${
-                      i === 2 ? ' max-md:border-r-0' : ''
-                    }`}
-                    style={{ borderColor: 'var(--color-warm-border)' }}
+                <div
+                  key={stat.label}
+                  className={`py-10 md:py-12 text-center${
+                    i < 3 ? ' border-r' : ''
+                  }${i < 2 ? ' max-md:border-b' : ''}${
+                    i === 2 ? ' max-md:border-r-0' : ''
+                  }`}
+                  style={{ borderColor: 'var(--color-warm-border)' }}
+                >
+                  <p className="font-display text-4xl md:text-5xl font-light tracking-wide mb-2">
+                    {stat.value}
+                  </p>
+                  <p
+                    className="text-[11px] tracking-[0.2em] uppercase font-medium"
+                    style={{ color: 'var(--color-ink-faint)' }}
                   >
-                    <p className="font-display text-4xl md:text-5xl font-light tracking-wide mb-2">
-                      {stat.value}
-                    </p>
-                    <p
-                      className="text-[10px] tracking-[0.2em] uppercase font-medium"
-                      style={{ color: 'var(--color-ink-faint)' }}
-                    >
-                      {stat.label}
-                    </p>
-                  </div>
-                </Reveal>
+                    {stat.label}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -312,53 +292,46 @@ export default function HomePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-8 md:gap-20">
               {/* Left label */}
-              <Reveal direction="left">
-                <div>
-                  <p
-                    className="font-display text-8xl md:text-9xl font-light tracking-wide opacity-[0.06] leading-none mb-3"
-                    aria-hidden="true"
-                  >
-                    01
-                  </p>
-                  <p className="text-eyebrow">
-                    Our Story
-                  </p>
-                </div>
-              </Reveal>
+              <div>
+                <p
+                  className="font-display text-8xl md:text-9xl font-light tracking-wide opacity-[0.06] leading-none mb-3"
+                  aria-hidden="true"
+                >
+                  01
+                </p>
+                <p className="text-eyebrow">
+                  Our Story
+                </p>
+              </div>
 
               {/* Right content */}
               <div>
                 <Reveal delay={0.1}>
                   <h2 className="font-display font-light text-2xl md:text-3xl lg:text-[2.75rem] tracking-wide leading-snug mb-10">
-                    Radical hospitality is an<br className="hidden md:block" /> ancient Persian invention
+                    Persian culture, music &amp; art.<br className="hidden md:block" /> Without any of the baggage.
                   </h2>
                 </Reveal>
 
-                <Reveal delay={0.2}>
-                  <div
-                    className="space-y-6 text-[15px] leading-[1.85]"
-                    style={{ color: 'var(--color-ink-soft)' }}
-                  >
-                    <p>
-                      In Persian culture, the concept of{' '}
-                      <em className="font-accent not-italic" style={{ color: 'var(--color-ink)', fontStyle: 'italic' }}>
-                        mehman-navazi
-                      </em>
-                      — treating every guest as a gift from
-                      God — has shaped how we gather for over 3,000 years. When a
-                      stranger arrives, you serve the best you have. No questions
-                      asked.
-                    </p>
-                    <p>
-                      Camp Alborz carries that tradition into Black Rock City.
-                      Every year we build a space where chai flows from dawn to
-                      dusk, where art cars light up the night, and where anyone can
-                      sit down and feel at home. It is not about being Persian. It
-                      is about the oldest form of hospitality meeting the newest
-                      kind of community.
-                    </p>
-                  </div>
-                </Reveal>
+                <div
+                  className="space-y-6 text-[15px] leading-[1.85]"
+                  style={{ color: 'var(--color-ink-soft)' }}
+                >
+                  <p>
+                    Alborz is a 501(c)(3) non-profit music and arts organization,
+                    supporting an inclusive and diverse community of performers
+                    and artists through events, partnerships, and community
+                    involvement. We were founded to celebrate Persian culture
+                    worldwide — through music, food, and art. The legendary
+                    hospitality, none of the pretense.
+                  </p>
+                  <p>
+                    Many of us live far away from our ancestral lands, but we
+                    share the best parts of our cultural heritage with one
+                    another and the broader community. We gather all over the
+                    globe but coalesce around our love for hosting new and old
+                    friends at our home — Black Rock City.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -386,29 +359,27 @@ export default function HomePage() {
             </Reveal>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-              {offerings.map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.1}>
-                  <div className="group text-center lg:text-left p-6 rounded-lg transition-colors duration-300 hover:bg-white/50 dark:hover:bg-white/5">
-                    <div
-                      className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-colors duration-300"
-                      style={{
-                        color: 'var(--color-terracotta)',
-                        backgroundColor: 'rgba(var(--color-terracotta-rgb), 0.08)',
-                      }}
-                    >
-                      {item.icon}
-                    </div>
-                    <h3 className="font-display text-lg tracking-wide mb-3">
-                      {item.title}
-                    </h3>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: 'var(--color-ink-soft)' }}
-                    >
-                      {item.description}
-                    </p>
+              {offerings.map((item) => (
+                <div key={item.title} className="group text-center lg:text-left p-6 rounded-lg transition-colors duration-300 hover:bg-white/50 dark:hover:bg-white/5">
+                  <div
+                    className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-colors duration-300"
+                    style={{
+                      color: 'var(--color-terracotta)',
+                      backgroundColor: 'rgba(var(--color-terracotta-rgb), 0.08)',
+                    }}
+                  >
+                    {item.icon}
                   </div>
-                </Reveal>
+                  <h3 className="font-display text-lg tracking-wide mb-3">
+                    {item.title}
+                  </h3>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: 'var(--color-ink-soft)' }}
+                  >
+                    {item.description}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -448,16 +419,12 @@ export default function HomePage() {
                   &#10022;
                 </span>
               </div>
-            </Reveal>
 
-            <Reveal delay={0.15}>
-              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10" style={{ fontStyle: 'italic' }}>
+              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10">
                 {rumiQuote?.text ||
                   "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."}
               </p>
-            </Reveal>
 
-            <Reveal delay={0.3}>
               <p
                 className="text-xs tracking-[0.35em] uppercase font-medium"
                 style={{ color: 'var(--color-terracotta)' }}
@@ -483,8 +450,8 @@ export default function HomePage() {
             style={{ y: panoramaY }}
           >
             <Image
-              src="/images/playa_camp.webp"
-              alt="Camp Alborz panoramic view at Black Rock City"
+              src="/images/mirror_mosaic.webp"
+              alt="Mirror mosaic art installation at Camp Alborz"
               fill
               className="object-cover"
               sizes="100vw"
@@ -492,19 +459,16 @@ export default function HomePage() {
             />
           </motion.div>
 
-          {/* Gradient overlays for depth */}
+          {/* Subtle dark overlay for contrast */}
           <div
-            className="absolute inset-0 z-10"
-            style={{
-              background: 'linear-gradient(to bottom, var(--color-cream) 0%, transparent 20%, transparent 80%, var(--color-cream) 100%)',
-            }}
+            className="absolute inset-0 z-10 bg-black/20"
           />
 
           <p
-            className="absolute bottom-6 right-8 text-[10px] tracking-[0.2em] uppercase text-white/60 z-20"
+            className="absolute bottom-6 right-8 text-[11px] tracking-[0.2em] uppercase text-white/60 z-20"
             style={{ textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}
           >
-            Black Rock City, 2025
+            Black Rock City
           </p>
         </section>
 
@@ -537,12 +501,10 @@ export default function HomePage() {
             </Reveal>
 
             {/* Decorative line */}
-            <Reveal>
-              <div
-                className="h-px mb-14 animate-draw-line"
-                style={{ backgroundColor: 'var(--color-warm-border)' }}
-              />
-            </Reveal>
+            <div
+              className="h-px mb-14 animate-draw-line"
+              style={{ backgroundColor: 'var(--color-warm-border)' }}
+            />
 
             {/* Staggered 3-column grid */}
             <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr_1fr] gap-8 md:gap-10">
@@ -551,7 +513,7 @@ export default function HomePage() {
                   i === 0 ? 'mt-0' : i === 1 ? 'md:mt-24' : 'md:mt-10';
 
                 return (
-                  <Reveal key={artist.number} delay={i * 0.15} direction="up">
+                  <Reveal key={artist.number} delay={0} direction="up">
                     <article className={`${marginTop} group`}>
                       {/* Image with hover zoom */}
                       <div className="relative aspect-[3/4] overflow-hidden rounded-sm mb-6 image-hover-zoom">
@@ -581,13 +543,13 @@ export default function HomePage() {
                       </p>
 
                       {/* Name */}
-                      <h3 className="font-accent text-xl md:text-2xl mb-1.5" style={{ fontStyle: 'italic' }}>
+                      <h3 className="font-accent text-xl md:text-2xl mb-1.5">
                         {artist.name}
                       </h3>
 
                       {/* Medium */}
                       <p
-                        className="text-[10px] tracking-[0.12em] uppercase mb-1"
+                        className="text-[11px] tracking-[0.12em] uppercase mb-1"
                         style={{ color: 'var(--color-ink-faint)' }}
                       >
                         {artist.medium}
@@ -656,7 +618,7 @@ export default function HomePage() {
                 Come find{' '}
                 <em
                   className="font-accent"
-                  style={{ color: 'var(--color-terracotta)', fontStyle: 'italic' }}
+                  style={{ color: 'var(--color-terracotta)' }}
                 >
                   your field
                 </em>
@@ -668,19 +630,19 @@ export default function HomePage() {
                 className="text-base md:text-[17px] leading-relaxed mb-12 max-w-lg mx-auto"
                 style={{ color: 'var(--color-ink-soft)' }}
               >
-                Applications for the 2026 season are open. Come build art, serve
-                tea, and be part of something that has been going for almost a
-                decade.
+                Our inclusive events foster cross-cultural understanding and
+                community engagement. Help us preserve and promote the vibrant
+                Persian culture.
               </p>
             </Reveal>
 
             <Reveal delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/apply" className="cta-primary text-sm">
-                  <span>Apply to Join</span>
+                <Link href="/donate" className="cta-primary text-sm">
+                  <span>Support Our Mission</span>
                 </Link>
-                <Link href="/donate" className="cta-secondary text-sm">
-                  <span>Support Our Camp</span>
+                <Link href="/about" className="cta-secondary text-sm">
+                  <span>Learn More</span>
                 </Link>
               </div>
             </Reveal>
@@ -710,18 +672,16 @@ export default function HomePage() {
               </div>
             </Reveal>
 
-            <Reveal>
-              <div
-                className="h-px mb-12"
-                style={{ backgroundColor: 'var(--color-warm-border)' }}
-              />
-            </Reveal>
+            <div
+              className="h-px mb-12"
+              style={{ backgroundColor: 'var(--color-warm-border)' }}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
-              {campQAs.map(({ question, answer }, i) => (
-                <Reveal key={question} delay={i * 0.12}>
+              {campQAs.map(({ question, answer }) => (
+                <Reveal key={question} delay={0}>
                   <div className="group">
-                    <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta" style={{ fontStyle: 'italic' }}>
+                    <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta">
                       {question}
                     </h3>
                     <p

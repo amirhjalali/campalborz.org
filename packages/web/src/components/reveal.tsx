@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 
 export function Reveal({
   children,
@@ -16,6 +16,11 @@ export function Reveal({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   const directionMap = {
     up: { y: 32, x: 0 },

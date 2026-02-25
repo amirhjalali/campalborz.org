@@ -116,14 +116,10 @@ export default function ArtPage() {
 
               return (
                 <Reveal key={category.name} delay={index * 0.1}>
-                  <motion.div
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  <div
                     className="luxury-card text-center"
                   >
-                    <div className="inline-flex p-4 rounded-full border mb-5" style={{ backgroundColor: 'rgba(184,150,12,0.15)', borderColor: 'rgba(184,150,12,0.25)' }}>
+                    <div className="inline-flex p-4 rounded-full border mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb),0.15)', borderColor: 'rgba(var(--color-gold-rgb),0.25)' }}>
                       <CategoryIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                     </div>
                     <h3 className="text-display-thin text-lg mb-2">{category.name}</h3>
@@ -133,7 +129,7 @@ export default function ArtPage() {
                     <p className="text-xs uppercase tracking-[0.2em]" style={{ color: 'var(--color-ink-soft)' }}>
                       Projects
                     </p>
-                  </motion.div>
+                  </div>
                 </Reveal>
               );
             })}
@@ -154,7 +150,7 @@ export default function ArtPage() {
               <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                 Featured Art Cars
               </h2>
-              <p className="font-accent text-lg max-w-2xl mx-auto" style={{ color: 'rgba(250,247,240,0.8)' }}>
+              <p className="font-accent text-lg max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-cream-rgb),0.8)' }}>
                 Our signature artistic contributions to Black Rock City
               </p>
             </div>
@@ -207,11 +203,11 @@ export default function ArtPage() {
                           </p>
                         </div>
 
-                        <p className="text-body-relaxed" style={{ color: 'rgba(250,247,240,0.8)' }}>
+                        <p className="text-body-relaxed" style={{ color: 'rgba(var(--color-cream-rgb),0.8)' }}>
                           {installation.description}
                         </p>
 
-                        <div className="flex flex-wrap gap-6 text-sm" style={{ color: 'rgba(250,247,240,0.6)' }}>
+                        <div className="flex flex-wrap gap-6 text-sm" style={{ color: 'rgba(var(--color-cream-rgb),0.6)' }}>
                           <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
                             {installation.location}
@@ -268,11 +264,7 @@ export default function ArtPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {art.collaborations.map((collab, index) => (
                 <Reveal key={collab.title} delay={index * 0.1} direction={index % 2 === 0 ? 'up' : 'right'}>
-                  <motion.div
-                    initial={{ y: 20 }}
-                    whileInView={{ y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  <div
                     className="luxury-card"
                   >
                     <span className="text-eyebrow">
@@ -299,7 +291,7 @@ export default function ArtPage() {
                         <ExternalLink className="h-3.5 w-3.5" />
                       </Link>
                     )}
-                  </motion.div>
+                  </div>
                 </Reveal>
               ))}
             </div>

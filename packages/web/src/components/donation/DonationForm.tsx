@@ -1,19 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from 'sonner';
 import { Heart, DollarSign, CheckCircle, Info, CreditCard, Lock } from "lucide-react";
 
 interface DonationFormProps {
   campaigns?: string[];
   tenantId?: string;
+  initialAmount?: number | null;
+  prefillKey?: number;
   onSuccess?: (donationId: string) => void;
 }
 
 const suggestedAmounts = [25, 75, 150, 300, 500];
 
-export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFormProps) {
-  const [amount, setAmount] = useState<number | null>(null);
+export function DonationForm({ campaigns = [], tenantId, initialAmount = null, prefillKey = 0, onSuccess }: DonationFormProps) {
+  const [amount, setAmount] = useState<number | null>(initialAmount);
   const [customAmount, setCustomAmount] = useState("");
   const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
   const [selectedCampaign, setSelectedCampaign] = useState("");
@@ -24,6 +26,15 @@ export function DonationForm({ campaigns = [], tenantId, onSuccess }: DonationFo
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
+
+  useEffect(() => {
+    if (prefillKey > 0) {
+      setAmount(initialAmount);
+      setCustomAmount("");
+      setStep("amount");
+      setError(null);
+    }
+  }, [prefillKey, initialAmount]);
 
   const handleAmountSelection = (selectedAmount: number) => {
     setAmount(selectedAmount);

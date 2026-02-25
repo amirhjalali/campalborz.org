@@ -127,7 +127,7 @@ export const contentConfig: ContentConfig = {
   features: [
     {
       title: "Tea House & Hookah Lounge",
-      description: "Daily Persian chai, saffron sweets, and open hospitality in our shaded majlis.",
+      description: "Daily Persian tea, saffron sweets, and open hospitality in our shaded majlis.",
       icon: "coffee",
       link: "/culture",
       gradient: "from-burnt-sienna to-antique-gold",
@@ -432,7 +432,7 @@ export const contentConfig: ContentConfig = {
       {
         day: "Daily Schedule",
         events: [
-          { time: "Morning", title: "Tea House Opens", description: "Persian chai and light refreshments available" },
+          { time: "Morning", title: "Tea House Opens", description: "Persian tea and light refreshments available" },
           { time: "Afternoon", title: "Open Hospitality", description: "Hookah lounge and shade for visitors" },
           { time: "Evening", title: "Community Dinner", description: "Shared meals for camp members" },
         ],
@@ -500,7 +500,7 @@ export const contentConfig: ContentConfig = {
       {
         amount: 25,
         title: "Tea Fund",
-        description: "Keeps the chai pot full all week",
+        description: "Keeps the tea pot full all week",
         perks: ["Camp sticker", "Thank you email"],
         popular: false,
       },

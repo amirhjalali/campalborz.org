@@ -13,7 +13,7 @@ import { pageMetadata, siteConfig } from '@/lib/metadata';
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
-  weight: ['400', '600'],
+  weight: ['400'],
   style: ['normal', 'italic'],
   display: 'swap',
 });

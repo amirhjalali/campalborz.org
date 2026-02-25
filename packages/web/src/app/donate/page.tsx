@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -25,6 +25,15 @@ export default function DonatePage() {
     target: heroRef,
     offset: ['start start', 'end start'],
   });
+
+  const [prefilledAmount, setPrefilledAmount] = useState<number | null>(null);
+  const [prefillKey, setPrefillKey] = useState(0);
+
+  const scrollToFormAndSetAmount = useCallback((amountInCents: number | null) => {
+    setPrefilledAmount(amountInCents);
+    setPrefillKey((k) => k + 1);
+    document.getElementById('donation-form')?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
@@ -103,6 +112,134 @@ export default function DonatePage() {
 
       </section>
 
+      {/* Donation Tiers */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="space-y-4 mb-14">
+              <p className="text-eyebrow">DONATION TIERS</p>
+              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+                Choose Your Support Level
+              </h2>
+              <p className="font-accent text-lg max-w-2xl" style={{ color: 'var(--color-ink-soft)' }}>
+                Every contribution helps us build a stronger, more vibrant community
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {donate.donationTiers.map((tier, index) => (
+              <Reveal key={tier.amount} delay={index * 0.1}>
+                <div
+                  className="relative luxury-card cursor-pointer transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg"
+                  style={tier.popular ? { boxShadow: '0 0 0 2px var(--color-gold)' } : undefined}
+                  onClick={() => scrollToFormAndSetAmount(tier.amount * 100)}
+                >
+                  {tier.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="px-4 py-1 text-white text-xs rounded-full uppercase tracking-[0.1em]" style={{ backgroundColor: 'var(--color-gold)' }}>
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-center mb-6 pt-2">
+                    <p className="text-4xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
+                      ${tier.amount}
+                    </p>
+                    <h3 className="text-display-thin text-xl mb-2">{tier.title}</h3>
+                    <p className="font-accent text-sm" style={{ color: 'var(--color-ink-soft)' }}>{tier.description}</p>
+                  </div>
+
+                  <ul className="space-y-3 mb-8">
+                    {tier.perks.map((perk, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                        <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-sage)' }} />
+                        {perk}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    className={`w-full ${tier.popular ? 'cta-primary cta-shimmer' : 'cta-secondary'}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      scrollToFormAndSetAmount(tier.amount * 100);
+                    }}
+                  >
+                    <span>Donate ${tier.amount}</span>
+                    <ArrowRight size={18} aria-hidden="true" />
+                  </button>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={0.3}>
+            <div className="text-center mt-10">
+              <p style={{ color: 'var(--color-ink-soft)' }} className="mb-4">Want to contribute a different amount?</p>
+              <button
+                className="cta-secondary"
+                onClick={() => scrollToFormAndSetAmount(null)}
+              >
+                <span>Custom Donation</span>
+                <ArrowRight size={18} aria-hidden="true" />
+              </button>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Donation Form */}
+      {donate.donationForm && (
+        <section id="donation-form" className="py-24 md:py-32">
+          <div className="max-w-2xl mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="text-center space-y-4 mb-10">
+                <p className="text-eyebrow">MAKE A GIFT</p>
+                <h2 className="text-display-thin text-2xl md:text-3xl">
+                  {donate.donationForm.title}
+                </h2>
+                <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                  {donate.donationForm.description}
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.15}>
+              <div className="frame-panel">
+                <DonationForm
+                  campaigns={donate.donationForm.campaigns}
+                  initialAmount={prefilledAmount}
+                  prefillKey={prefillKey}
+                  onSuccess={(donationId) => {
+                    console.log('Donation successful:', donationId);
+                  }}
+                />
+              </div>
+            </Reveal>
+
+            {/* Trust Indicators */}
+            <Reveal delay={0.25}>
+              <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs" style={{ color: 'rgba(var(--color-ink-rgb), 0.5)' }}>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                  <span>Secure Payment</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                  <span>501(c)(3) Tax-Deductible</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                  <span>100% Goes to Community</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
+
       {/* Impact Stats */}
       <section className="py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
@@ -121,7 +258,7 @@ export default function DonatePage() {
               return (
                 <Reveal key={stat.label} delay={index * 0.1}>
                   <div className="luxury-card text-center">
-                    <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                    <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                       <StatIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                     </div>
                     <p className="text-3xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
@@ -161,14 +298,14 @@ export default function DonatePage() {
                     <div className="border rounded-2xl p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
                       <div className="flex items-start justify-between gap-4 mb-6">
                         <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                          <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                             <OptionIcon className="h-5 w-5" style={{ color: 'var(--color-gold-muted)' }} />
                           </div>
                           <div>
                             <h3 className="text-display-thin text-lg" style={{ color: 'var(--color-cream)' }}>
                               {option.method}
                             </h3>
-                            <p className="text-sm" style={{ color: 'rgba(250, 247, 240, 0.6)' }}>
+                            <p className="text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.6)' }}>
                               {option.description}
                             </p>
                           </div>
@@ -182,7 +319,7 @@ export default function DonatePage() {
 
                       <ul className="space-y-3 mb-6">
                         {option.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-start gap-3 text-sm" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                          <li key={idx} className="flex items-start gap-3 text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                             <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-gold-muted)' }} />
                             {detail}
                           </li>
@@ -210,74 +347,6 @@ export default function DonatePage() {
         </section>
       )}
 
-      {/* Donation Tiers */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
-          <Reveal>
-            <div className="space-y-4 mb-14">
-              <p className="text-eyebrow">DONATION TIERS</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
-                Choose Your Support Level
-              </h2>
-              <p className="font-accent text-lg max-w-2xl" style={{ color: 'var(--color-ink-soft)' }}>
-                Every contribution helps us build a stronger, more vibrant community
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {donate.donationTiers.map((tier, index) => (
-              <Reveal key={tier.amount} delay={index * 0.1}>
-                <div
-                  className="relative luxury-card"
-                  style={tier.popular ? { boxShadow: '0 0 0 2px var(--color-gold)' } : undefined}
-                >
-                  {tier.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="px-4 py-1 text-white text-xs rounded-full uppercase tracking-[0.1em]" style={{ backgroundColor: 'var(--color-gold)' }}>
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="text-center mb-6 pt-2">
-                    <p className="text-4xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
-                      ${tier.amount}
-                    </p>
-                    <h3 className="text-display-thin text-xl mb-2">{tier.title}</h3>
-                    <p className="font-accent text-sm" style={{ color: 'var(--color-ink-soft)' }}>{tier.description}</p>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {tier.perks.map((perk, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                        <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-sage)' }} />
-                        {perk}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <button className={`w-full ${tier.popular ? 'cta-primary cta-shimmer' : 'cta-secondary'}`}>
-                    <span>Donate ${tier.amount}</span>
-                    <ArrowRight size={18} aria-hidden="true" />
-                  </button>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={0.3}>
-            <div className="text-center mt-10">
-              <p style={{ color: 'var(--color-ink-soft)' }} className="mb-4">Want to contribute a different amount?</p>
-              <button className="cta-secondary">
-                <span>Custom Donation</span>
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       <div className="ornate-divider" />
 
       {/* Funding Priorities */}
@@ -288,7 +357,7 @@ export default function DonatePage() {
               <div className="text-center mb-10">
                 <p className="text-eyebrow mb-3">WHERE YOUR MONEY GOES</p>
                 <h2 className="text-display-thin text-2xl md:text-3xl">
-                  2024 Funding Priorities
+                  2026 Funding Priorities
                 </h2>
               </div>
 
@@ -302,11 +371,11 @@ export default function DonatePage() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                          <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}>
                             <PriorityIcon className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                           </div>
                           <div>
-                            <h4 className="text-display-thin text-lg">{priority.title}</h4>
+                            <h3 className="text-display-thin text-lg">{priority.title}</h3>
                             <p className="text-xs" style={{ color: 'var(--color-ink-soft)' }}>{priority.description}</p>
                           </div>
                         </div>
@@ -341,7 +410,7 @@ export default function DonatePage() {
                   Financial Transparency
                 </h2>
                 <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                  2023 budget breakdown — see exactly how donations were used
+                  2025 budget breakdown — see exactly how donations were used
                 </p>
               </div>
 
@@ -353,7 +422,7 @@ export default function DonatePage() {
                     style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-display-thin text-lg">{item.category}</h4>
+                      <h3 className="text-display-thin text-lg">{item.category}</h3>
                       <div className="flex items-center gap-4">
                         <span className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>{item.percentage}%</span>
                         <span className="text-lg font-display" style={{ color: 'var(--color-gold)' }}>{item.amount}</span>
@@ -395,7 +464,7 @@ export default function DonatePage() {
                 <Reveal key={option.title} delay={index * 0.12}>
                   <div className="border rounded-2xl p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                      <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                         <OptionIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
                       <div>
@@ -405,7 +474,7 @@ export default function DonatePage() {
                         <p className="text-sm" style={{ color: 'var(--color-gold-muted)' }}>{option.amount}</p>
                       </div>
                     </div>
-                    <p className="text-body-relaxed mb-6" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                    <p className="text-body-relaxed mb-6" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                       {option.description}
                     </p>
                     <Link
@@ -431,7 +500,7 @@ export default function DonatePage() {
             <Reveal>
               <div className="frame-panel">
                 <div className="flex flex-col md:flex-row items-start gap-6">
-                  <div className="inline-flex p-4 rounded-full" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                  <div className="inline-flex p-4 rounded-full" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                     <Award className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div className="flex-1">
@@ -461,7 +530,7 @@ export default function DonatePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="luxury-card text-center">
-                <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                   <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
                 </div>
                 <h2 className="text-display-thin text-2xl md:text-3xl mb-3">
@@ -478,7 +547,7 @@ export default function DonatePage() {
                       className="p-6 rounded-xl"
                       style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}
                     >
-                      <h4 className="text-display-thin text-lg mb-2">{tier.title}</h4>
+                      <h3 className="text-display-thin text-lg mb-2">{tier.title}</h3>
                       <p className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>{tier.description}</p>
                     </div>
                   ))}
@@ -494,54 +563,6 @@ export default function DonatePage() {
       )}
 
       <div className="ornate-divider" />
-
-      {/* Donation Form */}
-      {donate.donationForm && (
-        <section className="py-24 md:py-32">
-          <div className="max-w-2xl mx-auto px-5 md:px-10">
-            <Reveal>
-              <div className="text-center space-y-4 mb-10">
-                <p className="text-eyebrow">MAKE A GIFT</p>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
-                  {donate.donationForm.title}
-                </h2>
-                <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                  {donate.donationForm.description}
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.15}>
-              <div className="frame-panel">
-                <DonationForm
-                  campaigns={donate.donationForm.campaigns}
-                  onSuccess={(donationId) => {
-                    console.log('Donation successful:', donationId);
-                  }}
-                />
-              </div>
-            </Reveal>
-
-            {/* Trust Indicators */}
-            <Reveal delay={0.25}>
-              <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs" style={{ color: 'rgba(var(--color-ink-rgb), 0.5)' }}>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>Secure Payment</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>501(c)(3) Tax-Deductible</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>100% Goes to Community</span>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-      )}
 
       {/* Gratitude */}
       {donate.gratitude && (
@@ -570,7 +591,7 @@ export default function DonatePage() {
                 <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                   {donate.cta.title}
                 </h2>
-                <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                   {donate.cta.description}
                 </p>
                 <Link href={donate.cta.buttons.primary.link} className="cta-primary cta-shimmer">

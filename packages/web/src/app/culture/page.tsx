@@ -50,7 +50,6 @@ export default function CulturePage() {
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIRAAAgICAgEFAAAAAAAAAAAAAQIDBAAFERIGEyExcZH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABkRAAIDAQAAAAAAAAAAAAAAAAECABEhMf/aAAwDAQACEQMRAD8Aw/XaZd0knsWp2rIhVFhRQCx9yT8ZZ0dSTXaxq1LMsLMpcy9eRcfnGMZFAFTJP//Z"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-transparent" style={{ background: `linear-gradient(to top, var(--color-cream), transparent, transparent)`, opacity: 0.9 }} />
         </motion.div>
 
         <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
@@ -107,16 +106,12 @@ export default function CulturePage() {
 
               return (
                 <Reveal key={element.title} direction="up" delay={index * 0.1}>
-                  <motion.div
-                    initial={{ y: 16, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.12 + (index > 2 ? 0.05 : 0), ease: [0.22, 1, 0.36, 1] }}
+                  <div
                     className="luxury-card group h-full"
                   >
                     <div
                       className="inline-flex p-4 rounded-full mb-5 transition-transform duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}
+                      style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
                     >
                       <ElementIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                     </div>
@@ -132,7 +127,7 @@ export default function CulturePage() {
                         </div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 </Reveal>
               );
             })}
@@ -166,11 +161,6 @@ export default function CulturePage() {
         </div>
       </section>
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
       {/* Cultural Values */}
       <section className="section-contrast py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
@@ -193,7 +183,7 @@ export default function CulturePage() {
                     <div className="flex items-start gap-5">
                       <div
                         className="flex-shrink-0 p-4 rounded-full"
-                        style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}
+                        style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
                       >
                         <ValueIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
@@ -201,7 +191,7 @@ export default function CulturePage() {
                         <h3 className="font-display text-xl" style={{ color: 'var(--color-cream)' }}>
                           {value.title}
                         </h3>
-                        <p className="text-body-relaxed text-sm" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                        <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                           {value.description}
                         </p>
                         <p className="font-accent text-sm" style={{ color: 'var(--color-gold-muted)' }}>
@@ -216,11 +206,6 @@ export default function CulturePage() {
           </div>
         </div>
       </section>
-
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
 
       {/* Cultural Workshops */}
       <section className="py-24 md:py-32">
@@ -245,7 +230,7 @@ export default function CulturePage() {
                     <h3 className="font-display text-xl" style={{ color: 'var(--color-ink)' }}>{workshop.title}</h3>
                     <span
                       className="px-3 py-1 rounded-full text-xs tracking-[0.1em] uppercase"
-                      style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', color: 'var(--color-gold-muted)' }}
+                      style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', color: 'var(--color-gold-muted)' }}
                     >
                       {workshop.frequency}
                     </span>
@@ -286,11 +271,6 @@ export default function CulturePage() {
         </div>
       </section>
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
       {/* Persian Celebrations */}
       <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
@@ -314,7 +294,7 @@ export default function CulturePage() {
                     <div className="flex items-center gap-4">
                       <div
                         className="p-3 rounded-full"
-                        style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}
+                        style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
                       >
                         <Star className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                       </div>
@@ -351,11 +331,6 @@ export default function CulturePage() {
         </div>
       </section>
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
       {/* Learning Resources */}
       <section className="py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
@@ -365,7 +340,7 @@ export default function CulturePage() {
                 <p className="text-eyebrow">KNOWLEDGE</p>
                 <div
                   className="inline-flex p-3 rounded-full"
-                  style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}
+                  style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
                 >
                   <BookOpen className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                 </div>
@@ -398,11 +373,6 @@ export default function CulturePage() {
         </div>
       </section>
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
       {/* Cultural Bridge */}
       {culture.culturalBridge && (
         <section className="section-contrast py-24 md:py-32">
@@ -410,7 +380,7 @@ export default function CulturePage() {
             <Reveal direction="up">
               <div className="max-w-2xl mx-auto text-center mb-14">
                 <p className="text-eyebrow mb-3" style={{ color: 'var(--color-gold-muted)' }}>BRIDGING WORLDS</p>
-                <blockquote className="font-accent text-2xl md:text-3xl italic leading-relaxed" style={{ color: 'rgba(250, 247, 240, 0.9)' }}>
+                <blockquote className="font-accent text-2xl md:text-3xl italic leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.9)' }}>
                   Building Cultural Bridges
                 </blockquote>
               </div>
@@ -424,7 +394,7 @@ export default function CulturePage() {
                   </h3>
                   <div className="space-y-4">
                     {culture.culturalBridge.mission.map((paragraph, index) => (
-                      <p key={index} className={`text-body-relaxed ${index === 0 ? 'drop-cap' : ''}`} style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                      <p key={index} className={`text-body-relaxed ${index === 0 ? 'drop-cap' : ''}`} style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                         {paragraph}
                       </p>
                     ))}
@@ -444,11 +414,11 @@ export default function CulturePage() {
                         <li key={index} className="flex items-start gap-4">
                           <div
                             className="flex-shrink-0 p-2 rounded-full"
-                            style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}
+                            style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}
                           >
                             <ActionIcon className="h-4 w-4" style={{ color: 'var(--color-gold-muted)' }} />
                           </div>
-                          <span className="text-body-relaxed" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
+                          <span className="text-body-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
                             {action.text}
                           </span>
                         </li>
@@ -489,27 +459,6 @@ export default function CulturePage() {
           </div>
         </section>
       )}
-
-      {/* Experience Persian Culture CTA */}
-      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
-          <Reveal direction="up">
-            <div className="text-center space-y-6 max-w-2xl mx-auto">
-              <p className="text-eyebrow">IMMERSE YOURSELF</p>
-              <h2 className="font-display text-3xl md:text-4xl" style={{ color: 'var(--color-ink)' }}>
-                Experience Persian Culture
-              </h2>
-              <p className="text-body-relaxed text-lg" style={{ color: 'var(--color-ink-soft)' }}>
-                Join us at our upcoming events and discover the beauty of Persian traditions, music, and community.
-              </p>
-              <Link href="/events" className="cta-primary inline-flex">
-                <span>Explore Our Events</span>
-                <span><ArrowRight size={18} aria-hidden="true" /></span>
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </main>
   );
 }

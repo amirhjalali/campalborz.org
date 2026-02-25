@@ -152,7 +152,7 @@ export function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
             <span
-              className="text-xl font-heading tracking-tight transition-colors duration-300 group-hover:text-terracotta"
+              className="text-xl font-display tracking-tight transition-colors duration-300 group-hover:text-terracotta"
               style={{ color: 'var(--color-ink)' }}
             >
               {campConfig.name}
@@ -160,7 +160,7 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1" role="menubar" aria-label="Site pages">
+          <div className="hidden lg:flex items-center space-x-1">
             {navItems.map((item) => (
               <div
                 key={item.label}
@@ -292,7 +292,7 @@ export function Navigation() {
                   <Link
                     href={item.href}
                     className={cn(
-                      'block py-3 text-lg font-heading transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
+                      'block py-3 text-lg font-display transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
                       isActive(item.href)
                         ? 'text-ink'
                         : 'text-ink-soft'

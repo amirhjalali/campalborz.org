@@ -41,24 +41,24 @@ export function Footer() {
             {/* Brand Column */}
             <div className="space-y-5">
               <h3
-                className="font-heading text-2xl tracking-tight"
+                className="font-display text-2xl tracking-tight"
                 style={{ color: 'var(--color-cream)' }}
               >
                 {campConfig.name}
               </h3>
               <p
                 className="text-sm max-w-xs leading-relaxed"
-                style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.72)' }}
               >
                 {footer?.tagline || campConfig.tagline}
               </p>
               <div
                 className="w-12 h-px"
-                style={{ backgroundColor: 'rgba(250, 247, 240, 0.15)' }}
+                style={{ backgroundColor: 'rgba(var(--color-cream-rgb), 0.15)' }}
               />
               <p
-                className="text-[10px] tracking-[0.2em] uppercase"
-                style={{ color: 'rgba(250, 247, 240, 0.25)' }}
+                className="text-[11px] tracking-[0.2em] uppercase"
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.45)' }}
               >
                 {campConfig.taxStatus} Non-Profit Organization
               </p>
@@ -67,8 +67,8 @@ export function Footer() {
             {/* Navigation Column */}
             <div className="space-y-6">
               <h4
-                className="text-[10px] tracking-[0.25em] uppercase font-medium"
-                style={{ color: 'rgba(250, 247, 240, 0.35)' }}
+                className="text-[11px] tracking-[0.25em] uppercase font-medium"
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.5)' }}
               >
                 Navigation
               </h4>
@@ -78,7 +78,7 @@ export function Footer() {
                     key={link.href}
                     href={link.href}
                     className="text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
-                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                    style={{ color: 'rgba(var(--color-cream-rgb), 0.72)' }}
                   >
                     {link.label}
                   </Link>
@@ -89,8 +89,8 @@ export function Footer() {
             {/* Connect Column */}
             <div className="space-y-6">
               <h4
-                className="text-[10px] tracking-[0.25em] uppercase font-medium"
-                style={{ color: 'rgba(250, 247, 240, 0.35)' }}
+                className="text-[11px] tracking-[0.25em] uppercase font-medium"
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.5)' }}
               >
                 Connect
               </h4>
@@ -103,7 +103,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     aria-label={`Follow Camp Alborz on ${link.label} (opens in new tab)`}
                     className="block text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
-                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                    style={{ color: 'rgba(var(--color-cream-rgb), 0.72)' }}
                   >
                     {link.label}
                   </a>
@@ -113,7 +113,7 @@ export function Footer() {
                     href={`mailto:${campConfig.email}`}
                     aria-label={`Send email to ${campConfig.email}`}
                     className="block text-sm transition-colors duration-300 hover:text-gold focus-visible:text-gold"
-                    style={{ color: 'rgba(250, 247, 240, 0.55)' }}
+                    style={{ color: 'rgba(var(--color-cream-rgb), 0.72)' }}
                   >
                     {campConfig.email}
                   </a>
@@ -125,18 +125,18 @@ export function Footer() {
           {/* Bottom Bar */}
           <div
             className="mt-16 pt-8"
-            style={{ borderTop: '1px solid rgba(250, 247, 240, 0.08)' }}
+            style={{ borderTop: '1px solid rgba(var(--color-cream-rgb), 0.08)' }}
           >
             <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
               <p
                 className="text-[11px]"
-                style={{ color: 'rgba(250, 247, 240, 0.25)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.45)' }}
               >
                 &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
               </p>
               <p
                 className="text-[11px] tracking-[0.15em]"
-                style={{ color: 'rgba(250, 247, 240, 0.18)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.4)' }}
               >
                 Black Rock City, Nevada
               </p>

@@ -64,7 +64,7 @@ export default function DonationSuccessPage() {
               {/* Details Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}>
                     <Mail className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
@@ -76,7 +76,7 @@ export default function DonationSuccessPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}>
                     <FileText className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
@@ -98,7 +98,7 @@ export default function DonationSuccessPage() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)' }}>
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}>
                     <Heart className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div>
@@ -140,7 +140,7 @@ export default function DonationSuccessPage() {
                   },
                 ].map((item) => (
                   <div key={item.step} className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                       <span className="text-sm font-display" style={{ color: 'var(--color-gold)' }}>{item.step}</span>
                     </div>
                     <div>
@@ -160,7 +160,7 @@ export default function DonationSuccessPage() {
         <div className="max-w-2xl mx-auto px-5 md:px-10">
           <Reveal direction="none">
             <div className="luxury-card text-center">
-              <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(184, 150, 12, 0.15)', border: '1px solid rgba(184, 150, 12, 0.25)' }}>
+              <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                 <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
               </div>
               <h3 className="text-display-thin text-xl mb-3">
