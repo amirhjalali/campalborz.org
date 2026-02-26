@@ -39,15 +39,14 @@ export default function CulturePage() {
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
-            alt="Traditional Persian cultural celebration featuring music, dance, and authentic decorations at Camp Alborz"
+            src="/images/culture_hero_pro.webp"
+            alt="Persian tea house gathering at Camp Alborz with traditional samovar, carpets, lanterns, and live music on the playa"
             fill
             className="object-cover"
             priority
-            quality={90}
+            quality={85}
             sizes="100vw"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIRAAAgICAgEFAAAAAAAAAAAAAQIDBAAFERIGEyExcZH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABkRAAIDAQAAAAAAAAAAAAAAAAECABEhMf/aAAwDAQACEQMRAD8Aw/XaZd0knsWp2rIhVFhRQCx9yT8ZZ0dSTXaxq1LMsLMpcy9eRcfnGMZFAFTJP//Z"
+            placeholder="empty"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </motion.div>

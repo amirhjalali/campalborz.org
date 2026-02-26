@@ -39,15 +39,14 @@ export default function ArtPage() {
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg"
-            alt="HOMA art car illuminated at night during Burning Man, showcasing intricate Persian-inspired design and LED lighting"
+            src="/images/art_hero_pro.webp"
+            alt="Persian-inspired art car on the Burning Man playa at golden hour, with Persian rugs, gathering people, and a dramatic sunset sky"
             fill
             className="object-cover"
             priority
             quality={90}
             sizes="100vw"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAIAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAAUH/8QAIRAAAgIBAwUBAAAAAAAAAAAAAQIDBAAFERIGEyExQXH/xAAVAQEBAAAAAAAAAAAAAAAAAAACA//EABkRAAIDAQAAAAAAAAAAAAAAAAECABEhMf/aAAwDAQACEQMRAD8AxXS9Ks6lqMdWGeSNZFZjJxBKgAnz+5t9LoFfQ4BVhtTzxqSFeQgFx9yScYyLZwBXJM//2Q=="
+            placeholder="empty"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
           <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--color-cream), transparent, transparent)` }} />

@@ -1,25 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, LogIn, Eye, EyeOff, User, LogOut, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, LogIn, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useAuth } from '../../contexts/AuthContext';
-import { NotificationBell } from '../../components/notifications/NotificationBell';
-import { OnlineMembers } from '../../components/notifications/OnlineMembers';
-import { ChatRoom } from '../../components/chat/ChatRoom';
 
 export default function MembersPage() {
   const { members } = useContentConfig();
-  const { user, isAuthenticated, isLoading: authLoading, error, login, logout, clearError } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, error, login, clearError } = useAuth();
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const portalInfo = members?.portalInfo;
+  // Redirect authenticated users to the full portal dashboard
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace('/portal');
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +37,6 @@ export default function MembersPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,248 +56,9 @@ export default function MembersPage() {
     );
   }
 
-  // Authenticated member view
+  // Redirect authenticated users to the proper portal dashboard
   if (isAuthenticated && user) {
-    return (
-      <main className="min-h-screen bg-cream">
-        {/* Member Dashboard Header */}
-        <section className="pt-32 pb-16">
-            <div className="section-contained">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border-2 border-gold/40 flex items-center justify-center">
-                    <User className="h-8 w-8 text-gold" />
-                  </div>
-                  <div>
-                    <h1 className="text-display-thin text-3xl text-ink">{user.name}</h1>
-                    <p className="text-body-relaxed text-sm text-ink-soft">{user.email}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <NotificationBell />
-                  <OnlineMembers compact />
-                  <button
-                    onClick={handleLogout}
-                    className="cta-secondary flex items-center gap-2"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {portalInfo && (
-            <>
-              {/* Portal Highlights */}
-              <section className="py-16">
-                <div className="section-contained">
-                  <div className="text-center mb-10">
-                    <h2 className="text-display-thin text-3xl text-ink mb-3">
-                      {portalInfo.welcomeTitle}
-                    </h2>
-                    <p className="text-body-relaxed text-ink-soft">
-                      Two simple steps to lock in your placement.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {portalInfo.highlights.map((item) => (
-                      <div
-                        key={item.title}
-                        className="luxury-card p-6"
-                      >
-                        <h3 className="text-display-thin text-xl text-ink mb-2">{item.title}</h3>
-                        <p className="text-body-relaxed text-ink-soft">{item.description}</p>
-                        {item.linkUrl && item.linkText && (
-                          <Link
-                            href={item.linkUrl}
-                            target={item.linkUrl.startsWith('http') ? '_blank' : undefined}
-                            rel={item.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
-                            className="inline-flex items-center text-gold hover:text-gold/80 mt-4 font-medium transition-colors"
-                          >
-                            {item.linkText}
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Link>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Dues & Grid Fees */}
-              <section className="py-16 section-alt">
-                <div className="section-contained">
-                  <div className="luxury-card p-8">
-                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-                      <div className="flex-1">
-                        <p className="text-display-wide text-xs tracking-[0.4em] text-gold mb-2">DUES</p>
-                        <h3 className="text-display-thin text-3xl text-ink mb-3">
-                          {portalInfo.dues.amountLabel}
-                        </h3>
-                        <p className="text-body-relaxed text-ink-soft mb-4">{portalInfo.dues.description}</p>
-                        <ul className="space-y-2 text-body-relaxed text-ink-soft">
-                          {portalInfo.dues.breakdown.map((item, index) => (
-                            <li key={index} className="flex items-start">
-                              <span className="text-gold mr-2">&#8226;</span>
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-display-wide text-xs tracking-[0.4em] text-gold mb-3">GRID FEES</p>
-                        <div className="space-y-3">
-                          {portalInfo.dues.gridFees.map((fee) => (
-                            <div
-                              key={fee.label}
-                              className="border border-line/40 rounded-xl p-4 bg-cream/50"
-                            >
-                              <div className="flex items-center justify-between mb-1">
-                                <p className="font-semibold text-ink">{fee.label}</p>
-                                <span className="text-gold font-semibold">{fee.amount}</span>
-                              </div>
-                              <p className="text-sm text-ink-soft">{fee.description}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Payment Options */}
-              {portalInfo.paymentOptions && portalInfo.paymentOptions.length > 0 && (
-                <section className="py-16">
-                  <div className="section-contained">
-                    <div className="text-center mb-10">
-                      <h3 className="text-display-thin text-3xl text-ink mb-2">
-                        How to Send Your Dues
-                      </h3>
-                      <p className="text-body-relaxed text-ink-soft">
-                        Choose the option that works best for you.
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {portalInfo.paymentOptions.map((option) => {
-                        const OptionIcon = getIcon(option.icon || 'heart');
-                        return (
-                          <div
-                            key={option.method}
-                            className="luxury-card p-6"
-                          >
-                            <div className="flex items-center mb-3">
-                              <div className="p-3 bg-gold/10 rounded-lg mr-3 border border-gold/20">
-                                <OptionIcon className="h-5 w-5 text-gold" />
-                              </div>
-                              <div>
-                                <p className="font-semibold text-ink">{option.method}</p>
-                                <p className="text-sm text-ink-soft">{option.description}</p>
-                              </div>
-                            </div>
-                            <ul className="space-y-2 text-sm text-ink-soft">
-                              {option.details.map((detail, detailIdx) => (
-                                <li key={detailIdx} className="flex items-start">
-                                  <span className="text-gold mr-2">&#8226;</span>
-                                  {detail}
-                                </li>
-                              ))}
-                            </ul>
-                            {option.linkUrl && option.linkText && (
-                              <Link
-                                href={option.linkUrl}
-                                target={option.linkUrl.startsWith('http') ? '_blank' : undefined}
-                                rel={option.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
-                                className="inline-flex items-center text-gold hover:text-gold/80 font-medium text-sm mt-4 transition-colors"
-                              >
-                                {option.linkText}
-                                <ArrowRight className="h-4 w-4 ml-2" />
-                              </Link>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </section>
-              )}
-
-              {/* Resources & Fundraisers */}
-              <section className="py-16 section-alt">
-                <div className="section-contained grid gap-8 lg:grid-cols-2">
-                  <div className="luxury-card p-6">
-                    <h3 className="text-display-thin text-2xl text-ink mb-4">Key Resources</h3>
-                    <div className="space-y-4">
-                      {portalInfo.resources.map((resource) => (
-                        <div key={resource.title}>
-                          <p className="font-semibold text-ink">{resource.title}</p>
-                          <p className="text-sm text-ink-soft">{resource.description}</p>
-                          <Link
-                            href={resource.linkUrl}
-                            target={resource.linkUrl.startsWith('http') ? '_blank' : undefined}
-                            rel={resource.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
-                            className="inline-flex items-center text-gold hover:text-gold/80 text-sm font-medium mt-2 transition-colors"
-                          >
-                            {resource.linkText}
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="luxury-card p-6">
-                    <h3 className="text-display-thin text-2xl text-ink mb-4">Upcoming Fundraisers</h3>
-                    <div className="space-y-4">
-                      {portalInfo.fundraisers.map((fundraiser) => (
-                        <div key={fundraiser.title} className="border border-line/40 rounded-xl p-4">
-                          <p className="text-display-wide text-xs tracking-[0.3em] text-gold mb-1">{fundraiser.date}</p>
-                          <p className="font-semibold text-ink">{fundraiser.title}</p>
-                          <p className="text-sm text-ink-soft">{fundraiser.description}</p>
-                          {fundraiser.linkUrl && fundraiser.linkText && (
-                            <Link
-                              href={fundraiser.linkUrl}
-                              target={fundraiser.linkUrl.startsWith('http') ? '_blank' : undefined}
-                              rel={fundraiser.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
-                              className="inline-flex items-center text-gold hover:text-gold/80 text-sm font-medium mt-2 transition-colors"
-                            >
-                              {fundraiser.linkText}
-                              <ArrowRight className="h-4 w-4 ml-2" />
-                            </Link>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Camp Chat & Online Members */}
-              <section className="py-16">
-                <div className="section-contained">
-                  <div className="text-center mb-10">
-                    <h2 className="text-display-thin text-3xl text-ink mb-3">
-                      Camp Community
-                    </h2>
-                    <p className="text-body-relaxed text-ink-soft">
-                      Chat with your campmates and see who is online.
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2">
-                      <ChatRoom />
-                    </div>
-                    <div>
-                      <OnlineMembers />
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </>
-          )}
-        </main>
-    );
+    return null; // useEffect above handles redirect to /portal
   }
 
   // Login view (not authenticated)
