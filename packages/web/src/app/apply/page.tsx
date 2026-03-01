@@ -89,47 +89,79 @@ export default function ApplyPage() {
 
     setIsSubmitting(true);
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
-      const response = await fetch('/api/applications', {
+    // Map form experience values to the API's enum
+    const experienceMap: Record<string, string> = {
+      'first-time': 'FIRST_TIMER',
+      '1-3-years': 'BEEN_BEFORE',
+      '4-7-years': 'VETERAN',
+      '8-plus-years': 'VETERAN',
+    };
+
+    const trpcInput = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      experience: experienceMap[formData.experience] || 'FIRST_TIMER',
+      interests: formData.interests || undefined,
+      contribution: formData.contribution || undefined,
+      dietaryRestrictions: formData.dietary || undefined,
+      emergencyContactName: formData.emergency_contact || undefined,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/trpc/applications.submit`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      }).catch(() => {
-        return { ok: true };
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trpcInput),
       });
 
-      if (response.ok) {
-        setIsSubmitted(true);
-        toast.success(apply.form.successMessage || 'Application submitted successfully!', {
-          description: 'We\'ll review your application and get back to you soon.',
-          duration: 5000,
-        });
+      const data = await res.json();
 
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          experience: '',
-          interests: '',
-          contribution: '',
-          dietary: '',
-          emergency_contact: '',
-        });
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        throw new Error('Submission failed');
+      if (!res.ok || data.error) {
+        const message =
+          data.error?.json?.message ||
+          data.error?.message ||
+          'Submission failed';
+        throw new Error(message);
       }
-    } catch (error) {
-      console.error('Application submission error:', error);
-      toast.error('Failed to submit application', {
-        description: 'Please try again or contact us directly if the problem persists.',
+
+      setIsSubmitted(true);
+      toast.success(apply.form.successMessage || 'Application submitted successfully!', {
+        description: 'We\'ll review your application and get back to you soon.',
         duration: 5000,
       });
+
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        experience: '',
+        interests: '',
+        contribution: '',
+        dietary: '',
+        emergency_contact: '',
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Application submission error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Submission failed';
+
+      if (errorMessage.includes('already under review')) {
+        toast.error('Duplicate application', {
+          description: 'An application with this email is already under review. Please contact us if you need to update it.',
+          duration: 7000,
+        });
+      } else {
+        toast.error('Failed to submit application', {
+          description: errorMessage !== 'Submission failed'
+            ? errorMessage
+            : 'Please try again or contact us directly if the problem persists.',
+          duration: 5000,
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

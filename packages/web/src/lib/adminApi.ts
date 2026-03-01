@@ -359,7 +359,7 @@ export async function updateMemberProfile(
     notes: string | null;
   }>,
 ): Promise<MemberData> {
-  return trpcMutation<MemberData>('members.update', { id, ...data });
+  return trpcMutation<MemberData>('members.adminUpdate', { id, ...data });
 }
 
 export async function updateMemberRole(
@@ -367,6 +367,10 @@ export async function updateMemberRole(
   role: 'ADMIN' | 'MANAGER' | 'MEMBER',
 ): Promise<unknown> {
   return trpcMutation('members.updateRole', { memberId, role });
+}
+
+export async function deactivateMember(memberId: string): Promise<unknown> {
+  return trpcMutation('members.deactivate', { memberId });
 }
 
 export async function inviteMember(

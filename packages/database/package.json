@@ -12,6 +12,7 @@
     "migrate:reset": "prisma migrate reset",
     "migrate:status": "prisma migrate status",
     "seed": "tsx prisma/seed.ts",
+    "seed:2025": "tsx seed/seed-2025.ts",
     "studio": "prisma studio",
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
@@ -31,6 +32,7 @@
     "bcryptjs": "^2.4.3",
     "prisma": "^5.3.1",
     "tsx": "^3.12.7",
+    "xlsx": "^0.18.5",
     "typescript": "^5.1.6"
   }
 }

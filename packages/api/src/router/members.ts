@@ -256,6 +256,51 @@ export const membersRouter = router({
       return { success: true, deletedEmail: member.email };
     }),
 
+  /** Admin update of a member's profile fields (admin only) */
+  adminUpdate: adminProcedure
+    .input(z.object({
+      id: z.string().uuid('Invalid member ID'),
+      name: z.string().min(1).max(100).optional(),
+      email: z.string().email().max(255).optional(),
+      phone: z.string().max(20).nullable().optional(),
+      playaName: z.string().max(100).nullable().optional(),
+      gender: z.enum(['MALE', 'FEMALE', 'NON_BINARY', 'OTHER', 'PREFER_NOT_TO_SAY']).nullable().optional(),
+      emergencyContactName: z.string().max(100).nullable().optional(),
+      emergencyContactPhone: z.string().max(20).nullable().optional(),
+      dietaryRestrictions: z.string().max(500).nullable().optional(),
+      notes: z.string().max(2000).nullable().optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...data } = input;
+
+      const member = await ctx.prisma.member.findUnique({
+        where: { id },
+      });
+
+      if (!member) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Member not found' });
+      }
+
+      return ctx.prisma.member.update({
+        where: { id },
+        data,
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          playaName: true,
+          phone: true,
+          gender: true,
+          role: true,
+          isActive: true,
+          emergencyContactName: true,
+          emergencyContactPhone: true,
+          dietaryRestrictions: true,
+          notes: true,
+        },
+      });
+    }),
+
   /** Update admin notes on a member (manager+) */
   updateNotes: managerProcedure
     .input(z.object({

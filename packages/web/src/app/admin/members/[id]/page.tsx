@@ -24,15 +24,15 @@ import { StatusBadge } from '../../../../components/shared/StatusBadge';
 import { ConfirmDialog } from '../../../../components/shared/ConfirmDialog';
 import {
   fetchMemberById,
+  updateMemberProfile,
   updateMemberRole,
+  deactivateMember,
   updateSeasonMemberStatus,
   updateSeasonMemberHousing,
   recordPayment,
   type MemberData,
   type PaymentData,
 } from '../../../../lib/adminApi';
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
 type Tab = 'season' | 'payments' | 'profile';
 
@@ -159,26 +159,16 @@ export default function MemberDetailPage() {
     if (!member) return;
     try {
       setSaving(true);
-      const token = localStorage.getItem('accessToken');
-      // Use direct API call for profile update since it requires different fields
-      await fetch(`${API_BASE_URL}/api/trpc/members.update`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          id: member.id,
-          name: editName,
-          email: editEmail,
-          phone: editPhone || null,
-          playaName: editPlayaName || null,
-          gender: editGender || null,
-          emergencyContactName: editEmergencyName || null,
-          emergencyContactPhone: editEmergencyPhone || null,
-          dietaryRestrictions: editDietary || null,
-          notes: editNotes || null,
-        }),
+      await updateMemberProfile(member.id, {
+        name: editName,
+        email: editEmail,
+        phone: editPhone || null,
+        playaName: editPlayaName || null,
+        gender: editGender || null,
+        emergencyContactName: editEmergencyName || null,
+        emergencyContactPhone: editEmergencyPhone || null,
+        dietaryRestrictions: editDietary || null,
+        notes: editNotes || null,
       });
       showSaveNotification('Profile saved successfully.', 'success');
     } catch {
@@ -202,15 +192,7 @@ export default function MemberDetailPage() {
   const handleDeactivate = async () => {
     if (!member) return;
     try {
-      const token = localStorage.getItem('accessToken');
-      await fetch(`${API_BASE_URL}/api/trpc/members.deactivate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ id: member.id }),
-      });
+      await deactivateMember(member.id);
       setMember({ ...member, isActive: false });
       showSaveNotification('Member deactivated.', 'success');
     } catch {
