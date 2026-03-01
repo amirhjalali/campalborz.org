@@ -75,7 +75,7 @@ describe('generateMetadata', () => {
   it('should include Open Graph data', () => {
     const meta = generateMetadata({ title: 'Test', path: '/test' });
     expect(meta.openGraph).toBeDefined();
-    expect(meta.openGraph?.type).toBe('website');
+    expect((meta.openGraph as any)?.type).toBe('website');
     expect(meta.openGraph?.url).toBe('https://campalborz.org/test');
     expect(meta.openGraph?.siteName).toBe('Camp Alborz');
   });
@@ -83,7 +83,7 @@ describe('generateMetadata', () => {
   it('should include Twitter card data', () => {
     const meta = generateMetadata({ title: 'Test' });
     expect(meta.twitter).toBeDefined();
-    expect(meta.twitter?.card).toBe('summary_large_image');
+    expect((meta.twitter as any)?.card).toBe('summary_large_image');
     expect(meta.twitter?.creator).toBe('@campalborz');
   });
 

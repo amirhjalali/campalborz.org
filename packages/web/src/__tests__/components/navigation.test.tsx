@@ -12,6 +12,7 @@ import '@testing-library/jest-dom';
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
+    nav: ({ children, ...props }: any) => <nav {...filterProps(props)}>{children}</nav>,
     div: ({ children, ...props }: any) => <div {...filterProps(props)}>{children}</div>,
     span: ({ children, ...props }: any) => <span {...filterProps(props)}>{children}</span>,
   },
@@ -56,7 +57,7 @@ import { Navigation } from '../../components/navigation';
 describe('Navigation', () => {
   it('should render the camp name as logo text', () => {
     render(<Navigation />);
-    expect(screen.getByText('CAMP ALBORZ')).toBeInTheDocument();
+    expect(screen.getByText('Camp Alborz')).toBeInTheDocument();
   });
 
   it('should render all navigation items', () => {
@@ -108,7 +109,7 @@ describe('Navigation', () => {
 
   it('should have the logo as a link to homepage', () => {
     render(<Navigation />);
-    const logoLink = screen.getByText('CAMP ALBORZ').closest('a');
+    const logoLink = screen.getByText('Camp Alborz').closest('a');
     expect(logoLink).toHaveAttribute('href', '/');
   });
 
