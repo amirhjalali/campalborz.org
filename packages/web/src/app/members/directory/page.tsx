@@ -16,7 +16,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { fetchDirectory, type DirectoryMember } from '../../../lib/mock-member-data';
 
 const roleConfig: Record<string, { label: string; color: string; icon: typeof Shield }> = {
-  ADMIN: { label: 'Camp Lead', color: 'bg-gold/10 text-gold border-gold/20', icon: Star },
+  LEAD: { label: 'Camp Lead', color: 'bg-gold/10 text-gold border-gold/20', icon: Star },
   MANAGER: { label: 'Manager', color: 'bg-sage/10 text-sage border-sage/20', icon: Shield },
   MEMBER: { label: 'Member', color: 'bg-cream text-ink-soft border-line/30', icon: User },
 };
@@ -62,8 +62,8 @@ export default function DirectoryPage() {
     return matchesSearch && matchesRole;
   });
 
-  // Sort: ADMIN first, then MANAGER, then MEMBER
-  const sortOrder: Record<string, number> = { ADMIN: 0, MANAGER: 1, MEMBER: 2 };
+  // Sort: LEAD first, then MANAGER, then MEMBER
+  const sortOrder: Record<string, number> = { LEAD: 0, MANAGER: 1, MEMBER: 2 };
   const sorted = [...filtered].sort((a, b) => (sortOrder[a.role] ?? 3) - (sortOrder[b.role] ?? 3));
 
   return (
