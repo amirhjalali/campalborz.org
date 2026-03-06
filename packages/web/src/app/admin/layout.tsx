@@ -18,6 +18,8 @@ import {
   Ticket,
   FileText,
   Megaphone,
+  Mail,
+  Upload,
   Menu,
   X,
   ChevronDown,
@@ -33,12 +35,14 @@ const sidebarItems = [
   { label: 'Season', href: '/admin/season', icon: Calendar },
   { label: 'Housing', href: '/admin/housing', icon: Home },
   { label: 'Payments', href: '/admin/payments', icon: CreditCard },
-  { label: 'Build', href: '/admin/build', icon: Hammer },
+  { label: 'Tickets & DGS', href: '/admin/tickets', icon: Ticket },
+  { label: 'Build & Strike', href: '/admin/build', icon: Hammer },
   { label: 'Inventory', href: '/admin/inventory', icon: Package },
   { label: 'Budget', href: '/admin/budget', icon: PieChart },
-  { label: 'Tickets', href: '/admin/tickets', icon: Ticket },
   { label: 'Applications', href: '/admin/applications', icon: FileText },
+  { label: 'Communications', href: '/admin/communications', icon: Mail },
   { label: 'Announcements', href: '/admin/announcements', icon: Megaphone },
+  { label: 'Import / Export', href: '/admin/import', icon: Upload },
 ];
 
 function SeasonSelector() {

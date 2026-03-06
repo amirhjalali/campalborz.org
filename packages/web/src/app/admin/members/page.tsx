@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -16,7 +16,10 @@ import {
   Copy,
   Check,
   RefreshCw,
-  Download,
+  Hammer,
+  MessageCircle,
+  Sparkles,
+  DollarSign,
 } from 'lucide-react';
 import { StatusBadge } from '../../../components/shared/StatusBadge';
 import { SearchInput } from '../../../components/shared/SearchInput';
@@ -24,6 +27,7 @@ import { EmptyState } from '../../../components/shared/EmptyState';
 import { useAdminSeason } from '../../../contexts/AdminSeasonContext';
 import {
   fetchSeasonMembers,
+  updateSeasonMemberStatus,
   inviteMember,
   type SeasonMember,
 } from '../../../lib/adminApi';
@@ -32,6 +36,10 @@ const PAGE_SIZE = 50;
 
 type SortField = 'name' | 'email' | 'status' | 'role' | 'housing';
 type SortDir = 'asc' | 'desc';
+
+const STATUS_OPTIONS = ['INTERESTED', 'MAYBE', 'CONFIRMED', 'WAITLISTED', 'CANCELLED'] as const;
+
+type FilterPreset = 'none' | 'unpaid' | 'buildCrew' | 'strikeCrew' | 'notWhatsApp' | 'alborzVirgin';
 
 export default function MembersPage() {
   const router = useRouter();
@@ -44,9 +52,21 @@ export default function MembersPage() {
   // Filters & search
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [activePreset, setActivePreset] = useState<FilterPreset>('none');
   const [page, setPage] = useState(0);
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
+
+  // Bulk selection
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkStatusValue, setBulkStatusValue] = useState('');
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [emailsCopied, setEmailsCopied] = useState(false);
+
+  // Inline status editing
+  const [editingStatusId, setEditingStatusId] = useState<string | null>(null);
+  const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
+  const statusDropdownRef = useRef<HTMLDivElement>(null);
 
   // Invite modal
   const [showInvite, setShowInvite] = useState(false);
@@ -57,13 +77,26 @@ export default function MembersPage() {
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Determine server-side filter params from active preset
+  const getFilterParams = useCallback(() => {
+    const params: {
+      buildCrew?: boolean;
+      strikeCrew?: boolean;
+    } = {};
+    if (activePreset === 'buildCrew') params.buildCrew = true;
+    if (activePreset === 'strikeCrew') params.strikeCrew = true;
+    return params;
+  }, [activePreset]);
+
   const loadMembers = useCallback(async () => {
     try {
       setLoading(true);
+      const filterParams = getFilterParams();
       const result = await fetchSeasonMembers({
         seasonId: selectedSeasonId || undefined,
         search: search || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
+        ...filterParams,
         limit: PAGE_SIZE,
         offset: page * PAGE_SIZE,
       });
@@ -77,7 +110,7 @@ export default function MembersPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, statusFilter, selectedSeasonId]);
+  }, [page, search, statusFilter, selectedSeasonId, getFilterParams]);
 
   useEffect(() => {
     loadMembers();
@@ -86,7 +119,21 @@ export default function MembersPage() {
   // Reset page when filters change
   useEffect(() => {
     setPage(0);
-  }, [search, statusFilter]);
+    setSelectedIds(new Set());
+  }, [search, statusFilter, activePreset]);
+
+  // Close status dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (statusDropdownRef.current && !statusDropdownRef.current.contains(e.target as Node)) {
+        setEditingStatusId(null);
+      }
+    }
+    if (editingStatusId) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [editingStatusId]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -97,7 +144,7 @@ export default function MembersPage() {
     }
   };
 
-  // Client-side sort (since server sort only supports member name ordering)
+  // Client-side sort
   const sortedMembers = [...members].sort((a, b) => {
     let cmp = 0;
     switch (sortField) {
@@ -120,6 +167,16 @@ export default function MembersPage() {
     return sortDir === 'asc' ? cmp : -cmp;
   });
 
+  // Apply client-side preset filters (for ones not handled server-side)
+  const filteredMembers = sortedMembers.filter((sm) => {
+    if (activePreset === 'notWhatsApp') return !sm.addedToWhatsApp;
+    if (activePreset === 'alborzVirgin') return sm.isAlborzVirgin;
+    // 'unpaid' - we don't have payment data in the list, so we filter for non-CONFIRMED
+    // as a proxy (members who haven't confirmed are likely unpaid)
+    if (activePreset === 'unpaid') return sm.status !== 'CONFIRMED' && sm.status !== 'CANCELLED';
+    return true;
+  });
+
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) return null;
     return sortDir === 'asc' ? (
@@ -127,6 +184,83 @@ export default function MembersPage() {
     ) : (
       <ChevronDown className="h-3.5 w-3.5 inline ml-1" />
     );
+  };
+
+  const handlePresetToggle = (preset: FilterPreset) => {
+    setActivePreset(activePreset === preset ? 'none' : preset);
+  };
+
+  // Inline status change
+  const handleInlineStatusChange = async (smId: string, newStatus: string) => {
+    try {
+      setStatusUpdating(smId);
+      await updateSeasonMemberStatus(smId, newStatus);
+      setMembers((prev) =>
+        prev.map((m) => (m.id === smId ? { ...m, status: newStatus } : m))
+      );
+      setEditingStatusId(null);
+    } catch {
+      // silently fail, user can retry
+    } finally {
+      setStatusUpdating(null);
+    }
+  };
+
+  // Bulk actions
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredMembers.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredMembers.map((m) => m.id)));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleBulkStatusChange = async () => {
+    if (!bulkStatusValue || selectedIds.size === 0) return;
+    try {
+      setBulkLoading(true);
+      const promises = Array.from(selectedIds).map((id) =>
+        updateSeasonMemberStatus(id, bulkStatusValue)
+      );
+      await Promise.all(promises);
+      setMembers((prev) =>
+        prev.map((m) =>
+          selectedIds.has(m.id) ? { ...m, status: bulkStatusValue } : m
+        )
+      );
+      setSelectedIds(new Set());
+      setBulkStatusValue('');
+    } catch {
+      // Some may have failed
+    } finally {
+      setBulkLoading(false);
+    }
+  };
+
+  const handleCopyEmails = async () => {
+    const emails = filteredMembers
+      .filter((m) => selectedIds.has(m.id))
+      .map((m) => m.member.email)
+      .join(', ');
+    try {
+      await navigator.clipboard.writeText(emails);
+      setEmailsCopied(true);
+      setTimeout(() => setEmailsCopied(false), 2000);
+    } catch {
+      // Clipboard not available
+    }
   };
 
   const handleInvite = async () => {
@@ -172,6 +306,14 @@ export default function MembersPage() {
     acc[m.status] = (acc[m.status] || 0) + 1;
     return acc;
   }, {});
+
+  const filterPresets: { key: FilterPreset; label: string; icon: React.ElementType }[] = [
+    { key: 'unpaid', label: 'Unpaid Dues', icon: DollarSign },
+    { key: 'buildCrew', label: 'Build Crew', icon: Hammer },
+    { key: 'strikeCrew', label: 'Strike Crew', icon: Hammer },
+    { key: 'notWhatsApp', label: 'Not on WhatsApp', icon: MessageCircle },
+    { key: 'alborzVirgin', label: 'Alborz Virgins', icon: Sparkles },
+  ];
 
   return (
     <div className="space-y-6">
@@ -221,6 +363,33 @@ export default function MembersPage() {
           ))}
         </div>
       )}
+
+      {/* Smart Filter Presets */}
+      <div className="flex flex-wrap gap-2">
+        {filterPresets.map(({ key, label, icon: Icon }) => (
+          <button
+            key={key}
+            onClick={() => handlePresetToggle(key)}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs border transition-colors ${
+              activePreset === key
+                ? 'bg-gold/10 border-gold text-gold font-semibold'
+                : 'border-tan/30 text-ink-soft hover:bg-cream hover:border-tan/50'
+            }`}
+          >
+            <Icon className="h-3 w-3" />
+            {label}
+          </button>
+        ))}
+        {activePreset !== 'none' && (
+          <button
+            onClick={() => setActivePreset('none')}
+            className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs border border-red-200 text-red-500 hover:bg-red-50 transition-colors"
+          >
+            <X className="h-3 w-3" />
+            Clear
+          </button>
+        )}
+      </div>
 
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -281,6 +450,7 @@ export default function MembersPage() {
                   onClick: () => {
                     setSearch('');
                     setStatusFilter('all');
+                    setActivePreset('none');
                   },
                 }
               : undefined
@@ -292,6 +462,15 @@ export default function MembersPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-sage/10 bg-cream/50">
+                  {/* Checkbox column */}
+                  <th className="py-3 px-3 w-10">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.size === filteredMembers.length && filteredMembers.length > 0}
+                      onChange={toggleSelectAll}
+                      className="h-4 w-4 rounded border-tan/40 text-sage focus:ring-sage/30 cursor-pointer"
+                    />
+                  </th>
                   <th
                     onClick={() => handleSort('name')}
                     className="text-left py-3 px-4 text-xs font-medium text-ink-soft uppercase tracking-wider cursor-pointer hover:text-ink select-none"
@@ -325,16 +504,32 @@ export default function MembersPage() {
                 </tr>
               </thead>
               <tbody>
-                {sortedMembers.map((sm, idx) => (
+                {filteredMembers.map((sm, idx) => (
                   <motion.tr
                     key={sm.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: idx * 0.02, duration: 0.2 }}
-                    onClick={() => router.push(`/admin/members/${sm.member.id}`)}
-                    className="border-b border-sage/5 hover:bg-sage/[0.03] cursor-pointer transition-colors"
+                    className={`border-b border-sage/5 hover:bg-sage/[0.03] transition-colors ${
+                      selectedIds.has(sm.id) ? 'bg-gold/[0.04]' : ''
+                    }`}
                   >
-                    <td className="py-3 px-4">
+                    {/* Checkbox */}
+                    <td className="py-3 px-3 w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(sm.id)}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          toggleSelectOne(sm.id);
+                        }}
+                        className="h-4 w-4 rounded border-tan/40 text-sage focus:ring-sage/30 cursor-pointer"
+                      />
+                    </td>
+                    <td
+                      className="py-3 px-4 cursor-pointer"
+                      onClick={() => router.push(`/admin/members/${sm.member.id}`)}
+                    >
                       <div>
                         <p className="font-medium text-ink">
                           {sm.member.name}
@@ -346,18 +541,63 @@ export default function MembersPage() {
                         )}
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-ink-soft hidden md:table-cell">
+                    <td
+                      className="py-3 px-4 text-ink-soft hidden md:table-cell cursor-pointer"
+                      onClick={() => router.push(`/admin/members/${sm.member.id}`)}
+                    >
                       {sm.member.email}
                     </td>
-                    <td className="py-3 px-4">
-                      <StatusBadge status={sm.status} variant="season" />
+                    {/* Inline editable status */}
+                    <td className="py-3 px-4 relative">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingStatusId(editingStatusId === sm.id ? null : sm.id);
+                        }}
+                        className="cursor-pointer hover:opacity-80 transition-opacity"
+                        title="Click to change status"
+                      >
+                        {statusUpdating === sm.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin text-sage" />
+                        ) : (
+                          <StatusBadge status={sm.status} variant="season" />
+                        )}
+                      </button>
+                      {/* Status dropdown */}
+                      {editingStatusId === sm.id && (
+                        <div
+                          ref={statusDropdownRef}
+                          className="absolute z-20 top-full left-0 mt-1 bg-white rounded-lg shadow-lg border border-tan/30 py-1 min-w-[150px]"
+                        >
+                          {STATUS_OPTIONS.map((opt) => (
+                            <button
+                              key={opt}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleInlineStatusChange(sm.id, opt);
+                              }}
+                              className={`w-full text-left px-3 py-1.5 text-xs hover:bg-cream transition-colors flex items-center gap-2 ${
+                                sm.status === opt ? 'bg-sage/5 font-semibold' : ''
+                              }`}
+                            >
+                              <StatusBadge status={opt} variant="season" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </td>
-                    <td className="py-3 px-4 text-ink-soft hidden lg:table-cell">
+                    <td
+                      className="py-3 px-4 text-ink-soft hidden lg:table-cell cursor-pointer"
+                      onClick={() => router.push(`/admin/members/${sm.member.id}`)}
+                    >
                       <span className="inline-flex items-center rounded-md bg-sage/5 px-2 py-0.5 text-xs font-medium text-sage">
                         {sm.member.role}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-ink-soft hidden lg:table-cell">
+                    <td
+                      className="py-3 px-4 text-ink-soft hidden lg:table-cell cursor-pointer"
+                      onClick={() => router.push(`/admin/members/${sm.member.id}`)}
+                    >
                       {sm.housingType
                         ? sm.housingType.charAt(0) + sm.housingType.slice(1).toLowerCase()
                         : '\u2014'}
@@ -399,6 +639,75 @@ export default function MembersPage() {
           )}
         </div>
       )}
+
+      {/* Bulk Actions Toolbar */}
+      <AnimatePresence>
+        {selectedIds.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-0 left-0 right-0 z-40 bg-ink border-t border-gold/30 shadow-2xl"
+          >
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gold tabular-nums">
+                  {selectedIds.size} selected
+                </span>
+                <button
+                  onClick={() => setSelectedIds(new Set())}
+                  className="text-xs text-white/50 hover:text-white transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                {/* Change Status */}
+                <div className="flex items-center gap-2">
+                  <select
+                    value={bulkStatusValue}
+                    onChange={(e) => setBulkStatusValue(e.target.value)}
+                    className="rounded-lg bg-white/10 border border-white/20 text-white text-xs px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-gold"
+                  >
+                    <option value="" className="text-ink">Change Status...</option>
+                    {STATUS_OPTIONS.map((s) => (
+                      <option key={s} value={s} className="text-ink">
+                        {s.charAt(0) + s.slice(1).toLowerCase()}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={handleBulkStatusChange}
+                    disabled={!bulkStatusValue || bulkLoading}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gold text-ink hover:bg-gold/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
+                  >
+                    {bulkLoading && <Loader2 className="h-3 w-3 animate-spin" />}
+                    Apply
+                  </button>
+                </div>
+                {/* Copy Emails */}
+                <button
+                  onClick={handleCopyEmails}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/20 text-white hover:bg-white/10 transition-colors"
+                >
+                  {emailsCopied ? (
+                    <>
+                      <Check className="h-3 w-3 text-green-400" />
+                      <span className="text-green-400">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3 w-3" />
+                      Copy Emails
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Invite Member Modal */}
       <AnimatePresence>
@@ -517,6 +826,9 @@ export default function MembersPage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Bottom spacer when bulk toolbar is visible */}
+      {selectedIds.size > 0 && <div className="h-16" />}
     </div>
   );
 }

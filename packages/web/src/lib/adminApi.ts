@@ -139,6 +139,11 @@ export interface SeasonMember {
   status: string;
   memberId: string;
   housingType?: string;
+  buildCrew: boolean;
+  strikeCrew: boolean;
+  isAlborzVirgin: boolean;
+  isBMVirgin: boolean;
+  addedToWhatsApp: boolean;
   member: {
     id: string;
     name: string;
@@ -316,6 +321,8 @@ export async function fetchSeasonMembers(params?: {
   seasonId?: string;
   search?: string;
   status?: string;
+  buildCrew?: boolean;
+  strikeCrew?: boolean;
   limit?: number;
   offset?: number;
 }): Promise<SeasonMemberListResult> {
@@ -323,6 +330,8 @@ export async function fetchSeasonMembers(params?: {
   if (params?.seasonId) input.seasonId = params.seasonId;
   if (params?.search) input.search = params.search;
   if (params?.status && params.status !== 'all') input.status = params.status;
+  if (params?.buildCrew !== undefined) input.buildCrew = params.buildCrew;
+  if (params?.strikeCrew !== undefined) input.strikeCrew = params.strikeCrew;
   if (params?.limit) input.limit = params.limit;
   if (params?.offset !== undefined) input.offset = params.offset;
 
@@ -396,6 +405,64 @@ export async function updateSeasonMemberHousing(
   data: Record<string, unknown>,
 ): Promise<unknown> {
   return trpcMutation('seasonMembers.updateHousing', { id, ...data });
+}
+
+// ---------------------------------------------------------------------------
+// Payments
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Communications
+// ---------------------------------------------------------------------------
+
+export interface ActionItemMember {
+  id: string;
+  name: string;
+  email: string;
+  playaName?: string;
+}
+
+export interface ActionItems {
+  unpaidDues: { count: number; members: ActionItemMember[] };
+  noTicket: { count: number; members: ActionItemMember[] };
+  notOnWhatsapp: { count: number; members: ActionItemMember[] };
+  noPreApproval: { count: number; members: ActionItemMember[] };
+  pendingApplications: { count: number };
+}
+
+export async function fetchActionItems(seasonId?: string): Promise<ActionItems> {
+  const input: Record<string, unknown> = {};
+  if (seasonId) input.seasonId = seasonId;
+  return trpcQuery<ActionItems>('communications.getActionItems', input);
+}
+
+export interface SendMassEmailResult {
+  sent: number;
+  failed: number;
+  errors?: string[];
+}
+
+export async function sendMassEmail(data: {
+  seasonId?: string;
+  filter: string;
+  customEmails?: string[];
+  subject: string;
+  body: string;
+}): Promise<SendMassEmailResult> {
+  return trpcMutation<SendMassEmailResult>('communications.sendMassEmail', data);
+}
+
+export interface EmailListResult {
+  emails: Array<{ name: string; email: string }>;
+  count: number;
+}
+
+export async function generateEmailList(data: {
+  seasonId?: string;
+  filter: string;
+  customEmails?: string[];
+}): Promise<EmailListResult> {
+  return trpcMutation<EmailListResult>('export.emailList', data);
 }
 
 // ---------------------------------------------------------------------------

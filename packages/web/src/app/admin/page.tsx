@@ -17,6 +17,10 @@ import {
   Calendar,
   Megaphone,
   BarChart3,
+  DollarSign,
+  FileCheck,
+  MessageSquare,
+  Mail,
 } from 'lucide-react';
 import { StatCard } from '../../components/shared/StatCard';
 import { StatusBadge } from '../../components/shared/StatusBadge';
@@ -24,8 +28,10 @@ import { EmptyState } from '../../components/shared/EmptyState';
 import { useAdminSeason } from '../../contexts/AdminSeasonContext';
 import {
   fetchDashboardData,
+  fetchActionItems,
   type DashboardData,
   type RecentApplication,
+  type ActionItems,
 } from '../../lib/adminApi';
 
 const statusBarColors: Record<string, string> = {
@@ -61,6 +67,7 @@ const placeholderData: DashboardData = {
 export default function AdminDashboardPage() {
   const { selectedSeasonId } = useAdminSeason();
   const [data, setData] = useState<DashboardData>(placeholderData);
+  const [actionItems, setActionItems] = useState<ActionItems | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,8 +80,12 @@ export default function AdminDashboardPage() {
         setLoading(true);
       }
 
-      const result = await fetchDashboardData(selectedSeasonId || undefined);
+      const [result, actionResult] = await Promise.all([
+        fetchDashboardData(selectedSeasonId || undefined),
+        fetchActionItems(selectedSeasonId || undefined).catch(() => null),
+      ]);
       setData(result);
+      setActionItems(actionResult);
       setError(null);
     } catch {
       setError('Unable to connect to the server. Showing placeholder data.');
@@ -98,6 +109,82 @@ export default function AdminDashboardPage() {
 
   const maxCount = Math.max(...statusBreakdown.map((s) => s.count), 1);
   const enrolledCount = data.confirmed + data.maybe + data.interested + data.waitlisted;
+
+  // Build action items alerts (only show where count > 0)
+  const alertCards = actionItems
+    ? [
+        {
+          key: 'unpaidDues',
+          count: actionItems.unpaidDues.count,
+          label: 'Unpaid Dues',
+          icon: DollarSign,
+          href: '/admin/communications',
+        },
+        {
+          key: 'noPreApproval',
+          count: actionItems.noPreApproval.count,
+          label: 'No Pre-Approval',
+          icon: FileCheck,
+          href: '/admin/communications',
+        },
+        {
+          key: 'pendingApps',
+          count: actionItems.pendingApplications.count,
+          label: 'Pending Apps',
+          icon: FileText,
+          href: '/admin/applications',
+        },
+        {
+          key: 'notOnWhatsapp',
+          count: actionItems.notOnWhatsapp.count,
+          label: 'Not on WhatsApp',
+          icon: MessageSquare,
+          href: '/admin/communications',
+        },
+      ].filter((c) => c.count > 0)
+    : [];
+
+  // Season timeline phases
+  const timelinePhases = [
+    { key: 'soi', label: 'SOI' },
+    { key: 'ticketing', label: 'Ticketing' },
+    { key: 'dues', label: 'Dues' },
+    { key: 'build', label: 'Build' },
+    { key: 'burn', label: 'BURN' },
+    { key: 'strike', label: 'Strike' },
+    { key: 'postPlaya', label: 'Post-Playa' },
+  ];
+
+  // Determine current phase from season dates (simple heuristic)
+  const getCurrentPhase = (): string | null => {
+    if (!data.season) return null;
+    const season = data.season as { id: string; name: string; year: number; [key: string]: unknown };
+    const now = new Date();
+    // If the season object has date fields, use them; otherwise return null
+    const burnStart = season.burnStartDate ? new Date(season.burnStartDate as string) : null;
+    const burnEnd = season.burnEndDate ? new Date(season.burnEndDate as string) : null;
+    const buildStart = season.buildStartDate ? new Date(season.buildStartDate as string) : null;
+    const strikeEnd = season.strikeEndDate ? new Date(season.strikeEndDate as string) : null;
+
+    if (burnEnd && now > burnEnd) {
+      if (strikeEnd && now <= strikeEnd) return 'strike';
+      if (strikeEnd && now > strikeEnd) return 'postPlaya';
+      return 'postPlaya';
+    }
+    if (burnStart && now >= burnStart) return 'burn';
+    if (buildStart && now >= buildStart) return 'build';
+    // Before build, estimate based on season year
+    const seasonYear = data.season.year;
+    const month = now.getMonth(); // 0-indexed
+    if (now.getFullYear() === seasonYear || (now.getFullYear() === seasonYear - 1 && month >= 9)) {
+      if (month >= 6) return 'dues'; // July onwards
+      if (month >= 3) return 'ticketing'; // April onwards
+      return 'soi'; // Jan-March
+    }
+    return null;
+  };
+
+  const currentPhase = getCurrentPhase();
 
   return (
     <div className="space-y-8">
@@ -147,6 +234,41 @@ export default function AdminDashboardPage() {
 
       {!loading && (
         <>
+          {/* Action Items Bar */}
+          {alertCards.length > 0 && (
+            <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin">
+              {alertCards.map((card) => {
+                const Icon = card.icon;
+                return (
+                  <Link
+                    key={card.key}
+                    href={card.href}
+                    className="flex-shrink-0"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 hover:bg-amber-100 transition-colors group"
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 border border-amber-300">
+                        <Icon className="h-4 w-4 text-amber-700" />
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-lg font-semibold text-amber-700 tabular-nums">
+                          {card.count}
+                        </span>
+                        <span className="text-sm text-amber-600 whitespace-nowrap">
+                          {card.label}
+                        </span>
+                      </div>
+                      <ArrowRight className="h-3.5 w-3.5 text-amber-400 group-hover:text-amber-600 transition-colors ml-1" />
+                    </motion.div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
           {/* Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
@@ -185,6 +307,72 @@ export default function AdminDashboardPage() {
               subtext={data.pendingApplications > 0 ? 'Awaiting review' : 'All caught up'}
               index={3}
             />
+          </div>
+
+          {/* Season Timeline */}
+          <div className="luxury-card p-5">
+            <h2 className="text-display-thin text-sm text-ink-soft uppercase tracking-wider mb-4">
+              Season Timeline
+            </h2>
+            <div className="relative flex items-center justify-between">
+              {/* Connecting line */}
+              <div className="absolute top-3.5 left-4 right-4 h-0.5 bg-tan/30" />
+              <div
+                className="absolute top-3.5 left-4 h-0.5 bg-sage transition-all duration-500"
+                style={{
+                  width: currentPhase
+                    ? `${(timelinePhases.findIndex((p) => p.key === currentPhase) / (timelinePhases.length - 1)) * 100}%`
+                    : '0%',
+                }}
+              />
+
+              {timelinePhases.map((phase) => {
+                const isCurrent = phase.key === currentPhase;
+                const phaseIdx = timelinePhases.findIndex((p) => p.key === phase.key);
+                const currentIdx = currentPhase
+                  ? timelinePhases.findIndex((p) => p.key === currentPhase)
+                  : -1;
+                const isPast = currentIdx >= 0 && phaseIdx < currentIdx;
+
+                return (
+                  <div
+                    key={phase.key}
+                    className="relative flex flex-col items-center z-10"
+                  >
+                    <motion.div
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: isCurrent ? 1.2 : 1 }}
+                      className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-colors ${
+                        isCurrent
+                          ? 'bg-sage border-sage shadow-md shadow-sage/30'
+                          : isPast
+                            ? 'bg-sage/80 border-sage/80'
+                            : 'bg-white border-tan/40'
+                      }`}
+                    >
+                      {(isCurrent || isPast) && (
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            isCurrent ? 'bg-white' : 'bg-white/70'
+                          }`}
+                        />
+                      )}
+                    </motion.div>
+                    <span
+                      className={`mt-2 text-xs whitespace-nowrap ${
+                        isCurrent
+                          ? 'font-semibold text-sage'
+                          : isPast
+                            ? 'text-ink-soft'
+                            : 'text-ink-soft/50'
+                      }`}
+                    >
+                      {phase.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Three-Column Layout */}
@@ -269,6 +457,17 @@ export default function AdminDashboardPage() {
                       ? `${data.totalPayments} payments recorded`
                       : 'No payments yet'
                   }
+                />
+                <QuickActionLink
+                  href="/admin/communications"
+                  icon={Mail}
+                  label="Communications"
+                  description={
+                    alertCards.length > 0
+                      ? `${alertCards.length} action item${alertCards.length !== 1 ? 's' : ''} need attention`
+                      : 'Email & action items'
+                  }
+                  highlight={alertCards.length > 0}
                 />
                 <QuickActionLink
                   href="/admin/announcements"
