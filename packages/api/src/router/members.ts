@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, memberProcedure, managerProcedure, adminProcedure } from '../trpc';
+import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 import { signInviteToken } from './auth';
 import logger from '../lib/logger';
 
@@ -8,7 +8,7 @@ import logger from '../lib/logger';
 
 const memberSearchInput = z.object({
   search: z.string().max(200).optional(),
-  role: z.enum(['ADMIN', 'MANAGER', 'MEMBER']).optional(),
+  role: z.enum(['LEAD', 'MANAGER', 'MEMBER']).optional(),
   isActive: z.boolean().optional(),
   sortBy: z.enum(['name', 'email', 'createdAt', 'role']).optional().default('name'),
   sortOrder: z.enum(['asc', 'desc']).optional().default('asc'),
@@ -97,11 +97,11 @@ export const membersRouter = router({
     }),
 
   /** Invite a new member by email (admin only) */
-  invite: adminProcedure
+  invite: leadProcedure
     .input(z.object({
       email: z.string().email('Invalid email address').max(255),
       name: z.string().min(1, 'Name is required').max(100),
-      role: z.enum(['ADMIN', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
+      role: z.enum(['LEAD', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
     }))
     .mutation(async ({ ctx, input }) => {
       const normalizedEmail = input.email.toLowerCase().trim();
@@ -133,10 +133,10 @@ export const membersRouter = router({
     }),
 
   /** Update a member's role (admin only) */
-  updateRole: adminProcedure
+  updateRole: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
-      role: z.enum(['ADMIN', 'MANAGER', 'MEMBER']),
+      role: z.enum(['LEAD', 'MANAGER', 'MEMBER']),
     }))
     .mutation(async ({ ctx, input }) => {
       if (input.memberId === ctx.user.id) {
@@ -163,7 +163,7 @@ export const membersRouter = router({
     }),
 
   /** Deactivate a member (admin only) */
-  deactivate: adminProcedure
+  deactivate: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
     }))
@@ -196,7 +196,7 @@ export const membersRouter = router({
     }),
 
   /** Reactivate a deactivated member (admin only) */
-  reactivate: adminProcedure
+  reactivate: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
     }))
@@ -225,7 +225,7 @@ export const membersRouter = router({
     }),
 
   /** Permanently delete a member and all related data (admin only) */
-  delete: adminProcedure
+  delete: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
       confirmEmail: z.string().email('Must confirm with member email'),
@@ -257,7 +257,7 @@ export const membersRouter = router({
     }),
 
   /** Admin update of a member's profile fields (admin only) */
-  adminUpdate: adminProcedure
+  adminUpdate: leadProcedure
     .input(z.object({
       id: z.string().uuid('Invalid member ID'),
       name: z.string().min(1).max(100).optional(),

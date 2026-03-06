@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, publicProcedure, memberProcedure, managerProcedure, adminProcedure } from '../trpc';
+import { router, publicProcedure, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 import logger from '../lib/logger';
 
 // --- Validation schemas ---
@@ -225,7 +225,7 @@ export const eventsRouter = router({
     }),
 
   /** Create a new event/shift (admin only) */
-  create: adminProcedure
+  create: leadProcedure
     .input(createShiftInput)
     .mutation(async ({ ctx, input }) => {
       // Verify season exists
@@ -257,7 +257,7 @@ export const eventsRouter = router({
     }),
 
   /** Update an existing event/shift (admin only) */
-  update: adminProcedure
+  update: leadProcedure
     .input(updateShiftInput)
     .mutation(async ({ ctx, input }) => {
       const { id, date, ...rest } = input;
@@ -283,7 +283,7 @@ export const eventsRouter = router({
     }),
 
   /** Delete an event/shift (admin only) */
-  delete: adminProcedure
+  delete: leadProcedure
     .input(z.object({ id: z.string().uuid('Invalid event ID') }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.prisma.shift.findUnique({

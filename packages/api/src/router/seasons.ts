@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, memberProcedure, managerProcedure, adminProcedure } from '../trpc';
+import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 
 export const seasonsRouter = router({
   list: memberProcedure
@@ -23,7 +23,7 @@ export const seasonsRouter = router({
       return season;
     }),
 
-  create: adminProcedure
+  create: leadProcedure
     .input(z.object({
       year: z.number().int().min(2020).max(2100),
       name: z.string().min(1),
@@ -51,7 +51,7 @@ export const seasonsRouter = router({
       });
     }),
 
-  update: adminProcedure
+  update: leadProcedure
     .input(z.object({
       id: z.string().uuid(),
       name: z.string().min(1).optional(),
@@ -78,7 +78,7 @@ export const seasonsRouter = router({
       });
     }),
 
-  activate: adminProcedure
+  activate: leadProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       // Deactivate all seasons, then activate the target

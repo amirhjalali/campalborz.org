@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
   // Redirect if already authenticated as admin/manager
   useEffect(() => {
     if (!authLoading && isAuthenticated && user) {
-      if (user.role === 'ADMIN' || user.role === 'MANAGER') {
+      if (user.role === 'LEAD' || user.role === 'MANAGER') {
         router.replace('/admin');
       } else {
         // Regular member -- redirect to portal

@@ -86,7 +86,7 @@ function requireAuth(namespace: Namespace) {
 function requireAdmin(namespace: Namespace) {
   requireAuth(namespace);
   namespace.use((socket: AuthenticatedSocket, next) => {
-    if (socket.userRole !== 'ADMIN' && socket.userRole !== 'MANAGER') {
+    if (socket.userRole !== 'LEAD' && socket.userRole !== 'MANAGER') {
       return next(new Error('Admin access required'));
     }
     next();

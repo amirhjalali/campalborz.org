@@ -14,18 +14,21 @@ export const memberProcedure = t.procedure.use(({ ctx, next }) => {
   return next({ ctx: { ...ctx, user: ctx.user } });
 });
 
-// Requires ADMIN or MANAGER role
+// Requires LEAD or MANAGER role
 export const managerProcedure = memberProcedure.use(({ ctx, next }) => {
-  if (ctx.user.role !== 'ADMIN' && ctx.user.role !== 'MANAGER') {
+  if (ctx.user.role !== 'LEAD' && ctx.user.role !== 'MANAGER') {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Manager access required' });
   }
   return next();
 });
 
-// Requires ADMIN role
-export const adminProcedure = memberProcedure.use(({ ctx, next }) => {
-  if (ctx.user.role !== 'ADMIN') {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'Admin access required' });
+// Requires LEAD role
+export const leadProcedure = memberProcedure.use(({ ctx, next }) => {
+  if (ctx.user.role !== 'LEAD') {
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'Lead access required' });
   }
   return next();
 });
+
+// Backwards-compatible alias
+export const adminProcedure = leadProcedure;

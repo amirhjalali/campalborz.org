@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import jwt from 'jsonwebtoken';
-import { router, publicProcedure, adminProcedure, managerProcedure } from '../trpc';
+import { router, publicProcedure, leadProcedure, managerProcedure } from '../trpc';
 import { signInviteToken } from './auth';
 import logger from '../lib/logger';
 
@@ -12,11 +12,11 @@ export const invitationsRouter = router({
    * Create a new member invite (admin only).
    * Creates the member record and generates an invite JWT token.
    */
-  create: adminProcedure
+  create: leadProcedure
     .input(z.object({
       email: z.string().email('Invalid email address').max(255),
       name: z.string().min(1, 'Name is required').max(100),
-      role: z.enum(['ADMIN', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
+      role: z.enum(['LEAD', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
       playaName: z.string().max(100).optional(),
       phone: z.string().max(20).optional(),
     }))
@@ -92,12 +92,12 @@ export const invitationsRouter = router({
    * Bulk create invitations (admin only).
    * Accepts an array of email/name pairs and creates members + invite tokens for each.
    */
-  bulkCreate: adminProcedure
+  bulkCreate: leadProcedure
     .input(z.object({
       invites: z.array(z.object({
         email: z.string().email('Invalid email address').max(255),
         name: z.string().min(1).max(100),
-        role: z.enum(['ADMIN', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
+        role: z.enum(['LEAD', 'MANAGER', 'MEMBER']).optional().default('MEMBER'),
       })).min(1, 'At least one invite is required').max(50, 'Maximum 50 invites at a time'),
     }))
     .mutation(async ({ ctx, input }) => {
@@ -281,7 +281,7 @@ export const invitationsRouter = router({
    * Resend an invitation for a specific member (admin only).
    * Generates a new invite token.
    */
-  resend: adminProcedure
+  resend: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
     }))
@@ -319,7 +319,7 @@ export const invitationsRouter = router({
    * Revoke an invitation by deactivating the member (admin only).
    * Only works for members who haven't accepted yet.
    */
-  revoke: adminProcedure
+  revoke: leadProcedure
     .input(z.object({
       memberId: z.string().uuid('Invalid member ID'),
     }))

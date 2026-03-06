@@ -77,7 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
     }
     if (!isLoading && isAuthenticated && user) {
-      if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+      if (user.role !== 'LEAD' && user.role !== 'MANAGER') {
         router.replace('/portal');
       }
     }
@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return null;
   }
 
-  if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+  if (user.role !== 'LEAD' && user.role !== 'MANAGER') {
     return null;
   }
 
@@ -148,7 +148,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link href="/admin" className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-gold" />
               <span className="font-display text-sm tracking-wider text-cream">
-                CAMP ALBORZ ADMIN
+                CAMP ALBORZ LEAD
               </span>
             </Link>
             <button

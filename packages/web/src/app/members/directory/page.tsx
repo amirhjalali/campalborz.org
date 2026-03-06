@@ -95,7 +95,7 @@ export default function DirectoryPage() {
             className="form-input w-auto min-w-[140px] text-sm"
           >
             <option value="all">All Roles</option>
-            <option value="ADMIN">Camp Leads</option>
+            <option value="LEAD">Camp Leads</option>
             <option value="MANAGER">Managers</option>
             <option value="MEMBER">Members</option>
           </select>

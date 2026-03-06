@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, publicProcedure, managerProcedure, adminProcedure } from '../trpc';
+import { router, publicProcedure, managerProcedure, leadProcedure } from '../trpc';
 import logger from '../lib/logger';
 import { emitAdminUpdate } from '../lib/socket';
 
@@ -143,7 +143,7 @@ export const applicationsRouter = router({
     }),
 
   /** Review an application: approve, reject, or waitlist (admin only) */
-  review: adminProcedure
+  review: leadProcedure
     .input(z.object({
       applicationId: z.string().uuid('Invalid application ID'),
       status: z.enum(['ACCEPTED', 'REJECTED', 'WAITLISTED']),
@@ -188,7 +188,7 @@ export const applicationsRouter = router({
     }),
 
   /** Update status of an already-reviewed application (admin only) */
-  updateStatus: adminProcedure
+  updateStatus: leadProcedure
     .input(z.object({
       applicationId: z.string().uuid('Invalid application ID'),
       status: applicationStatusEnum,
@@ -223,7 +223,7 @@ export const applicationsRouter = router({
     }),
 
   /** Delete an application (admin only) */
-  delete: adminProcedure
+  delete: leadProcedure
     .input(z.object({ id: z.string().uuid('Invalid application ID') }))
     .mutation(async ({ ctx, input }) => {
       const application = await ctx.prisma.application.findUnique({

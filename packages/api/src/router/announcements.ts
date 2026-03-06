@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, memberProcedure, adminProcedure } from '../trpc';
+import { router, memberProcedure, leadProcedure } from '../trpc';
 import { notifyAll } from '../lib/socket';
 import logger from '../lib/logger';
 
@@ -40,7 +40,7 @@ export const announcementsRouter = router({
       const where: any = {};
 
       // Non-admin members only see published, non-expired announcements
-      const isManager = ctx.user.role === 'ADMIN' || ctx.user.role === 'MANAGER';
+      const isManager = ctx.user.role === 'LEAD' || ctx.user.role === 'MANAGER';
 
       if (!isManager || !input.includeUnpublished) {
         where.isPublished = true;
@@ -88,7 +88,7 @@ export const announcementsRouter = router({
       }
 
       // Non-admin members can only see published announcements
-      const isManager = ctx.user.role === 'ADMIN' || ctx.user.role === 'MANAGER';
+      const isManager = ctx.user.role === 'LEAD' || ctx.user.role === 'MANAGER';
       if (!isManager && !announcement.isPublished) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Announcement not found' });
       }
@@ -97,7 +97,7 @@ export const announcementsRouter = router({
     }),
 
   /** Create a new announcement (admin only) */
-  create: adminProcedure
+  create: leadProcedure
     .input(createAnnouncementInput)
     .mutation(async ({ ctx, input }) => {
       const announcement = await ctx.prisma.announcement.create({
@@ -132,7 +132,7 @@ export const announcementsRouter = router({
     }),
 
   /** Update an existing announcement (admin only) */
-  update: adminProcedure
+  update: leadProcedure
     .input(updateAnnouncementInput)
     .mutation(async ({ ctx, input }) => {
       const { id, expiresAt, isPublished, ...rest } = input;
@@ -170,7 +170,7 @@ export const announcementsRouter = router({
     }),
 
   /** Delete an announcement (admin only) */
-  delete: adminProcedure
+  delete: leadProcedure
     .input(z.object({ id: z.string().uuid('Invalid announcement ID') }))
     .mutation(async ({ ctx, input }) => {
       const existing = await ctx.prisma.announcement.findUnique({ where: { id: input.id } });

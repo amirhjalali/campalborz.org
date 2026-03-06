@@ -89,7 +89,7 @@ export async function importMembers(
     }
 
     // Determine role
-    const role = normalizeName(name) === 'amir jalali' ? 'ADMIN' : 'MEMBER';
+    const role = normalizeName(name) === 'amir jalali' ? 'LEAD' : 'MEMBER';
 
     // Upsert member
     const member = await prisma.member.upsert({

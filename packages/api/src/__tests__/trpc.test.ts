@@ -102,7 +102,7 @@ describe('tRPC procedures', () => {
         id: '1',
         email: 'admin@example.com',
         name: 'Admin',
-        role: 'ADMIN',
+        role: 'LEAD',
       });
       const result = await caller.test();
       expect(result).toBe('manager-data');
@@ -161,7 +161,7 @@ describe('tRPC procedures', () => {
         id: '1',
         email: 'admin@example.com',
         name: 'Admin',
-        role: 'ADMIN',
+        role: 'LEAD',
       });
       const result = await caller.test();
       expect(result).toBe('admin-data');

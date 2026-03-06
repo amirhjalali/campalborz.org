@@ -17,7 +17,7 @@ export interface MemberProfile {
   phone?: string;
   bio?: string;
   profilePhoto?: string;
-  role: 'ADMIN' | 'MANAGER' | 'MEMBER';
+  role: 'LEAD' | 'MANAGER' | 'MEMBER';
   joinedDate: string;
   memberSince: string;
 }
@@ -70,7 +70,7 @@ export interface DirectoryMember {
   id: string;
   name: string;
   playaName?: string;
-  role: 'ADMIN' | 'MANAGER' | 'MEMBER';
+  role: 'LEAD' | 'MANAGER' | 'MEMBER';
   joinedYear: string;
   bio?: string;
   skills?: string[];
@@ -285,7 +285,7 @@ const MOCK_DIRECTORY: DirectoryMember[] = [
     id: 'mem-1',
     name: 'Arash Mehraban',
     playaName: 'Sage Fox',
-    role: 'ADMIN',
+    role: 'LEAD',
     joinedYear: '2008',
     bio: 'Founding member and camp lead. Passionate about building community through Persian culture and art.',
     skills: ['Leadership', 'Event Planning', 'Sound Engineering'],
@@ -294,7 +294,7 @@ const MOCK_DIRECTORY: DirectoryMember[] = [
     id: 'mem-2',
     name: 'Shirin Kamali',
     playaName: 'Desert Rose',
-    role: 'ADMIN',
+    role: 'LEAD',
     joinedYear: '2009',
     bio: 'Co-lead and art director. Oversees HOMA and DAMAVAND art car projects.',
     skills: ['Art Direction', 'LED Design', 'Fabrication'],

@@ -7,7 +7,7 @@ export interface User {
   email: string;
   name: string;
   playaName?: string;
-  role: 'ADMIN' | 'MANAGER' | 'MEMBER';
+  role: 'LEAD' | 'MANAGER' | 'MEMBER';
   emailVerified: boolean;
 }
 

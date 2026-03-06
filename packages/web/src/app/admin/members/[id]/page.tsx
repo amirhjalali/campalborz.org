@@ -181,7 +181,7 @@ export default function MemberDetailPage() {
   const handleChangeRole = async () => {
     if (!member || !pendingRole) return;
     try {
-      await updateMemberRole(member.id, pendingRole as 'ADMIN' | 'MANAGER' | 'MEMBER');
+      await updateMemberRole(member.id, pendingRole as 'LEAD' | 'MANAGER' | 'MEMBER');
       setMember({ ...member, role: pendingRole });
       showSaveNotification('Role updated successfully.', 'success');
     } catch {
@@ -344,7 +344,7 @@ export default function MemberDetailPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                setPendingRole(member.role === 'ADMIN' ? 'MEMBER' : member.role === 'MANAGER' ? 'ADMIN' : 'MANAGER');
+                setPendingRole(member.role === 'LEAD' ? 'MEMBER' : member.role === 'MANAGER' ? 'LEAD' : 'MANAGER');
                 setShowRoleDialog(true);
               }}
               className="px-3 py-2 rounded-lg text-sm font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors flex items-center gap-1.5"

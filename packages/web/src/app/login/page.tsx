@@ -23,7 +23,7 @@ function LoginForm() {
     if (!authLoading && isAuthenticated && user) {
       if (redirectTo && !redirectTo.startsWith('/login') && !redirectTo.startsWith('/admin/login')) {
         router.replace(redirectTo);
-      } else if (user.role === 'ADMIN' || user.role === 'MANAGER') {
+      } else if (user.role === 'LEAD' || user.role === 'MANAGER') {
         router.replace('/admin');
       } else {
         router.replace('/portal');

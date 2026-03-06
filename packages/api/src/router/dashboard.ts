@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, memberProcedure, adminProcedure } from '../trpc';
+import { router, memberProcedure, leadProcedure } from '../trpc';
 
 export const dashboardRouter = router({
-  getAdminDashboard: adminProcedure
+  getAdminDashboard: leadProcedure
     .input(z.object({
       seasonId: z.string().uuid().optional(),
     }).optional().default({}))

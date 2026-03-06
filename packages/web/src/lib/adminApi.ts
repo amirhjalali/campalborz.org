@@ -364,7 +364,7 @@ export async function updateMemberProfile(
 
 export async function updateMemberRole(
   memberId: string,
-  role: 'ADMIN' | 'MANAGER' | 'MEMBER',
+  role: 'LEAD' | 'MANAGER' | 'MEMBER',
 ): Promise<unknown> {
   return trpcMutation('members.updateRole', { memberId, role });
 }

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { router, memberProcedure, managerProcedure, adminProcedure } from '../trpc';
+import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 
 export const seasonMembersRouter = router({
   list: managerProcedure
@@ -88,7 +88,7 @@ export const seasonMembersRouter = router({
       return sm;
     }),
 
-  enroll: adminProcedure
+  enroll: leadProcedure
     .input(z.object({
       seasonId: z.string().uuid(),
       memberId: z.string().uuid(),
@@ -115,7 +115,7 @@ export const seasonMembersRouter = router({
       });
     }),
 
-  bulkEnroll: adminProcedure
+  bulkEnroll: leadProcedure
     .input(z.object({
       seasonId: z.string().uuid(),
       memberIds: z.array(z.string().uuid()).min(1),

@@ -108,7 +108,7 @@ async function main() {
       playaName: 'Amir',
       phone: '(310) 555-0100',
       gender: 'MALE',
-      role: 'ADMIN',
+      role: 'LEAD',
       isActive: true,
       emailVerified: true,
       emergencyContactName: 'Ahson Jalali',
