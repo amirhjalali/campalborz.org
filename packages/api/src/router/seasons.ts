@@ -92,6 +92,100 @@ export const seasonsRouter = router({
       });
     }),
 
+  rollover: leadProcedure
+    .input(z.object({
+      fromSeasonId: z.string().uuid(),
+      year: z.number().int().min(2020).max(2100),
+      name: z.string().min(1),
+      duesAmount: z.number().int().min(0),
+      gridFee30amp: z.number().int().min(0),
+      gridFee50amp: z.number().int().min(0),
+      memberFilter: z.enum(['all_active', 'confirmed_only', 'custom']).default('all_active'),
+      memberIds: z.array(z.string().uuid()).optional(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      // 1. Verify source season exists
+      const sourceSeason = await ctx.prisma.season.findUnique({
+        where: { id: input.fromSeasonId },
+      });
+      if (!sourceSeason) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Source season not found' });
+      }
+
+      // 2. Verify target year doesn't already exist
+      const existingSeason = await ctx.prisma.season.findUnique({
+        where: { year: input.year },
+      });
+      if (existingSeason) {
+        throw new TRPCError({ code: 'CONFLICT', message: `A season for year ${input.year} already exists` });
+      }
+
+      // 3. Create the new season (NOT active by default)
+      const newSeason = await ctx.prisma.season.create({
+        data: {
+          year: input.year,
+          name: input.name,
+          duesAmount: input.duesAmount,
+          gridFee30amp: input.gridFee30amp,
+          gridFee50amp: input.gridFee50amp,
+        },
+      });
+
+      // 4. Query members from source season based on filter
+      let whereClause: any = { seasonId: input.fromSeasonId };
+
+      if (input.memberFilter === 'all_active') {
+        whereClause.status = { not: 'CANCELLED' };
+      } else if (input.memberFilter === 'confirmed_only') {
+        whereClause.status = 'CONFIRMED';
+      } else if (input.memberFilter === 'custom') {
+        if (!input.memberIds || input.memberIds.length === 0) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'memberIds required when memberFilter is "custom"' });
+        }
+        whereClause.memberId = { in: input.memberIds };
+      }
+
+      const sourceMembers = await ctx.prisma.seasonMember.findMany({
+        where: whereClause,
+        select: { memberId: true },
+      });
+
+      // 5. Bulk create SeasonMember enrollments for the new season
+      const enrollmentData = sourceMembers.map((sm) => ({
+        seasonId: newSeason.id,
+        memberId: sm.memberId,
+        status: 'INTERESTED' as const,
+      }));
+
+      await ctx.prisma.seasonMember.createMany({
+        data: enrollmentData,
+        skipDuplicates: true,
+      });
+
+      // 6. Create audit log entry
+      await ctx.prisma.auditLog.create({
+        data: {
+          memberId: ctx.user.id,
+          action: 'SEASON_ROLLOVER',
+          entityType: 'Season',
+          entityId: newSeason.id,
+          details: {
+            fromSeasonId: input.fromSeasonId,
+            fromYear: sourceSeason.year,
+            toYear: input.year,
+            memberFilter: input.memberFilter,
+            membersEnrolled: sourceMembers.length,
+          },
+        },
+      });
+
+      // 7. Return result
+      return {
+        season: newSeason,
+        membersEnrolled: sourceMembers.length,
+      };
+    }),
+
   getStats: managerProcedure
     .input(z.object({ seasonId: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
