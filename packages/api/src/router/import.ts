@@ -147,7 +147,7 @@ interface ParsedPayment {
   paidTo: string | null;
 }
 
-interface ParseError {
+export interface ParseError {
   sheet: string;
   row: number;
   message: string;

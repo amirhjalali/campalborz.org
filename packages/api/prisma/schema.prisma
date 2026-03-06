@@ -16,7 +16,7 @@ generator client {
 // ═══════════════════════════════════════════════
 
 enum MemberRole {
-  ADMIN
+  LEAD
   MANAGER
   MEMBER
 }
