@@ -650,6 +650,54 @@ export async function sendMembershipReminder(to: string, name: string): Promise<
   return sendEmail({ to, subject: 'Camp Alborz - Season Reminder', html, text });
 }
 
+/**
+ * Send a mass email to a list of recipients using the branded template.
+ * Iterates over each recipient and calls the core sendEmail helper.
+ * Returns aggregate results: how many sent, failed, and individual errors.
+ */
+export async function sendMassEmailToRecipients(
+  recipients: string[],
+  subject: string,
+  body: string,
+  senderName: string,
+): Promise<{ sent: number; failed: number; errors: string[] }> {
+  const html = layout(
+    [
+      heading(subject),
+      paragraph(body),
+      smallText(`Sent by ${senderName} via Camp Alborz`),
+    ].join('\n'),
+    subject,
+  );
+
+  const text = [
+    subject,
+    '',
+    body,
+    '',
+    `Sent by ${senderName} via Camp Alborz`,
+    '',
+    '---',
+    'Camp Alborz | campalborz.org',
+  ].join('\n');
+
+  let sent = 0;
+  let failed = 0;
+  const errors: string[] = [];
+
+  for (const to of recipients) {
+    const ok = await sendEmail({ to, subject, html, text });
+    if (ok) {
+      sent++;
+    } else {
+      failed++;
+      errors.push(to);
+    }
+  }
+
+  return { sent, failed, errors };
+}
+
 // ---------------------------------------------------------------------------
 // Named export for the entire service (useful for dependency injection / testing)
 // ---------------------------------------------------------------------------
@@ -662,6 +710,7 @@ export const emailService = {
   sendApplicationApproved,
   sendApplicationDenied,
   sendMembershipReminder,
+  sendMassEmailToRecipients,
 };
 
 export default emailService;
