@@ -286,10 +286,10 @@ export default function DonatePage() {
                 const OptionIcon = getIcon(option.icon || 'heart');
                 return (
                   <Reveal key={option.method} delay={index * 0.12}>
-                    <div className="border rounded-2xl p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
-                      <div className="flex items-start justify-between gap-4 mb-6">
+                    <div className="border rounded-2xl p-5 sm:p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                         <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
+                          <div className="p-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                             <OptionIcon className="h-5 w-5" style={{ color: 'var(--color-gold-muted)' }} />
                           </div>
                           <div>
@@ -302,7 +302,7 @@ export default function DonatePage() {
                           </div>
                         </div>
                         {option.badge && (
-                          <span className="px-3 py-1 text-white text-xs rounded-full uppercase tracking-[0.1em]" style={{ backgroundColor: 'var(--color-gold)' }}>
+                          <span className="px-3 py-1 text-white text-xs rounded-full uppercase tracking-[0.1em] flex-shrink-0" style={{ backgroundColor: 'var(--color-gold)' }}>
                             {option.badge}
                           </span>
                         )}
@@ -322,7 +322,7 @@ export default function DonatePage() {
                           href={option.linkUrl}
                           target={option.linkUrl.startsWith('http') ? '_blank' : undefined}
                           rel={option.linkUrl.startsWith('http') ? 'noreferrer' : undefined}
-                          className="inline-flex items-center gap-2 text-sm transition-colors"
+                          className="inline-flex items-center gap-2 text-sm py-2 transition-colors"
                           style={{ color: 'var(--color-gold-muted)' }}
                         >
                           {option.linkText}
@@ -453,9 +453,9 @@ export default function DonatePage() {
               const OptionIcon = getIcon(option.icon);
               return (
                 <Reveal key={option.title} delay={index * 0.12}>
-                  <div className="border rounded-2xl p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                  <div className="border rounded-2xl p-5 sm:p-8" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
+                      <div className="p-3 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                         <OptionIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
                       <div>
@@ -470,7 +470,7 @@ export default function DonatePage() {
                     </p>
                     <Link
                       href="/about"
-                      className="inline-flex items-center gap-2 text-sm transition-colors"
+                      className="inline-flex items-center gap-2 text-sm py-2 transition-colors"
                       style={{ color: 'var(--color-gold-muted)' }}
                     >
                       Learn More

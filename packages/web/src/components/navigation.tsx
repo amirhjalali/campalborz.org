@@ -238,7 +238,7 @@ export function Navigation() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2.5 rounded-full transition-all duration-300 text-ink-soft hover:text-ink hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
+                className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full transition-all duration-300 text-ink-soft hover:text-ink hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
                 aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               >
                 {theme === 'dark' ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
@@ -257,7 +257,7 @@ export function Navigation() {
             <button
               ref={mobileMenuButtonRef}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-ink-soft hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
+              className="lg:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-ink-soft hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2"
               aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
@@ -309,7 +309,7 @@ export function Navigation() {
                           key={child.href}
                           href={child.href}
                           className={cn(
-                            'block py-2 text-sm transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
+                            'block py-3 text-sm transition-colors duration-200 hover:text-terracotta focus:outline-none focus-visible:text-ink',
                             isActive(child.href)
                               ? 'text-ink'
                               : 'text-ink-faint'

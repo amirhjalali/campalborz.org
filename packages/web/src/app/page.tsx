@@ -254,7 +254,7 @@ export default function HomePage() {
             </motion.p>
 
             <motion.div
-              className="flex items-center gap-8"
+              className="flex flex-wrap items-center gap-4 sm:gap-8"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -267,7 +267,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/about"
-                className="text-[13px] border-b pb-0.5 transition-colors text-white/70 border-white/40 hover:text-white hover:border-white"
+                className="text-[13px] border-b py-2 px-1 pb-0.5 transition-colors text-white/70 border-white/40 hover:text-white hover:border-white"
               >
                 Our Story
               </Link>
@@ -312,7 +312,7 @@ export default function HomePage() {
                   className={`py-10 md:py-12 text-center${
                     i < 3 ? ' border-r' : ''
                   }${i < 2 ? ' max-md:border-b' : ''}${
-                    i === 2 ? ' max-md:border-r-0' : ''
+                    i === 1 || i === 2 ? ' max-md:border-r-0' : ''
                   }`}
                   style={{ borderColor: 'var(--color-warm-border)' }}
                 >
@@ -463,14 +463,14 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10" style={{ color: 'var(--color-ink)' }}>
+              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10" style={{ color: '#2C2416', textShadow: '0 0 20px rgba(250, 247, 240, 0.5)' }}>
                 {rumiQuote?.text ||
                   "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."}
               </p>
 
               <p
                 className="text-xs tracking-[0.35em] uppercase font-medium"
-                style={{ color: 'var(--color-terracotta)' }}
+                style={{ color: '#2C2416' }}
               >
                 {rumiQuote?.attribution
                   ? rumiQuote.attribution.split('·')[0].trim()
@@ -538,7 +538,7 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/art"
-                  className="text-xs tracking-[0.2em] uppercase font-medium transition-colors hover:text-terracotta"
+                  className="text-xs tracking-[0.2em] uppercase font-medium transition-colors hover:text-terracotta py-3 pl-3"
                   style={{ color: 'var(--color-ink-soft)' }}
                 >
                   View all &rarr;
@@ -718,12 +718,12 @@ export default function HomePage() {
               {campQAs.map(({ question, answer }) => (
                 <Reveal key={question} delay={0}>
                   <div className="group">
-                    <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta">
+                    <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta" style={{ color: '#2C2416' }}>
                       {question}
                     </h3>
                     <p
                       className="text-sm leading-[1.8]"
-                      style={{ color: 'var(--color-ink-soft)' }}
+                      style={{ color: '#3d3426' }}
                     >
                       {answer}
                     </p>
