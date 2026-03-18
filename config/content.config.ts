@@ -404,21 +404,19 @@ export const contentConfig: ContentConfig = {
       {
         id: 3,
         title: "Los Angeles Fundraiser",
-        date: "June 14, 2025",
+        date: "June 2026",
         time: "Evening event",
         location: "Los Angeles, CA",
         type: "Fundraiser",
         description:
-          "An evening fundraiser supporting HOMA and DAMAVAND upgrades for the 2026 playa season.",
+          "An evening fundraiser supporting HOMA and DAMAVAND upgrades for the 2026 playa season. Details announced via our mailing list.",
         icon: "music",
         color: "bg-orange-100 text-orange-600",
-        linkText: "Get tickets",
-        linkUrl: "https://www.eventbrite.com/e/2025-alborz-fundraiser-tickets-1364970556679",
       },
       {
         id: 4,
         title: "New York Fundraiser",
-        date: "July 2025",
+        date: "July 2026",
         time: "TBA",
         location: "New York, NY",
         type: "Fundraiser",
@@ -426,6 +424,18 @@ export const contentConfig: ContentConfig = {
           "Annual NYC gathering with music, hospitality, and community. Details announced via our mailing list.",
         icon: "heart",
         color: "bg-rose-100 text-rose-600",
+      },
+      {
+        id: 5,
+        title: "Burning Man 2026",
+        date: "August 30 – September 7, 2026",
+        time: "All week",
+        location: "Black Rock City, NV",
+        type: "Burning Man",
+        description:
+          "Camp Alborz returns to the playa with Persian tea, art cars HOMA and DAMAVAND, and a full week of hospitality, music, and community.",
+        icon: "flame",
+        color: "bg-amber-100 text-amber-600",
       },
     ],
     burningManSchedule: [
@@ -630,7 +640,7 @@ export const contentConfig: ContentConfig = {
       },
     ],
     donorRecognition: {
-      title: "Thank You to Our 2023 Supporters",
+      title: "Thank You to Our Supporters",
       description: "Shoutout to everyone who helped make this happen",
       tiers: [
         {
@@ -680,7 +690,7 @@ export const contentConfig: ContentConfig = {
         icon: "dollar-sign",
       },
       {
-        method: "Camp Alborz 2025 Fundraiser",
+        method: "Camp Alborz 2026 Fundraiser",
         description: "Givebutter campaign powering HOMA, DAMAVAND, and hospitality upgrades.",
         details: [
           "Tax-deductible receipt delivered instantly.",
@@ -974,7 +984,7 @@ export const contentConfig: ContentConfig = {
         {
           title: "Complete the membership form",
           description: "Share your arrival plans, vehicles, and camp needs within one week of receiving your welcome email.",
-          linkText: "2025 Membership Form",
+          linkText: "2026 Membership Form",
           linkUrl: "https://forms.gle/6YCQonYgfx8vo9oY8",
         },
         {
@@ -1020,7 +1030,7 @@ export const contentConfig: ContentConfig = {
           description: "Contribute beyond dues or help sponsor another camper.",
           details: [
             "Receipts available instantly—perfect for employer matching.",
-            "Link donations to “Camp Alborz 2025” so we apply them correctly.",
+            "Link donations to “Camp Alborz 2026” so we apply them correctly.",
           ],
           icon: "gift",
           linkText: "Open Givebutter",
@@ -1044,15 +1054,13 @@ export const contentConfig: ContentConfig = {
       fundraisers: [
         {
           title: "Los Angeles Fundraiser",
-          date: "June 14, 2025",
-          description: "Dance with us in LA while raising funds for HOMA and DAMAVAND upgrades.",
-          linkText: "Buy tickets",
-          linkUrl: "https://www.eventbrite.com/e/2025-alborz-fundraiser-tickets-1364970556679",
+          date: "June 2026",
+          description: "Dance with us in LA while raising funds for HOMA and DAMAVAND upgrades. Details announced via our mailing list.",
         },
         {
           title: "New York Fundraiser",
-          date: "July 2025",
-          description: "Details TBA—watch the WhatsApp group for lineup and location.",
+          date: "July 2026",
+          description: "Details TBA — watch the WhatsApp group for lineup and location.",
         },
       ],
     },

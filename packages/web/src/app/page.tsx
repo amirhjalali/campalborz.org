@@ -152,6 +152,9 @@ export default function HomePage() {
         <section
           ref={heroRef}
           className="relative min-h-screen overflow-hidden flex items-center"
+          style={{
+            background: 'linear-gradient(135deg, #2C2416 0%, #4A5D5A 35%, #3a4a3a 55%, #D4C4A8 85%, #D4AF37 100%)',
+          }}
         >
           {/* Full-bleed background image with parallax */}
           <motion.div className="absolute inset-0 -top-[15%] -bottom-[15%]" style={{ y: heroImageY }}>
@@ -361,13 +364,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
               {offerings.map((item) => (
                 <div key={item.title} className="group text-center lg:text-left p-6 rounded-lg transition-colors duration-300 hover:bg-white/50 dark:hover:bg-white/5">
-                  <div
-                    className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-colors duration-300"
-                    style={{
-                      color: 'var(--color-terracotta)',
-                      backgroundColor: 'rgba(var(--color-terracotta-rgb), 0.08)',
-                    }}
-                  >
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-colors duration-300 text-terracotta bg-terracotta/10">
                     {item.icon}
                   </div>
                   <h3 className="font-display text-lg tracking-wide mb-3">
@@ -391,6 +388,9 @@ export default function HomePage() {
         <section
           ref={quoteRef}
           className="relative py-28 md:py-40 overflow-hidden"
+          style={{
+            background: 'linear-gradient(180deg, #FAF7F0 0%, #e8ddd0 30%, #D4C4A8 60%, #f3ebe0 100%)',
+          }}
         >
           {/* Parallax background */}
           <motion.div className="absolute inset-0 -top-20 -bottom-20" style={{ y: quoteBgY }}>
@@ -443,7 +443,10 @@ export default function HomePage() {
         <section
           ref={panoramaRef}
           className="relative w-full overflow-hidden"
-          style={{ height: 'clamp(300px, 45vw, 550px)' }}
+          style={{
+            height: 'clamp(300px, 45vw, 550px)',
+            background: 'linear-gradient(135deg, #4A5D5A 0%, #2C2416 40%, #D4AF37 70%, #D4C4A8 100%)',
+          }}
         >
           <motion.div
             className="absolute inset-0 -top-[10%] -bottom-[10%]"
@@ -581,7 +584,12 @@ export default function HomePage() {
         {/* ============================================ */}
         {/* 8. MOUNTAIN DIVIDER — Parallax               */}
         {/* ============================================ */}
-        <div className="relative w-full h-48 md:h-56 overflow-hidden">
+        <div
+          className="relative w-full h-48 md:h-56 overflow-hidden"
+          style={{
+            background: 'linear-gradient(180deg, var(--color-cream) 0%, #4A5D5A 30%, #2C2416 60%, var(--color-cream) 100%)',
+          }}
+        >
           <Image
             src="/images/mountain_ink.webp"
             alt=""
@@ -600,48 +608,38 @@ export default function HomePage() {
         </div>
 
         {/* ============================================ */}
-        {/* 9. CTA SECTION                               */}
+        {/* 9. CTA SECTION — 2026 Season                 */}
         {/* ============================================ */}
-        <section
-          className="py-28 md:py-36"
-          style={{ backgroundColor: 'rgba(var(--color-terracotta-rgb), 0.04)' }}
-        >
+        <section className="section-contrast py-28 md:py-36">
           <div className="max-w-2xl mx-auto px-5 md:px-10 text-center">
             <Reveal>
-              <p className="text-eyebrow mb-6">
+              <p className="text-[11px] tracking-[0.3em] uppercase font-medium mb-6" style={{ color: 'var(--color-gold-muted)' }}>
                 2026 Season
               </p>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h2 className="font-display font-light text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-8">
-                Come find{' '}
-                <em
-                  className="font-accent"
-                  style={{ color: 'var(--color-terracotta)' }}
-                >
-                  your field
-                </em>
+              <h2 className="text-display-thin font-display font-light text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6">
+                Join Us for the 2026 Season
               </h2>
             </Reveal>
 
             <Reveal delay={0.2}>
-              <p
-                className="text-base md:text-[17px] leading-relaxed mb-12 max-w-lg mx-auto"
-                style={{ color: 'var(--color-ink-soft)' }}
-              >
-                Our inclusive events foster cross-cultural understanding and
-                community engagement. Help us preserve and promote the vibrant
-                Persian culture.
+              <p className="font-accent text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: 'var(--color-gold-muted)' }}>
+                Black Rock City awaits. Bring your spirit, your curiosity, and your appetite — we&apos;ll bring the tea, the music, and the fire.
               </p>
             </Reveal>
 
             <Reveal delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/donate" className="cta-primary text-sm">
-                  <span>Support Our Mission</span>
+                <Link href="/apply" className="cta-primary text-sm">
+                  <span>Apply Now</span>
                 </Link>
-                <Link href="/about" className="cta-secondary text-sm">
+                <Link
+                  href="/about"
+                  className="cta-secondary text-sm"
+                  style={{ color: 'var(--color-cream)', borderColor: 'rgba(255,255,255,0.3)' }}
+                >
                   <span>Learn More</span>
                 </Link>
               </div>

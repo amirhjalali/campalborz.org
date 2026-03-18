@@ -33,7 +33,13 @@ export default function CulturePage() {
   return (
     <main style={{ backgroundColor: 'var(--color-cream)' }}>
       {/* Hero Section with Parallax */}
-      <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
+      <section
+        ref={heroRef}
+        className="relative min-h-hero-sm overflow-hidden flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(145deg, #2C2416 0%, #D4C4A8 30%, #4A5D5A 60%, #D4AF37 85%, #2C2416 100%)',
+        }}
+      >
         <motion.div
           className="absolute inset-0 z-0"
           style={{ y: backgroundY }}
@@ -46,7 +52,6 @@ export default function CulturePage() {
             priority
             quality={85}
             sizes="100vw"
-            placeholder="empty"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </motion.div>

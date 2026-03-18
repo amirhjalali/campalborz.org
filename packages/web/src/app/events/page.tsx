@@ -33,20 +33,25 @@ export default function EventsPage() {
   return (
     <main style={{ backgroundColor: 'var(--color-cream)' }}>
       {/* Hero Section with Parallax */}
-      <section ref={heroRef} className="relative min-h-hero-sm overflow-hidden flex items-center justify-center">
+      <section
+        ref={heroRef}
+        className="relative min-h-hero-sm overflow-hidden flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(160deg, #1a1f1a 0%, #4A5D5A 30%, #2C2416 60%, #D4AF37 90%, #D4C4A8 100%)',
+        }}
+      >
         <motion.div
           className="absolute inset-0 z-0"
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/events_hero.webp"
-            alt="Camp Alborz community event with participants enjoying Persian cuisine and festivities"
+            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+            alt="Camp Alborz community event at night on the playa with Persian geometric structures and colorful lights"
             fill
             className="object-cover"
             priority
             quality={85}
             sizes="100vw"
-            placeholder="empty"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
 

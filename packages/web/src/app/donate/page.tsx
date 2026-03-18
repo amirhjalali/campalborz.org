@@ -1,11 +1,10 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Reveal } from '../../components/reveal';
-import { DonationForm } from '../../components/donation/DonationForm';
 import { useContentConfig, useCampConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import {
@@ -26,13 +25,8 @@ export default function DonatePage() {
     offset: ['start start', 'end start'],
   });
 
-  const [prefilledAmount, setPrefilledAmount] = useState<number | null>(null);
-  const [prefillKey, setPrefillKey] = useState(0);
-
-  const scrollToFormAndSetAmount = useCallback((amountInCents: number | null) => {
-    setPrefilledAmount(amountInCents);
-    setPrefillKey((k) => k + 1);
-    document.getElementById('donation-form')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToPaymentOptions = useCallback(() => {
+    document.getElementById('ways-to-give')?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
@@ -133,7 +127,7 @@ export default function DonatePage() {
                 <div
                   className="relative luxury-card cursor-pointer transition-transform duration-200 hover:scale-[1.02] hover:shadow-lg"
                   style={tier.popular ? { boxShadow: '0 0 0 2px var(--color-gold)' } : undefined}
-                  onClick={() => scrollToFormAndSetAmount(tier.amount * 100)}
+                  onClick={() => scrollToPaymentOptions()}
                 >
                   {tier.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -164,7 +158,7 @@ export default function DonatePage() {
                     className={`w-full ${tier.popular ? 'cta-primary cta-shimmer' : 'cta-secondary'}`}
                     onClick={(e) => {
                       e.stopPropagation();
-                      scrollToFormAndSetAmount(tier.amount * 100);
+                      scrollToPaymentOptions();
                     }}
                   >
                     <span>Donate ${tier.amount}</span>
@@ -180,9 +174,9 @@ export default function DonatePage() {
               <p style={{ color: 'var(--color-ink-soft)' }} className="mb-4">Want to contribute a different amount?</p>
               <button
                 className="cta-secondary"
-                onClick={() => scrollToFormAndSetAmount(null)}
+                onClick={() => scrollToPaymentOptions()}
               >
-                <span>Custom Donation</span>
+                <span>Choose How to Give</span>
                 <ArrowRight size={18} aria-hidden="true" />
               </button>
             </div>
@@ -190,37 +184,34 @@ export default function DonatePage() {
         </div>
       </section>
 
-      {/* Donation Form */}
-      {donate.donationForm && (
-        <section id="donation-form" className="py-24 md:py-32">
-          <div className="max-w-2xl mx-auto px-5 md:px-10">
-            <Reveal>
-              <div className="text-center space-y-4 mb-10">
-                <p className="text-eyebrow">MAKE A GIFT</p>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
-                  {donate.donationForm.title}
-                </h2>
-                <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                  {donate.donationForm.description}
-                </p>
+      {/* Donate Now CTA - Givebutter */}
+      <section id="donate-now" className="py-24 md:py-32">
+        <div className="max-w-2xl mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="frame-panel text-center">
+              <div className="inline-flex p-5 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
+                <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
               </div>
-            </Reveal>
+              <h2 className="text-display-thin text-2xl md:text-3xl mb-3">
+                Donate Now
+              </h2>
+              <p className="text-body-relaxed text-sm mb-2" style={{ color: 'var(--color-ink-soft)' }}>
+                Every dollar goes directly into the camp — art cars, sound systems, shade structures, and endless tea.
+              </p>
+              <p className="text-body-relaxed text-sm mb-8" style={{ color: 'var(--color-ink-soft)' }}>
+                Donations are tax-deductible and you will receive an instant receipt.
+              </p>
 
-            <Reveal delay={0.15}>
-              <div className="frame-panel">
-                <DonationForm
-                  campaigns={donate.donationForm.campaigns}
-                  initialAmount={prefilledAmount}
-                  prefillKey={prefillKey}
-                  onSuccess={(donationId) => {
-                    console.log('Donation successful:', donationId);
-                  }}
-                />
-              </div>
-            </Reveal>
+              <a
+                href="https://givebutter.com/Alborz2025Fundraiser"
+                target="_blank"
+                rel="noreferrer"
+                className="cta-primary cta-shimmer inline-flex text-lg px-10 py-4"
+              >
+                <span>Donate via Givebutter</span>
+                <ExternalLink size={20} aria-hidden="true" />
+              </a>
 
-            {/* Trust Indicators */}
-            <Reveal delay={0.25}>
               <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs" style={{ color: 'rgba(var(--color-ink-rgb), 0.5)' }}>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
@@ -235,10 +226,10 @@ export default function DonatePage() {
                   <span>100% Goes to Community</span>
                 </div>
               </div>
-            </Reveal>
-          </div>
-        </section>
-      )}
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* Impact Stats */}
       <section className="py-24 md:py-32">
@@ -279,7 +270,7 @@ export default function DonatePage() {
 
       {/* Payment Options */}
       {donate.paymentOptions && donate.paymentOptions.length > 0 && (
-        <section className="section-contrast">
+        <section id="ways-to-give" className="section-contrast">
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="text-center space-y-4 mb-14">

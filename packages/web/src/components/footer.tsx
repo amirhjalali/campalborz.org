@@ -14,6 +14,7 @@ export function Footer() {
     { label: 'Events', href: '/events' },
     { label: 'Art', href: '/art' },
     { label: 'Culture', href: '/culture' },
+    { label: 'Apply', href: '/apply' },
     { label: 'Donate', href: '/donate' },
     { label: 'Members', href: '/members' },
   ];
