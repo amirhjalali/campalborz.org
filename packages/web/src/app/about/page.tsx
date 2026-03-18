@@ -24,7 +24,7 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
         <Reveal>
           <div className="space-y-4 mb-14 text-center">
             <p className="text-eyebrow">TIMELINE</p>
-            <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+            <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
               Our Journey
             </h2>
             <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -157,7 +157,7 @@ export default function AboutPage() {
             OUR STORY
           </motion.p>
           <motion.h1
-            className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -189,7 +189,7 @@ export default function AboutPage() {
           <div className="text-center space-y-8">
             <Reveal>
               <p className="text-eyebrow">OUR MISSION</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight mt-3">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight mt-3" style={{ color: '#2C2416' }}>
                 {about.mission.title}
               </h2>
             </Reveal>
@@ -226,7 +226,7 @@ export default function AboutPage() {
           <Reveal>
             <div className="mb-14 text-center">
               <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>OUR VALUES</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight mt-3" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight mt-3" style={{ color: 'var(--color-cream)' }}>
                 Our Core Values
               </h2>
             </div>
@@ -254,7 +254,7 @@ export default function AboutPage() {
                     >
                       <ValueIcon className="h-8 w-8" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
                     </div>
-                    <h3 className="text-display-thin text-xl mb-4" style={{ color: 'var(--color-cream)' }}>
+                    <h3 className="font-display text-xl mb-4" style={{ color: 'var(--color-cream)' }}>
                       {value.title}
                     </h3>
                     <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
@@ -277,7 +277,7 @@ export default function AboutPage() {
           <Reveal>
             <div className="mb-14 text-center">
               <p className="text-eyebrow">THE CREW</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight mt-3">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight mt-3" style={{ color: '#2C2416' }}>
                 Our Leadership
               </h2>
             </div>
@@ -300,7 +300,7 @@ export default function AboutPage() {
                       {member.name.charAt(0)}
                     </span>
                   </div>
-                  <h3 className="text-display-thin text-lg mb-1">{member.name}</h3>
+                  <h3 className="font-display text-lg mb-1">{member.name}</h3>
                   <p className="text-caption mb-3" style={{ color: 'var(--color-gold)' }}>
                     {member.role}
                   </p>
@@ -321,7 +321,7 @@ export default function AboutPage() {
         <div className="max-w-[1200px] mx-auto px-5 md:px-10 text-center space-y-6">
           <Reveal>
             <p className="text-eyebrow">NON-PROFIT</p>
-            <h2 className="text-display-thin text-2xl md:text-3xl mt-3">
+            <h2 className="font-accent text-2xl md:text-3xl mt-3" style={{ color: '#2C2416' }}>
               {about.nonprofit.title}
             </h2>
           </Reveal>

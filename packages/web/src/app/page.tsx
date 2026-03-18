@@ -121,7 +121,7 @@ const offerings = [
   },
   {
     title: 'Hookah Lounge',
-    description: 'Traditional hookah under a hand-built shade structure. Stories exchanged, friendships forged.',
+    description: 'Traditional hookah under a hand-built shade structure. Pull up a cushion, swap stories, and lose track of time.',
     icon: (
       <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <path d="M24 4v8M24 12c-6 0-10 4-10 10v2h20v-2c0-6-4-10-10-10z" />
@@ -138,22 +138,22 @@ const campQAs = [
   {
     question: 'What is Camp Alborz?',
     answer:
-      'A 501(c)(3) non-profit music and arts organization celebrating Persian culture through events, art, and community. We\'ve been on the playa since 2014.',
+      'A 501(c)(3) non-profit celebrating Persian culture through music, art, and community. We\'ve been building on the playa since 2008 and year-round in LA, Brooklyn, and beyond.',
   },
   {
     question: 'Where does the name come from?',
     answer:
-      'Alborz is Iran\'s greatest mountain range — a symbol of resilience and beauty. Like the mountains, we bring something enduring to the desert.',
+      'Alborz is Iran\'s greatest mountain range — home to Mount Damavand, the tallest peak in the Middle East. We named the camp after it, and one of our art cars after the peak.',
   },
   {
     question: 'What happens at camp?',
     answer:
-      'Hot tea all day. Hookah lounge. HOMA and DAMAVAND art cars on the playa nightly. Live DJs blending Persian classical with electronic. Camp dinners with homemade Persian food.',
+      'Persian tea from sunrise on, hookah lounge all afternoon, and homemade camp dinners. After dark, our art cars HOMA and DAMAVAND head out with DJs blending Persian and electronic music.',
   },
   {
     question: 'How can I get involved?',
     answer:
-      'Come find us on the playa — everyone is welcome. If you\'d like to support our mission, donations help us build art, throw events, and keep the tea flowing year-round.',
+      'Come to one of our events or find us on the playa — we\'re always welcoming new faces. You can also apply to join the camp, or donate to help us build art and keep the tea flowing.',
   },
 ];
 
@@ -225,7 +225,7 @@ export default function HomePage() {
             style={{ opacity: heroOpacity }}
           >
             <motion.p
-              className="text-[11px] tracking-[0.25em] uppercase mb-8 text-white/70"
+              className="text-eyebrow mb-8 text-white/70"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
@@ -250,7 +250,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               Celebrating Persian culture worldwide through music, food, and art.
-              The legendary hospitality, without any of the baggage.
+              The legendary hospitality, none of the pretense.
             </motion.p>
 
             <motion.div
@@ -261,15 +261,17 @@ export default function HomePage() {
             >
               <Link
                 href="/donate"
-                className="inline-flex items-center bg-white text-[#1a1a18] px-8 py-3.5 text-[11px] uppercase tracking-[0.14em] font-medium transition-all duration-300 hover:bg-[#e8a87c] hover:text-white"
+                className="cta-primary"
+                style={{ backgroundColor: 'white', color: '#1a1a18', borderColor: 'white' }}
               >
                 <span>Support Us</span>
               </Link>
               <Link
                 href="/about"
-                className="text-[13px] border-b py-2 px-1 pb-0.5 transition-colors text-white/70 border-white/40 hover:text-white hover:border-white"
+                className="cta-secondary"
+                style={{ color: 'rgba(255,255,255,0.7)', borderColor: 'rgba(255,255,255,0.4)' }}
               >
-                Our Story
+                <span>Our Story</span>
               </Link>
             </motion.div>
           </motion.div>
@@ -320,7 +322,7 @@ export default function HomePage() {
                     {stat.value}
                   </p>
                   <p
-                    className="text-[11px] tracking-[0.2em] uppercase font-medium"
+                    className="text-eyebrow"
                     style={{ color: 'var(--color-ink-faint)' }}
                   >
                     {stat.label}
@@ -353,8 +355,8 @@ export default function HomePage() {
               {/* Right content */}
               <div>
                 <Reveal delay={0.1}>
-                  <h2 className="font-display font-light text-2xl md:text-3xl lg:text-[2.75rem] tracking-wide leading-snug mb-10">
-                    Persian culture, music &amp; art.<br className="hidden md:block" /> Without any of the baggage.
+                  <h2 className="font-accent text-2xl md:text-3xl lg:text-[2.75rem] tracking-wide leading-snug mb-10" style={{ color: '#2C2416' }}>
+                    Persian culture, music &amp; art.<br className="hidden md:block" /> None of the pretense.
                   </h2>
                 </Reveal>
 
@@ -398,7 +400,7 @@ export default function HomePage() {
                 <p className="text-eyebrow mb-4">
                   What We Bring
                 </p>
-                <h2 className="font-display font-light text-3xl md:text-4xl tracking-wide">
+                <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                   Life at Camp Alborz
                 </h2>
               </div>
@@ -532,7 +534,7 @@ export default function HomePage() {
                   <p className="text-eyebrow mb-2">
                     Inspiration
                   </p>
-                  <h2 className="font-display font-light text-2xl md:text-3xl tracking-wide">
+                  <h2 className="font-accent text-2xl md:text-3xl tracking-wide" style={{ color: '#2C2416' }}>
                     Artist Spotlight
                   </h2>
                 </div>
@@ -652,13 +654,13 @@ export default function HomePage() {
         <section className="section-contrast py-28 md:py-36">
           <div className="max-w-2xl mx-auto px-5 md:px-10 text-center">
             <Reveal>
-              <p className="text-[11px] tracking-[0.3em] uppercase font-medium mb-6" style={{ color: 'var(--color-gold-muted)' }}>
+              <p className="text-eyebrow mb-6" style={{ color: 'var(--color-gold-muted)' }}>
                 2026 Season
               </p>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h2 className="text-display-thin font-display font-light text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6" style={{ color: 'var(--color-cream)' }}>
                 Join Us for the 2026 Season
               </h2>
             </Reveal>
@@ -701,7 +703,8 @@ export default function HomePage() {
                   </p>
                   <h2
                     id="faq-heading"
-                    className="font-display font-light text-2xl md:text-3xl tracking-wide"
+                    className="font-accent text-2xl md:text-3xl tracking-wide"
+                    style={{ color: '#2C2416' }}
                   >
                     Questions &amp; Answers
                   </h2>

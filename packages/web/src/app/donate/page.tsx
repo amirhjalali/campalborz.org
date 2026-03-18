@@ -79,7 +79,7 @@ export default function DonatePage() {
             SUPPORT OUR MISSION
           </motion.p>
           <motion.h1
-            className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -87,7 +87,7 @@ export default function DonatePage() {
             {donate.title}
           </motion.h1>
           <motion.p
-            className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+            className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
             initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -112,7 +112,7 @@ export default function DonatePage() {
           <Reveal>
             <div className="space-y-4 mb-14">
               <p className="text-eyebrow">DONATION TIERS</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
                 Choose Your Support Level
               </h2>
               <p className="font-accent text-lg max-w-2xl" style={{ color: 'var(--color-ink-soft)' }}>
@@ -141,7 +141,7 @@ export default function DonatePage() {
                     <p className="text-4xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
                       ${tier.amount}
                     </p>
-                    <h3 className="text-display-thin text-xl mb-2">{tier.title}</h3>
+                    <h3 className="font-display text-xl mb-2">{tier.title}</h3>
                     <p className="font-accent text-sm" style={{ color: 'var(--color-ink-soft)' }}>{tier.description}</p>
                   </div>
 
@@ -192,7 +192,7 @@ export default function DonatePage() {
               <div className="inline-flex p-5 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                 <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
               </div>
-              <h2 className="text-display-thin text-2xl md:text-3xl mb-3">
+              <h2 className="font-accent text-2xl md:text-3xl mb-3" style={{ color: '#2C2416' }}>
                 Donate Now
               </h2>
               <p className="text-body-relaxed text-sm mb-2" style={{ color: 'var(--color-ink-soft)' }}>
@@ -237,7 +237,7 @@ export default function DonatePage() {
           <Reveal>
             <div className="text-center space-y-4 mb-14">
               <p className="text-eyebrow">IMPACT</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
                 How Donations Help
               </h2>
             </div>
@@ -275,7 +275,7 @@ export default function DonatePage() {
             <Reveal>
               <div className="text-center space-y-4 mb-14">
                 <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>WAYS TO GIVE</p>
-                <h2 className="text-display-thin text-3xl md:text-4xl" style={{ color: 'var(--color-cream)' }}>
+                <h2 className="font-accent text-3xl md:text-4xl" style={{ color: 'var(--color-cream)' }}>
                   Preferred Ways to Give
                 </h2>
               </div>
@@ -293,7 +293,7 @@ export default function DonatePage() {
                             <OptionIcon className="h-5 w-5" style={{ color: 'var(--color-gold-muted)' }} />
                           </div>
                           <div>
-                            <h3 className="text-display-thin text-lg" style={{ color: 'var(--color-cream)' }}>
+                            <h3 className="font-display text-lg" style={{ color: 'var(--color-cream)' }}>
                               {option.method}
                             </h3>
                             <p className="text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.6)' }}>
@@ -347,7 +347,7 @@ export default function DonatePage() {
             <div className="frame-panel">
               <div className="text-center mb-10">
                 <p className="text-eyebrow mb-3">WHERE YOUR MONEY GOES</p>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
+                <h2 className="font-accent text-2xl md:text-3xl" style={{ color: '#2C2416' }}>
                   2026 Funding Priorities
                 </h2>
               </div>
@@ -366,7 +366,7 @@ export default function DonatePage() {
                             <PriorityIcon className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
                           </div>
                           <div>
-                            <h3 className="text-display-thin text-lg">{priority.title}</h3>
+                            <h3 className="font-display text-lg">{priority.title}</h3>
                             <p className="text-xs" style={{ color: 'var(--color-ink-soft)' }}>{priority.description}</p>
                           </div>
                         </div>
@@ -397,7 +397,7 @@ export default function DonatePage() {
             <div className="luxury-card">
               <div className="text-center space-y-4 mb-10">
                 <p className="text-eyebrow">TRANSPARENCY</p>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
+                <h2 className="font-accent text-2xl md:text-3xl" style={{ color: '#2C2416' }}>
                   Financial Transparency
                 </h2>
                 <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
@@ -413,7 +413,7 @@ export default function DonatePage() {
                     style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-display-thin text-lg">{item.category}</h3>
+                      <h3 className="font-display text-lg">{item.category}</h3>
                       <div className="flex items-center gap-4">
                         <span className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>{item.percentage}%</span>
                         <span className="text-lg font-display" style={{ color: 'var(--color-gold)' }}>{item.amount}</span>
@@ -442,7 +442,7 @@ export default function DonatePage() {
           <Reveal>
             <div className="space-y-4 mb-14">
               <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>GET INVOLVED</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                 Other Ways to Support Us
               </h2>
             </div>
@@ -459,7 +459,7 @@ export default function DonatePage() {
                         <OptionIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
                       </div>
                       <div>
-                        <h3 className="text-display-thin text-xl" style={{ color: 'var(--color-cream)' }}>
+                        <h3 className="font-display text-xl" style={{ color: 'var(--color-cream)' }}>
                           {option.title}
                         </h3>
                         <p className="text-sm" style={{ color: 'var(--color-gold-muted)' }}>{option.amount}</p>
@@ -495,7 +495,7 @@ export default function DonatePage() {
                     <Award className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-display-thin text-xl mb-3">
+                    <h3 className="font-display text-xl mb-3">
                       {donate.taxInfo.title}
                     </h3>
                     <p className="text-body-relaxed mb-3" style={{ color: 'var(--color-ink-soft)' }}>
@@ -524,7 +524,7 @@ export default function DonatePage() {
                 <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                   <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
                 </div>
-                <h2 className="text-display-thin text-2xl md:text-3xl mb-3">
+                <h2 className="font-accent text-2xl md:text-3xl mb-3" style={{ color: '#2C2416' }}>
                   {donate.donorRecognition.title}
                 </h2>
                 <p className="text-body-relaxed mb-8 max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -538,7 +538,7 @@ export default function DonatePage() {
                       className="p-6 rounded-xl"
                       style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}
                     >
-                      <h3 className="text-display-thin text-lg mb-2">{tier.title}</h3>
+                      <h3 className="font-display text-lg mb-2">{tier.title}</h3>
                       <p className="text-sm" style={{ color: 'var(--color-ink-soft)' }}>{tier.description}</p>
                     </div>
                   ))}
@@ -561,7 +561,7 @@ export default function DonatePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="frame-panel text-center">
-                <h2 className="text-display-thin text-2xl md:text-3xl mb-6">
+                <h2 className="font-accent text-2xl md:text-3xl mb-6" style={{ color: '#2C2416' }}>
                   {donate.gratitude.title}
                 </h2>
                 <p className="font-accent italic text-lg max-w-3xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -579,7 +579,7 @@ export default function DonatePage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="text-center space-y-6">
-                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
+                <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                   {donate.cta.title}
                 </h2>
                 <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>

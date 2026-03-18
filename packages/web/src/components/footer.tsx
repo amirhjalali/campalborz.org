@@ -48,7 +48,7 @@ export function Footer() {
                 {campConfig.name}
               </h3>
               <p
-                className="text-sm max-w-xs leading-relaxed"
+                className="font-body text-sm max-w-xs leading-relaxed"
                 style={{ color: 'rgba(var(--color-cream-rgb), 0.72)' }}
               >
                 {footer?.tagline || campConfig.tagline}

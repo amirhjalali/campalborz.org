@@ -64,7 +64,8 @@ export default function EventsPage() {
           style={{ y: textY, opacity }}
         >
           <motion.p
-            className="text-display-wide text-xs tracking-[0.5em] text-white/80 mb-6"
+            className="text-eyebrow mb-6"
+            style={{ color: 'rgba(255, 255, 255, 0.8)' }}
             initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -72,7 +73,7 @@ export default function EventsPage() {
             GATHER WITH US
           </motion.p>
           <motion.h1
-            className="text-display-thin text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -80,13 +81,21 @@ export default function EventsPage() {
             {events.title}
           </motion.h1>
           <motion.p
-            className="text-body-relaxed text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
+            className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
             initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             {events.subtitle}
           </motion.p>
+
+          <motion.div
+            className="ornate-divider mt-8"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            style={{ filter: 'brightness(1.5)' }}
+          />
         </motion.div>
       </section>
 
@@ -96,7 +105,7 @@ export default function EventsPage() {
           <Reveal>
             <div className="text-center space-y-3 mb-14">
               <p className="text-eyebrow">UPCOMING EVENTS</p>
-              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
                 Event Categories
               </h2>
               <p className="font-accent text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -144,7 +153,7 @@ export default function EventsPage() {
               <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>
                 PLAYA SCHEDULE
               </p>
-              <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                 Upcoming Events
               </h2>
               <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-tan-50), 0.8)' }}>
@@ -241,7 +250,7 @@ export default function EventsPage() {
             <Reveal>
               <div className="mb-14 text-center">
                 <p className="text-eyebrow mb-3">PLAYA SCHEDULE</p>
-                <h2 className="font-display text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
+                <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
                   Burning Man Schedule
                 </h2>
               </div>
@@ -289,7 +298,7 @@ export default function EventsPage() {
             <Reveal>
               <div className="frame-panel">
                 <div className="mb-10">
-                  <h2 className="font-display text-2xl md:text-3xl" style={{ color: 'var(--color-ink)' }}>
+                  <h2 className="font-accent text-2xl md:text-3xl" style={{ color: '#2C2416' }}>
                     Event Guidelines
                   </h2>
                 </div>
@@ -331,7 +340,7 @@ export default function EventsPage() {
             <Reveal>
               <div className="text-center space-y-6 max-w-2xl mx-auto py-8">
                 <p className="text-eyebrow">JOIN US</p>
-                <h2 className="font-display text-2xl md:text-3xl" style={{ color: 'var(--color-ink)' }}>
+                <h2 className="font-accent text-2xl md:text-3xl" style={{ color: '#2C2416' }}>
                   {events.cta.title}
                 </h2>
                 <p className="text-body-relaxed text-base" style={{ color: 'var(--color-ink-soft)' }}>

@@ -183,9 +183,8 @@ export const contentConfig: ContentConfig = {
       title: "What We Do",
       paragraphs: [
         "Camp Alborz is a 501(c)(3) that builds art cars, throws fundraisers, and runs a hospitality camp at Burning Man. We're a crew of builders, DJs, engineers, artists, and people who just really like making tea for strangers.",
-        "We started as a group of Persian burners who wanted to bring some of our culture's hospitality traditions to the playa. Fifteen years later, we've built two art cars, hosted thousands of guests, and become a year-round community.",
-        "Throughout the year, we organize fundraisers in LA and NYC, run community cleanup projects, and generally look for excuses to get together. The playa is the centerpiece, but the friendships extend far beyond it.",
-        "Our camp is home base—shaded, air-conditioned, and stocked with endless tea. We feed anyone who walks in, no questions asked.",
+        "We started as a group of Persian burners who wanted to bring our culture's hospitality traditions to the playa. Fifteen years later, we've built two art cars, hosted thousands of guests, and become a year-round community that stretches from LA to Brooklyn to Tehran.",
+        "Off-playa, we organize fundraisers, run community cleanups like Beyond the K Bridge, and look for any excuse to get together. On the playa, our camp is home base — shaded, stocked with endless tea, and open to anyone who walks in.",
       ],
     },
     values: [
@@ -442,17 +441,17 @@ export const contentConfig: ContentConfig = {
       {
         day: "Daily Schedule",
         events: [
-          { time: "Morning", title: "Tea House Opens", description: "Persian tea and light refreshments available" },
-          { time: "Afternoon", title: "Open Hospitality", description: "Hookah lounge and shade for visitors" },
-          { time: "Evening", title: "Community Dinner", description: "Shared meals for camp members" },
+          { time: "10 AM", title: "Tea House Opens", description: "Fresh brewed Persian tea, dried fruits, and a shaded spot to start the day" },
+          { time: "2 PM", title: "Hookah Lounge", description: "Traditional hookah, cold drinks, and conversation under the shade structure" },
+          { time: "6 PM", title: "Camp Dinner", description: "Home-cooked Persian food — tahdig, kabob, and whatever the crew is inspired to make" },
         ],
       },
       {
-        day: "Special Events",
+        day: "Nightly & Special Events",
         events: [
-          { time: "Varies", title: "Art Car Rides", description: "HOMA and DAMAVAND tours when available" },
-          { time: "Varies", title: "Cultural Workshops", description: "Calligraphy, cooking, and music sessions" },
-          { time: "Saturday", title: "Saturday Night Celebration", description: "Annual signature camp event" },
+          { time: "9 PM+", title: "Art Car Departures", description: "HOMA and DAMAVAND head out with DJs and riders — check the board for tonight's lineup" },
+          { time: "Midweek", title: "Persian Calligraphy & Music", description: "Drop-in workshops with camp artists — no experience needed" },
+          { time: "Saturday", title: "Saturday Night Celebration", description: "Our biggest night — full sound system, both art cars out, and an open kitchen until sunrise" },
         ],
       },
     ],
