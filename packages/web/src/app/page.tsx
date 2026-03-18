@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../components/reveal';
@@ -18,6 +18,7 @@ const artists = [
   {
     number: '001',
     name: 'Mahmoud Farshchian',
+    initials: 'MF',
     medium: 'Miniature Painting · Neo-classical Persian',
     era: 'b. 1930, Isfahan',
     bio: 'The undisputed master of contemporary Persian miniature painting. His luminous compositions bridge centuries of tradition with modern sensibility.',
@@ -26,6 +27,7 @@ const artists = [
   {
     number: '002',
     name: 'Parviz Tanavoli',
+    initials: 'PT',
     medium: 'Sculpture · Heech Series',
     era: 'b. 1937, Tehran',
     bio: 'Father of modern Iranian sculpture. His iconic "Heech" (Nothingness) series explores the void between existence and absence.',
@@ -34,12 +36,53 @@ const artists = [
   {
     number: '003',
     name: 'Monir Farmanfarmaian',
+    initials: 'MF',
     medium: 'Mirror Mosaic · Geometric Abstraction',
     era: '1924 – 2019, Tehran',
     bio: 'Fused traditional Iranian mirror mosaic (aineh-kari) with Western geometric abstraction to create something entirely new.',
     image: '/images/mirror_mosaic.webp',
   },
 ];
+
+/* Artist image with graceful fallback to styled initials placeholder */
+function ArtistImage({ artist }: { artist: typeof artists[number] }) {
+  const [imgError, setImgError] = useState(false);
+  const handleError = useCallback(() => setImgError(true), []);
+
+  if (imgError) {
+    return (
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(135deg, var(--color-sage) 0%, #2C2416 60%, var(--color-gold-muted) 100%)',
+        }}
+      >
+        <div className="text-center">
+          <span className="font-display text-5xl md:text-6xl tracking-widest text-white/80">
+            {artist.initials}
+          </span>
+          <p className="mt-3 text-[10px] tracking-[0.3em] uppercase text-white/40">
+            {artist.medium.split('·')[0].trim()}
+          </p>
+        </div>
+        {/* Decorative geometric pattern overlay */}
+        <div className="absolute inset-0 pattern-persian opacity-10 pointer-events-none" />
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={artist.image}
+      alt={`${artist.name} — ${artist.medium}`}
+      fill
+      className="object-cover transition-transform duration-700"
+      sizes="(max-width: 768px) 100vw, 33vw"
+      loading="lazy"
+      onError={handleError}
+    />
+  );
+}
 
 const offerings = [
   {
@@ -420,7 +463,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10">
+              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10" style={{ color: 'var(--color-ink)' }}>
                 {rumiQuote?.text ||
                   "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."}
               </p>
@@ -518,16 +561,12 @@ export default function HomePage() {
                 return (
                   <Reveal key={artist.number} delay={0} direction="up">
                     <article className={`${marginTop} group`}>
-                      {/* Image with hover zoom */}
-                      <div className="relative aspect-[3/4] overflow-hidden rounded-sm mb-6 image-hover-zoom">
-                        <Image
-                          src={artist.image}
-                          alt={artist.name}
-                          fill
-                          className="object-cover transition-transform duration-700"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          loading="lazy"
-                        />
+                      {/* Image with hover zoom and fallback */}
+                      <div
+                        className="relative aspect-[3/4] overflow-hidden rounded-sm mb-6 image-hover-zoom"
+                        style={{ backgroundColor: 'var(--color-sage, #4A5D5A)' }}
+                      >
+                        <ArtistImage artist={artist} />
                         {/* Subtle overlay on hover */}
                         <div
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -619,20 +658,20 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h2 className="text-display-thin font-display font-light text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6">
+              <h2 className="text-display-thin font-display font-light text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6" style={{ color: 'var(--color-cream)' }}>
                 Join Us for the 2026 Season
               </h2>
             </Reveal>
 
             <Reveal delay={0.2}>
-              <p className="font-accent text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: 'var(--color-gold-muted)' }}>
+              <p className="font-accent text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
                 Black Rock City awaits. Bring your spirit, your curiosity, and your appetite — we&apos;ll bring the tea, the music, and the fire.
               </p>
             </Reveal>
 
             <Reveal delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/apply" className="cta-primary text-sm">
+                <Link href="/apply" className="cta-primary text-sm" style={{ backgroundColor: 'var(--color-gold)', color: 'var(--color-ink)', border: 'none' }}>
                   <span>Apply Now</span>
                 </Link>
                 <Link
