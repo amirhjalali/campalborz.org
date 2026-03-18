@@ -21,6 +21,7 @@ import {
   List,
   ArrowRight,
   Users,
+  Clipboard,
 } from 'lucide-react';
 import { ConfirmDialog } from '../../../components/shared/ConfirmDialog';
 import { useAdminSeason } from '../../../contexts/AdminSeasonContext';
@@ -58,14 +59,34 @@ interface ActionCardDef {
   key: keyof Omit<ActionItems, 'pendingApplications'>;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  href?: string;
+  emailFilter: string;
 }
 
 const ACTION_CARDS: ActionCardDef[] = [
-  { key: 'unpaidDues', label: 'Unpaid Dues', icon: DollarSign },
-  { key: 'noTicket', label: 'No Ticket', icon: Ticket },
-  { key: 'notOnWhatsapp', label: 'Not on WhatsApp', icon: MessageSquare },
-  { key: 'noPreApproval', label: 'No Pre-Approval Form', icon: FileCheck },
+  { key: 'unpaidDues', label: 'Unpaid Dues', icon: DollarSign, emailFilter: 'unpaid_dues' },
+  { key: 'noTicket', label: 'No Ticket', icon: Ticket, emailFilter: 'no_ticket' },
+  { key: 'notOnWhatsApp', label: 'Not on WhatsApp', icon: MessageSquare, emailFilter: 'not_on_whatsapp' },
+  { key: 'noPreApproval', label: 'No Pre-Approval Form', icon: FileCheck, emailFilter: 'no_preapproval' },
+];
+
+// ---------------------------------------------------------------------------
+// Quick Email List definitions
+// ---------------------------------------------------------------------------
+
+interface QuickListDef {
+  label: string;
+  filter: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const QUICK_LISTS: QuickListDef[] = [
+  { label: 'All Members', filter: 'all', icon: Users },
+  { label: 'Unpaid Dues', filter: 'unpaid_dues', icon: DollarSign },
+  { label: 'No Ticket', filter: 'no_ticket', icon: Ticket },
+  { label: 'Not on WhatsApp', filter: 'not_on_whatsapp', icon: MessageSquare },
+  { label: 'No Pre-Approval', filter: 'no_preapproval', icon: FileCheck },
+  { label: 'Build Crew', filter: 'build_crew', icon: Users },
+  { label: 'Strike Crew', filter: 'strike_crew', icon: Users },
 ];
 
 // ---------------------------------------------------------------------------
@@ -75,7 +96,7 @@ const ACTION_CARDS: ActionCardDef[] = [
 const placeholderActionItems: ActionItems = {
   unpaidDues: { count: 0, members: [] },
   noTicket: { count: 0, members: [] },
-  notOnWhatsapp: { count: 0, members: [] },
+  notOnWhatsApp: { count: 0, members: [] },
   noPreApproval: { count: 0, members: [] },
   pendingApplications: { count: 0 },
 };
@@ -99,6 +120,7 @@ export default function CommunicationsPage() {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
   const [previewCount, setPreviewCount] = useState<number | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [showSendConfirm, setShowSendConfirm] = useState(false);
   const [emailResult, setEmailResult] = useState<SendMassEmailResult | null>(null);
@@ -109,6 +131,9 @@ export default function CommunicationsPage() {
   const [generatingList, setGeneratingList] = useState(false);
   const [emailList, setEmailList] = useState<EmailListResult | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+
+  // Quick Email List state
+  const [quickListLoading, setQuickListLoading] = useState<string | null>(null);
 
   // ---------------------------------------------------------------------------
   // Load action items
@@ -132,7 +157,7 @@ export default function CommunicationsPage() {
   }, [loadActionItems]);
 
   // ---------------------------------------------------------------------------
-  // Update preview count when email filter changes
+  // Fetch preview count when email filter changes
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
@@ -144,19 +169,53 @@ export default function CommunicationsPage() {
       setPreviewCount(lines.length);
       return;
     }
-    // Map filter to action item counts
-    const filterCountMap: Record<string, number> = {
-      all: (actionItems.unpaidDues.count + actionItems.noTicket.count + actionItems.notOnWhatsapp.count + actionItems.noPreApproval.count) || 0,
-      confirmed: 0, // We don't have this count from action items
+
+    // For known action item filters, use the local count for immediate feedback
+    const localCountMap: Record<string, number | undefined> = {
       unpaid_dues: actionItems.unpaidDues.count,
-      build_crew: 0,
-      strike_crew: 0,
-      not_on_whatsapp: actionItems.notOnWhatsapp.count,
-      no_preapproval: actionItems.noPreApproval.count,
       no_ticket: actionItems.noTicket.count,
+      not_on_whatsapp: actionItems.notOnWhatsApp.count,
+      no_preapproval: actionItems.noPreApproval.count,
     };
-    setPreviewCount(filterCountMap[emailFilter] ?? null);
-  }, [emailFilter, customEmails, actionItems]);
+
+    if (localCountMap[emailFilter] !== undefined) {
+      setPreviewCount(localCountMap[emailFilter]!);
+      return;
+    }
+
+    // For filters we don't have local counts for, fetch from the server
+    if (!selectedSeasonId) {
+      setPreviewCount(null);
+      return;
+    }
+
+    let cancelled = false;
+    setPreviewLoading(true);
+
+    generateEmailList({
+      seasonId: selectedSeasonId,
+      filter: emailFilter,
+    })
+      .then((result) => {
+        if (!cancelled) {
+          setPreviewCount(result.count);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setPreviewCount(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setPreviewLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [emailFilter, customEmails, actionItems, selectedSeasonId]);
 
   // ---------------------------------------------------------------------------
   // Send mass email
@@ -168,7 +227,7 @@ export default function CommunicationsPage() {
       setEmailResult(null);
       const result = await sendMassEmail({
         seasonId: selectedSeasonId || undefined,
-        filter: emailFilter,
+        recipientFilter: emailFilter,
         customEmails:
           emailFilter === 'custom'
             ? customEmails
@@ -215,6 +274,43 @@ export default function CommunicationsPage() {
   };
 
   // ---------------------------------------------------------------------------
+  // Quick email list -- one-click copy for common segments
+  // ---------------------------------------------------------------------------
+
+  const handleQuickCopy = async (filter: string) => {
+    try {
+      setQuickListLoading(filter);
+      const result = await generateEmailList({
+        seasonId: selectedSeasonId || undefined,
+        filter,
+      });
+      const emailText = result.emails.map((e) => e.email).join(', ');
+      await navigator.clipboard.writeText(emailText);
+      setCopied(`quick-${filter}`);
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      // Clipboard or API unavailable
+    } finally {
+      setQuickListLoading(null);
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // Copy from action item cards
+  // ---------------------------------------------------------------------------
+
+  const handleCopyActionEmails = async (members: ActionItemMember[]) => {
+    const emailText = members.map((m) => m.email).join(', ');
+    try {
+      await navigator.clipboard.writeText(emailText);
+      setCopied('action-emails');
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      // Clipboard unavailable
+    }
+  };
+
+  // ---------------------------------------------------------------------------
   // Clipboard
   // ---------------------------------------------------------------------------
 
@@ -225,6 +321,20 @@ export default function CommunicationsPage() {
       setTimeout(() => setCopied(null), 2000);
     } catch {
       // Clipboard API unavailable
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // Compose email from action item card
+  // ---------------------------------------------------------------------------
+
+  const handleComposeFromCard = (card: ActionCardDef) => {
+    setEmailFilter(card.emailFilter);
+    setEmailResult(null);
+    // Scroll to compose section
+    const composeSection = document.getElementById('compose-email');
+    if (composeSection) {
+      composeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -369,6 +479,35 @@ export default function CommunicationsPage() {
                               ),
                             )}
                           </div>
+                          {/* Card footer actions */}
+                          <div className="border-t border-tan/20 px-5 py-3 flex items-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleCopyActionEmails(
+                                  (data as { count: number; members: ActionItemMember[] }).members,
+                                );
+                              }}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors"
+                            >
+                              {copied === 'action-emails' ? (
+                                <Check className="h-3.5 w-3.5 text-green-500" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                              Copy Emails
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleComposeFromCard(card);
+                              }}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors"
+                            >
+                              <Mail className="h-3.5 w-3.5" />
+                              Compose Email
+                            </button>
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -424,15 +563,15 @@ export default function CommunicationsPage() {
           </section>
 
           {/* ================================================================= */}
-          {/* MASS EMAIL SECTION                                                */}
+          {/* COMPOSE EMAIL SECTION                                             */}
           {/* ================================================================= */}
-          <section className="luxury-card p-6">
+          <section id="compose-email" className="luxury-card p-6">
             <div className="flex items-center gap-3 mb-6">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage/5 border border-sage/10">
                 <Mail className="h-5 w-5 text-sage" />
               </div>
               <div>
-                <h2 className="text-display-thin text-xl text-ink">Mass Email</h2>
+                <h2 className="text-display-thin text-xl text-ink">Compose Email</h2>
                 <p className="text-xs text-ink-soft">
                   Send branded emails to filtered member groups
                 </p>
@@ -457,6 +596,27 @@ export default function CommunicationsPage() {
                     </option>
                   ))}
                 </select>
+                {/* Preview recipient count */}
+                <div className="flex items-center gap-2 mt-2">
+                  <Users className="h-3.5 w-3.5 text-ink-soft" />
+                  <p className="text-xs text-ink-soft">
+                    {previewLoading ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        Counting recipients...
+                      </span>
+                    ) : previewCount !== null ? (
+                      <>
+                        <span className="font-semibold text-ink tabular-nums">
+                          {previewCount}
+                        </span>{' '}
+                        recipient{previewCount !== 1 ? 's' : ''} will receive this email
+                      </>
+                    ) : (
+                      'Select a filter to see recipient count'
+                    )}
+                  </p>
+                </div>
               </div>
 
               {/* Custom emails textarea */}
@@ -488,13 +648,17 @@ export default function CommunicationsPage() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Enter email subject"
+                  maxLength={200}
                   className="form-input w-full"
                 />
+                <p className="text-xs text-ink-soft mt-1 tabular-nums">
+                  {subject.length}/200 characters
+                </p>
               </div>
 
               {/* Body */}
               <div>
-                <label className="form-label">Body (plain text)</label>
+                <label className="form-label">Message Body</label>
                 <textarea
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
@@ -504,29 +668,12 @@ export default function CommunicationsPage() {
                 />
               </div>
 
-              {/* Preview count & Send */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-ink-soft" />
-                  <p className="text-sm text-ink-soft">
-                    {previewCount !== null ? (
-                      <>
-                        This will send to{' '}
-                        <span className="font-semibold text-ink tabular-nums">
-                          {previewCount}
-                        </span>{' '}
-                        member{previewCount !== 1 ? 's' : ''}
-                      </>
-                    ) : (
-                      'Select a filter to see recipient count'
-                    )}
-                  </p>
-                </div>
-
+              {/* Send Button */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-4 pt-2">
                 <button
                   onClick={() => setShowSendConfirm(true)}
                   disabled={
-                    sendingEmail || !subject.trim() || !body.trim() || previewCount === 0
+                    sendingEmail || !subject.trim() || !body.trim() || previewCount === 0 || previewCount === null
                   }
                   className="cta-primary text-sm px-6 py-2.5 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -535,7 +682,7 @@ export default function CommunicationsPage() {
                   ) : (
                     <Send className="h-4 w-4" />
                   )}
-                  {sendingEmail ? 'Sending...' : 'Send Email'}
+                  <span>{sendingEmail ? 'Sending...' : 'Send Email'}</span>
                 </button>
               </div>
 
@@ -555,7 +702,14 @@ export default function CommunicationsPage() {
                       emailResult.failed > 0 ? 'text-amber-700' : 'text-green-700'
                     }`}
                   >
-                    Sent {emailResult.sent}, Failed {emailResult.failed}
+                    {emailResult.sent > 0 && (
+                      <>Sent to {emailResult.sent} recipient{emailResult.sent !== 1 ? 's' : ''}</>
+                    )}
+                    {emailResult.sent > 0 && emailResult.failed > 0 && ', '}
+                    {emailResult.failed > 0 && (
+                      <>{emailResult.failed} failed</>
+                    )}
+                    {emailResult.sent === 0 && emailResult.failed === 0 && 'No emails were sent.'}
                   </p>
                   {emailResult.errors && emailResult.errors.length > 0 && (
                     <ul className="mt-2 space-y-1">
@@ -577,10 +731,61 @@ export default function CommunicationsPage() {
             onClose={() => setShowSendConfirm(false)}
             onConfirm={handleSendEmail}
             title="Send Mass Email"
-            message={`This will send an email to ${previewCount ?? 0} member${(previewCount ?? 0) !== 1 ? 's' : ''}. Are you sure you want to proceed?`}
+            message={`This will send "${subject}" to ${previewCount ?? 0} recipient${(previewCount ?? 0) !== 1 ? 's' : ''}. This action cannot be undone.`}
             confirmLabel="Send Email"
             variant="warning"
           />
+
+          {/* ================================================================= */}
+          {/* QUICK EMAIL LISTS                                                 */}
+          {/* ================================================================= */}
+          <section className="luxury-card p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage/5 border border-sage/10">
+                <Clipboard className="h-5 w-5 text-sage" />
+              </div>
+              <div>
+                <h2 className="text-display-thin text-xl text-ink">Quick Email Lists</h2>
+                <p className="text-xs text-ink-soft">
+                  One-click copy email lists for common member segments
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {QUICK_LISTS.map((item) => {
+                const Icon = item.icon;
+                const isLoading = quickListLoading === item.filter;
+                const isCopied = copied === `quick-${item.filter}`;
+
+                return (
+                  <button
+                    key={item.filter}
+                    onClick={() => handleQuickCopy(item.filter)}
+                    disabled={isLoading}
+                    className="flex items-center gap-3 rounded-xl border border-tan/30 p-4 hover:bg-cream transition-colors group text-left disabled:opacity-60"
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sage/5 border border-sage/10 group-hover:bg-sage/10 transition-colors">
+                      <Icon className="h-4 w-4 text-sage" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-ink truncate">{item.label}</p>
+                      <p className="text-xs text-ink-soft">Click to copy emails</p>
+                    </div>
+                    <div className="shrink-0">
+                      {isLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-ink-soft" />
+                      ) : isCopied ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4 text-ink-soft group-hover:text-sage transition-colors" />
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
 
           {/* ================================================================= */}
           {/* EMAIL LIST GENERATOR                                              */}
@@ -593,7 +798,7 @@ export default function CommunicationsPage() {
               <div>
                 <h2 className="text-display-thin text-xl text-ink">Email List Generator</h2>
                 <p className="text-xs text-ink-soft">
-                  Generate and copy email lists by filter
+                  Generate and copy email lists by filter with full details
                 </p>
               </div>
             </div>
@@ -650,7 +855,7 @@ export default function CommunicationsPage() {
                 ) : (
                   <List className="h-4 w-4" />
                 )}
-                {generatingList ? 'Generating...' : 'Generate List'}
+                <span>{generatingList ? 'Generating...' : 'Generate List'}</span>
               </button>
 
               {/* Results */}
@@ -671,13 +876,13 @@ export default function CommunicationsPage() {
                       <button
                         onClick={() =>
                           handleCopy(
-                            emailList.emails.map((e) => e.email).join('\n'),
-                            'emails',
+                            emailList.emails.map((e) => e.email).join(', '),
+                            'list-emails',
                           )
                         }
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors"
                       >
-                        {copied === 'emails' ? (
+                        {copied === 'list-emails' ? (
                           <Check className="h-3.5 w-3.5 text-green-500" />
                         ) : (
                           <Copy className="h-3.5 w-3.5" />
@@ -690,12 +895,12 @@ export default function CommunicationsPage() {
                             ['Name,Email', ...emailList.emails.map((e) => `${e.name},${e.email}`)].join(
                               '\n',
                             ),
-                            'csv',
+                            'list-csv',
                           )
                         }
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-tan/40 text-ink-soft hover:bg-cream transition-colors"
                       >
-                        {copied === 'csv' ? (
+                        {copied === 'list-csv' ? (
                           <Check className="h-3.5 w-3.5 text-green-500" />
                         ) : (
                           <Copy className="h-3.5 w-3.5" />

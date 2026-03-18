@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { router, publicProcedure, memberProcedure } from '../trpc';
 import logger from '../lib/logger';
+import { sendPasswordResetEmail } from '../lib/email';
 
 // --- Token helpers ---
 
@@ -277,13 +278,15 @@ export const authRouter = router({
       // Always return success to prevent email enumeration
       if (member && member.isActive) {
         const resetToken = signResetToken(member.id);
-        // In production, send email with resetToken
-        // For now, log it in development
         if (process.env.NODE_ENV === 'development') {
           logger.debug(`Reset token for ${member.email}: ${resetToken}`);
         }
-        // TODO: Send email via SendGrid/Nodemailer
-        // await sendResetEmail(member.email, resetToken);
+
+        try {
+          await sendPasswordResetEmail(member.email, resetToken);
+        } catch (err: any) {
+          logger.error(`Failed to send password reset email to ${member.email}: ${err.message || err}`);
+        }
       }
 
       return { success: true, message: 'If an account with that email exists, a reset link has been sent.' };

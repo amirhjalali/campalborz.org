@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { router, publicProcedure, leadProcedure, managerProcedure } from '../trpc';
 import { signInviteToken } from './auth';
 import logger from '../lib/logger';
+import { sendInviteEmail } from '../lib/email';
 
 // --- Router ---
 
@@ -35,8 +36,11 @@ export const invitationsRouter = router({
 
           logger.info(`Invite re-sent for ${normalizedEmail} by ${ctx.user.email}`);
 
-          // TODO: Send invite email
-          // await sendInviteEmail(normalizedEmail, inviteToken);
+          try {
+            await sendInviteEmail(normalizedEmail, ctx.user.name, inviteToken);
+          } catch (err: any) {
+            logger.error(`Failed to send invite email to ${normalizedEmail}: ${err.message || err}`);
+          }
 
           return {
             member: {
@@ -73,8 +77,11 @@ export const invitationsRouter = router({
 
       logger.info(`Invitation created for ${normalizedEmail} by ${ctx.user.email}`);
 
-      // TODO: Send invite email
-      // await sendInviteEmail(normalizedEmail, inviteToken);
+      try {
+        await sendInviteEmail(normalizedEmail, ctx.user.name, inviteToken);
+      } catch (err: any) {
+        logger.error(`Failed to send invite email to ${normalizedEmail}: ${err.message || err}`);
+      }
 
       return {
         member: {
@@ -305,8 +312,11 @@ export const invitationsRouter = router({
 
       logger.info(`Invite resent for ${member.email} by ${ctx.user.email}`);
 
-      // TODO: Send invite email
-      // await sendInviteEmail(member.email, inviteToken);
+      try {
+        await sendInviteEmail(member.email, ctx.user.name, inviteToken);
+      } catch (err: any) {
+        logger.error(`Failed to send invite email to ${member.email}: ${err.message || err}`);
+      }
 
       return {
         memberId: member.id,

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   transpilePackages: ["@camp-platform/shared"],
   experimental: {
@@ -74,10 +75,11 @@ const nextConfig = {
     ];
   },
   async rewrites() {
+    const apiUrl = process.env.INTERNAL_API_URL || 'http://localhost:3005';
     return [
       {
         source: '/api/trpc/:path*',
-        destination: 'http://localhost:3005/api/trpc/:path*',
+        destination: `${apiUrl}/api/trpc/:path*`,
       },
     ];
   },

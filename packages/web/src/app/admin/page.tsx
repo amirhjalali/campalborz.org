@@ -135,8 +135,8 @@ export default function AdminDashboardPage() {
           href: '/admin/applications',
         },
         {
-          key: 'notOnWhatsapp',
-          count: actionItems.notOnWhatsapp.count,
+          key: 'notOnWhatsApp',
+          count: actionItems.notOnWhatsApp.count,
           label: 'Not on WhatsApp',
           icon: MessageSquare,
           href: '/admin/communications',

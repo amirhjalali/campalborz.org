@@ -425,7 +425,7 @@ export interface ActionItemMember {
 export interface ActionItems {
   unpaidDues: { count: number; members: ActionItemMember[] };
   noTicket: { count: number; members: ActionItemMember[] };
-  notOnWhatsapp: { count: number; members: ActionItemMember[] };
+  notOnWhatsApp: { count: number; members: ActionItemMember[] };
   noPreApproval: { count: number; members: ActionItemMember[] };
   pendingApplications: { count: number };
 }
@@ -444,7 +444,7 @@ export interface SendMassEmailResult {
 
 export async function sendMassEmail(data: {
   seasonId?: string;
-  filter: string;
+  recipientFilter: string;
   customEmails?: string[];
   subject: string;
   body: string;

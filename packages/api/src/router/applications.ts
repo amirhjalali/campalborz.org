@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { router, publicProcedure, managerProcedure, leadProcedure } from '../trpc';
 import logger from '../lib/logger';
 import { emitAdminUpdate } from '../lib/socket';
+import { sendApplicationConfirmation, sendApplicationApproved, sendApplicationDenied } from '../lib/email';
 
 // --- Validation schemas ---
 
@@ -88,6 +89,13 @@ export const applicationsRouter = router({
         status: application.status,
         createdAt: application.createdAt,
       });
+
+      // Send confirmation email to the applicant
+      try {
+        await sendApplicationConfirmation(normalizedEmail, input.name);
+      } catch (err: any) {
+        logger.error(`Failed to send application confirmation email to ${normalizedEmail}: ${err.message || err}`);
+      }
 
       return {
         id: application.id,
@@ -183,6 +191,17 @@ export const applicationsRouter = router({
         status: updated.status,
         reviewedBy: ctx.user.name,
       });
+
+      // Send status notification email to the applicant
+      try {
+        if (input.status === 'ACCEPTED') {
+          await sendApplicationApproved(updated.email, updated.name);
+        } else if (input.status === 'REJECTED') {
+          await sendApplicationDenied(updated.email, updated.name);
+        }
+      } catch (err: any) {
+        logger.error(`Failed to send application ${input.status.toLowerCase()} email to ${updated.email}: ${err.message || err}`);
+      }
 
       return updated;
     }),

@@ -9,6 +9,7 @@ import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { StructuredData } from '../components/structured-data';
 import { pageMetadata, siteConfig } from '@/lib/metadata';
+import { Toaster } from 'sonner';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -51,6 +52,7 @@ export default function RootLayout({
                 {children}
               </div>
               <Footer />
+              <Toaster position="top-right" richColors closeButton />
             </NotificationProvider>
           </AuthProvider>
         </ThemeProvider>

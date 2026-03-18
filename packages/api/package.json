@@ -4,7 +4,7 @@
   "description": "Multi-tenant API server for the camp management platform",
   "main": "src/index.ts",
   "scripts": {
-    "build": "echo 'API build skipped - codebase needs significant fixes'",
+    "build": "tsc && cp -r prisma dist/",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "lint": "eslint src/**/*.ts",
