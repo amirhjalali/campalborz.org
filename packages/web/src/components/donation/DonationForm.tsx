@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { toast } from 'sonner';
-import { Heart, DollarSign, CheckCircle, Info, CreditCard, Lock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Heart, CheckCircle, Info, Lock } from "lucide-react";
 
 interface DonationFormProps {
   campaigns?: string[];
@@ -10,11 +9,19 @@ interface DonationFormProps {
   initialAmount?: number | null;
   prefillKey?: number;
   onSuccess?: (donationId: string) => void;
+  givebutterCampaignId?: string;
 }
 
 const suggestedAmounts = [25, 75, 150, 300, 500];
 
-export function DonationForm({ campaigns = [], tenantId, initialAmount = null, prefillKey = 0, onSuccess }: DonationFormProps) {
+const DEFAULT_GIVEBUTTER_CAMPAIGN_ID = "Alborz2025Fundraiser";
+
+export function DonationForm({
+  campaigns = [],
+  initialAmount = null,
+  prefillKey = 0,
+  givebutterCampaignId,
+}: DonationFormProps) {
   const [amount, setAmount] = useState<number | null>(initialAmount);
   const [customAmount, setCustomAmount] = useState("");
   const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
@@ -23,9 +30,13 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
   const [donorEmail, setDonorEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
+  const [step, setStep] = useState<"amount" | "details" | "payment">("amount");
+  const givebutterContainerRef = useRef<HTMLDivElement>(null);
+
+  const campaignId = givebutterCampaignId
+    || process.env.NEXT_PUBLIC_GIVEBUTTER_CAMPAIGN_ID
+    || DEFAULT_GIVEBUTTER_CAMPAIGN_ID;
 
   useEffect(() => {
     if (prefillKey > 0) {
@@ -35,6 +46,34 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
       setError(null);
     }
   }, [prefillKey, initialAmount]);
+
+  // Load GiveButter widget script when the payment step is reached
+  useEffect(() => {
+    if (step !== "payment") return;
+
+    const existingScript = document.querySelector('script[src*="givebutter.com/js/widget.js"]');
+    if (existingScript) {
+      // Script already loaded; trigger re-render of the widget
+      if (typeof (window as any).Givebutter === 'function') {
+        try {
+          (window as any).Givebutter('render');
+        } catch {
+          // Widget will render from the container element
+        }
+      }
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://widgets.givebutter.com/latest.umd.cjs?acct=23Dn2nKxDqcGYoag&p=other";
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup is intentionally minimal — GiveButter script can persist
+    };
+  }, [step, campaignId]);
 
   const handleAmountSelection = (selectedAmount: number) => {
     setAmount(selectedAmount);
@@ -72,48 +111,6 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
       setStep("payment");
     }
   };
-
-  const handleDemoPayment = async () => {
-    setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setStep("success");
-    toast.success('Thank you for your donation!', {
-      description: 'You will receive a receipt via email shortly.',
-      duration: 5000,
-    });
-    if (onSuccess) {
-      onSuccess("donation-" + Date.now());
-    }
-  };
-
-  if (step === "success") {
-    return (
-      <div className="text-center py-12">
-        <CheckCircle className="h-16 w-16 text-sage-600 mx-auto mb-4" />
-        <h2 className="text-display-thin text-2xl mb-2">Thank You!</h2>
-        <p className="text-body-relaxed text-ink-soft mb-6">
-          Your donation of ${(amount! / 100).toFixed(2)} has been processed successfully.
-        </p>
-        <p className="text-sm text-ink-soft/70 mb-8">
-          You will receive a tax receipt via email shortly.
-        </p>
-        <button
-          onClick={() => {
-            setStep("amount");
-            setAmount(null);
-            setCustomAmount("");
-            setDonorName("");
-            setDonorEmail("");
-            setMessage("");
-          }}
-          className="cta-secondary text-sm"
-        >
-          Make Another Donation
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -374,27 +371,19 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
             </div>
           </div>
 
-          <div className="luxury-card text-center py-8">
-            <CreditCard className="h-10 w-10 text-gold mx-auto mb-3" />
-            <p className="text-body-relaxed text-sm text-ink-soft mb-4">
-              Payment processing will be available soon. Click below to simulate a donation.
-            </p>
-            <div className="flex items-center justify-center gap-2 text-xs text-ink-soft/60 mb-4">
-              <Lock className="h-3 w-3" />
-              <span>Secure &amp; encrypted</span>
-            </div>
+          {/* GiveButter Embedded Widget */}
+          <div ref={givebutterContainerRef} className="min-h-[400px]">
+            <givebutter-widget id={campaignId}></givebutter-widget>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 text-xs text-ink-soft/60">
+            <Lock className="h-3 w-3" />
+            <span>Secure payment powered by Givebutter</span>
           </div>
 
           <div className="flex gap-3">
             <button onClick={() => setStep("details")} className="cta-secondary flex-1 justify-center text-sm">
               Back
-            </button>
-            <button
-              onClick={handleDemoPayment}
-              disabled={isProcessing}
-              className="cta-primary cta-shimmer flex-1 justify-center text-sm disabled:opacity-50"
-            >
-              {isProcessing ? "Processing..." : `Donate $${(amount! / 100).toFixed(2)}`}
             </button>
           </div>
         </div>

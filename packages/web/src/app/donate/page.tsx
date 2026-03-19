@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -14,6 +14,72 @@ import {
   ExternalLink,
   Award
 } from 'lucide-react';
+
+/**
+ * Embedded GiveButter donation widget section.
+ * Dynamically loads the GiveButter script and renders the campaign widget inline.
+ */
+function GivebutterDonateSection({ campaignId }: { campaignId: string }) {
+  useEffect(() => {
+    const existingScript = document.querySelector('script[src*="givebutter.com"]');
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = 'https://widgets.givebutter.com/latest.umd.cjs?acct=23Dn2nKxDqcGYoag&p=other';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    } else if (typeof (window as any).Givebutter === 'function') {
+      try {
+        (window as any).Givebutter('render');
+      } catch {
+        // Widget will self-render from the container element
+      }
+    }
+  }, [campaignId]);
+
+  return (
+    <section id="donate-now" className="py-24 md:py-32">
+      <div className="max-w-2xl mx-auto px-5 md:px-10">
+        <Reveal>
+          <div className="frame-panel text-center">
+            <div className="inline-flex p-5 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
+              <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
+            </div>
+            <h2 className="font-accent text-2xl md:text-3xl mb-3" style={{ color: '#2C2416' }}>
+              Donate Now
+            </h2>
+            <p className="text-body-relaxed text-sm mb-2" style={{ color: 'var(--color-ink-soft)' }}>
+              Every dollar goes directly into the camp — art cars, sound systems, shade structures, and endless tea.
+            </p>
+            <p className="text-body-relaxed text-sm mb-8" style={{ color: 'var(--color-ink-soft)' }}>
+              Donations are tax-deductible and you will receive an instant receipt.
+            </p>
+
+            {/* GiveButter Embedded Widget */}
+            <div className="min-h-[400px] mb-8">
+              <givebutter-widget id={campaignId}></givebutter-widget>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-6 mt-4 text-xs" style={{ color: 'rgba(var(--color-ink-rgb), 0.5)' }}>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                <span>Secure Payment</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                <span>501(c)(3) Tax-Deductible</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Heart className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                <span>100% Goes to Community</span>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
 
 export default function DonatePage() {
   const { donate } = useContentConfig();
@@ -184,52 +250,8 @@ export default function DonatePage() {
         </div>
       </section>
 
-      {/* Donate Now CTA - Givebutter */}
-      <section id="donate-now" className="py-24 md:py-32">
-        <div className="max-w-2xl mx-auto px-5 md:px-10">
-          <Reveal>
-            <div className="frame-panel text-center">
-              <div className="inline-flex p-5 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
-                <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
-              </div>
-              <h2 className="font-accent text-2xl md:text-3xl mb-3" style={{ color: '#2C2416' }}>
-                Donate Now
-              </h2>
-              <p className="text-body-relaxed text-sm mb-2" style={{ color: 'var(--color-ink-soft)' }}>
-                Every dollar goes directly into the camp — art cars, sound systems, shade structures, and endless tea.
-              </p>
-              <p className="text-body-relaxed text-sm mb-8" style={{ color: 'var(--color-ink-soft)' }}>
-                Donations are tax-deductible and you will receive an instant receipt.
-              </p>
-
-              <a
-                href="https://givebutter.com/Alborz2025Fundraiser"
-                target="_blank"
-                rel="noreferrer"
-                className="cta-primary cta-shimmer inline-flex text-lg px-10 py-4"
-              >
-                <span>Donate via Givebutter</span>
-                <ExternalLink size={20} aria-hidden="true" />
-              </a>
-
-              <div className="flex flex-wrap items-center justify-center gap-6 mt-8 text-xs" style={{ color: 'rgba(var(--color-ink-rgb), 0.5)' }}>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>Secure Payment</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>501(c)(3) Tax-Deductible</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
-                  <span>100% Goes to Community</span>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      {/* Donate Now - Givebutter Embedded Widget */}
+      <GivebutterDonateSection campaignId={donate.donationForm?.givebutterCampaignId || 'Alborz2025Fundraiser'} />
 
       {/* Impact Stats */}
       <section className="py-24 md:py-32">

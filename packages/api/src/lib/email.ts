@@ -651,6 +651,88 @@ export async function sendMembershipReminder(to: string, name: string): Promise<
 }
 
 /**
+ * Send a donation receipt email to a donor.
+ * Includes 501(c)(3) tax-deductibility information.
+ */
+export async function sendDonationReceipt(
+  to: string,
+  donorName: string,
+  amount: string,
+  date: string,
+  campaignName?: string,
+): Promise<boolean> {
+  const firstName = donorName.split(' ')[0] || 'Friend';
+  const campaign = campaignName || 'Camp Alborz General Fund';
+
+  const html = layout(
+    [
+      heading('Thank You for Your Donation'),
+      paragraph(
+        `Dear ${firstName}, thank you for your generous contribution to Camp Alborz. ` +
+        'Your support helps us build art cars, host community events, and bring Persian hospitality to the playa.'
+      ),
+      infoBox(
+        `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">` +
+        `<tr><td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.inkSecondary};">Donor</td>` +
+        `<td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.ink};text-align:right;font-weight:600;">${donorName}</td></tr>` +
+        `<tr><td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.inkSecondary};">Amount</td>` +
+        `<td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.ink};text-align:right;font-weight:600;">${amount}</td></tr>` +
+        `<tr><td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.inkSecondary};">Date</td>` +
+        `<td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.ink};text-align:right;">${date}</td></tr>` +
+        `<tr><td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.inkSecondary};">Campaign</td>` +
+        `<td style="padding:4px 0;font-family:${BRAND.fontBody};font-size:14px;color:${BRAND.ink};text-align:right;">${campaign}</td></tr>` +
+        `</table>`
+      ),
+      `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:20px 0;">` +
+      `<tr><td style="padding:16px 20px;background-color:${BRAND.cream};border-radius:6px;border:1px solid ${BRAND.borderLight};">` +
+      `<p style="margin:0 0 8px;font-family:${BRAND.fontDisplay};font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:${BRAND.sage};">Tax Information</p>` +
+      `<p style="margin:0;font-family:${BRAND.fontBody};font-size:13px;line-height:1.6;color:${BRAND.inkSecondary};">` +
+      `Camp Alborz is a 501(c)(3) non-profit organization. This donation is tax-deductible to the extent allowed by law. ` +
+      `No goods or services were provided in exchange for this contribution. Please retain this email as your official donation receipt.</p>` +
+      `</td></tr></table>`,
+      paragraph(
+        'Your generosity makes a real difference. Every dollar goes directly into art installations, camp infrastructure, ' +
+        'community events, and the hospitality that defines Camp Alborz.'
+      ),
+      ctaButton('Visit Camp Alborz', `${APP_URL}`),
+      `<p style="margin:24px 0 0;font-family:${BRAND.fontAccent};font-size:16px;font-style:italic;color:${BRAND.sage};">With gratitude,<br/>The Camp Alborz Team</p>`,
+    ].join('\n'),
+    `Thank you for your donation of ${amount} to Camp Alborz!`
+  );
+
+  const text = [
+    `Thank You for Your Donation, ${firstName}!`,
+    '',
+    'Thank you for your generous contribution to Camp Alborz.',
+    'Your support helps us build art cars, host community events, and bring Persian hospitality to the playa.',
+    '',
+    'Donation Details:',
+    `  Donor: ${donorName}`,
+    `  Amount: ${amount}`,
+    `  Date: ${date}`,
+    `  Campaign: ${campaign}`,
+    '',
+    'TAX INFORMATION',
+    'Camp Alborz is a 501(c)(3) non-profit organization. This donation is tax-deductible to the extent allowed by law.',
+    'No goods or services were provided in exchange for this contribution.',
+    'Please retain this email as your official donation receipt.',
+    '',
+    'Your generosity makes a real difference. Every dollar goes directly into art installations,',
+    'camp infrastructure, community events, and the hospitality that defines Camp Alborz.',
+    '',
+    `Visit us: ${APP_URL}`,
+    '',
+    'With gratitude,',
+    'The Camp Alborz Team',
+    '',
+    '---',
+    'Camp Alborz | campalborz.org',
+  ].join('\n');
+
+  return sendEmail({ to, subject: `Donation Receipt - Camp Alborz (${amount})`, html, text });
+}
+
+/**
  * Send a mass email to a list of recipients using the branded template.
  * Iterates over each recipient and calls the core sendEmail helper.
  * Returns aggregate results: how many sent, failed, and individual errors.
@@ -710,6 +792,7 @@ export const emailService = {
   sendApplicationApproved,
   sendApplicationDenied,
   sendMembershipReminder,
+  sendDonationReceipt,
   sendMassEmailToRecipients,
 };
 

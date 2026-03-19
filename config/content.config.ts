@@ -679,6 +679,7 @@ export const contentConfig: ContentConfig = {
         "Transportation",
         "Burning Man 2026",
       ],
+      givebutterCampaignId: "Alborz2025Fundraiser",
     },
     paymentOptions: [
       {

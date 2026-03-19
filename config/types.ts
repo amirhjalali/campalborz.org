@@ -209,6 +209,7 @@ export interface ContentConfig {
       title: string;
       description: string;
       campaigns: string[];
+      givebutterCampaignId?: string;
     };
     paymentOptions?: PaymentOption[];
     gratitude?: {
