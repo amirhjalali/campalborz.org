@@ -73,7 +73,7 @@ export default function DamavandPage() {
             ART CAR 002
           </motion.p>
           <motion.h1
-            className="text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -133,7 +133,7 @@ export default function DamavandPage() {
               <p className="text-eyebrow">
                 EVOLUTION
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 Three Generations
               </h2>
             </div>
@@ -168,7 +168,7 @@ export default function DamavandPage() {
                     </div>
                     <span className="text-caption" style={{ color: 'var(--color-gold)' }}>{era.year}</span>
                   </div>
-                  <h3 className="text-display-thin text-xl mb-3">{era.title}</h3>
+                  <h3 className="font-display text-xl mb-3">{era.title}</h3>
                   <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
                     {era.description}
                   </p>
@@ -189,7 +189,7 @@ export default function DamavandPage() {
               <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>
                 DETAILS
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: 'var(--color-cream)' }}>
                 Specifications
               </h2>
             </div>
@@ -206,7 +206,7 @@ export default function DamavandPage() {
                 <div className="text-center py-3">
                   <spec.icon className="h-4 w-4 mx-auto mb-2" style={{ color: 'var(--color-gold-muted)' }} />
                   <p className="text-caption text-[11px] mb-0.5" style={{ color: 'rgba(var(--color-cream-rgb),0.6)' }}>{spec.label}</p>
-                  <p className="text-display-thin text-base" style={{ color: 'var(--color-cream)' }}>{spec.value}</p>
+                  <p className="font-display text-base" style={{ color: 'var(--color-cream)' }}>{spec.value}</p>
                 </div>
               </Reveal>
             ))}
@@ -222,7 +222,7 @@ export default function DamavandPage() {
               <p className="text-eyebrow">
                 ON THE PLAYA
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 Gallery
               </h2>
             </div>
@@ -272,7 +272,7 @@ export default function DamavandPage() {
           <div className="section-contained">
             <div className="frame-panel text-center space-y-6">
               <p className="text-eyebrow">GET INVOLVED</p>
-              <h2 className="text-display-thin text-2xl md:text-3xl">
+              <h2 className="font-accent text-2xl md:text-3xl tracking-wide" style={{ color: '#2C2416' }}>
                 Help Build the Next Generation
               </h2>
               <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>

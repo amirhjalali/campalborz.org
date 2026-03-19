@@ -68,7 +68,7 @@ export default function ArtPage() {
             OUR CREATIONS
           </motion.p>
           <motion.h1
-            className="text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -103,7 +103,7 @@ export default function ArtPage() {
               <p className="text-eyebrow">
                 OUR WORK
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 Art Categories
               </h2>
             </div>
@@ -121,7 +121,7 @@ export default function ArtPage() {
                     <div className="inline-flex p-4 rounded-full border mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb),0.15)', borderColor: 'rgba(var(--color-gold-rgb),0.25)' }}>
                       <CategoryIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                     </div>
-                    <h3 className="text-display-thin text-lg mb-2">{category.name}</h3>
+                    <h3 className="font-display text-lg mb-2">{category.name}</h3>
                     <p className="text-3xl font-display mb-1" style={{ color: 'var(--color-gold)' }}>
                       {category.count}
                     </p>
@@ -146,7 +146,7 @@ export default function ArtPage() {
               <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>
                 OUR CREATIONS
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: 'var(--color-cream)' }}>
                 Featured Art Cars
               </h2>
               <p className="font-accent text-lg max-w-2xl mx-auto" style={{ color: 'rgba(var(--color-cream-rgb),0.8)' }}>
@@ -251,7 +251,7 @@ export default function ArtPage() {
             <Reveal>
               <div className="text-center space-y-4 mb-14">
                 <p className="text-eyebrow">PARTNERSHIPS</p>
-                <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+                <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                   Collaborations & Sponsored Projects
                 </h2>
                 <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -269,7 +269,7 @@ export default function ArtPage() {
                     <span className="text-eyebrow">
                       {collab.year || 'Ongoing'}
                     </span>
-                    <h3 className="text-display-thin text-xl mt-2 mb-3">
+                    <h3 className="font-display text-xl mt-2 mb-3">
                       {collab.title}
                     </h3>
                     <p className="text-xs mb-4" style={{ color: 'var(--color-gold)' }}>
@@ -308,7 +308,7 @@ export default function ArtPage() {
               <p className="text-eyebrow">
                 FROM CONCEPT TO PLAYA
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 Our Creative Process
               </h2>
               <p className="font-accent text-lg max-w-2xl" style={{ color: 'var(--color-ink-soft)' }}>
@@ -333,7 +333,7 @@ export default function ArtPage() {
                       {index + 1}
                     </div>
                     <div>
-                      <h3 className="text-display-thin text-lg">{phase.phase}</h3>
+                      <h3 className="font-display text-lg">{phase.phase}</h3>
                       <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-gold)' }}>
                         <Calendar className="h-3 w-3" />
                         {phase.time}
@@ -358,7 +358,7 @@ export default function ArtPage() {
           <div className="section-contained">
             <div className="frame-panel text-center space-y-6">
               <p className="text-eyebrow">JOIN THE MOVEMENT</p>
-              <h2 className="text-display-thin text-2xl md:text-3xl">
+              <h2 className="font-accent text-2xl md:text-3xl tracking-wide" style={{ color: '#2C2416' }}>
                 Create Art With Us
               </h2>
               <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>

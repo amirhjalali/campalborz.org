@@ -183,7 +183,7 @@ export const contentConfig: ContentConfig = {
       title: "What We Do",
       paragraphs: [
         "Camp Alborz is a 501(c)(3) that builds art cars, throws fundraisers, and runs a hospitality camp at Burning Man. We're a crew of builders, DJs, engineers, artists, and people who just really like making tea for strangers.",
-        "We started as a group of Persian burners who wanted to bring our culture's hospitality traditions to the playa. Fifteen years later, we've built two art cars, hosted thousands of guests, and become a year-round community that stretches from LA to Brooklyn to Tehran.",
+        "We started as a group of Persian burners who wanted to bring our culture's hospitality traditions to the playa. Since then, we've built two art cars, hosted thousands of guests, and become a year-round community that stretches from LA to Brooklyn to Tehran.",
         "Off-playa, we organize fundraisers, run community cleanups like Beyond the K Bridge, and look for any excuse to get together. On the playa, our camp is home base — shaded, stocked with endless tea, and open to anyone who walks in.",
       ],
     },
@@ -205,6 +205,18 @@ export const contentConfig: ContentConfig = {
         title: "Build Together",
         description: "We make stuff with our hands—art cars, shade structures, sound systems, feasts.",
         gradient: "from-persian-violet to-pink-500",
+      },
+      {
+        icon: "globe",
+        title: "Bridge Cultures",
+        description: "Persian roots, global reach. We share our heritage and learn from everyone who shows up.",
+        gradient: "from-blue-500 to-cyan-600",
+      },
+      {
+        icon: "flame",
+        title: "Leave It Better",
+        description: "MOOP sweeps on playa, cleanups off playa. We take care of the places that take care of us.",
+        gradient: "from-orange-500 to-red-600",
       },
     ],
     timeline: [

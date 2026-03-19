@@ -72,7 +72,7 @@ export default function HomaPage() {
             ART CAR 001
           </motion.p>
           <motion.h1
-            className="text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
+            className="font-display text-optical-h1 tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -129,7 +129,7 @@ export default function HomaPage() {
               <p className="text-eyebrow">
                 SPECIFICATIONS
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 The Beast
               </h2>
             </div>
@@ -149,7 +149,7 @@ export default function HomaPage() {
                   </div>
                   <div>
                     <p className="text-caption mb-1" style={{ color: 'var(--color-ink-faint)' }}>{spec.label}</p>
-                    <p className="text-display-thin text-xl mb-1">{spec.value}</p>
+                    <p className="font-display text-xl mb-1">{spec.value}</p>
                     <p className="text-sm" style={{ color: 'var(--color-ink-faint)' }}>{spec.detail}</p>
                   </div>
                 </div>
@@ -191,7 +191,7 @@ export default function HomaPage() {
               <p className="text-eyebrow">
                 ON THE PLAYA
               </p>
-              <h2 className="text-display-thin text-3xl md:text-4xl tracking-tight">
+              <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
                 Gallery
               </h2>
             </div>
@@ -232,7 +232,7 @@ export default function HomaPage() {
           <div className="section-contained">
             <div className="frame-panel text-center space-y-8">
               <p className="text-eyebrow">GET INVOLVED</p>
-              <h2 className="text-display-thin text-2xl md:text-3xl">
+              <h2 className="font-accent text-2xl md:text-3xl tracking-wide" style={{ color: '#2C2416' }}>
                 Help HOMA Take Flight
               </h2>
               <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>

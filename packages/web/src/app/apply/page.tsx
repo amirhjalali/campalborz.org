@@ -7,7 +7,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Reveal } from '../../components/reveal';
 import { useContentConfig } from '../../hooks/useConfig';
 import { toast } from 'sonner';
-import { CheckCircle, Loader2, ArrowRight, ExternalLink, FileText, Users, MessageSquare, Clock } from 'lucide-react';
+import { CheckCircle, Loader2, ArrowRight, ExternalLink, FileText, Users, MessageSquare } from 'lucide-react';
 
 interface ApplicationFormData {
   name: string;
@@ -174,7 +174,7 @@ export default function ApplyPage() {
     });
   };
 
-  const processIcons = [FileText, Users, MessageSquare, Clock];
+  const processIcons = [FileText, MessageSquare, Users];
 
   return (
     <main style={{ backgroundColor: 'var(--color-cream)' }}>
@@ -209,10 +209,10 @@ export default function ApplyPage() {
             MEMBERSHIP APPLICATION
           </motion.p>
           <motion.h1
-            className="text-display-thin text-4xl sm:text-5xl md:text-6xl text-white drop-shadow-lg mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
             initial={{ y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.9 }}
+            transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             {apply.title}
           </motion.h1>
@@ -220,7 +220,7 @@ export default function ApplyPage() {
             className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto italic"
             initial={{ y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             {apply.subtitle}
           </motion.p>
@@ -244,7 +244,7 @@ export default function ApplyPage() {
                 <div className="inline-flex p-4 rounded-full" style={{ backgroundColor: 'rgba(90, 107, 90, 0.12)', border: '1px solid rgba(90, 107, 90, 0.25)' }}>
                   <CheckCircle className="h-10 w-10" style={{ color: 'var(--color-sage)' }} aria-hidden="true" />
                 </div>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
+                <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
                   Application Submitted Successfully!
                 </h2>
                 <p className="text-body-relaxed max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
@@ -266,7 +266,7 @@ export default function ApplyPage() {
               <div className="frame-panel">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                   <div>
-                    <h3 className="text-display-thin text-xl mb-2">
+                    <h3 className="font-accent text-xl tracking-tight mb-2" style={{ color: '#2C2416' }}>
                       Prefer the Google Form?
                     </h3>
                     <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
@@ -303,7 +303,7 @@ export default function ApplyPage() {
             <div className="frame-panel">
               <div className="mb-10">
                 <p className="text-eyebrow mb-3">MEMBERSHIP APPLICATION</p>
-                <h2 className="text-display-thin text-2xl md:text-3xl">
+                <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
                   {apply.form.title}
                 </h2>
               </div>
@@ -314,7 +314,7 @@ export default function ApplyPage() {
                   <div className="space-y-6">
                     <div>
                       <p className="text-eyebrow mb-2">ABOUT YOU</p>
-                      <h3 className="text-display-thin text-lg pb-3" style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                      <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
                         {apply.form.fields.personalInfo.title}
                       </h3>
                     </div>
@@ -483,7 +483,7 @@ export default function ApplyPage() {
                 {/* Terms */}
                 <Reveal delay={0.35}>
                   <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}>
-                    <h4 className="text-display-thin text-lg mb-4">
+                    <h4 className="font-accent text-lg tracking-tight mb-4" style={{ color: '#2C2416' }}>
                       {apply.form.beforeYouApply.title}
                     </h4>
                     <ul className="space-y-2">
@@ -538,13 +538,13 @@ export default function ApplyPage() {
           <Reveal>
             <div className="mb-14">
               <p className="text-eyebrow mb-3" style={{ color: 'var(--color-gold-muted)' }}>HOW IT WORKS</p>
-              <h2 className="text-display-thin text-3xl md:text-4xl" style={{ color: 'var(--color-cream)' }}>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: 'var(--color-cream)' }}>
                 {apply.process.title}
               </h2>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {apply.process.steps.map((step, index) => {
               const StepIcon = processIcons[index] || FileText;
               return (
@@ -560,7 +560,7 @@ export default function ApplyPage() {
                     <div className="text-3xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
                       {step.stepNumber}
                     </div>
-                    <h3 className="text-display-thin text-lg mb-3" style={{ color: 'var(--color-cream)' }}>
+                    <h3 className="font-accent text-lg tracking-tight mb-3" style={{ color: 'var(--color-cream)' }}>
                       {step.title}
                     </h3>
                     <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}>
@@ -578,7 +578,7 @@ export default function ApplyPage() {
       <section className="py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10 text-center space-y-6">
           <Reveal>
-            <h2 className="text-display-thin text-2xl md:text-3xl">
+            <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
               Questions About Applying?
             </h2>
             <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>

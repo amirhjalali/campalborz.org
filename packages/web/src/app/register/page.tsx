@@ -13,8 +13,8 @@ export default function RegisterPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center">
-      <Loader2 className="h-8 w-8 text-gold animate-spin" />
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-cream)' }}>
+      <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
     </div>
   );
 }

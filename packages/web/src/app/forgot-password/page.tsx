@@ -71,14 +71,14 @@ export default function ForgotPasswordPage() {
   const displayError = validationError || error;
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="w-full max-w-md animate-fade-in">
         {/* Camp name and tagline */}
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+          <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: 'var(--color-ink)' }}>
             CAMP ALBORZ
           </h1>
-          <p className="font-accent italic text-lg text-sage">
+          <p className="font-accent italic text-lg" style={{ color: 'var(--color-sage)' }}>
             Password Recovery
           </p>
         </div>
@@ -92,10 +92,10 @@ export default function ForgotPasswordPage() {
                   <CheckCircle className="h-8 w-8 text-success" />
                 </div>
               </div>
-              <h2 className="text-display-thin text-xl text-ink mb-3">
+              <h2 className="font-accent text-xl tracking-tight mb-3" style={{ color: 'var(--color-ink)' }}>
                 Check Your Email
               </h2>
-              <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+              <p className="text-body-relaxed text-sm mb-6" style={{ color: 'var(--color-ink-soft)' }}>
                 If an account exists with that email, we&apos;ve sent a password reset link.
                 Please check your inbox and spam folder. The link expires in 1 hour.
               </p>
@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
             </div>
           ) : (
             <>
-              <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
+              <p className="text-body-relaxed text-sm text-center mb-6" style={{ color: 'var(--color-ink-soft)' }}>
                 Enter your email address and we&apos;ll send you a link to reset your password.
               </p>
 
@@ -167,7 +167,8 @@ export default function ForgotPasswordPage() {
           <div className="mt-6 text-center">
             <Link
               href="/login"
-              className="text-sm text-ink-soft hover:text-gold transition-colors inline-flex items-center gap-1"
+              className="text-sm transition-colors inline-flex items-center gap-1"
+              style={{ color: 'var(--color-ink-soft)' }}
             >
               <ArrowLeft className="h-4 w-4" />
               Back to login

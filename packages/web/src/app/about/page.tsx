@@ -28,7 +28,7 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
               Our Journey
             </h2>
             <p className="text-body-relaxed text-base max-w-2xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
-              15+ years of building community, art, and hospitality on the playa and beyond.
+              Nearly two decades of building community, art, and hospitality on the playa and beyond.
             </p>
           </div>
         </Reveal>
@@ -237,9 +237,9 @@ export default function AboutPage() {
               const ValueIcon = getIcon(value.icon);
 
               return (
-                <Reveal key={value.title} delay={index * 0.15} direction={index === 0 ? 'left' : index === 2 ? 'right' : 'up'}>
+                <Reveal key={value.title} delay={index * 0.15} direction={index % 3 === 0 ? 'left' : index % 3 === 2 ? 'right' : 'up'} className={index === 0 ? 'md:col-span-2' : ''}>
                   <div
-                    className={`border rounded-2xl p-8 text-center group transition-shadow duration-300 ${index === 0 ? 'md:col-span-2' : ''}`}
+                    className="border rounded-2xl p-8 text-center group transition-shadow duration-300 h-full"
                     style={{
                       borderColor: 'rgba(255, 255, 255, 0.1)',
                       backgroundColor: 'rgba(255, 255, 255, 0.05)',
