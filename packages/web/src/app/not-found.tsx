@@ -23,7 +23,7 @@ export default function NotFound() {
           <p className="text-body-relaxed text-lg mb-2" style={{ color: '#4a4a42' }}>
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
-          <p className="text-body-relaxed" style={{ color: 'rgba(74, 74, 66, 0.6)' }}>
+          <p className="text-body-relaxed" style={{ color: '#4a4a42' }}>
             Don&apos;t worry, even the best explorers get lost sometimes.
           </p>
         </div>
@@ -42,7 +42,7 @@ export default function NotFound() {
                 <Icon className="h-5 w-5 text-ink-soft/40 group-hover:text-gold transition-colors" />
                 <div className="text-left">
                   <p className="font-medium text-sm text-ink group-hover:text-gold transition-colors">{label}</p>
-                  <p className="text-xs text-ink-soft/60">{description}</p>
+                  <p className="text-xs text-ink-soft">{description}</p>
                 </div>
               </Link>
             ))}
@@ -60,12 +60,12 @@ export default function NotFound() {
           </Link>
         </div>
 
-        <p className="text-sm text-ink-soft/50 font-accent italic mb-12">
+        <p className="text-sm text-ink-soft font-accent italic mb-12">
           &ldquo;Not all who wander are lost... but this page definitely is.&rdquo;
         </p>
 
         <div className="pt-8 border-t border-tan-300/30">
-          <p className="text-sm text-ink-soft/60">
+          <p className="text-sm text-ink-soft">
             Still can&apos;t find what you&apos;re looking for?{' '}
             <a
               href="mailto:info@campalborz.org"

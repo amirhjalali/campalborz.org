@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, useReducedMotion } from 'framer-motion';
 import { Menu, X, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '../lib/utils';
@@ -46,6 +46,7 @@ export function Navigation() {
   const [mounted, setMounted] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
@@ -143,9 +144,9 @@ export function Navigation() {
           ? 'bg-cream/90 dark:bg-[#1a1f1a]/90 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.05)]'
           : 'bg-transparent'
       )}
-      initial={{ opacity: 0 }}
+      initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">

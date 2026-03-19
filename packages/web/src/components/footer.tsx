@@ -59,7 +59,7 @@ export function Footer() {
               />
               <p
                 className="text-[11px] tracking-[0.2em] uppercase"
-                style={{ color: 'rgba(var(--color-cream-rgb), 0.45)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}
               >
                 {campConfig.taxStatus} Non-Profit Organization
               </p>
@@ -69,7 +69,7 @@ export function Footer() {
             <div className="space-y-6">
               <h4
                 className="text-[11px] tracking-[0.25em] uppercase font-medium"
-                style={{ color: 'rgba(var(--color-cream-rgb), 0.5)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}
               >
                 Navigation
               </h4>
@@ -91,7 +91,7 @@ export function Footer() {
             <div className="space-y-6">
               <h4
                 className="text-[11px] tracking-[0.25em] uppercase font-medium"
-                style={{ color: 'rgba(var(--color-cream-rgb), 0.5)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}
               >
                 Connect
               </h4>
@@ -131,13 +131,13 @@ export function Footer() {
             <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
               <p
                 className="text-[11px]"
-                style={{ color: 'rgba(var(--color-cream-rgb), 0.45)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}
               >
                 &copy; {currentYear} {footer?.copyright || campConfig.name}. All rights reserved.
               </p>
               <p
                 className="text-[11px] tracking-[0.15em]"
-                style={{ color: 'rgba(var(--color-cream-rgb), 0.4)' }}
+                style={{ color: 'rgba(var(--color-cream-rgb), 0.7)' }}
               >
                 Black Rock City, Nevada
               </p>

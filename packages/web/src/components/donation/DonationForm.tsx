@@ -121,7 +121,14 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
         <Heart className="h-5 w-5 text-gold mr-2" />
         <h3 className="text-display-thin text-xl">Make a Donation</h3>
       </div>
-      <div className="flex space-x-2 mb-6">
+      <div
+        className="flex space-x-2 mb-6"
+        role="progressbar"
+        aria-valuenow={["amount", "details", "payment"].indexOf(step) + 1}
+        aria-valuemin={1}
+        aria-valuemax={3}
+        aria-label={`Donation form step ${["amount", "details", "payment"].indexOf(step) + 1} of 3`}
+      >
         {["amount", "details", "payment"].map((s, index) => (
           <div
             key={s}
@@ -214,11 +221,13 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
             </div>
           )}
 
-          {error && (
-            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
-              {error}
-            </div>
-          )}
+          <div aria-live="polite">
+            {error && (
+              <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+          </div>
 
           <button
             onClick={handleNextStep}
@@ -325,11 +334,13 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
             </div>
           </div>
 
-          {error && (
-            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
-              {error}
-            </div>
-          )}
+          <div aria-live="polite">
+            {error && (
+              <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+          </div>
 
           <div className="flex gap-3">
             <button onClick={() => setStep("amount")} className="cta-secondary flex-1 justify-center text-sm">

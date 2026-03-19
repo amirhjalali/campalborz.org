@@ -299,7 +299,7 @@ function fuzzyMatchMember(
 // ─── Router ─────────────────────────────────────────────────────────
 
 const importInput = z.object({
-  fileBase64: z.string(),
+  fileBase64: z.string().max(5 * 1024 * 1024, 'File size must not exceed 5MB'),
   seasonId: z.string().uuid(),
 });
 

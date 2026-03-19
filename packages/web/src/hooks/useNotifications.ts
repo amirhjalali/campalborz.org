@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useCallback, useState, useRef } from 'react';
-import io from 'socket.io-client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
-type SocketInstance = ReturnType<typeof io>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SocketInstance = any;
 
 export interface Notification {
   id: string;
@@ -36,6 +36,9 @@ interface UseNotificationsReturn {
 /**
  * Hook for receiving real-time push notifications and online member tracking.
  * Connects to the /notifications namespace when a valid token is present.
+ *
+ * socket.io-client is lazy-loaded via dynamic import to keep it out of the
+ * initial bundle for unauthenticated visitors.
  */
 export function useNotifications(enabled: boolean = true): UseNotificationsReturn {
   const socketRef = useRef<SocketInstance | null>(null);
@@ -49,44 +52,56 @@ export function useNotifications(enabled: boolean = true): UseNotificationsRetur
     const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
     if (!token) return;
 
-    const socket = io(`${API_BASE_URL}/notifications`, {
-      auth: { token },
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 3000,
-    });
+    let cancelled = false;
 
-    socket.on('connect', () => {
-      setIsConnected(true);
-      // Request current online users list
-      socket.emit('get_online_users');
-    });
+    // Lazy-load socket.io-client only when actually connecting
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (import('socket.io-client') as Promise<any>).then((mod) => {
+      if (cancelled) return;
 
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
+      const io = mod.default || mod;
+      const socket = io(`${API_BASE_URL}/notifications`, {
+        auth: { token },
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 3000,
+      });
 
-    socket.on('connect_error', () => {
-      setIsConnected(false);
-    });
+      socket.on('connect', () => {
+        setIsConnected(true);
+        // Request current online users list
+        socket.emit('get_online_users');
+      });
 
-    // Receive push notifications
-    socket.on('notification', (notification: Notification) => {
-      setNotifications((prev) => [notification, ...prev].slice(0, 50));
-    });
+      socket.on('disconnect', () => {
+        setIsConnected(false);
+      });
 
-    // Receive online users list updates
-    socket.on('online_users', (users: OnlineUser[]) => {
-      setOnlineUsers(users);
-    });
+      socket.on('connect_error', () => {
+        setIsConnected(false);
+      });
 
-    socketRef.current = socket;
+      // Receive push notifications
+      socket.on('notification', (notification: Notification) => {
+        setNotifications((prev) => [notification, ...prev].slice(0, 50));
+      });
+
+      // Receive online users list updates
+      socket.on('online_users', (users: OnlineUser[]) => {
+        setOnlineUsers(users);
+      });
+
+      socketRef.current = socket;
+    });
 
     return () => {
-      socket.removeAllListeners();
-      socket.disconnect();
-      socketRef.current = null;
+      cancelled = true;
+      if (socketRef.current) {
+        socketRef.current.removeAllListeners();
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
     };
   }, [enabled]);
 

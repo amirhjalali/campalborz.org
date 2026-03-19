@@ -1,3 +1,4 @@
+// TODO: Convert to Server Component for static generation
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -44,6 +45,7 @@ export default function ArtPage() {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
             quality={90}
             sizes="100vw"
             placeholder="empty"
@@ -52,7 +54,7 @@ export default function ArtPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-transparent to-transparent opacity-90" style={{ background: `linear-gradient(to top, var(--color-cream), transparent, transparent)` }} />
         </motion.div>
 
-        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" aria-hidden="true" />
 
         <motion.div
           className="relative z-10 section-contained text-center py-24"
@@ -86,6 +88,7 @@ export default function ArtPage() {
 
           <motion.div
             className="ornate-divider mt-8"
+            aria-hidden="true"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -136,7 +139,7 @@ export default function ArtPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* Featured Art Cars */}
       <section className="section-contrast">
@@ -242,7 +245,7 @@ export default function ArtPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* Collaborations */}
       {art.collaborations && art.collaborations.length > 0 && (
@@ -298,7 +301,7 @@ export default function ArtPage() {
         </section>
       )}
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* Creative Process Timeline */}
       <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
@@ -350,7 +353,7 @@ export default function ArtPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* CTA Section */}
       <Reveal>

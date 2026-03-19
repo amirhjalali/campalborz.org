@@ -1,3 +1,4 @@
+// TODO: Convert to Server Component for static generation
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -56,7 +57,7 @@ export default function CulturePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </motion.div>
 
-        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" aria-hidden="true" />
 
         <motion.div
           className="relative z-10 text-center py-24 max-w-[1200px] mx-auto px-5 md:px-10"
@@ -90,6 +91,7 @@ export default function CulturePage() {
 
           <motion.div
             className="ornate-divider mt-8"
+            aria-hidden="true"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}

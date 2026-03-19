@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 import { signInviteToken } from './auth';
 import logger from '../lib/logger';
@@ -33,7 +34,7 @@ export const membersRouter = router({
   list: managerProcedure
     .input(memberSearchInput)
     .query(async ({ ctx, input }) => {
-      const where: any = {};
+      const where: Prisma.MemberWhereInput = {};
 
       if (input.search) {
         where.OR = [

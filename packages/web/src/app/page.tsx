@@ -9,6 +9,7 @@ import {
   motion,
   useScroll,
   useTransform,
+  useReducedMotion,
 } from 'framer-motion';
 
 /* ──────────────────────────────────────────────
@@ -66,7 +67,7 @@ function ArtistImage({ artist }: { artist: typeof artists[number] }) {
           </p>
         </div>
         {/* Decorative geometric pattern overlay */}
-        <div className="absolute inset-0 pattern-persian opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 pattern-persian opacity-10 pointer-events-none" aria-hidden="true" />
       </div>
     );
   }
@@ -163,28 +164,33 @@ const campQAs = [
 export default function HomePage() {
   const content = useContentConfig();
   const rumiQuote = content.home?.rumiQuote;
+  const prefersReducedMotion = useReducedMotion();
 
   const heroRef = useRef(null);
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  const heroImageY = useTransform(heroScroll, [0, 1], ['0%', '15%']);
-  const heroOpacity = useTransform(heroScroll, [0, 0.5], [1, 0]);
+  const heroImageYScroll = useTransform(heroScroll, [0, 1], ['0%', '15%']);
+  const heroOpacityScroll = useTransform(heroScroll, [0, 0.5], [1, 0]);
+  const heroImageY = prefersReducedMotion ? '0%' : heroImageYScroll;
+  const heroOpacity = prefersReducedMotion ? 1 : heroOpacityScroll;
 
   const quoteRef = useRef(null);
   const { scrollYProgress: quoteScroll } = useScroll({
     target: quoteRef,
     offset: ['start end', 'end start'],
   });
-  const quoteBgY = useTransform(quoteScroll, [0, 1], ['0%', '20%']);
+  const quoteBgYScroll = useTransform(quoteScroll, [0, 1], ['0%', '20%']);
+  const quoteBgY = prefersReducedMotion ? '0%' : quoteBgYScroll;
 
   const panoramaRef = useRef(null);
   const { scrollYProgress: panoramaScroll } = useScroll({
     target: panoramaRef,
     offset: ['start end', 'end start'],
   });
-  const panoramaY = useTransform(panoramaScroll, [0, 1], ['-5%', '5%']);
+  const panoramaYScroll = useTransform(panoramaScroll, [0, 1], ['-5%', '5%']);
+  const panoramaY = prefersReducedMotion ? '0%' : panoramaYScroll;
 
   return (
     <>
@@ -206,6 +212,7 @@ export default function HomePage() {
               alt="Camp Alborz at golden hour on the playa"
               fill
               priority
+              fetchPriority="high"
               className="object-cover"
               sizes="100vw"
             />
@@ -456,7 +463,7 @@ export default function HomePage() {
 
           <div className="relative max-w-3xl mx-auto px-5 md:px-10 text-center">
             <Reveal>
-              <div className="ornate-divider mb-10">
+              <div className="ornate-divider mb-10" aria-hidden="true">
                 <span
                   className="text-xs tracking-[0.4em] uppercase"
                   style={{ color: 'var(--color-gold-muted)' }}

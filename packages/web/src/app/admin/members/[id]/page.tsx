@@ -41,6 +41,9 @@ export default function MemberDetailPage() {
   const router = useRouter();
   const memberId = params.id as string;
 
+  // Validate UUID format
+  const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(memberId);
+
   const [member, setMember] = useState<MemberData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,6 +91,11 @@ export default function MemberDetailPage() {
   const [recordingPayment, setRecordingPayment] = useState(false);
 
   const loadMember = useCallback(async () => {
+    if (!isValidUUID) {
+      setError('Invalid member ID format.');
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const data = await fetchMemberById(memberId);
@@ -124,7 +132,7 @@ export default function MemberDetailPage() {
     } finally {
       setLoading(false);
     }
-  }, [memberId]);
+  }, [memberId, isValidUUID]);
 
   useEffect(() => {
     loadMember();

@@ -221,7 +221,7 @@ describe('authRouter', () => {
       const caller = createTestCaller();
       const result = await caller.auth.resetPassword({
         token: resetToken,
-        newPassword: 'newpassword123',
+        newPassword: 'NewPassword1!',
       });
 
       expect(result).toEqual({ success: true });
@@ -234,7 +234,7 @@ describe('authRouter', () => {
     it('should throw BAD_REQUEST for invalid token', async () => {
       const caller = createTestCaller();
       await expect(
-        caller.auth.resetPassword({ token: 'invalid-token', newPassword: 'newpassword123' })
+        caller.auth.resetPassword({ token: 'invalid-token', newPassword: 'NewPassword1!' })
       ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
 
@@ -246,7 +246,7 @@ describe('authRouter', () => {
 
       const caller = createTestCaller();
       await expect(
-        caller.auth.resetPassword({ token: inviteToken, newPassword: 'newpassword123' })
+        caller.auth.resetPassword({ token: inviteToken, newPassword: 'NewPassword1!' })
       ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
   });
@@ -273,7 +273,7 @@ describe('authRouter', () => {
       const caller = createTestCaller();
       const result = await caller.auth.acceptInvite({
         inviteToken,
-        password: 'newpassword123',
+        password: 'NewPassword1!',
       });
 
       expect(result.accessToken).toBeDefined();
@@ -302,7 +302,7 @@ describe('authRouter', () => {
 
       const caller = createTestCaller();
       await expect(
-        caller.auth.acceptInvite({ inviteToken, password: 'newpassword123' })
+        caller.auth.acceptInvite({ inviteToken, password: 'NewPassword1!' })
       ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
 
@@ -316,7 +316,7 @@ describe('authRouter', () => {
 
       const caller = createTestCaller();
       await expect(
-        caller.auth.acceptInvite({ inviteToken, password: 'newpassword123' })
+        caller.auth.acceptInvite({ inviteToken, password: 'NewPassword1!' })
       ).rejects.toMatchObject({ code: 'NOT_FOUND' });
     });
   });
@@ -342,7 +342,7 @@ describe('authRouter', () => {
       const caller = createTestCaller(authenticatedUser);
       const result = await caller.auth.changePassword({
         currentPassword: 'currentpassword',
-        newPassword: 'newpassword123',
+        newPassword: 'NewPassword1!',
       });
 
       expect(result).toEqual({ success: true });
@@ -369,7 +369,7 @@ describe('authRouter', () => {
       await expect(
         caller.auth.changePassword({
           currentPassword: 'wrongpassword',
-          newPassword: 'newpassword123',
+          newPassword: 'NewPassword1!',
         })
       ).rejects.toMatchObject({ code: 'BAD_REQUEST' });
     });
@@ -379,7 +379,7 @@ describe('authRouter', () => {
       await expect(
         caller.auth.changePassword({
           currentPassword: 'currentpassword',
-          newPassword: 'newpassword123',
+          newPassword: 'NewPassword1!',
         })
       ).rejects.toMatchObject({ code: 'UNAUTHORIZED' });
     });

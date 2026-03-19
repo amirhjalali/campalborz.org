@@ -12,6 +12,15 @@ import { globalLimiter, authLimiter } from './lib/rateLimit';
 
 dotenv.config();
 
+// Validate required environment variables at startup
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL'];
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    logger.error(`FATAL: Missing required environment variable: ${envVar}`);
+    process.exit(1);
+  }
+}
+
 const app = express();
 const httpServer = createServer(app);
 const port = process.env.PORT || 3005;

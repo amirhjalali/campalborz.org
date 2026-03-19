@@ -28,7 +28,10 @@ function signResetToken(memberId: string): string {
 
 const passwordSchema = z.string()
   .min(8, 'Password must be at least 8 characters')
-  .max(128, 'Password must be at most 128 characters');
+  .max(128, 'Password must be at most 128 characters')
+  .refine((pw) => /[A-Z]/.test(pw), 'Password must contain at least one uppercase letter')
+  .refine((pw) => /[0-9]/.test(pw), 'Password must contain at least one number')
+  .refine((pw) => /[!@#$%^&*]/.test(pw), 'Password must contain at least one special character (!@#$%^&*)');
 
 const emailSchema = z.string().email('Invalid email address').max(255);
 

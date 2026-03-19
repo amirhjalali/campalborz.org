@@ -19,26 +19,30 @@ export async function POST(request: NextRequest) {
     const body = await request.text();
     const signature = headers().get('stripe-signature');
 
-    // In production, verify the webhook signature:
-    // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-    // let event;
-    //
-    // try {
-    //   event = stripe.webhooks.constructEvent(
-    //     body,
-    //     signature,
-    //     process.env.STRIPE_WEBHOOK_SECRET
-    //   );
-    // } catch (err) {
-    //   console.error('Webhook signature verification failed:', err.message);
-    //   return NextResponse.json(
-    //     { error: 'Webhook signature verification failed' },
-    //     { status: 400 }
-    //   );
-    // }
+    let event;
 
-    // For demo mode, just parse the body
-    const event = JSON.parse(body);
+    if (process.env.STRIPE_WEBHOOK_SECRET && process.env.STRIPE_SECRET_KEY) {
+      // Production: verify webhook signature
+      const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+      try {
+        event = stripe.webhooks.constructEvent(
+          body,
+          signature,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        console.error('Webhook signature verification failed:', message);
+        return NextResponse.json(
+          { error: 'Webhook signature verification failed' },
+          { status: 400 }
+        );
+      }
+    } else {
+      // Development: parse without verification (log warning)
+      console.warn('WARNING: Stripe webhook signature verification is disabled. Set STRIPE_WEBHOOK_SECRET and STRIPE_SECRET_KEY for production.');
+      event = JSON.parse(body);
+    }
 
     console.log('Webhook event received:', event.type);
 

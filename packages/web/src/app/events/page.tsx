@@ -1,3 +1,4 @@
+// TODO: Convert to Server Component for static generation
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';

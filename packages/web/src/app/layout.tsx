@@ -56,6 +56,11 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          {/* AuthProvider runs a non-blocking async token check on mount —
+              children render immediately (isLoading starts true, flips false).
+              NotificationProvider only opens a socket when authenticated,
+              so unauthenticated visitors pay zero socket.io cost.
+              Cannot Suspense-wrap NotificationProvider because it calls useAuth(). */}
           <AuthProvider>
             <NotificationProvider>
               <Navigation />

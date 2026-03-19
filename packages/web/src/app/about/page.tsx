@@ -1,6 +1,7 @@
+// TODO: Convert to Server Component for static generation
 'use client';
 
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
@@ -10,13 +11,15 @@ import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
 
 function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useContentConfig>['about']> }) {
+  const prefersReducedMotion = useReducedMotion();
   const timelineRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ['start center', 'end center'],
   });
 
-  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const scaleYSpring = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const scaleY = prefersReducedMotion ? 1 : scaleYSpring;
 
   return (
     <section className="py-24 md:py-32 relative">
@@ -33,7 +36,7 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
           </div>
         </Reveal>
 
-        <div className="ornate-divider mb-14" />
+        <div className="ornate-divider mb-14" aria-hidden="true" />
 
         <div ref={timelineRef} className="relative max-w-3xl mx-auto">
           {/* Timeline Line Background */}
@@ -100,6 +103,7 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
 
 export default function AboutPage() {
   const { about } = useContentConfig();
+  const prefersReducedMotion = useReducedMotion();
   const heroRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -107,9 +111,12 @@ export default function AboutPage() {
     offset: ['start start', 'end start'],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const backgroundYScroll = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
+  const textYScroll = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const opacityScroll = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const backgroundY = prefersReducedMotion ? '0%' : backgroundYScroll;
+  const textY = prefersReducedMotion ? '0%' : textYScroll;
+  const opacity = prefersReducedMotion ? 1 : opacityScroll;
 
   if (!about) {
     return (
@@ -141,7 +148,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         </motion.div>
 
-        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
+        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" aria-hidden="true" />
 
         <motion.div
           className="relative z-10 max-w-[1200px] mx-auto px-5 md:px-10 text-center py-24"
@@ -175,6 +182,7 @@ export default function AboutPage() {
 
           <motion.div
             className="ornate-divider mt-8"
+            aria-hidden="true"
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -218,7 +226,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* Values Section */}
       <section className="py-24 md:py-32 section-contrast">
@@ -314,7 +322,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="ornate-divider" />
+      <div className="ornate-divider" aria-hidden="true" />
 
       {/* 501(c)(3) CTA Section */}
       <section className="py-24 md:py-32">
