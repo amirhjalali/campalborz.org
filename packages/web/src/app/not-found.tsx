@@ -10,26 +10,26 @@ export default function NotFound() {
   ];
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="max-w-2xl w-full text-center">
         <div className="mb-8">
           <h1 className="text-9xl font-display font-light text-sage/20">404</h1>
         </div>
 
         <div className="mb-8">
-          <h2 className="text-display-thin text-3xl md:text-4xl mb-4">
+          <h2 className="font-display text-3xl md:text-4xl mb-4">
             Looks Like You&apos;ve Wandered Off the Playa
           </h2>
-          <p className="text-body-relaxed text-lg text-ink-soft mb-2">
+          <p className="text-body-relaxed text-lg mb-2" style={{ color: '#4a4a42' }}>
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
-          <p className="text-body-relaxed text-ink-soft/60">
+          <p className="text-body-relaxed" style={{ color: 'rgba(74, 74, 66, 0.6)' }}>
             Don&apos;t worry, even the best explorers get lost sometimes.
           </p>
         </div>
 
         <div className="frame-panel mb-8">
-          <h3 className="text-sm font-display tracking-widest uppercase text-ink-soft mb-4">
+          <h3 className="text-sm font-display tracking-widest uppercase mb-4" style={{ color: '#4a4a42' }}>
             Try one of these instead
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -365,11 +365,11 @@ export default function ArtPage() {
                 Whether you are an experienced artist or just curious about creating, there is a place for you in our artistic community.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Link href="/apply" className="cta-primary">
-                  <span>Apply to Join</span>
+                <Link href="/donate" className="cta-primary cta-shimmer">
+                  <span>Support Our Art</span>
                 </Link>
-                <Link href="/events" className="cta-secondary">
-                  <span>See Art Events</span>
+                <Link href="/apply" className="cta-secondary">
+                  <span>Apply to Join</span>
                   <ArrowRight size={18} aria-hidden="true" />
                 </Link>
               </div>

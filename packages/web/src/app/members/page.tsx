@@ -63,14 +63,14 @@ export default function MembersPage() {
 
   // Login view (not authenticated)
   return (
-      <main className="min-h-screen bg-cream">
+      <main className="min-h-screen" style={{ backgroundColor: 'var(--color-cream)' }}>
         {/* Hero Section */}
         <section className="pt-32 pb-16">
           <div className="section-contained text-center">
-            <h1 className="text-display-thin text-4xl md:text-5xl text-ink mb-4">
+            <h1 className="font-display text-4xl md:text-5xl mb-4" style={{ color: '#2C2416' }}>
               {members.title}
             </h1>
-            <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
+            <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
               {members.subtitle}
             </p>
           </div>
@@ -82,10 +82,10 @@ export default function MembersPage() {
             <div className="luxury-card p-8">
               <div className="flex justify-center mb-6">
                 <div className="p-3 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full border border-gold/30">
-                  <LogIn className="h-8 w-8 text-gold" />
+                  <LogIn className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
                 </div>
               </div>
-              <h2 className="text-display-thin text-2xl text-center text-ink mb-6">
+              <h2 className="font-display text-2xl text-center mb-6" style={{ color: '#2C2416' }}>
                 {members.loginSection.title}
               </h2>
 
@@ -156,7 +156,7 @@ export default function MembersPage() {
                     onChange={handleChange}
                     className="h-4 w-4 text-gold border-line/40 rounded focus:ring-gold"
                   />
-                  <label htmlFor="rememberMe" className="ml-2 text-sm text-ink-soft">
+                  <label htmlFor="rememberMe" className="ml-2 text-sm" style={{ color: '#4a4a42' }}>
                     Remember me for 30 days
                   </label>
                 </div>
@@ -170,7 +170,7 @@ export default function MembersPage() {
                 </button>
               </form>
               <div className="mt-6 text-center">
-                <p className="text-sm text-ink-soft">
+                <p className="text-sm" style={{ color: '#4a4a42' }}>
                   Membership is by invitation only.{' '}
                   <Link href="/apply" className="text-gold font-medium hover:text-gold/80 transition-colors">
                     Apply to join
@@ -185,10 +185,10 @@ export default function MembersPage() {
         <section className="py-16 section-alt">
           <div className="section-contained">
             <div className="text-center mb-12">
-              <h2 className="text-display-thin text-3xl text-ink mb-4">
+              <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
                 {members.benefits.title}
               </h2>
-              <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
+              <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
                 {members.benefits.subtitle}
               </p>
             </div>
@@ -202,12 +202,12 @@ export default function MembersPage() {
                     className="luxury-card p-6"
                   >
                     <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-gold/20 to-gold/10 border border-gold/30 mb-4">
-                      <BenefitIcon className="h-6 w-6 text-gold" />
+                      <BenefitIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
                     </div>
-                    <h3 className="text-display-thin text-lg text-ink mb-2">
+                    <h3 className="font-display text-lg mb-2" style={{ color: '#2C2416' }}>
                       {benefit.title}
                     </h3>
-                    <p className="text-body-relaxed text-sm text-ink-soft">
+                    <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
                       {benefit.description}
                     </p>
                   </div>
@@ -221,10 +221,10 @@ export default function MembersPage() {
         <section className="py-16">
           <div className="section-contained">
             <div className="text-center mb-12">
-              <h2 className="text-display-thin text-3xl text-ink mb-4">
+              <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
                 {members.spotlight.title}
               </h2>
-              <p className="text-body-relaxed text-lg text-ink-soft max-w-2xl mx-auto">
+              <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
                 {members.spotlight.subtitle}
               </p>
             </div>
@@ -236,16 +236,16 @@ export default function MembersPage() {
                   className="text-center"
                 >
                   <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-sage-light/30 border-2 border-gold/30" />
-                  <h3 className="text-display-thin text-xl text-ink mb-1">
+                  <h3 className="font-display text-xl mb-1" style={{ color: '#2C2416' }}>
                     {member.name}
                   </h3>
-                  <p className="text-gold font-medium mb-2">
+                  <p className="font-medium mb-2" style={{ color: 'var(--color-gold)' }}>
                     {member.role}
                   </p>
-                  <p className="text-sm text-ink-soft mb-3">
+                  <p className="text-sm mb-3" style={{ color: '#4a4a42' }}>
                     Member for {member.years}
                   </p>
-                  <p className="text-body-relaxed text-sm text-ink-soft">
+                  <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
                     {member.contribution}
                   </p>
                 </div>
@@ -262,11 +262,11 @@ export default function MembersPage() {
                 const StatIcon = getIcon(stat.icon);
                 return (
                   <div key={stat.label}>
-                    <StatIcon className="h-8 w-8 text-gold mx-auto mb-3" />
-                    <div className="text-display-thin text-4xl text-gold mb-1">
+                    <StatIcon className="h-8 w-8 mx-auto mb-3" style={{ color: 'var(--color-gold)' }} />
+                    <div className="font-display text-4xl mb-1" style={{ color: 'var(--color-gold)' }}>
                       {stat.value}
                     </div>
-                    <div className="text-body-relaxed text-ink-soft">
+                    <div className="text-body-relaxed" style={{ color: '#4a4a42' }}>
                       {stat.label}
                     </div>
                   </div>
@@ -281,10 +281,10 @@ export default function MembersPage() {
           <section className="py-16">
             <div className="section-contained text-center">
               <div className="frame-panel max-w-4xl mx-auto">
-                <h2 className="text-display-thin text-3xl text-ink mb-4">
+                <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
                   {members.cta.title}
                 </h2>
-                <p className="text-body-relaxed text-lg text-ink-soft mb-8 max-w-2xl mx-auto">
+                <p className="text-body-relaxed text-lg mb-8 max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
                   {members.cta.description}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">

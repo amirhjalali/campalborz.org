@@ -75,6 +75,13 @@ export function generateMetadata({
     alternates: {
       canonical: pageUrl,
     },
+    icons: {
+      icon: [
+        { url: '/favicon.ico', sizes: 'any' },
+        { url: '/icon.svg', type: 'image/svg+xml' },
+      ],
+      apple: '/apple-touch-icon.png',
+    },
     openGraph: {
       type: 'website',
       locale: 'en_US',
@@ -226,6 +233,20 @@ export const pageMetadata = {
     path: '/admin',
     noIndex: true,
   }),
+
+  portal: generateMetadata({
+    title: 'Member Portal | Camp Alborz',
+    description: 'Access your Camp Alborz member dashboard, season details, payments, and profile.',
+    path: '/portal',
+    noIndex: true,
+  }),
+
+  register: generateMetadata({
+    title: 'Register | Camp Alborz',
+    description: 'Registration for Camp Alborz is invite-only.',
+    path: '/register',
+    noIndex: true,
+  }),
 };
 
 /**
@@ -253,6 +274,29 @@ export function generateOrganizationSchema() {
       contactType: 'General Inquiries',
     },
     keywords: 'Persian culture, Burning Man, art cars, music, community, nonprofit',
+  };
+}
+
+export function generateWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    publisher: {
+      '@type': 'NonprofitOrganization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 

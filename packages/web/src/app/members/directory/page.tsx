@@ -47,7 +47,7 @@ export default function DirectoryPage() {
   if (authLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
       </div>
     );
   }
@@ -71,8 +71,8 @@ export default function DirectoryPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-display-thin text-3xl text-ink mb-2">Member Directory</h1>
-          <p className="text-body-relaxed text-ink-soft">
+          <h1 className="font-display text-3xl mb-2" style={{ color: '#2C2416' }}>Member Directory</h1>
+          <p className="text-body-relaxed" style={{ color: '#4a4a42' }}>
             Connect with fellow Camp Alborz members. {directory.length} members in our community.
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function DirectoryPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-soft" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: '#4a4a42' }} />
             <input
               type="text"
               value={searchQuery}
@@ -103,13 +103,13 @@ export default function DirectoryPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 text-gold animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
           </div>
         ) : sorted.length === 0 ? (
           <div className="luxury-card p-12 text-center hover:translate-y-0">
-            <Users className="h-10 w-10 text-ink-soft/40 mx-auto mb-4" />
-            <h3 className="text-display-thin text-xl text-ink mb-2">No Members Found</h3>
-            <p className="text-body-relaxed text-sm text-ink-soft">
+            <Users className="h-10 w-10 mx-auto mb-4" style={{ color: 'rgba(74, 74, 66, 0.4)' }} />
+            <h3 className="font-display text-xl mb-2" style={{ color: '#2C2416' }}>No Members Found</h3>
+            <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
               {searchQuery || filterRole !== 'all'
                 ? 'Try adjusting your search or filter criteria.'
                 : 'The member directory is empty.'}
@@ -143,13 +143,13 @@ function MemberCard({ member }: { member: DirectoryMember }) {
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-sage/10 border-2 border-gold/30 flex items-center justify-center shrink-0">
-          <User className="h-6 w-6 text-gold/70" />
+          <User className="h-6 w-6" style={{ color: 'var(--color-gold)', opacity: 0.7 }} />
         </div>
 
         {/* Info */}
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-0.5">
-            <h3 className="text-sm font-semibold text-ink truncate">{member.name}</h3>
+            <h3 className="text-sm font-semibold truncate" style={{ color: '#2C2416' }}>{member.name}</h3>
             <span className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border ${role.color}`}>
               <role.icon className="h-2.5 w-2.5" />
               {role.label}
@@ -157,17 +157,17 @@ function MemberCard({ member }: { member: DirectoryMember }) {
           </div>
 
           {member.playaName && (
-            <p className="text-xs text-gold font-medium mb-1">
+            <p className="text-xs font-medium mb-1" style={{ color: 'var(--color-gold)' }}>
               &ldquo;{member.playaName}&rdquo;
             </p>
           )}
 
-          <p className="text-xs text-ink-soft mb-2">
+          <p className="text-xs mb-2" style={{ color: '#4a4a42' }}>
             Member since {member.joinedYear}
           </p>
 
           {member.bio && (
-            <p className="text-xs text-ink-soft line-clamp-2 mb-2">{member.bio}</p>
+            <p className="text-xs line-clamp-2 mb-2" style={{ color: '#4a4a42' }}>{member.bio}</p>
           )}
 
           {member.skills && member.skills.length > 0 && (
@@ -175,7 +175,8 @@ function MemberCard({ member }: { member: DirectoryMember }) {
               {member.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="inline-flex items-center px-2 py-0.5 rounded-md bg-cream text-[10px] font-medium text-ink-soft border border-line/20"
+                  className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium border border-line/20"
+                  style={{ backgroundColor: 'var(--color-cream)', color: '#4a4a42' }}
                 >
                   {skill}
                 </span>

@@ -77,18 +77,18 @@ function LoginForm() {
   // Don't render form if already authenticated (will redirect)
   if (!authLoading && isAuthenticated) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-cream)' }}>
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="w-full max-w-md animate-fade-in">
         {/* Camp name and tagline */}
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+          <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
             CAMP ALBORZ
           </h1>
           <p className="font-accent italic text-lg text-sage">
@@ -111,7 +111,7 @@ function LoginForm() {
           {/* Redirect notice */}
           {redirectTo && !displayError && (
             <div className="mb-6 p-4 bg-gold/10 border border-gold/20 rounded-xl">
-              <p className="text-ink-soft text-sm">Please sign in to continue.</p>
+              <p className="text-sm" style={{ color: '#4a4a42' }}>Please sign in to continue.</p>
             </div>
           )}
 
@@ -216,8 +216,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-cream flex items-center justify-center">
-          <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-cream)' }}>
+          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
         </div>
       }
     >

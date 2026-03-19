@@ -31,7 +31,7 @@ export default function DonationSuccessPage() {
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <h1 className="text-display-thin text-4xl md:text-5xl mb-4">
+            <h1 className="font-display text-4xl md:text-5xl mb-4">
               Thank You for Your Generosity
             </h1>
           </Reveal>
@@ -120,7 +120,7 @@ export default function DonationSuccessPage() {
           <Reveal>
             <div className="luxury-card">
               <p className="text-eyebrow mb-3">NEXT STEPS</p>
-              <h2 className="text-display-thin text-2xl mb-6">What Happens Next</h2>
+              <h2 className="font-display text-2xl mb-6">What Happens Next</h2>
               <div className="space-y-6">
                 {[
                   {
@@ -163,7 +163,7 @@ export default function DonationSuccessPage() {
               <div className="inline-flex p-4 rounded-full mb-6" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
                 <Heart className="h-10 w-10" style={{ color: 'var(--color-gold)' }} />
               </div>
-              <h3 className="text-display-thin text-xl mb-3">
+              <h3 className="font-display text-xl mb-3">
                 You Are Making a Difference
               </h3>
               <p className="text-body-relaxed mb-6 max-w-lg mx-auto" style={{ color: 'var(--color-ink-soft)' }}>

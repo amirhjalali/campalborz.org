@@ -485,7 +485,7 @@ export const contentConfig: ContentConfig = {
       title: "Come to an Event",
       description: "New around here? Show up to something—that's the best way to meet people and see what we're about.",
       buttons: {
-        primary: { text: "Upcoming Events", link: "/events" },
+        primary: { text: "Apply to Join", link: "/apply" },
         secondary: { text: "About Us", link: "/about" },
       },
     },

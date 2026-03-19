@@ -17,7 +17,13 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/admin/',
           '/api/',
-          '/members/settings',
+          '/portal/',
+          '/members/',
+          '/login',
+          '/register',
+          '/forgot-password',
+          '/reset-password',
+          '/invite/',
           '/*?preview=*', // Preview pages
         ],
       },
@@ -25,12 +31,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/admin/', '/api/'],
+        disallow: ['/admin/', '/api/', '/portal/', '/members/'],
       },
       {
         userAgent: 'bingbot',
         allow: '/',
-        disallow: ['/admin/', '/api/'],
+        disallow: ['/admin/', '/api/', '/portal/', '/members/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

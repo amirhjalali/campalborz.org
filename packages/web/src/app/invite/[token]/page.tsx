@@ -39,7 +39,7 @@ function PasswordStrength({ password }: { password: string }) {
           />
         ))}
       </div>
-      <p className="text-xs text-ink-soft">{strength.label}</p>
+      <p className="text-xs" style={{ color: '#4a4a42' }}>{strength.label}</p>
     </div>
   );
 }
@@ -155,10 +155,10 @@ export default function InvitePage() {
   // Loading state while validating token
   if (inviteState.status === 'loading') {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
         <div className="w-full max-w-md text-center">
           <div className="text-center mb-8">
-            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+            <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
               CAMP ALBORZ
             </h1>
             <p className="font-accent italic text-lg text-sage">
@@ -166,8 +166,8 @@ export default function InvitePage() {
             </p>
           </div>
           <div className="luxury-card p-8 flex flex-col items-center">
-            <Loader2 className="h-8 w-8 text-gold animate-spin mb-4" />
-            <p className="text-body-relaxed text-sm text-ink-soft">Validating your invitation...</p>
+            <Loader2 className="h-8 w-8 animate-spin mb-4" style={{ color: 'var(--color-gold)' }} />
+            <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>Validating your invitation...</p>
           </div>
         </div>
       </div>
@@ -177,10 +177,10 @@ export default function InvitePage() {
   // Invalid token
   if (inviteState.status === 'invalid') {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+            <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
               CAMP ALBORZ
             </h1>
           </div>
@@ -190,10 +190,10 @@ export default function InvitePage() {
                 <XCircle className="h-8 w-8 text-error" />
               </div>
             </div>
-            <h2 className="text-display-thin text-xl text-ink mb-3">
+            <h2 className="font-display text-xl mb-3" style={{ color: '#2C2416' }}>
               Invalid Invitation
             </h2>
-            <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+            <p className="text-body-relaxed text-sm mb-6" style={{ color: '#4a4a42' }}>
               {inviteState.message}
             </p>
             <Link href="/login" className="cta-secondary inline-flex items-center gap-2 text-sm">
@@ -208,23 +208,23 @@ export default function InvitePage() {
   // Already accepted
   if (inviteState.status === 'already_accepted') {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+            <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
               CAMP ALBORZ
             </h1>
           </div>
           <div className="luxury-card p-8 text-center">
             <div className="flex justify-center mb-4">
               <div className="p-3 bg-gold/10 rounded-full border border-gold/30">
-                <PartyPopper className="h-8 w-8 text-gold" />
+                <PartyPopper className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
               </div>
             </div>
-            <h2 className="text-display-thin text-xl text-ink mb-3">
+            <h2 className="font-display text-xl mb-3" style={{ color: '#2C2416' }}>
               Already Accepted
             </h2>
-            <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+            <p className="text-body-relaxed text-sm mb-6" style={{ color: '#4a4a42' }}>
               This invitation has already been accepted. You can sign in with your existing credentials.
             </p>
             <Link href="/login" className="cta-primary inline-flex text-sm">
@@ -238,11 +238,11 @@ export default function InvitePage() {
 
   // Valid token -- show registration form
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="w-full max-w-md animate-fade-in">
         {/* Camp name */}
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+          <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
             CAMP ALBORZ
           </h1>
           <p className="font-accent italic text-lg text-sage">
@@ -255,19 +255,19 @@ export default function InvitePage() {
           {/* Welcome icon */}
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-gold/10 rounded-full border border-gold/30">
-              <PartyPopper className="h-8 w-8 text-gold" />
+              <PartyPopper className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
             </div>
           </div>
 
-          <h2 className="text-display-thin text-xl text-center text-ink mb-2">
+          <h2 className="font-display text-xl text-center mb-2" style={{ color: '#2C2416' }}>
             You&apos;ve Been Invited
           </h2>
-          <p className="text-body-relaxed text-sm text-ink-soft text-center mb-2">
-            Welcome to Camp Alborz, <span className="font-semibold text-ink">{inviteState.name}</span>!
+          <p className="text-body-relaxed text-sm text-center mb-2" style={{ color: '#4a4a42' }}>
+            Welcome to Camp Alborz, <span className="font-semibold" style={{ color: '#2C2416' }}>{inviteState.name}</span>!
           </p>
-          <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
+          <p className="text-body-relaxed text-sm text-center mb-6" style={{ color: '#4a4a42' }}>
             Set your password below to activate your account for{' '}
-            <span className="font-medium text-ink">{inviteState.email}</span>.
+            <span className="font-medium" style={{ color: '#2C2416' }}>{inviteState.email}</span>.
           </p>
 
           {error && (
@@ -367,7 +367,7 @@ export default function InvitePage() {
 
         {/* Already have an account */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-ink-soft">
+          <p className="text-sm" style={{ color: '#4a4a42' }}>
             Already have an account?{' '}
             <Link href="/login" className="text-gold hover:text-gold/80 font-medium transition-colors">
               Sign in

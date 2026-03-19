@@ -51,7 +51,7 @@ export default function ResourcesPage() {
   if (authLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
       </div>
     );
   }
@@ -79,8 +79,8 @@ export default function ResourcesPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-display-thin text-3xl text-ink mb-2">Camp Resources</h1>
-          <p className="text-body-relaxed text-ink-soft">
+          <h1 className="font-display text-3xl mb-2" style={{ color: '#2C2416' }}>Camp Resources</h1>
+          <p className="text-body-relaxed" style={{ color: '#4a4a42' }}>
             Guides, documents, forms, and useful links for Camp Alborz members.
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function ResourcesPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-soft" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: '#4a4a42' }} />
             <input
               type="text"
               value={searchQuery}
@@ -112,13 +112,13 @@ export default function ResourcesPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 text-gold animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="luxury-card p-12 text-center hover:translate-y-0">
-            <FolderOpen className="h-10 w-10 text-ink-soft/40 mx-auto mb-4" />
-            <h3 className="text-display-thin text-xl text-ink mb-2">No Resources Found</h3>
-            <p className="text-body-relaxed text-sm text-ink-soft">
+            <FolderOpen className="h-10 w-10 mx-auto mb-4" style={{ color: 'rgba(74, 74, 66, 0.4)' }} />
+            <h3 className="font-display text-xl mb-2" style={{ color: '#2C2416' }}>No Resources Found</h3>
+            <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
               {searchQuery || filterCategory !== 'all'
                 ? 'Try adjusting your search or filter criteria.'
                 : 'No resources are available at this time.'}
@@ -149,9 +149,9 @@ export default function ResourcesPage() {
               return (
                 <div key={cat}>
                   <div className="flex items-center gap-2 mb-4">
-                    <config.icon className="h-4 w-4 text-gold" />
-                    <h2 className="text-display-thin text-lg text-ink">{config.label}s</h2>
-                    <span className="text-xs text-ink-soft ml-1">({items.length})</span>
+                    <config.icon className="h-4 w-4" style={{ color: 'var(--color-gold)' }} />
+                    <h2 className="font-display text-lg" style={{ color: '#2C2416' }}>{config.label}s</h2>
+                    <span className="text-xs ml-1" style={{ color: '#4a4a42' }}>({items.length})</span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {items.map((res) => (
@@ -181,21 +181,21 @@ function ResourceCard({ resource }: { resource: CampResource }) {
     >
       <div className="flex items-start gap-4">
         <div className="p-2.5 rounded-xl bg-gold/10 border border-gold/20 shrink-0 group-hover:bg-gold/20 transition-colors">
-          <IconComponent className="h-5 w-5 text-gold" />
+          <IconComponent className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3 mb-1">
-            <h3 className="text-sm font-semibold text-ink group-hover:text-gold transition-colors leading-snug">
+            <h3 className="text-sm font-semibold group-hover:text-gold transition-colors leading-snug" style={{ color: '#2C2416' }}>
               {resource.title}
             </h3>
-            <ExternalLink className="h-3.5 w-3.5 text-ink-soft/40 group-hover:text-gold shrink-0 mt-0.5 transition-colors" />
+            <ExternalLink className="h-3.5 w-3.5 group-hover:text-gold shrink-0 mt-0.5 transition-colors" style={{ color: 'rgba(74, 74, 66, 0.4)' }} />
           </div>
-          <p className="text-xs text-ink-soft mb-2 line-clamp-2">{resource.description}</p>
+          <p className="text-xs mb-2 line-clamp-2" style={{ color: '#4a4a42' }}>{resource.description}</p>
           <div className="flex items-center gap-3">
             <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border ${config.color}`}>
               {config.label}
             </span>
-            <span className="text-[10px] text-ink-soft">
+            <span className="text-[10px]" style={{ color: '#4a4a42' }}>
               Updated {formatDate(resource.updatedAt)}
             </span>
           </div>

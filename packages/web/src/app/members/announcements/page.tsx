@@ -47,7 +47,7 @@ export default function AnnouncementsPage() {
   if (authLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-gold animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
       </div>
     );
   }
@@ -69,8 +69,8 @@ export default function AnnouncementsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-display-thin text-3xl text-ink mb-2">Announcements</h1>
-          <p className="text-body-relaxed text-ink-soft">
+          <h1 className="font-display text-3xl mb-2" style={{ color: '#2C2416' }}>Announcements</h1>
+          <p className="text-body-relaxed" style={{ color: '#4a4a42' }}>
             Stay up to date with the latest news and updates from Camp Alborz.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function AnnouncementsPage() {
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-soft" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: '#4a4a42' }} />
             <input
               type="text"
               value={searchQuery}
@@ -102,13 +102,13 @@ export default function AnnouncementsPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 text-gold animate-spin" />
+            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
           </div>
         ) : filtered.length === 0 ? (
           <div className="luxury-card p-12 text-center hover:translate-y-0">
-            <AlertCircle className="h-10 w-10 text-ink-soft/40 mx-auto mb-4" />
-            <h3 className="text-display-thin text-xl text-ink mb-2">No Announcements Found</h3>
-            <p className="text-body-relaxed text-sm text-ink-soft">
+            <AlertCircle className="h-10 w-10 mx-auto mb-4" style={{ color: 'rgba(74, 74, 66, 0.4)' }} />
+            <h3 className="font-display text-xl mb-2" style={{ color: '#2C2416' }}>No Announcements Found</h3>
+            <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
               {searchQuery || filterCategory !== 'all'
                 ? 'Try adjusting your search or filter criteria.'
                 : 'There are no announcements at this time.'}
@@ -119,7 +119,7 @@ export default function AnnouncementsPage() {
             {/* Pinned Announcements */}
             {pinned.length > 0 && (
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-xs font-medium text-gold uppercase tracking-wider">
+                <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--color-gold)' }}>
                   <Pin className="h-3.5 w-3.5" />
                   Pinned
                 </div>
@@ -133,7 +133,7 @@ export default function AnnouncementsPage() {
             {unpinned.length > 0 && (
               <div className="space-y-3">
                 {pinned.length > 0 && (
-                  <div className="flex items-center gap-2 text-xs font-medium text-ink-soft uppercase tracking-wider pt-2">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider pt-2" style={{ color: '#4a4a42' }}>
                     Recent
                   </div>
                 )}
@@ -157,9 +157,9 @@ function AnnouncementCard({ announcement }: { announcement: Announcement }) {
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex items-start gap-3">
           {announcement.pinned && (
-            <Pin className="h-4 w-4 text-gold shrink-0 mt-0.5" />
+            <Pin className="h-4 w-4 shrink-0 mt-0.5" style={{ color: 'var(--color-gold)' }} />
           )}
-          <h3 className="text-lg font-semibold text-ink leading-snug">
+          <h3 className="text-lg font-semibold leading-snug" style={{ color: '#2C2416' }}>
             {announcement.title}
           </h3>
         </div>
@@ -167,12 +167,12 @@ function AnnouncementCard({ announcement }: { announcement: Announcement }) {
           {config.label}
         </span>
       </div>
-      <p className="text-body-relaxed text-sm text-ink-soft mb-4 leading-relaxed">
+      <p className="text-body-relaxed text-sm mb-4 leading-relaxed" style={{ color: '#4a4a42' }}>
         {announcement.content}
       </p>
-      <div className="flex items-center gap-3 text-xs text-ink-soft">
+      <div className="flex items-center gap-3 text-xs" style={{ color: '#4a4a42' }}>
         <span className="font-medium">{announcement.author}</span>
-        <span className="text-ink-soft/40">|</span>
+        <span style={{ opacity: 0.4 }}>|</span>
         <span>{formatDate(announcement.date)}</span>
       </div>
     </div>

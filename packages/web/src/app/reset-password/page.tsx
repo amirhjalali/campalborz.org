@@ -38,7 +38,7 @@ function PasswordStrength({ password }: { password: string }) {
           />
         ))}
       </div>
-      <p className="text-xs text-ink-soft">{strength.label}</p>
+      <p className="text-xs" style={{ color: '#4a4a42' }}>{strength.label}</p>
     </div>
   );
 }
@@ -125,10 +125,10 @@ function ResetPasswordForm() {
             <AlertCircle className="h-8 w-8 text-error" />
           </div>
         </div>
-        <h2 className="text-display-thin text-xl text-ink mb-3">
+        <h2 className="font-display text-xl mb-3" style={{ color: '#2C2416' }}>
           Invalid Link
         </h2>
-        <p className="text-body-relaxed text-sm text-ink-soft mb-6">
+        <p className="text-body-relaxed text-sm mb-6" style={{ color: '#4a4a42' }}>
           This password reset link is invalid or has expired. Please request a new one.
         </p>
         <Link href="/forgot-password" className="cta-primary inline-flex text-sm">
@@ -147,19 +147,19 @@ function ResetPasswordForm() {
               <CheckCircle className="h-8 w-8 text-success" />
             </div>
           </div>
-          <h2 className="text-display-thin text-xl text-ink mb-3">
+          <h2 className="font-display text-xl mb-3" style={{ color: '#2C2416' }}>
             Password Updated
           </h2>
-          <p className="text-body-relaxed text-sm text-ink-soft">
+          <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
             Your password has been reset successfully. Redirecting to login...
           </p>
           <div className="mt-4">
-            <Loader2 className="h-5 w-5 text-gold animate-spin mx-auto" />
+            <Loader2 className="h-5 w-5 animate-spin mx-auto" style={{ color: 'var(--color-gold)' }} />
           </div>
         </div>
       ) : (
         <>
-          <p className="text-body-relaxed text-sm text-ink-soft text-center mb-6">
+          <p className="text-body-relaxed text-sm text-center mb-6" style={{ color: '#4a4a42' }}>
             Enter your new password below. Choose a strong password with at least 8 characters.
           </p>
 
@@ -264,11 +264,11 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="w-full max-w-md animate-fade-in">
         {/* Camp name and tagline */}
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl tracking-wider text-ink mb-2">
+          <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
             CAMP ALBORZ
           </h1>
           <p className="font-accent italic text-lg text-sage">
@@ -279,7 +279,7 @@ export default function ResetPasswordPage() {
         <Suspense
           fallback={
             <div className="luxury-card p-8 flex items-center justify-center">
-              <Loader2 className="h-8 w-8 text-gold animate-spin" />
+              <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--color-gold)' }} />
             </div>
           }
         >

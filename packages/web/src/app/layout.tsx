@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import type { Viewport } from 'next';
 import "../styles/globals.css";
 import { Playfair_Display, Inter } from 'next/font/google';
 import { campConfig } from '../../../../config/camp.config';
@@ -28,6 +29,16 @@ const inter = Inter({
 
 // Use centralized metadata configuration
 export const metadata = pageMetadata.home;
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FAF7F2' },
+    { media: '(prefers-color-scheme: dark)', color: '#2C2416' },
+  ],
+};
 
 export default function RootLayout({
   children,
