@@ -1,7 +1,7 @@
 'use client';
 
 import { type LucideIcon } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 interface StatCardProps {
   icon: LucideIcon;
@@ -13,7 +13,7 @@ interface StatCardProps {
 
 export function StatCard({ icon: Icon, label, value, subtext, index = 0 }: StatCardProps) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
@@ -29,6 +29,6 @@ export function StatCard({ icon: Icon, label, value, subtext, index = 0 }: StatC
       {subtext && (
         <p className="mt-1 text-xs text-[#4F4434]">{subtext}</p>
       )}
-    </motion.div>
+    </m.div>
   );
 }

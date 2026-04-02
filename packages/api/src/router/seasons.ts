@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
+import logger from '../lib/logger';
 
 export const seasonsRouter = router({
   list: memberProcedure
@@ -54,7 +56,7 @@ export const seasonsRouter = router({
   update: leadProcedure
     .input(z.object({
       id: z.string().uuid(),
-      name: z.string().min(1).optional(),
+      name: z.string().min(1).max(200).optional(),
       duesAmount: z.number().int().min(0).optional(),
       gridFee30amp: z.number().int().min(0).optional(),
       gridFee50amp: z.number().int().min(0).optional(),
@@ -66,11 +68,18 @@ export const seasonsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { id, startDate, endDate, buildStartDate, strikeEndDate, ...rest } = input;
 
-      const data: any = { ...rest };
+      const existing = await ctx.prisma.season.findUnique({ where: { id } });
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Season not found' });
+      }
+
+      const data: Prisma.SeasonUpdateInput = { ...rest };
       if (startDate !== undefined) data.startDate = startDate ? new Date(startDate) : null;
       if (endDate !== undefined) data.endDate = endDate ? new Date(endDate) : null;
       if (buildStartDate !== undefined) data.buildStartDate = buildStartDate ? new Date(buildStartDate) : null;
       if (strikeEndDate !== undefined) data.strikeEndDate = strikeEndDate ? new Date(strikeEndDate) : null;
+
+      logger.info(`Season ${existing.year} updated by ${ctx.user.email}`);
 
       return ctx.prisma.season.update({
         where: { id },

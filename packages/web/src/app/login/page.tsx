@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, Loader2, AlertCircle, ArrowRight, Mountain } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 function LoginForm() {
@@ -84,10 +85,21 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--color-cream)' }}>
-      <div className="w-full max-w-md animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden" style={{ backgroundColor: 'var(--color-cream)' }}>
+      {/* Decorative background pattern */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+
+      <motion.div
+        className="w-full max-w-md relative z-10"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
         {/* Camp name and tagline */}
         <div className="text-center mb-8">
+          <div className="inline-flex p-3 rounded-full mb-4" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)', border: '1px solid rgba(var(--color-gold-rgb), 0.2)' }}>
+            <Mountain className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
+          </div>
           <h1 className="font-display text-3xl tracking-wider mb-2" style={{ color: '#2C2416' }}>
             CAMP ALBORZ
           </h1>
@@ -99,20 +111,18 @@ function LoginForm() {
         {/* Login card */}
         <div className="luxury-card p-8">
           {/* Error message */}
-          {displayError && (
-            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-xl" role="alert" aria-live="assertive">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" aria-hidden="true" />
-                <p className="text-error text-sm">{displayError}</p>
-              </div>
-            </div>
-          )}
+          <AnimatedError error={displayError} />
 
           {/* Redirect notice */}
           {redirectTo && !displayError && (
-            <div className="mb-6 p-4 bg-gold/10 border border-gold/20 rounded-xl">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mb-6 p-4 rounded-xl"
+              style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.08)', border: '1px solid rgba(var(--color-gold-rgb), 0.2)' }}
+            >
               <p className="text-sm" style={{ color: '#4a4a42' }}>Please sign in to continue.</p>
-            </div>
+            </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
@@ -140,9 +150,19 @@ function LoginForm() {
 
             {/* Password */}
             <div>
-              <label htmlFor="login-password" className="form-label">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="login-password" className="form-label mb-0">
+                  Password
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-medium transition-colors"
+                  style={{ color: 'var(--color-sage)' }}
+                  tabIndex={-1}
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -161,41 +181,58 @@ function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-soft hover:text-gold transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors"
+                  style={{ color: 'var(--color-ink-soft)' }}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
             {/* Submit */}
-            <button
+            <motion.button
               type="submit"
               disabled={isSubmitting || authLoading}
-              className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
+              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+              className="w-full cta-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
-                  <span><Loader2 className="h-5 w-5 mr-2 animate-spin" /></span>
+                  <Loader2 className="h-5 w-5 animate-spin" />
                   <span>Signing in...</span>
                 </>
               ) : (
-                <span>Sign In</span>
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
               )}
-            </button>
+            </motion.button>
           </form>
 
-          {/* Forgot password link */}
-          <div className="mt-6 text-center">
-            <Link
-              href="/forgot-password"
-              className="text-sm text-sage hover:text-gold transition-colors"
-            >
-              Forgot password?
-            </Link>
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full" style={{ borderTop: '1px solid rgba(var(--color-line-rgb), 0.3)' }} />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-3 text-xs" style={{ backgroundColor: 'white', color: 'var(--color-ink-faint)' }}>
+                Not a member yet?
+              </span>
+            </div>
           </div>
+
+          {/* Apply link */}
+          <Link
+            href="/apply"
+            className="w-full cta-secondary flex items-center justify-center gap-2 text-sm"
+          >
+            <span>Apply for Membership</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
         {/* Back to home */}
@@ -207,8 +244,28 @@ function LoginForm() {
             Back to homepage
           </Link>
         </div>
-      </div>
+      </motion.div>
     </div>
+  );
+}
+
+function AnimatedError({ error }: { error: string | null }) {
+  if (!error) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-6 p-4 rounded-xl"
+      role="alert"
+      aria-live="assertive"
+      style={{ backgroundColor: 'rgba(var(--color-error-rgb, 220, 38, 38), 0.06)', border: '1px solid rgba(var(--color-error-rgb, 220, 38, 38), 0.15)' }}
+    >
+      <div className="flex items-start gap-3">
+        <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-error)' }} aria-hidden="true" />
+        <p className="text-sm" style={{ color: 'var(--color-error)' }}>{error}</p>
+      </div>
+    </motion.div>
   );
 }
 

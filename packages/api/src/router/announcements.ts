@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, memberProcedure, leadProcedure } from '../trpc';
 import { notifyAll } from '../lib/socket';
 import logger from '../lib/logger';
@@ -37,7 +38,7 @@ export const announcementsRouter = router({
       offset: z.number().int().min(0).optional().default(0),
     }).optional().default({}))
     .query(async ({ ctx, input }) => {
-      const where: any = {};
+      const where: Prisma.AnnouncementWhereInput = {};
 
       // Non-admin members only see published, non-expired announcements
       const isManager = ctx.user.role === 'LEAD' || ctx.user.role === 'MANAGER';
@@ -142,7 +143,7 @@ export const announcementsRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Announcement not found' });
       }
 
-      const data: any = { ...rest };
+      const data: Prisma.AnnouncementUpdateInput = { ...rest };
 
       if (expiresAt !== undefined) {
         data.expiresAt = expiresAt ? new Date(expiresAt) : null;

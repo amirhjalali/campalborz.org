@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, publicProcedure, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 import logger from '../lib/logger';
 
@@ -61,7 +62,7 @@ export const eventsRouter = router({
         seasonId = activeSeason.id;
       }
 
-      const where: any = { seasonId };
+      const where: Prisma.ShiftWhereInput = { seasonId };
 
       if (input.upcoming) {
         where.date = { gte: new Date() };
@@ -267,7 +268,7 @@ export const eventsRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' });
       }
 
-      const data: any = { ...rest };
+      const data: Prisma.ShiftUpdateInput = { ...rest };
       if (date !== undefined) {
         data.date = new Date(date);
       }

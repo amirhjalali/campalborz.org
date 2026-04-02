@@ -3,7 +3,12 @@ import { MetadataRoute } from 'next';
 /**
  * Robots.txt Generation
  *
- * Tells search engines which pages to crawl and which to avoid
+ * Controls search engine crawling behavior.
+ * - Public content pages are fully crawlable.
+ * - Admin, auth, API, and member-only pages are blocked.
+ * - Major bots (Google, Bing) get explicit allow rules.
+ * - AI crawlers are blocked to protect content.
+ *
  * See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
  */
 export default function robots(): MetadataRoute.Robots {
@@ -24,19 +29,59 @@ export default function robots(): MetadataRoute.Robots {
           '/forgot-password',
           '/reset-password',
           '/invite/',
-          '/*?preview=*', // Preview pages
+          '/donate/success',
+          '/*?preview=*',
+          '/_next/',
         ],
       },
-      // Specific rules for common bots
+      // Google — explicit allow for priority pages
       {
         userAgent: 'Googlebot',
-        allow: '/',
+        allow: [
+          '/',
+          '/about',
+          '/art/',
+          '/events',
+          '/culture',
+          '/donate',
+          '/apply',
+        ],
         disallow: ['/admin/', '/api/', '/portal/', '/members/'],
       },
+      // Bing
       {
         userAgent: 'bingbot',
-        allow: '/',
+        allow: [
+          '/',
+          '/about',
+          '/art/',
+          '/events',
+          '/culture',
+          '/donate',
+          '/apply',
+        ],
         disallow: ['/admin/', '/api/', '/portal/', '/members/'],
+      },
+      // Block common AI scrapers from copying content wholesale
+      {
+        userAgent: 'GPTBot',
+        disallow: ['/'],
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        disallow: ['/'],
+      },
+      {
+        userAgent: 'CCBot',
+        disallow: ['/'],
+      },
+      {
+        userAgent: 'anthropic-ai',
+        disallow: ['/'],
+      },
+      {
+        userAgent: 'Claude-Web',
+        disallow: ['/'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

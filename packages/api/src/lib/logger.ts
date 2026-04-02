@@ -6,7 +6,9 @@ export const logger = {
     if (process.env.NODE_ENV === 'development') {
       console.debug('[DEBUG]', new Date().toISOString(), ...args);
     }
-  }
+  },
+  /** Log security-relevant events (failed logins, permission denials, suspicious activity) */
+  security: (...args: unknown[]) => console.warn('[SECURITY]', new Date().toISOString(), ...args),
 };
 
 export default logger;

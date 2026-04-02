@@ -1,13 +1,25 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Reveal } from '../../components/reveal';
 import { useContentConfig } from '../../hooks/useConfig';
 import { toast } from 'sonner';
-import { CheckCircle, Loader2, ArrowRight, ExternalLink, FileText, Users, MessageSquare } from 'lucide-react';
+import {
+  CheckCircle,
+  Loader2,
+  ArrowRight,
+  ArrowLeft,
+  ExternalLink,
+  FileText,
+  Users,
+  MessageSquare,
+  User,
+  Utensils,
+  AlertCircle,
+} from 'lucide-react';
 
 interface ApplicationFormData {
   name: string;
@@ -18,6 +30,56 @@ interface ApplicationFormData {
   contribution: string;
   dietary: string;
   emergency_contact: string;
+}
+
+interface FieldErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  experience?: string;
+  interests?: string;
+  contribution?: string;
+  emergency_contact?: string;
+}
+
+const STEPS = [
+  { id: 'personal', label: 'About You', icon: User },
+  { id: 'experience', label: 'Experience', icon: MessageSquare },
+  { id: 'contribution', label: 'Contribution', icon: Users },
+  { id: 'details', label: 'Details', icon: Utensils },
+] as const;
+
+function CharacterCount({ value, min }: { value: string; min: number }) {
+  const count = value.length;
+  const remaining = min - count;
+  const met = count >= min;
+
+  return (
+    <div className="flex items-center justify-between mt-1.5">
+      <p className="text-xs" style={{ color: met ? 'var(--color-sage)' : 'var(--color-ink-faint)' }}>
+        {met ? 'Minimum reached' : `${remaining} more character${remaining !== 1 ? 's' : ''} needed`}
+      </p>
+      <p className="text-xs tabular-nums" style={{ color: met ? 'var(--color-sage)' : 'var(--color-ink-faint)' }}>
+        {count}/{min} min
+      </p>
+    </div>
+  );
+}
+
+function FieldError({ error }: { error?: string }) {
+  if (!error) return null;
+  return (
+    <motion.p
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center gap-1.5 text-xs mt-1.5"
+      style={{ color: 'var(--color-error)' }}
+      role="alert"
+    >
+      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+      {error}
+    </motion.p>
+  );
 }
 
 export default function ApplyPage() {
@@ -33,6 +95,7 @@ export default function ApplyPage() {
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ApplicationFormData>({
     name: '',
     email: '',
@@ -43,8 +106,12 @@ export default function ApplyPage() {
     dietary: '',
     emergency_contact: '',
   });
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const formRef = useRef<HTMLDivElement>(null);
 
   if (!apply) {
     return (
@@ -54,44 +121,131 @@ export default function ApplyPage() {
     );
   }
 
-  const validateForm = (): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error('Please enter a valid email address');
-      return false;
+  const validateField = (name: string, value: string): string | undefined => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Full name is required.';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters.';
+        return undefined;
+      case 'email': {
+        if (!value.trim()) return 'Email is required.';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return 'Please enter a valid email address.';
+        return undefined;
+      }
+      case 'phone': {
+        if (!value.trim()) return 'Phone number is required.';
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        if (!phoneRegex.test(value)) return 'Please enter a valid phone number.';
+        return undefined;
+      }
+      case 'emergency_contact':
+        if (!value.trim()) return 'Emergency contact is required for safety.';
+        return undefined;
+      case 'interests':
+        if (!value.trim()) return 'Please share your interests.';
+        if (value.length < 50) return 'Please tell us more (at least 50 characters).';
+        return undefined;
+      case 'contribution':
+        if (!value.trim()) return 'Please share how you would like to contribute.';
+        if (value.length < 50) return 'Please tell us more (at least 50 characters).';
+        return undefined;
+      default:
+        return undefined;
     }
+  };
 
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    if (!phoneRegex.test(formData.phone)) {
-      toast.error('Please enter a valid phone number');
-      return false;
+  const validateStep = (step: number): boolean => {
+    const errors: FieldErrors = {};
+
+    if (step === 0) {
+      const nameErr = validateField('name', formData.name);
+      const emailErr = validateField('email', formData.email);
+      const phoneErr = validateField('phone', formData.phone);
+      const emergencyErr = validateField('emergency_contact', formData.emergency_contact);
+      if (nameErr) errors.name = nameErr;
+      if (emailErr) errors.email = emailErr;
+      if (phoneErr) errors.phone = phoneErr;
+      if (emergencyErr) errors.emergency_contact = emergencyErr;
+    } else if (step === 1) {
+      // Experience selection is optional, no hard validation needed
+    } else if (step === 2) {
+      const interestsErr = validateField('interests', formData.interests);
+      const contributionErr = validateField('contribution', formData.contribution);
+      if (interestsErr) errors.interests = interestsErr;
+      if (contributionErr) errors.contribution = contributionErr;
     }
+    // Step 3 (Details) is optional
 
-    if (formData.interests.length < 50) {
-      toast.error('Please tell us more about your interests (at least 50 characters)');
-      return false;
-    }
+    setFieldErrors((prev) => ({ ...prev, ...errors }));
 
-    if (formData.contribution.length < 50) {
-      toast.error('Please tell us more about how you\'d like to contribute (at least 50 characters)');
+    if (Object.keys(errors).length > 0) {
+      // Mark all fields in this step as touched
+      const stepFields: Record<number, string[]> = {
+        0: ['name', 'email', 'phone', 'emergency_contact'],
+        1: ['experience'],
+        2: ['interests', 'contribution'],
+        3: ['dietary'],
+      };
+      setTouchedFields((prev) => {
+        const next = new Set(prev);
+        stepFields[step]?.forEach((f) => next.add(f));
+        return next;
+      });
       return false;
     }
 
     return true;
   };
 
+  const handleNext = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep((prev) => Math.min(prev + 1, STEPS.length - 1));
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleBack = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user types
+    if (touchedFields.has(name)) {
+      const error = validateField(name, value);
+      setFieldErrors((prev) => ({ ...prev, [name]: error }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setTouchedFields((prev) => new Set(prev).add(name));
+    const error = validateField(name, value);
+    setFieldErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
+    // Validate all steps
+    let hasErrors = false;
+    for (let i = 0; i <= 3; i++) {
+      if (!validateStep(i)) {
+        hasErrors = true;
+        setCurrentStep(i);
+        break;
+      }
     }
+    if (hasErrors) return;
 
     setIsSubmitting(true);
 
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
-    // Map form experience values to the API's enum
     const experienceMap: Record<string, string> = {
       'first-time': 'FIRST_TIMER',
       '1-3-years': 'BEEN_BEFORE',
@@ -143,6 +297,9 @@ export default function ApplyPage() {
         dietary: '',
         emergency_contact: '',
       });
+      setCurrentStep(0);
+      setFieldErrors({});
+      setTouchedFields(new Set());
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -167,14 +324,24 @@ export default function ApplyPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const processIcons = [FileText, MessageSquare, Users];
+
+  // Step completion check
+  const isStepComplete = (step: number): boolean => {
+    switch (step) {
+      case 0:
+        return !!(formData.name.trim() && formData.email.trim() && formData.phone.trim() && formData.emergency_contact.trim()
+          && !validateField('name', formData.name) && !validateField('email', formData.email) && !validateField('phone', formData.phone));
+      case 1:
+        return !!formData.experience;
+      case 2:
+        return !!(formData.interests.length >= 50 && formData.contribution.length >= 50);
+      case 3:
+        return true; // Optional step
+      default:
+        return false;
+    }
+  };
 
   return (
     <main style={{ backgroundColor: 'var(--color-cream)' }}>
@@ -241,9 +408,15 @@ export default function ApplyPage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal direction="none">
               <div className="frame-panel text-center space-y-6">
-                <div className="inline-flex p-4 rounded-full" style={{ backgroundColor: 'rgba(90, 107, 90, 0.12)', border: '1px solid rgba(90, 107, 90, 0.25)' }}>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                  className="inline-flex p-4 rounded-full"
+                  style={{ backgroundColor: 'rgba(90, 107, 90, 0.12)', border: '1px solid rgba(90, 107, 90, 0.25)' }}
+                >
                   <CheckCircle className="h-10 w-10" style={{ color: 'var(--color-sage)' }} aria-hidden="true" />
-                </div>
+                </motion.div>
                 <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
                   Application Submitted Successfully!
                 </h2>
@@ -252,6 +425,19 @@ export default function ApplyPage() {
                   and will review it carefully. You should receive a confirmation email shortly.
                   We'll be in touch within 1-2 weeks.
                 </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                  <Link href="/about" className="cta-secondary inline-flex">
+                    <span>Learn More About Us</span>
+                    <ArrowRight size={18} aria-hidden="true" />
+                  </Link>
+                  <button
+                    onClick={() => setIsSubmitted(false)}
+                    className="text-sm font-medium transition-colors"
+                    style={{ color: 'var(--color-sage)' }}
+                  >
+                    Submit another application
+                  </button>
+                </div>
               </div>
             </Reveal>
           </div>
@@ -259,8 +445,8 @@ export default function ApplyPage() {
       )}
 
       {/* Legacy Form Option */}
-      {apply.externalApplication && (
-        <section className="py-24 md:py-32">
+      {apply.externalApplication && !isSubmitted && (
+        <section className="py-16 md:py-20">
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="frame-panel">
@@ -294,241 +480,476 @@ export default function ApplyPage() {
         </section>
       )}
 
-      <div className="ornate-divider" />
+      {!isSubmitted && <div className="ornate-divider" />}
 
       {/* Application Form */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-3xl mx-auto px-5 md:px-10">
-          <Reveal>
-            <div className="frame-panel">
-              <div className="mb-10">
-                <p className="text-eyebrow mb-3">MEMBERSHIP APPLICATION</p>
-                <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
-                  {apply.form.title}
-                </h2>
-              </div>
+      {!isSubmitted && (
+        <section className="py-24 md:py-32" ref={formRef}>
+          <div className="max-w-3xl mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="frame-panel">
+                <div className="mb-10">
+                  <p className="text-eyebrow mb-3">MEMBERSHIP APPLICATION</p>
+                  <h2 className="font-accent text-2xl md:text-3xl tracking-tight" style={{ color: '#2C2416' }}>
+                    {apply.form.title}
+                  </h2>
+                </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Personal Information */}
-                <Reveal delay={0.1}>
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-eyebrow mb-2">ABOUT YOU</p>
-                      <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
-                        {apply.form.fields.personalInfo.title}
-                      </h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div>
-                        <label htmlFor="apply-name" className="form-label">
-                          {apply.form.fields.personalInfo.nameLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                        </label>
-                        <div className="input-glow rounded-xl">
-                          <input
-                            type="text"
-                            id="apply-name"
-                            name="name"
-                            required
-                            className="form-input border-0 bg-transparent"
-                            value={formData.name}
-                            onChange={handleChange}
-                            autoComplete="name"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="apply-email" className="form-label">
-                          {apply.form.fields.personalInfo.emailLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                        </label>
-                        <div className="input-glow rounded-xl">
-                          <input
-                            type="email"
-                            id="apply-email"
-                            name="email"
-                            required
-                            className="form-input border-0 bg-transparent"
-                            value={formData.email}
-                            onChange={handleChange}
-                            autoComplete="email"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="apply-phone" className="form-label">
-                          {apply.form.fields.personalInfo.phoneLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                        </label>
-                        <div className="input-glow rounded-xl">
-                          <input
-                            type="tel"
-                            id="apply-phone"
-                            name="phone"
-                            required
-                            className="form-input border-0 bg-transparent"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            autoComplete="tel"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label htmlFor="apply-emergency" className="form-label">
-                          {apply.form.fields.personalInfo.emergencyContactLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                        </label>
-                        <div className="input-glow rounded-xl">
-                          <input
-                            type="text"
-                            id="apply-emergency"
-                            name="emergency_contact"
-                            required
-                            className="form-input border-0 bg-transparent"
-                            placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
-                            value={formData.emergency_contact}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                {/* Step Progress Indicator */}
+                <div className="mb-10">
+                  <div className="flex items-center justify-between mb-3">
+                    {STEPS.map((step, index) => {
+                      const StepIcon = step.icon;
+                      const isActive = index === currentStep;
+                      const isComplete = index < currentStep || isStepComplete(index);
+                      return (
+                        <button
+                          key={step.id}
+                          type="button"
+                          onClick={() => {
+                            // Allow navigating to completed steps or current
+                            if (index <= currentStep || isStepComplete(currentStep)) {
+                              setCurrentStep(index);
+                            }
+                          }}
+                          className="flex flex-col items-center gap-2 group relative"
+                          disabled={index > currentStep && !isStepComplete(currentStep)}
+                        >
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${
+                              isActive
+                                ? 'border-[var(--color-gold)] bg-[var(--color-gold)]/10'
+                                : isComplete
+                                ? 'border-[var(--color-sage)] bg-[var(--color-sage)]/10'
+                                : 'border-[var(--color-line)] bg-transparent'
+                            }`}
+                          >
+                            {isComplete && !isActive ? (
+                              <CheckCircle
+                                className="h-5 w-5"
+                                style={{ color: 'var(--color-sage)' }}
+                              />
+                            ) : (
+                              <StepIcon
+                                className="h-5 w-5"
+                                style={{
+                                  color: isActive
+                                    ? 'var(--color-gold)'
+                                    : 'var(--color-ink-faint)',
+                                }}
+                              />
+                            )}
+                          </div>
+                          <span
+                            className="text-[11px] font-medium tracking-wide hidden sm:block"
+                            style={{
+                              color: isActive
+                                ? 'var(--color-gold)'
+                                : isComplete
+                                ? 'var(--color-sage)'
+                                : 'var(--color-ink-faint)',
+                            }}
+                          >
+                            {step.label}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
-                </Reveal>
+                  {/* Progress bar */}
+                  <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: 'rgba(var(--color-line-rgb), 0.2)' }}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: 'var(--color-gold)' }}
+                      initial={false}
+                      animate={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </div>
+                  <p className="text-xs text-center mt-2" style={{ color: 'var(--color-ink-faint)' }}>
+                    Step {currentStep + 1} of {STEPS.length}
+                  </p>
+                </div>
 
-                {/* Experience */}
-                <Reveal delay={0.15}>
-                  <div>
-                    <p className="text-eyebrow mb-2">EXPERIENCE</p>
-                    <label htmlFor="apply-experience" className="form-label">{apply.form.fields.experienceLabel}</label>
-                    <div className="input-glow rounded-xl">
-                      <select
-                        id="apply-experience"
-                        name="experience"
-                        className="form-input border-0 bg-transparent"
-                        value={formData.experience}
-                        onChange={handleChange}
+                <form onSubmit={handleSubmit}>
+                  <AnimatePresence mode="wait">
+                    {/* Step 0: Personal Information */}
+                    {currentStep === 0 && (
+                      <motion.div
+                        key="step-0"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-6"
                       >
-                        {apply.form.fields.experienceOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </Reveal>
+                        <div>
+                          <p className="text-eyebrow mb-2">ABOUT YOU</p>
+                          <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                            {apply.form.fields.personalInfo.title}
+                          </h3>
+                          <p className="text-body-relaxed text-sm mt-3" style={{ color: 'var(--color-ink-soft)' }}>
+                            Let us know who you are. All fields marked with an asterisk are required.
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div>
+                            <label htmlFor="apply-name" className="form-label">
+                              {apply.form.fields.personalInfo.nameLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                            </label>
+                            <div className="input-glow rounded-xl">
+                              <input
+                                type="text"
+                                id="apply-name"
+                                name="name"
+                                required
+                                className={`form-input border-0 bg-transparent ${fieldErrors.name && touchedFields.has('name') ? 'ring-2 ring-red-300' : ''}`}
+                                value={formData.name}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                autoComplete="name"
+                                placeholder="Your full name"
+                              />
+                            </div>
+                            <FieldError error={touchedFields.has('name') ? fieldErrors.name : undefined} />
+                          </div>
+                          <div>
+                            <label htmlFor="apply-email" className="form-label">
+                              {apply.form.fields.personalInfo.emailLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                            </label>
+                            <div className="input-glow rounded-xl">
+                              <input
+                                type="email"
+                                id="apply-email"
+                                name="email"
+                                required
+                                className={`form-input border-0 bg-transparent ${fieldErrors.email && touchedFields.has('email') ? 'ring-2 ring-red-300' : ''}`}
+                                value={formData.email}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                autoComplete="email"
+                                placeholder="your@email.com"
+                              />
+                            </div>
+                            <FieldError error={touchedFields.has('email') ? fieldErrors.email : undefined} />
+                          </div>
+                          <div>
+                            <label htmlFor="apply-phone" className="form-label">
+                              {apply.form.fields.personalInfo.phoneLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                            </label>
+                            <div className="input-glow rounded-xl">
+                              <input
+                                type="tel"
+                                id="apply-phone"
+                                name="phone"
+                                required
+                                className={`form-input border-0 bg-transparent ${fieldErrors.phone && touchedFields.has('phone') ? 'ring-2 ring-red-300' : ''}`}
+                                value={formData.phone}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                autoComplete="tel"
+                                placeholder="(555) 123-4567"
+                              />
+                            </div>
+                            <FieldError error={touchedFields.has('phone') ? fieldErrors.phone : undefined} />
+                          </div>
+                          <div>
+                            <label htmlFor="apply-emergency" className="form-label">
+                              {apply.form.fields.personalInfo.emergencyContactLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                            </label>
+                            <div className="input-glow rounded-xl">
+                              <input
+                                type="text"
+                                id="apply-emergency"
+                                name="emergency_contact"
+                                required
+                                className={`form-input border-0 bg-transparent ${fieldErrors.emergency_contact && touchedFields.has('emergency_contact') ? 'ring-2 ring-red-300' : ''}`}
+                                placeholder={apply.form.fields.personalInfo.emergencyContactPlaceholder}
+                                value={formData.emergency_contact}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </div>
+                            <FieldError error={touchedFields.has('emergency_contact') ? fieldErrors.emergency_contact : undefined} />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
 
-                {/* Interests */}
-                <Reveal delay={0.2}>
-                  <div>
-                    <label htmlFor="apply-interests" className="form-label">
-                      {apply.form.fields.interestsLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                    </label>
-                    <div className="input-glow rounded-xl">
-                      <textarea
-                        id="apply-interests"
-                        name="interests"
-                        required
-                        aria-required="true"
-                        aria-describedby="interests-hint"
-                        rows={4}
-                        className="form-input border-0 bg-transparent"
-                        placeholder={apply.form.fields.interestsPlaceholder}
-                        value={formData.interests}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <p id="interests-hint" className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>Minimum 50 characters</p>
-                  </div>
-                </Reveal>
+                    {/* Step 1: Experience */}
+                    {currentStep === 1 && (
+                      <motion.div
+                        key="step-1"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-6"
+                      >
+                        <div>
+                          <p className="text-eyebrow mb-2">BURNING MAN EXPERIENCE</p>
+                          <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                            Tell Us About Your Journey
+                          </h3>
+                          <p className="text-body-relaxed text-sm mt-3" style={{ color: 'var(--color-ink-soft)' }}>
+                            Whether this is your first time or you are a seasoned burner, we welcome all experience levels.
+                          </p>
+                        </div>
 
-                {/* Contribution */}
-                <Reveal delay={0.25}>
-                  <div>
-                    <label htmlFor="apply-contribution" className="form-label">
-                      {apply.form.fields.contributionLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
-                    </label>
-                    <div className="input-glow rounded-xl">
-                      <textarea
-                        id="apply-contribution"
-                        name="contribution"
-                        required
-                        aria-required="true"
-                        aria-describedby="contribution-hint"
-                        rows={4}
-                        className="form-input border-0 bg-transparent"
-                        placeholder={apply.form.fields.contributionPlaceholder}
-                        value={formData.contribution}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <p id="contribution-hint" className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>Minimum 50 characters</p>
-                  </div>
-                </Reveal>
+                        <div>
+                          <label htmlFor="apply-experience" className="form-label">{apply.form.fields.experienceLabel}</label>
+                          <div className="space-y-2 mt-2">
+                            {apply.form.fields.experienceOptions.map((option) => (
+                              <label
+                                key={option.value}
+                                className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 border-2 ${
+                                  formData.experience === option.value
+                                    ? 'border-[var(--color-gold)] bg-[var(--color-gold)]/5'
+                                    : 'border-transparent bg-white/50 hover:bg-white/80'
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="experience"
+                                  value={option.value}
+                                  checked={formData.experience === option.value}
+                                  onChange={handleChange}
+                                  className="sr-only"
+                                />
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                                  formData.experience === option.value
+                                    ? 'border-[var(--color-gold)]'
+                                    : 'border-gray-300'
+                                }`}>
+                                  {formData.experience === option.value && (
+                                    <motion.div
+                                      initial={{ scale: 0 }}
+                                      animate={{ scale: 1 }}
+                                      className="w-2.5 h-2.5 rounded-full"
+                                      style={{ backgroundColor: 'var(--color-gold)' }}
+                                    />
+                                  )}
+                                </div>
+                                <span className="text-sm font-medium" style={{ color: '#2C2416' }}>
+                                  {option.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
 
-                {/* Dietary */}
-                <Reveal delay={0.3}>
-                  <div>
-                    <label htmlFor="apply-dietary" className="form-label">{apply.form.fields.dietaryLabel}</label>
-                    <div className="input-glow rounded-xl">
-                      <textarea
-                        id="apply-dietary"
-                        name="dietary"
-                        rows={3}
-                        className="form-input border-0 bg-transparent"
-                        placeholder={apply.form.fields.dietaryPlaceholder}
-                        value={formData.dietary}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                </Reveal>
+                    {/* Step 2: Interests & Contribution */}
+                    {currentStep === 2 && (
+                      <motion.div
+                        key="step-2"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-6"
+                      >
+                        <div>
+                          <p className="text-eyebrow mb-2">YOUR CONTRIBUTION</p>
+                          <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                            What Brings You Here
+                          </h3>
+                          <p className="text-body-relaxed text-sm mt-3" style={{ color: 'var(--color-ink-soft)' }}>
+                            Camp Alborz thrives on the unique talents and passions each member brings. Share what excites you about our community.
+                          </p>
+                        </div>
 
-                {/* Terms */}
-                <Reveal delay={0.35}>
-                  <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}>
-                    <h4 className="font-accent text-lg tracking-tight mb-4" style={{ color: '#2C2416' }}>
-                      {apply.form.beforeYouApply.title}
-                    </h4>
-                    <ul className="space-y-2">
-                      {apply.form.beforeYouApply.items.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                          <span style={{ color: 'var(--color-gold)' }} className="mt-1">&#9670;</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Reveal>
+                        <div>
+                          <label htmlFor="apply-interests" className="form-label">
+                            {apply.form.fields.interestsLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                          </label>
+                          <div className="input-glow rounded-xl">
+                            <textarea
+                              id="apply-interests"
+                              name="interests"
+                              required
+                              aria-required="true"
+                              aria-describedby="interests-hint"
+                              rows={4}
+                              className={`form-input border-0 bg-transparent ${fieldErrors.interests && touchedFields.has('interests') ? 'ring-2 ring-red-300' : ''}`}
+                              placeholder={apply.form.fields.interestsPlaceholder}
+                              value={formData.interests}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          </div>
+                          <CharacterCount value={formData.interests} min={50} />
+                          <FieldError error={touchedFields.has('interests') ? fieldErrors.interests : undefined} />
+                        </div>
 
-                {/* Submit */}
-                <Reveal delay={0.4}>
-                  <div className="pt-4">
-                    <motion.button
-                      type="submit"
-                      disabled={isSubmitting}
-                      whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                      whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                      className="w-full cta-primary cta-shimmer disabled:opacity-70 disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-                          <span>Submitting Application...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>{apply.form.submitButton}</span>
-                          <ArrowRight size={18} aria-hidden="true" />
-                        </>
-                      )}
-                    </motion.button>
+                        <div>
+                          <label htmlFor="apply-contribution" className="form-label">
+                            {apply.form.fields.contributionLabel} <span style={{ color: 'var(--color-error)' }}>*</span>
+                          </label>
+                          <div className="input-glow rounded-xl">
+                            <textarea
+                              id="apply-contribution"
+                              name="contribution"
+                              required
+                              aria-required="true"
+                              aria-describedby="contribution-hint"
+                              rows={4}
+                              className={`form-input border-0 bg-transparent ${fieldErrors.contribution && touchedFields.has('contribution') ? 'ring-2 ring-red-300' : ''}`}
+                              placeholder={apply.form.fields.contributionPlaceholder}
+                              value={formData.contribution}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                            />
+                          </div>
+                          <CharacterCount value={formData.contribution} min={50} />
+                          <FieldError error={touchedFields.has('contribution') ? fieldErrors.contribution : undefined} />
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {/* Step 3: Details (Dietary + Terms) */}
+                    {currentStep === 3 && (
+                      <motion.div
+                        key="step-3"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-6"
+                      >
+                        <div>
+                          <p className="text-eyebrow mb-2">ADDITIONAL DETAILS</p>
+                          <h3 className="font-accent text-lg tracking-tight pb-3" style={{ color: '#2C2416', borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)' }}>
+                            Almost There
+                          </h3>
+                          <p className="text-body-relaxed text-sm mt-3" style={{ color: 'var(--color-ink-soft)' }}>
+                            Just a couple more optional details and you are ready to submit your application.
+                          </p>
+                        </div>
+
+                        <div>
+                          <label htmlFor="apply-dietary" className="form-label">{apply.form.fields.dietaryLabel}</label>
+                          <div className="input-glow rounded-xl">
+                            <textarea
+                              id="apply-dietary"
+                              name="dietary"
+                              rows={3}
+                              className="form-input border-0 bg-transparent"
+                              placeholder={apply.form.fields.dietaryPlaceholder}
+                              value={formData.dietary}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <p className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>Optional -- helps us plan camp meals.</p>
+                        </div>
+
+                        {/* Terms */}
+                        <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}>
+                          <h4 className="font-accent text-lg tracking-tight mb-4" style={{ color: '#2C2416' }}>
+                            {apply.form.beforeYouApply.title}
+                          </h4>
+                          <ul className="space-y-2.5">
+                            {apply.form.beforeYouApply.items.map((item, index) => (
+                              <li key={index} className="flex items-start gap-3 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                                <span style={{ color: 'var(--color-gold)' }} className="mt-0.5">&#9670;</span>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Application Summary */}
+                        <div className="p-6 rounded-xl border" style={{ borderColor: 'rgba(var(--color-line-rgb), 0.3)', backgroundColor: 'white' }}>
+                          <h4 className="font-accent text-base tracking-tight mb-4 flex items-center gap-2" style={{ color: '#2C2416' }}>
+                            <CheckCircle className="h-4 w-4" style={{ color: 'var(--color-sage)' }} />
+                            Application Summary
+                          </h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                            <div>
+                              <p className="text-xs font-medium uppercase tracking-wide mb-0.5" style={{ color: 'var(--color-ink-faint)' }}>Name</p>
+                              <p style={{ color: '#2C2416' }}>{formData.name || '--'}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium uppercase tracking-wide mb-0.5" style={{ color: 'var(--color-ink-faint)' }}>Email</p>
+                              <p style={{ color: '#2C2416' }}>{formData.email || '--'}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium uppercase tracking-wide mb-0.5" style={{ color: 'var(--color-ink-faint)' }}>Phone</p>
+                              <p style={{ color: '#2C2416' }}>{formData.phone || '--'}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium uppercase tracking-wide mb-0.5" style={{ color: 'var(--color-ink-faint)' }}>Experience</p>
+                              <p style={{ color: '#2C2416' }}>
+                                {apply.form.fields.experienceOptions.find(o => o.value === formData.experience)?.label || 'Not specified'}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex items-center justify-between pt-8 mt-8" style={{ borderTop: '1px solid rgba(var(--color-line-rgb), 0.2)' }}>
+                    {currentStep > 0 ? (
+                      <button
+                        type="button"
+                        onClick={handleBack}
+                        className="cta-secondary inline-flex items-center gap-2"
+                      >
+                        <ArrowLeft size={16} aria-hidden="true" />
+                        <span>Back</span>
+                      </button>
+                    ) : (
+                      <div />
+                    )}
+
+                    {currentStep < STEPS.length - 1 ? (
+                      <motion.button
+                        type="button"
+                        onClick={handleNext}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="cta-primary inline-flex items-center gap-2"
+                      >
+                        <span>Continue</span>
+                        <ArrowRight size={16} aria-hidden="true" />
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        type="submit"
+                        disabled={isSubmitting}
+                        whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+                        whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                        className="cta-primary cta-shimmer inline-flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                            <span>Submitting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>{apply.form.submitButton}</span>
+                            <ArrowRight size={18} aria-hidden="true" />
+                          </>
+                        )}
+                      </motion.button>
+                    )}
+                  </div>
+
+                  {currentStep === STEPS.length - 1 && (
                     <p className="text-sm mt-4 text-center" style={{ color: 'var(--color-ink-soft)' }}>
                       {apply.form.reviewMessage}
                     </p>
-                  </div>
-                </Reveal>
-              </form>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+                  )}
+                </form>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       <div className="ornate-divider" />
 
@@ -550,13 +971,9 @@ export default function ApplyPage() {
               return (
                 <Reveal key={step.stepNumber} delay={index * 0.1}>
                   <div className="border rounded-2xl p-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.1)', backgroundColor: 'rgba(255,255,255,0.05)' }}>
-                    {index % 2 === 0 ? (
-                      <StepIcon className="h-6 w-6 mx-auto mb-5" style={{ color: 'var(--color-gold-muted)' }} />
-                    ) : (
-                      <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
-                        <StepIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
-                      </div>
-                    )}
+                    <div className="inline-flex p-4 rounded-full mb-5" style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}>
+                      <StepIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
+                    </div>
                     <div className="text-3xl font-display mb-2" style={{ color: 'var(--color-gold)' }}>
                       {step.stepNumber}
                     </div>

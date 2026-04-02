@@ -10,7 +10,50 @@ import {
   useScroll,
   useTransform,
   useReducedMotion,
+  useInView,
 } from 'framer-motion';
+
+/* ──────────────────────────────────────────────
+   Shared animation config
+   ────────────────────────────────────────────── */
+const easeOutExpo = [0.16, 1, 0.3, 1] as const;
+
+/* ──────────────────────────────────────────────
+   Animated stat counter
+   ────────────────────────────────────────────── */
+function AnimatedStat({
+  value,
+  label,
+  index,
+}: {
+  value: string;
+  label: string;
+  index: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: easeOutExpo }}
+      className="py-10 md:py-14 text-center"
+    >
+      <p className="font-display text-4xl md:text-5xl font-light tracking-wide mb-2">
+        {value}
+      </p>
+      <p
+        className="text-eyebrow"
+        style={{ color: 'var(--color-ink-faint)' }}
+      >
+        {label}
+      </p>
+    </motion.div>
+  );
+}
 
 /* ──────────────────────────────────────────────
    Data
@@ -20,7 +63,7 @@ const artists = [
     number: '001',
     name: 'Mahmoud Farshchian',
     initials: 'MF',
-    medium: 'Miniature Painting · Neo-classical Persian',
+    medium: 'Miniature Painting \u00b7 Neo-classical Persian',
     era: 'b. 1930, Isfahan',
     bio: 'The undisputed master of contemporary Persian miniature painting. His luminous compositions bridge centuries of tradition with modern sensibility.',
     image: '/images/farshchian_tribute.webp',
@@ -29,7 +72,7 @@ const artists = [
     number: '002',
     name: 'Parviz Tanavoli',
     initials: 'PT',
-    medium: 'Sculpture · Heech Series',
+    medium: 'Sculpture \u00b7 Heech Series',
     era: 'b. 1937, Tehran',
     bio: 'Father of modern Iranian sculpture. His iconic "Heech" (Nothingness) series explores the void between existence and absence.',
     image: '/images/tanavoli_tribute.webp',
@@ -38,15 +81,15 @@ const artists = [
     number: '003',
     name: 'Monir Farmanfarmaian',
     initials: 'MF',
-    medium: 'Mirror Mosaic · Geometric Abstraction',
-    era: '1924 – 2019, Tehran',
+    medium: 'Mirror Mosaic \u00b7 Geometric Abstraction',
+    era: '1924 \u2013 2019, Tehran',
     bio: 'Fused traditional Iranian mirror mosaic (aineh-kari) with Western geometric abstraction to create something entirely new.',
     image: '/images/mirror_mosaic.webp',
   },
 ];
 
 /* Artist image with graceful fallback to styled initials placeholder */
-function ArtistImage({ artist }: { artist: typeof artists[number] }) {
+function ArtistImage({ artist }: { artist: (typeof artists)[number] }) {
   const [imgError, setImgError] = useState(false);
   const handleError = useCallback(() => setImgError(true), []);
 
@@ -55,7 +98,8 @@ function ArtistImage({ artist }: { artist: typeof artists[number] }) {
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{
-          background: 'linear-gradient(135deg, var(--color-sage) 0%, #2C2416 60%, var(--color-gold-muted) 100%)',
+          background:
+            'linear-gradient(135deg, var(--color-sage) 0%, #2C2416 60%, var(--color-gold-muted) 100%)',
         }}
       >
         <div className="text-center">
@@ -63,11 +107,11 @@ function ArtistImage({ artist }: { artist: typeof artists[number] }) {
             {artist.initials}
           </span>
           <p className="mt-3 text-[10px] tracking-[0.3em] uppercase text-white/40">
-            {artist.medium.split('·')[0].trim()}
+            {artist.medium.split('\u00b7')[0].trim()}
           </p>
         </div>
         {/* Decorative geometric pattern overlay */}
-        <div className="absolute inset-0 pattern-persian opacity-10 pointer-events-none" aria-hidden="true" />
+        <div className="absolute inset-0 pattern-persian opacity-10 pointer-events-none" />
       </div>
     );
   }
@@ -75,7 +119,7 @@ function ArtistImage({ artist }: { artist: typeof artists[number] }) {
   return (
     <Image
       src={artist.image}
-      alt={`${artist.name} — ${artist.medium}`}
+      alt={`${artist.name} \u2014 ${artist.medium}`}
       fill
       className="object-cover transition-transform duration-700"
       sizes="(max-width: 768px) 100vw, 33vw"
@@ -88,21 +132,43 @@ function ArtistImage({ artist }: { artist: typeof artists[number] }) {
 const offerings = [
   {
     title: 'Tea & Hospitality',
-    description: 'Hot Persian tea from dawn to dusk. Sit, sip, and connect with strangers who become family.',
+    description:
+      'Hot Persian tea from dawn to dusk. Sit, sip, and connect with strangers who become family.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        className="w-10 h-10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+      >
         <path d="M8 18h24v18a6 6 0 01-6 6H14a6 6 0 01-6-6V18z" />
         <path d="M32 22h4a4 4 0 010 8h-4" />
-        <path d="M14 8c0 0 2-4 6-4s6 4 6 4" strokeLinecap="round" />
-        <path d="M17 12c0 0 1-2 3-2s3 2 3 2" strokeLinecap="round" />
+        <path
+          d="M14 8c0 0 2-4 6-4s6 4 6 4"
+          strokeLinecap="round"
+        />
+        <path
+          d="M17 12c0 0 1-2 3-2s3 2 3 2"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
   {
     title: 'Art Cars',
-    description: 'HOMA and DAMAVAND roam the playa nightly — rolling temples of light, sound, and Persian geometry.',
+    description:
+      'HOMA and DAMAVAND roam the playa nightly \u2014 rolling temples of light, sound, and Persian geometry.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        className="w-10 h-10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+      >
         <circle cx="24" cy="24" r="18" />
         <path d="M24 6v36M6 24h36" />
         <path d="M10.1 10.1l27.8 27.8M37.9 10.1L10.1 37.9" />
@@ -112,9 +178,17 @@ const offerings = [
   },
   {
     title: 'Sound & Music',
-    description: 'Live DJs blend Persian classical with electronic. The desert becomes a dance floor under the stars.',
+    description:
+      'Live DJs blend Persian classical with electronic. The desert becomes a dance floor under the stars.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        className="w-10 h-10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+      >
         <path d="M20 8v28a6 6 0 11-6-6h6" />
         <path d="M20 18l16-6v22a6 6 0 11-6-6h6" />
       </svg>
@@ -122,14 +196,28 @@ const offerings = [
   },
   {
     title: 'Hookah Lounge',
-    description: 'Traditional hookah under a hand-built shade structure. Pull up a cushion, swap stories, and lose track of time.',
+    description:
+      'Traditional hookah under a hand-built shade structure. Pull up a cushion, swap stories, and lose track of time.',
     icon: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-10 h-10" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <svg
+        viewBox="0 0 48 48"
+        fill="none"
+        className="w-10 h-10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+      >
         <path d="M24 4v8M24 12c-6 0-10 4-10 10v2h20v-2c0-6-4-10-10-10z" />
-        <path d="M14 24v8c0 2 2 4 4 4h2" strokeLinecap="round" />
+        <path
+          d="M14 24v8c0 2 2 4 4 4h2"
+          strokeLinecap="round"
+        />
         <path d="M20 36h8" strokeLinecap="round" />
         <circle cx="24" cy="42" r="2" />
-        <path d="M34 24v4c0 4-3 6-6 6" strokeLinecap="round" />
+        <path
+          d="M34 24v4c0 4-3 6-6 6"
+          strokeLinecap="round"
+        />
       </svg>
     ),
   },
@@ -144,7 +232,7 @@ const campQAs = [
   {
     question: 'Where does the name come from?',
     answer:
-      'Alborz is Iran\'s greatest mountain range — home to Mount Damavand, the tallest peak in the Middle East. We named the camp after it, and one of our art cars after the peak.',
+      'Alborz is Iran\'s greatest mountain range \u2014 home to Mount Damavand, the tallest peak in the Middle East. We named the camp after it, and one of our art cars after the peak.',
   },
   {
     question: 'What happens at camp?',
@@ -154,7 +242,7 @@ const campQAs = [
   {
     question: 'How can I get involved?',
     answer:
-      'Come to one of our events or find us on the playa — we\'re always welcoming new faces. You can also apply to join the camp, or donate to help us build art and keep the tea flowing.',
+      'Come to one of our events or find us on the playa \u2014 we\'re always welcoming new faces. You can also apply to join the camp, or donate to help us build art and keep the tea flowing.',
   },
 ];
 
@@ -171,112 +259,188 @@ export default function HomePage() {
     target: heroRef,
     offset: ['start start', 'end start'],
   });
-  const heroImageYScroll = useTransform(heroScroll, [0, 1], ['0%', '15%']);
-  const heroOpacityScroll = useTransform(heroScroll, [0, 0.5], [1, 0]);
-  const heroImageY = prefersReducedMotion ? '0%' : heroImageYScroll;
-  const heroOpacity = prefersReducedMotion ? 1 : heroOpacityScroll;
+  const heroImageY = useTransform(heroScroll, [0, 1], ['0%', '18%']);
+  const heroImageScale = useTransform(heroScroll, [0, 1], [1, 1.08]);
+  const heroOpacity = useTransform(heroScroll, [0, 0.45], [1, 0]);
+  const heroContentY = useTransform(heroScroll, [0, 0.45], [0, -50]);
 
   const quoteRef = useRef(null);
   const { scrollYProgress: quoteScroll } = useScroll({
     target: quoteRef,
     offset: ['start end', 'end start'],
   });
-  const quoteBgYScroll = useTransform(quoteScroll, [0, 1], ['0%', '20%']);
-  const quoteBgY = prefersReducedMotion ? '0%' : quoteBgYScroll;
+  const quoteBgY = useTransform(quoteScroll, [0, 1], ['0%', '20%']);
+  const quoteScale = useTransform(quoteScroll, [0, 0.5, 1], [0.96, 1, 1.02]);
 
   const panoramaRef = useRef(null);
   const { scrollYProgress: panoramaScroll } = useScroll({
     target: panoramaRef,
     offset: ['start end', 'end start'],
   });
-  const panoramaYScroll = useTransform(panoramaScroll, [0, 1], ['-5%', '5%']);
-  const panoramaY = prefersReducedMotion ? '0%' : panoramaYScroll;
+  const panoramaY = useTransform(panoramaScroll, [0, 1], ['-5%', '5%']);
 
   return (
     <>
       <main>
         {/* ============================================ */}
-        {/* 1. HERO — Full-bleed image with text overlay  */}
+        {/* 1. HERO -- Full-bleed with dramatic entrance  */}
         {/* ============================================ */}
         <section
           ref={heroRef}
           className="relative min-h-screen overflow-hidden flex items-center"
           style={{
-            background: 'linear-gradient(135deg, #2C2416 0%, #4A5D5A 35%, #3a4a3a 55%, #D4C4A8 85%, #D4AF37 100%)',
+            background:
+              'linear-gradient(135deg, #2C2416 0%, #4A5D5A 35%, #3a4a3a 55%, #D4C4A8 85%, #D4AF37 100%)',
           }}
         >
-          {/* Full-bleed background image with parallax */}
-          <motion.div className="absolute inset-0 -top-[15%] -bottom-[15%]" style={{ y: heroImageY }}>
+          {/* Full-bleed background image with parallax + zoom */}
+          <motion.div
+            className="absolute inset-0 -top-[18%] -bottom-[18%]"
+            style={
+              prefersReducedMotion
+                ? {}
+                : { y: heroImageY, scale: heroImageScale }
+            }
+          >
             <Image
               src="/images/playa_camp.webp"
               alt="Camp Alborz at golden hour on the playa"
               fill
               priority
-              fetchPriority="high"
               className="object-cover"
               sizes="100vw"
             />
           </motion.div>
 
-          {/* Dark overlay for text legibility */}
+          {/* Multi-layered overlays for cinematic depth */}
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(to right, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.1) 100%)',
+              background:
+                'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.08) 100%)',
             }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(to top, rgba(44,36,22,0.4) 0%, transparent 40%)',
+            }}
+          />
+          {/* Subtle vignette */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ boxShadow: 'inset 0 0 250px rgba(0,0,0,0.2)' }}
           />
 
           {/* Text content */}
           <motion.div
             className="relative z-10 px-8 md:px-16 lg:px-20 max-w-3xl"
-            style={{ opacity: heroOpacity }}
+            style={
+              prefersReducedMotion
+                ? {}
+                : { opacity: heroOpacity, y: heroContentY }
+            }
           >
+            {/* Decorative line */}
+            <motion.div
+              className="w-12 h-px bg-white/40 mb-8"
+              initial={prefersReducedMotion ? false : { scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.15,
+                ease: easeOutExpo,
+              }}
+              style={{ transformOrigin: 'left' }}
+            />
+
             <motion.p
-              className="text-eyebrow mb-8 text-white/70"
-              initial={{ opacity: 0, y: 16 }}
+              className="text-eyebrow mb-8 text-white/60"
+              initial={
+                prefersReducedMotion ? false : { opacity: 0, y: 16 }
+              }
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.25,
+                ease: easeOutExpo,
+              }}
             >
               501(c)(3) Music &amp; Arts Organization
             </motion.p>
 
             <motion.h1
-              className="font-display text-5xl md:text-6xl lg:text-[5.5rem] font-normal leading-[0.95] tracking-tight mb-10 text-white"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="font-display text-5xl md:text-6xl lg:text-[5.5rem] font-normal leading-[0.92] tracking-tight mb-8 text-white"
+              initial={
+                prefersReducedMotion
+                  ? false
+                  : { opacity: 0, y: 30, scale: 0.98 }
+              }
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 1,
+                delay: 0.4,
+                ease: easeOutExpo,
+              }}
             >
-              Camp<br />
-              <em className="italic text-[#e8a87c]">Alborz</em>
+              Camp
+              <br />
+              <em
+                className="italic"
+                style={{ color: '#D4AF37' }}
+              >
+                Alborz
+              </em>
             </motion.h1>
 
             <motion.p
-              className="text-[15px] leading-[1.85] max-w-[420px] mb-12 text-white/80"
-              initial={{ opacity: 0, y: 20 }}
+              className="text-[15px] md:text-base leading-[1.85] max-w-[440px] mb-12 text-white/75"
+              initial={
+                prefersReducedMotion ? false : { opacity: 0, y: 20 }
+              }
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.7,
+                delay: 0.65,
+                ease: easeOutExpo,
+              }}
             >
-              Celebrating Persian culture worldwide through music, food, and art.
-              The legendary hospitality, none of the pretense.
+              Where 3,000 years of Persian culture meets the radical
+              spirit of the desert. Tea at dawn, fire at dusk, art
+              through the night.
             </motion.p>
 
             <motion.div
-              className="flex flex-wrap items-center gap-4 sm:gap-8"
-              initial={{ opacity: 0, y: 16 }}
+              className="flex flex-wrap items-center gap-4 sm:gap-6"
+              initial={
+                prefersReducedMotion ? false : { opacity: 0, y: 16 }
+              }
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.85,
+                ease: easeOutExpo,
+              }}
             >
               <Link
                 href="/donate"
                 className="cta-primary"
-                style={{ backgroundColor: 'white', color: '#1a1a18', borderColor: 'white' }}
+                style={{
+                  backgroundColor: 'white',
+                  color: '#1a1a18',
+                  borderColor: 'white',
+                }}
               >
-                <span>Support Us</span>
+                <span>Support Our Art</span>
               </Link>
               <Link
                 href="/about"
                 className="cta-secondary"
-                style={{ color: 'rgba(255,255,255,0.7)', borderColor: 'rgba(255,255,255,0.4)' }}
+                style={{
+                  color: 'rgba(255,255,255,0.7)',
+                  borderColor: 'rgba(255,255,255,0.3)',
+                }}
               >
                 <span>Our Story</span>
               </Link>
@@ -288,21 +452,25 @@ export default function HomePage() {
             className="absolute bottom-8 left-1/2 -translate-x-1/2 lg:left-20 lg:translate-x-0 flex flex-col items-center gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.6 }}
+            transition={{ delay: 1.6, duration: 0.6 }}
           >
-            <span className="text-[11px] tracking-[0.3em] uppercase text-white/50">
+            <span className="text-[11px] tracking-[0.3em] uppercase text-white/45">
               Scroll
             </span>
             <motion.div
-              className="w-px h-8 bg-white/40"
+              className="w-px h-8 bg-white/35 origin-top"
               animate={{ scaleY: [0, 1, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
             />
           </motion.div>
         </section>
 
         {/* ============================================ */}
-        {/* 2. NUMBERS BAR                               */}
+        {/* 2. NUMBERS BAR -- Animated counters           */}
         {/* ============================================ */}
         <section
           className="border-t border-b"
@@ -318,22 +486,22 @@ export default function HomePage() {
               ].map((stat, i) => (
                 <div
                   key={stat.label}
-                  className={`py-10 md:py-12 text-center${
-                    i < 3 ? ' border-r' : ''
-                  }${i < 2 ? ' max-md:border-b' : ''}${
-                    i === 1 || i === 2 ? ' max-md:border-r-0' : ''
+                  className={`${i < 3 ? 'border-r' : ''}${
+                    i < 2 ? ' max-md:border-b' : ''
+                  }${
+                    i === 1 || i === 2
+                      ? ' max-md:border-r-0'
+                      : ''
                   }`}
-                  style={{ borderColor: 'var(--color-warm-border)' }}
+                  style={{
+                    borderColor: 'var(--color-warm-border)',
+                  }}
                 >
-                  <p className="font-display text-4xl md:text-5xl font-light tracking-wide mb-2">
-                    {stat.value}
-                  </p>
-                  <p
-                    className="text-eyebrow"
-                    style={{ color: 'var(--color-ink-faint)' }}
-                  >
-                    {stat.label}
-                  </p>
+                  <AnimatedStat
+                    value={stat.value}
+                    label={stat.label}
+                    index={i}
+                  />
                 </div>
               ))}
             </div>
@@ -341,168 +509,278 @@ export default function HomePage() {
         </section>
 
         {/* ============================================ */}
-        {/* 3. STORY SECTION                             */}
+        {/* 3. STORY SECTION -- Who We Are                */}
         {/* ============================================ */}
-        <section className="py-24 md:py-32">
+        <section className="py-24 md:py-36">
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <div className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-8 md:gap-20">
               {/* Left label */}
-              <div>
-                <p
-                  className="font-display text-8xl md:text-9xl font-light tracking-wide opacity-[0.06] leading-none mb-3"
-                  aria-hidden="true"
-                >
-                  01
-                </p>
-                <p className="text-eyebrow">
-                  Our Story
-                </p>
-              </div>
+              <Reveal direction="left">
+                <div>
+                  <p
+                    className="font-display text-8xl md:text-9xl font-light tracking-wide opacity-[0.05] leading-none mb-3"
+                    aria-hidden="true"
+                  >
+                    01
+                  </p>
+                  <p className="text-eyebrow">Our Story</p>
+                </div>
+              </Reveal>
 
               {/* Right content */}
               <div>
                 <Reveal delay={0.1}>
-                  <h2 className="font-accent text-2xl md:text-3xl lg:text-[2.75rem] tracking-wide leading-snug mb-10" style={{ color: '#2C2416' }}>
-                    Persian culture, music &amp; art.<br className="hidden md:block" /> None of the pretense.
+                  <h2
+                    className="font-accent text-2xl md:text-3xl lg:text-[2.75rem] tracking-wide leading-snug mb-10"
+                    style={{ color: '#2C2416' }}
+                  >
+                    Born from the mountains.
+                    <br className="hidden md:block" />
+                    Built for the desert.
                   </h2>
                 </Reveal>
 
-                <div
-                  className="space-y-6 text-[15px] leading-[1.85]"
-                  style={{ color: 'var(--color-ink-soft)' }}
-                >
-                  <p>
-                    Alborz is a 501(c)(3) non-profit music and arts organization,
-                    supporting an inclusive and diverse community of performers
-                    and artists through events, partnerships, and community
-                    involvement. We were founded to celebrate Persian culture
-                    worldwide — through music, food, and art. The legendary
-                    hospitality, none of the pretense.
-                  </p>
-                  <p>
-                    Many of us live far away from our ancestral lands, but we
-                    share the best parts of our cultural heritage with one
-                    another and the broader community. We gather all over the
-                    globe but coalesce around our love for hosting new and old
-                    friends at our home — Black Rock City.
-                  </p>
-                </div>
+                <Reveal delay={0.2}>
+                  <div
+                    className="space-y-6 text-[15px] leading-[1.85]"
+                    style={{ color: 'var(--color-ink-soft)' }}
+                  >
+                    <p className="drop-cap">
+                      Alborz is a 501(c)(3) non-profit music and arts
+                      organization, supporting an inclusive and diverse
+                      community of performers and artists through
+                      events, partnerships, and community involvement.
+                      We were founded to celebrate Persian culture
+                      worldwide &mdash; through music, food, and art.
+                      The legendary hospitality, none of the pretense.
+                    </p>
+                    <p>
+                      Many of us live far away from our ancestral
+                      lands, but we share the best parts of our
+                      cultural heritage with one another and the
+                      broader community. We gather all over the globe
+                      but coalesce around our love for hosting new and
+                      old friends at our home &mdash; Black Rock City.
+                    </p>
+                  </div>
+                </Reveal>
+
+                {/* Inline CTA */}
+                <Reveal delay={0.3}>
+                  <div className="mt-10">
+                    <Link
+                      href="/about"
+                      className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium transition-colors duration-300 hover:text-terracotta group"
+                      style={{ color: 'var(--color-ink-soft)' }}
+                    >
+                      Read our full story
+                      <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                        &rarr;
+                      </span>
+                    </Link>
+                  </div>
+                </Reveal>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="h-px" style={{ backgroundColor: 'var(--color-warm-border)' }} />
+        <div
+          className="h-px"
+          style={{
+            backgroundColor: 'var(--color-warm-border)',
+          }}
+        />
 
         {/* ============================================ */}
-        {/* 4. OFFERINGS — What We Bring to the Playa    */}
+        {/* 4. OFFERINGS -- What We Bring to the Playa    */}
         {/* ============================================ */}
         <section
-          className="py-24 md:py-32"
-          style={{ backgroundColor: 'var(--color-cream-warm)' }}
+          className="py-24 md:py-36"
+          style={{
+            backgroundColor: 'var(--color-cream-warm)',
+          }}
         >
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
-              <div className="text-center mb-16">
-                <p className="text-eyebrow mb-4">
-                  What We Bring
-                </p>
-                <h2 className="font-accent text-3xl md:text-4xl tracking-wide" style={{ color: '#2C2416' }}>
+              <div className="text-center mb-20">
+                <p className="text-eyebrow mb-4">What We Bring</p>
+                <h2
+                  className="font-accent text-3xl md:text-4xl tracking-wide mb-4"
+                  style={{ color: '#2C2416' }}
+                >
                   Life at Camp Alborz
                 </h2>
+                <p
+                  className="text-sm max-w-md mx-auto leading-relaxed"
+                  style={{ color: 'var(--color-ink-faint)' }}
+                >
+                  From the first kettle at sunrise to the last beat at
+                  4am, here is what you will find at our camp.
+                </p>
               </div>
             </Reveal>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-              {offerings.map((item) => (
-                <div key={item.title} className="group text-center lg:text-left p-6 rounded-lg transition-colors duration-300 hover:bg-white/50 dark:hover:bg-white/5">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-colors duration-300 text-terracotta bg-terracotta/10">
-                    {item.icon}
+              {offerings.map((item, i) => (
+                <Reveal
+                  key={item.title}
+                  delay={i * 0.08}
+                  direction="up"
+                >
+                  <div className="group text-center lg:text-left p-6 rounded-lg transition-all duration-400 hover:bg-white/60 dark:hover:bg-white/5 hover:shadow-sm">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-all duration-300 text-terracotta bg-terracotta/10 group-hover:scale-110 group-hover:bg-terracotta/15">
+                      {item.icon}
+                    </div>
+                    <h3 className="font-display text-lg tracking-wide mb-3">
+                      {item.title}
+                    </h3>
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{
+                        color: 'var(--color-ink-soft)',
+                      }}
+                    >
+                      {item.description}
+                    </p>
                   </div>
-                  <h3 className="font-display text-lg tracking-wide mb-3">
-                    {item.title}
-                  </h3>
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ color: 'var(--color-ink-soft)' }}
-                  >
-                    {item.description}
-                  </p>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
         </section>
 
         {/* ============================================ */}
-        {/* 5. RUMI QUOTE — Parallax background          */}
+        {/* 5. RUMI QUOTE -- Immersive parallax moment    */}
         {/* ============================================ */}
         <section
           ref={quoteRef}
-          className="relative py-28 md:py-40 overflow-hidden"
+          className="relative py-32 md:py-44 overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, #FAF7F0 0%, #e8ddd0 30%, #D4C4A8 60%, #f3ebe0 100%)',
+            background:
+              'linear-gradient(180deg, #FAF7F0 0%, #e8ddd0 30%, #D4C4A8 60%, #f3ebe0 100%)',
           }}
         >
           {/* Parallax background */}
-          <motion.div className="absolute inset-0 -top-20 -bottom-20" style={{ y: quoteBgY }}>
+          <motion.div
+            className="absolute inset-0 -top-20 -bottom-20"
+            style={prefersReducedMotion ? {} : { y: quoteBgY }}
+          >
             <Image
               src="/images/hero_texture.webp"
               alt=""
               fill
-              className="object-cover opacity-30"
+              className="object-cover opacity-25"
               aria-hidden="true"
               sizes="100vw"
             />
           </motion.div>
 
-          {/* Decorative lines */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06]" aria-hidden="true">
-            <div className="w-[500px] h-[500px] border border-current rounded-full" />
+          {/* Decorative concentric circles */}
+          <div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            aria-hidden="true"
+          >
+            <div
+              className="w-[400px] h-[400px] border rounded-full opacity-[0.04]"
+              style={{
+                borderColor: 'var(--color-ink)',
+              }}
+            />
+            <div
+              className="absolute w-[550px] h-[550px] border rounded-full opacity-[0.03]"
+              style={{
+                borderColor: 'var(--color-ink)',
+              }}
+            />
           </div>
 
-          <div className="relative max-w-3xl mx-auto px-5 md:px-10 text-center">
-            <Reveal>
-              <div className="ornate-divider mb-10" aria-hidden="true">
+          <motion.div
+            className="relative max-w-3xl mx-auto px-5 md:px-10 text-center"
+            style={
+              prefersReducedMotion ? {} : { scale: quoteScale }
+            }
+          >
+            <Reveal direction="none">
+              <div className="ornate-divider mb-12">
                 <span
                   className="text-xs tracking-[0.4em] uppercase"
-                  style={{ color: 'var(--color-gold-muted)' }}
+                  style={{
+                    color: 'var(--color-gold-muted)',
+                  }}
                 >
                   &#10022;
                 </span>
               </div>
 
-              <p className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10" style={{ color: '#2C2416', textShadow: '0 0 20px rgba(250, 247, 240, 0.5)' }}>
-                {rumiQuote?.text ||
-                  "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."}
-              </p>
+              <blockquote>
+                <p
+                  className="font-accent text-2xl md:text-4xl lg:text-[2.75rem] leading-[1.4] mb-10"
+                  style={{
+                    color: '#2C2416',
+                    textShadow:
+                      '0 0 30px rgba(250, 247, 240, 0.6)',
+                  }}
+                >
+                  &ldquo;
+                  {rumiQuote?.text ||
+                    "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."}
+                  &rdquo;
+                </p>
 
-              <p
-                className="text-xs tracking-[0.35em] uppercase font-medium"
-                style={{ color: '#2C2416' }}
-              >
-                {rumiQuote?.attribution
-                  ? rumiQuote.attribution.split('·')[0].trim()
-                  : 'Jalal ad-Din Rumi'}
-              </p>
+                <footer>
+                  <p
+                    className="text-xs tracking-[0.35em] uppercase font-medium"
+                    style={{ color: '#2C2416' }}
+                  >
+                    {rumiQuote?.attribution
+                      ? rumiQuote.attribution
+                          .split('\u00b7')[0]
+                          .trim()
+                      : 'Jalal ad-Din Rumi'}
+                  </p>
+                  {rumiQuote?.context && (
+                    <p
+                      className="text-xs mt-3 italic"
+                      style={{ color: 'var(--color-ink-faint)' }}
+                    >
+                      {rumiQuote.context}
+                    </p>
+                  )}
+                </footer>
+              </blockquote>
+
+              <div className="ornate-divider mt-12">
+                <span
+                  className="text-xs tracking-[0.4em] uppercase"
+                  style={{
+                    color: 'var(--color-gold-muted)',
+                  }}
+                >
+                  &#10022;
+                </span>
+              </div>
             </Reveal>
-          </div>
+          </motion.div>
         </section>
 
         {/* ============================================ */}
-        {/* 6. FULL-BLEED CAMP IMAGE — Parallax          */}
+        {/* 6. FULL-BLEED CAMP IMAGE -- Parallax          */}
         {/* ============================================ */}
         <section
           ref={panoramaRef}
           className="relative w-full overflow-hidden"
           style={{
-            height: 'clamp(300px, 45vw, 550px)',
-            background: 'linear-gradient(135deg, #4A5D5A 0%, #2C2416 40%, #D4AF37 70%, #D4C4A8 100%)',
+            height: 'clamp(300px, 50vw, 600px)',
+            background:
+              'linear-gradient(135deg, #4A5D5A 0%, #2C2416 40%, #D4AF37 70%, #D4C4A8 100%)',
           }}
         >
           <motion.div
             className="absolute inset-0 -top-[10%] -bottom-[10%]"
-            style={{ y: panoramaY }}
+            style={
+              prefersReducedMotion ? {} : { y: panoramaY }
+            }
           >
             <Image
               src="/images/mirror_mosaic.webp"
@@ -514,43 +792,57 @@ export default function HomePage() {
             />
           </motion.div>
 
-          {/* Subtle dark overlay for contrast */}
+          {/* Cinematic letterbox overlay */}
+          <div className="absolute inset-0 z-10 bg-black/15" />
           <div
-            className="absolute inset-0 z-10 bg-black/20"
+            className="absolute inset-0 z-10 pointer-events-none"
+            style={{
+              boxShadow:
+                'inset 0 60px 80px -40px rgba(0,0,0,0.3), inset 0 -60px 80px -40px rgba(0,0,0,0.3)',
+            }}
           />
 
-          <p
-            className="absolute bottom-6 right-8 text-[11px] tracking-[0.2em] uppercase text-white/60 z-20"
-            style={{ textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}
-          >
-            Black Rock City
-          </p>
+          {/* Caption */}
+          <div className="absolute bottom-6 right-8 z-20 text-right">
+            <p
+              className="text-[11px] tracking-[0.2em] uppercase text-white/55"
+              style={{
+                textShadow: '0 1px 6px rgba(0,0,0,0.5)',
+              }}
+            >
+              Black Rock City
+            </p>
+          </div>
         </section>
 
         {/* ============================================ */}
         {/* 7. ARTIST SPOTLIGHT                          */}
         {/* ============================================ */}
-        <section className="py-24 md:py-32">
+        <section className="py-24 md:py-36">
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             {/* Header */}
             <Reveal>
-              <div
-                className="flex items-center justify-between pb-6 mb-14"
-              >
+              <div className="flex items-center justify-between pb-6 mb-14">
                 <div>
                   <p className="text-eyebrow mb-2">
                     Inspiration
                   </p>
-                  <h2 className="font-accent text-2xl md:text-3xl tracking-wide" style={{ color: '#2C2416' }}>
+                  <h2
+                    className="font-accent text-2xl md:text-3xl tracking-wide"
+                    style={{ color: '#2C2416' }}
+                  >
                     Artist Spotlight
                   </h2>
                 </div>
                 <Link
                   href="/art"
-                  className="text-xs tracking-[0.2em] uppercase font-medium transition-colors hover:text-terracotta py-3 pl-3"
+                  className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium transition-colors hover:text-terracotta py-3 pl-3 group"
                   style={{ color: 'var(--color-ink-soft)' }}
                 >
-                  View all &rarr;
+                  View all
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                    &rarr;
+                  </span>
                 </Link>
               </div>
             </Reveal>
@@ -558,29 +850,43 @@ export default function HomePage() {
             {/* Decorative line */}
             <div
               className="h-px mb-14 animate-draw-line"
-              style={{ backgroundColor: 'var(--color-warm-border)' }}
+              style={{
+                backgroundColor: 'var(--color-warm-border)',
+              }}
             />
 
             {/* Staggered 3-column grid */}
             <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr_1fr] gap-8 md:gap-10">
               {artists.map((artist, i) => {
                 const marginTop =
-                  i === 0 ? 'mt-0' : i === 1 ? 'md:mt-24' : 'md:mt-10';
+                  i === 0
+                    ? 'mt-0'
+                    : i === 1
+                      ? 'md:mt-24'
+                      : 'md:mt-10';
 
                 return (
-                  <Reveal key={artist.number} delay={0} direction="up">
+                  <Reveal
+                    key={artist.number}
+                    delay={i * 0.12}
+                    direction="up"
+                  >
                     <article className={`${marginTop} group`}>
                       {/* Image with hover zoom and fallback */}
                       <div
                         className="relative aspect-[3/4] overflow-hidden rounded-sm mb-6 image-hover-zoom"
-                        style={{ backgroundColor: 'var(--color-sage, #4A5D5A)' }}
+                        style={{
+                          backgroundColor:
+                            'var(--color-sage, #4A5D5A)',
+                        }}
                       >
                         <ArtistImage artist={artist} />
-                        {/* Subtle overlay on hover */}
+                        {/* Gradient overlay on hover */}
                         <div
                           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                           style={{
-                            background: 'linear-gradient(to top, rgba(var(--color-ink-rgb), 0.3) 0%, transparent 50%)',
+                            background:
+                              'linear-gradient(to top, rgba(var(--color-ink-rgb), 0.3) 0%, transparent 50%)',
                           }}
                         />
                       </div>
@@ -588,7 +894,9 @@ export default function HomePage() {
                       {/* Number */}
                       <p
                         className="text-xs tracking-[0.15em] mb-2 font-medium"
-                        style={{ color: 'var(--color-terracotta)' }}
+                        style={{
+                          color: 'var(--color-terracotta)',
+                        }}
                       >
                         {artist.number}
                       </p>
@@ -601,7 +909,9 @@ export default function HomePage() {
                       {/* Medium */}
                       <p
                         className="text-[11px] tracking-[0.12em] uppercase mb-1"
-                        style={{ color: 'var(--color-ink-faint)' }}
+                        style={{
+                          color: 'var(--color-ink-faint)',
+                        }}
                       >
                         {artist.medium}
                       </p>
@@ -609,7 +919,9 @@ export default function HomePage() {
                       {/* Era */}
                       <p
                         className="text-xs mb-4"
-                        style={{ color: 'var(--color-ink-faint)' }}
+                        style={{
+                          color: 'var(--color-ink-faint)',
+                        }}
                       >
                         {artist.era}
                       </p>
@@ -617,7 +929,9 @@ export default function HomePage() {
                       {/* Bio */}
                       <p
                         className="text-sm leading-relaxed"
-                        style={{ color: 'var(--color-ink-soft)' }}
+                        style={{
+                          color: 'var(--color-ink-soft)',
+                        }}
                       >
                         {artist.bio}
                       </p>
@@ -630,12 +944,13 @@ export default function HomePage() {
         </section>
 
         {/* ============================================ */}
-        {/* 8. MOUNTAIN DIVIDER — Parallax               */}
+        {/* 8. MOUNTAIN DIVIDER -- Parallax               */}
         {/* ============================================ */}
         <div
           className="relative w-full h-48 md:h-56 overflow-hidden"
           style={{
-            background: 'linear-gradient(180deg, var(--color-cream) 0%, #4A5D5A 30%, #2C2416 60%, var(--color-cream) 100%)',
+            background:
+              'linear-gradient(180deg, var(--color-cream) 0%, #4A5D5A 30%, #2C2416 60%, var(--color-cream) 100%)',
           }}
         >
           <Image
@@ -650,57 +965,108 @@ export default function HomePage() {
           <div
             className="absolute inset-0"
             style={{
-              background: 'linear-gradient(to bottom, var(--color-cream) 0%, transparent 30%, transparent 70%, var(--color-cream) 100%)',
+              background:
+                'linear-gradient(to bottom, var(--color-cream) 0%, transparent 30%, transparent 70%, var(--color-cream) 100%)',
             }}
           />
         </div>
 
         {/* ============================================ */}
-        {/* 9. CTA SECTION — 2026 Season                 */}
+        {/* 9. CTA SECTION -- 2026 Season                 */}
         {/* ============================================ */}
-        <section className="section-contrast py-28 md:py-36">
-          <div className="max-w-2xl mx-auto px-5 md:px-10 text-center">
+        <section className="section-contrast py-28 md:py-40 relative overflow-hidden">
+          {/* Background texture */}
+          <div className="absolute inset-0 pattern-persian opacity-[0.03] pointer-events-none" />
+
+          <div className="max-w-2xl mx-auto px-5 md:px-10 text-center relative">
+            <Reveal direction="none">
+              <div className="ornate-divider mb-8">
+                <span
+                  className="text-xs tracking-[0.4em]"
+                  style={{
+                    color: 'var(--color-gold-muted)',
+                  }}
+                >
+                  &#10022;
+                </span>
+              </div>
+            </Reveal>
+
             <Reveal>
-              <p className="text-eyebrow mb-6" style={{ color: 'var(--color-gold-muted)' }}>
+              <p
+                className="text-eyebrow mb-6"
+                style={{
+                  color: 'var(--color-gold-muted)',
+                }}
+              >
                 2026 Season
               </p>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h2 className="font-display text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6" style={{ color: 'var(--color-cream)' }}>
-                Join Us for the 2026 Season
+              <h2
+                className="font-display text-3xl md:text-4xl lg:text-[3.25rem] tracking-wide leading-snug mb-6"
+                style={{ color: 'var(--color-cream)' }}
+              >
+                The Playa Is Calling
               </h2>
             </Reveal>
 
             <Reveal delay={0.2}>
-              <p className="font-accent text-lg md:text-xl leading-relaxed mb-10 max-w-lg mx-auto" style={{ color: 'rgba(250, 247, 240, 0.8)' }}>
-                Black Rock City awaits. Bring your spirit, your curiosity, and your appetite — we&apos;ll bring the tea, the music, and the fire.
+              <p
+                className="font-accent text-lg md:text-xl leading-relaxed mb-12 max-w-lg mx-auto"
+                style={{
+                  color: 'rgba(250, 247, 240, 0.75)',
+                }}
+              >
+                Bring your spirit, your curiosity, and your
+                appetite. We&apos;ll bring the tea, the music, and
+                the fire. Come home to Black Rock City with us.
               </p>
             </Reveal>
 
             <Reveal delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link href="/apply" className="cta-primary text-sm" style={{ backgroundColor: 'var(--color-gold)', color: 'var(--color-ink)', border: 'none' }}>
-                  <span>Apply Now</span>
+                <Link
+                  href="/apply"
+                  className="cta-primary text-sm"
+                  style={{
+                    backgroundColor: 'var(--color-gold)',
+                    color: 'var(--color-ink)',
+                    border: 'none',
+                  }}
+                >
+                  <span>Apply to Join</span>
                 </Link>
                 <Link
-                  href="/about"
+                  href="/donate"
                   className="cta-secondary text-sm"
-                  style={{ color: 'var(--color-cream)', borderColor: 'rgba(255,255,255,0.3)' }}
+                  style={{
+                    color: 'var(--color-cream)',
+                    borderColor: 'rgba(255,255,255,0.25)',
+                  }}
                 >
-                  <span>Learn More</span>
+                  <span>Support the Art</span>
                 </Link>
               </div>
             </Reveal>
           </div>
         </section>
 
-        <div className="h-px" style={{ backgroundColor: 'var(--color-warm-border)' }} />
+        <div
+          className="h-px"
+          style={{
+            backgroundColor: 'var(--color-warm-border)',
+          }}
+        />
 
         {/* ============================================ */}
         {/* 10. FAQ SECTION                              */}
         {/* ============================================ */}
-        <section className="py-24 md:py-32" aria-labelledby="faq-heading">
+        <section
+          className="py-24 md:py-36"
+          aria-labelledby="faq-heading"
+        >
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
             <Reveal>
               <div className="flex items-end justify-between mb-14">
@@ -721,18 +1087,23 @@ export default function HomePage() {
 
             <div
               className="h-px mb-12"
-              style={{ backgroundColor: 'var(--color-warm-border)' }}
+              style={{
+                backgroundColor: 'var(--color-warm-border)',
+              }}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
-              {campQAs.map(({ question, answer }) => (
-                <Reveal key={question} delay={0}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-14">
+              {campQAs.map(({ question, answer }, i) => (
+                <Reveal key={question} delay={i * 0.08}>
                   <div className="group">
-                    <h3 className="font-accent text-lg md:text-xl mb-3 transition-colors group-hover:text-terracotta" style={{ color: '#2C2416' }}>
+                    <h3
+                      className="font-accent text-lg md:text-xl mb-3 transition-colors duration-300 group-hover:text-terracotta"
+                      style={{ color: '#2C2416' }}
+                    >
                       {question}
                     </h3>
                     <p
-                      className="text-sm leading-[1.8]"
+                      className="text-sm leading-[1.85]"
                       style={{ color: '#3d3426' }}
                     >
                       {answer}
@@ -741,6 +1112,28 @@ export default function HomePage() {
                 </Reveal>
               ))}
             </div>
+
+            {/* Bottom CTA */}
+            <Reveal delay={0.2}>
+              <div className="mt-16 pt-12 border-t text-center" style={{ borderColor: 'var(--color-warm-border)' }}>
+                <p
+                  className="text-sm mb-4"
+                  style={{ color: 'var(--color-ink-faint)' }}
+                >
+                  Have more questions?
+                </p>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium transition-colors duration-300 hover:text-terracotta group"
+                  style={{ color: 'var(--color-ink-soft)' }}
+                >
+                  Learn more about us
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                    &rarr;
+                  </span>
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
       </main>

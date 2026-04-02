@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, publicProcedure, managerProcedure, leadProcedure } from '../trpc';
 import logger from '../lib/logger';
 import { emitAdminUpdate } from '../lib/socket';
@@ -93,8 +94,9 @@ export const applicationsRouter = router({
       // Send confirmation email to the applicant
       try {
         await sendApplicationConfirmation(normalizedEmail, input.name);
-      } catch (err: any) {
-        logger.error(`Failed to send application confirmation email to ${normalizedEmail}: ${err.message || err}`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        logger.error(`Failed to send application confirmation email to ${normalizedEmail}: ${message}`);
       }
 
       return {
@@ -108,7 +110,7 @@ export const applicationsRouter = router({
   list: managerProcedure
     .input(listApplicationsInput)
     .query(async ({ ctx, input }) => {
-      const where: any = {};
+      const where: Prisma.ApplicationWhereInput = {};
 
       if (input.status) where.status = input.status;
       if (input.experience) where.experience = input.experience;
@@ -199,8 +201,9 @@ export const applicationsRouter = router({
         } else if (input.status === 'REJECTED') {
           await sendApplicationDenied(updated.email, updated.name);
         }
-      } catch (err: any) {
-        logger.error(`Failed to send application ${input.status.toLowerCase()} email to ${updated.email}: ${err.message || err}`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        logger.error(`Failed to send application ${input.status.toLowerCase()} email to ${updated.email}: ${message}`);
       }
 
       return updated;
@@ -222,7 +225,7 @@ export const applicationsRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Application not found' });
       }
 
-      const data: any = {
+      const data: Prisma.ApplicationUpdateInput = {
         status: input.status,
         reviewedBy: ctx.user.id,
       };

@@ -77,6 +77,7 @@ export function ConfirmDialog({
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={onClose}
+            aria-hidden="true"
           />
 
           {/* Dialog */}

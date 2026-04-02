@@ -8,15 +8,16 @@ import { appRouter } from './router';
 import { createContext } from './context';
 import logger from './lib/logger';
 import { initializeSocket } from './lib/socket';
-import { globalLimiter, authLimiter } from './lib/rateLimit';
+import { globalLimiter, authLimiter, submissionLimiter } from './lib/rateLimit';
+import prisma from './lib/prisma';
 
 dotenv.config();
 
 // Validate required environment variables at startup
-const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL'];
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL'] as const;
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
-    logger.error(`FATAL: Missing required environment variable: ${envVar}`);
+    logger.error(`Missing required environment variable: ${envVar}`);
     process.exit(1);
   }
 }
@@ -27,11 +28,17 @@ const port = process.env.PORT || 3005;
 
 // Security
 app.use(helmet());
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['https://campalborz.org', 'https://www.campalborz.org']
+  : ['http://localhost:3006', 'http://localhost:3000'];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://campalborz.org', 'https://www.campalborz.org']
-    : ['http://localhost:3006', 'http://localhost:3000'],
+  origin: allowedOrigins,
   credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400,
 }));
 app.use(express.json({ limit: '1mb' }));
 
@@ -45,7 +52,9 @@ app.use('/api/trpc/auth.register', authLimiter);
 app.use('/api/trpc/auth.forgotPassword', authLimiter);
 app.use('/api/trpc/auth.resetPassword', authLimiter);
 app.use('/api/trpc/auth.refresh', authLimiter);
-app.use('/api/trpc/applications.submit', authLimiter);
+app.use('/api/trpc/auth.acceptInvite', authLimiter);
+// Submission rate limiting for public forms
+app.use('/api/trpc/applications.submit', submissionLimiter);
 
 // Health check
 app.get('/health', (_req, res) => {
@@ -59,7 +68,14 @@ app.use(
     router: appRouter,
     createContext,
     onError({ error, path }) {
-      logger.error(`tRPC error on ${path}:`, error.message);
+      // Log the full error internally but don't expose internals to client
+      if (error.code === 'INTERNAL_SERVER_ERROR') {
+        logger.error(`tRPC internal error on ${path}:`, error.message, error.cause);
+        // Sanitize the error message so internals are not leaked to the client
+        error.message = 'An internal error occurred. Please try again later.';
+      } else {
+        logger.error(`tRPC error on ${path}: [${error.code}] ${error.message}`);
+      }
     },
   }),
 );
@@ -75,12 +91,22 @@ httpServer.listen(port, () => {
 });
 
 // Graceful shutdown
-function shutdown() {
+async function shutdown() {
   logger.info('Shutting down gracefully...');
+
+  // Disconnect Prisma to release database connections
+  try {
+    await prisma.$disconnect();
+    logger.info('Database connection closed');
+  } catch (err) {
+    logger.error('Error disconnecting from database:', err);
+  }
+
   httpServer.close(() => {
     logger.info('Server closed');
     process.exit(0);
   });
+
   // Force exit after 10s
   setTimeout(() => {
     logger.error('Forced shutdown after timeout');
@@ -90,3 +116,13 @@ function shutdown() {
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+
+// Catch unhandled rejections to prevent silent crashes
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled promise rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught exception:', err.message, err.stack);
+  process.exit(1);
+});

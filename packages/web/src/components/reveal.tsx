@@ -1,7 +1,20 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { useRef, useMemo } from 'react';
+import { m, useInView, useReducedMotion } from 'framer-motion';
+
+const directionMap = {
+  up: { y: 32, x: 0 },
+  down: { y: -32, x: 0 },
+  left: { x: -40, y: 0 },
+  right: { x: 40, y: 0 },
+  none: { x: 0, y: 0 },
+} as const;
+
+const transitionBase = {
+  duration: 0.7,
+  ease: [0.22, 1, 0.36, 1] as const,
+};
 
 export function Reveal({
   children,
@@ -18,33 +31,26 @@ export function Reveal({
   const isInView = useInView(ref, { once: true, margin: '-60px' });
   const prefersReducedMotion = useReducedMotion();
 
+  const { x, y } = directionMap[direction];
+
+  const transition = useMemo(
+    () => ({ ...transitionBase, delay }),
+    [delay]
+  );
+
   if (prefersReducedMotion) {
     return <div className={className}>{children}</div>;
   }
 
-  const directionMap = {
-    up: { y: 32, x: 0 },
-    down: { y: -32, x: 0 },
-    left: { x: -40, y: 0 },
-    right: { x: 40, y: 0 },
-    none: { x: 0, y: 0 },
-  };
-
-  const { x, y } = directionMap[direction];
-
   return (
-    <motion.div
+    <m.div
       ref={ref}
       className={className}
       initial={{ opacity: 0, x, y }}
       animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
-      transition={{
-        duration: 0.7,
-        delay,
-        ease: [0.22, 1, 0.36, 1],
-      }}
+      transition={transition}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

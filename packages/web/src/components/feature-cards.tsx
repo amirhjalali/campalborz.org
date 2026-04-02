@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ export function FeatureCards() {
 
   return (
     <section className="section-base section-contained">
-      <motion.div
+      <m.div
         initial={{ y: 16, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
@@ -26,7 +26,7 @@ export function FeatureCards() {
         <p className="text-body-relaxed text-base md:text-lg text-ink-soft mx-auto max-w-2xl">
           Explore the pillars of hospitality, art, and culture that define our community.
         </p>
-      </motion.div>
+      </m.div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, index) => {
@@ -34,7 +34,7 @@ export function FeatureCards() {
           const isExternal = feature.link?.startsWith('http');
 
           const CardContent = (
-            <motion.article
+            <m.article
               initial={{ y: 16, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, margin: '-50px' }}
@@ -72,7 +72,7 @@ export function FeatureCards() {
                   <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
                 </div>
               </div>
-            </motion.article>
+            </m.article>
           );
 
           if (isExternal) {

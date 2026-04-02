@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Prisma } from '@prisma/client';
 import { router, memberProcedure, managerProcedure } from '../trpc';
+import logger from '../lib/logger';
 
 const paymentTypeEnum = z.enum([
   'DUES', 'GRID', 'FOOD', 'DONATION', 'RV_VOUCHER',
@@ -18,20 +20,20 @@ export const paymentsRouter = router({
       type: paymentTypeEnum.optional(),
       method: paymentMethodEnum.optional(),
       memberId: z.string().uuid().optional(),
-      limit: z.number().min(1).max(200).optional().default(50),
-      offset: z.number().min(0).optional().default(0),
+      limit: z.number().int().min(1).max(200).optional().default(50),
+      offset: z.number().int().min(0).optional().default(0),
     }).optional().default({}))
     .query(async ({ ctx, input }) => {
-      const where: any = {};
+      const where: Prisma.PaymentWhereInput = {};
 
-      if (input.seasonId) {
-        where.seasonMember = { seasonId: input.seasonId };
+      if (input.seasonId || input.memberId) {
+        const seasonMemberFilter: Prisma.SeasonMemberWhereInput = {};
+        if (input.seasonId) seasonMemberFilter.seasonId = input.seasonId;
+        if (input.memberId) seasonMemberFilter.memberId = input.memberId;
+        where.seasonMember = seasonMemberFilter;
       }
       if (input.type) where.type = input.type;
       if (input.method) where.method = input.method;
-      if (input.memberId) {
-        where.seasonMember = { ...where.seasonMember, memberId: input.memberId };
-      }
 
       const [payments, total] = await Promise.all([
         ctx.prisma.payment.findMany({
@@ -58,24 +60,25 @@ export const paymentsRouter = router({
     .input(z.object({
       seasonMemberId: z.string().uuid(),
       type: paymentTypeEnum,
-      amount: z.number().int().min(1),
+      amount: z.number().int().min(1).max(100_000_00), // Max $100,000 in cents
       method: paymentMethodEnum,
-      paidTo: z.string().optional(),
+      paidTo: z.string().max(200).optional(),
       paidAt: z.string().datetime(),
-      notes: z.string().optional(),
-      recordedBy: z.string().optional(),
+      notes: z.string().max(2000).optional(),
+      recordedBy: z.string().max(200).optional(),
     }))
     .mutation(async ({ ctx, input }) => {
       // Verify the season member exists
       const sm = await ctx.prisma.seasonMember.findUnique({
         where: { id: input.seasonMemberId },
+        include: { member: { select: { name: true, email: true } } },
       });
 
       if (!sm) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Season member not found' });
       }
 
-      return ctx.prisma.payment.create({
+      const payment = await ctx.prisma.payment.create({
         data: {
           seasonMemberId: input.seasonMemberId,
           type: input.type,
@@ -94,6 +97,10 @@ export const paymentsRouter = router({
           },
         },
       });
+
+      logger.info(`Payment recorded: $${(input.amount / 100).toFixed(2)} ${input.type} for ${sm.member.name} by ${ctx.user.email}`);
+
+      return payment;
     }),
 
   getMyPayments: memberProcedure

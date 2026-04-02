@@ -36,10 +36,12 @@ export function SearchInput({ value, onChange, placeholder = 'Search...' }: Sear
   }, []);
 
   return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#4F4434]/50" />
+    <div className="relative" role="search">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#4F4434]/50" aria-hidden="true" />
+      <label htmlFor="search-input" className="sr-only">{placeholder}</label>
       <input
-        type="text"
+        type="search"
+        id="search-input"
         value={localValue}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}

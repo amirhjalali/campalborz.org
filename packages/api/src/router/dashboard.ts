@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
+import { Payment } from '@prisma/client';
 import { router, memberProcedure, leadProcedure } from '../trpc';
 
 export const dashboardRouter = router({
@@ -110,8 +111,8 @@ export const dashboardRouter = router({
         },
       });
 
-      let payments: any[] = [];
-      let duesStatus = null;
+      let payments: Payment[] = [];
+      let duesStatus: { required: number; paid: number; remaining: number; isPaid: boolean } | null = null;
 
       if (enrollment) {
         payments = await ctx.prisma.payment.findMany({

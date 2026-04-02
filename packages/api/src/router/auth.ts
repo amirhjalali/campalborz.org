@@ -6,32 +6,53 @@ import { router, publicProcedure, memberProcedure } from '../trpc';
 import logger from '../lib/logger';
 import { sendPasswordResetEmail } from '../lib/email';
 
+// --- JWT secret accessor ---
+
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is not configured');
+  }
+  return secret;
+}
+
 // --- Token helpers ---
 
 function signAccessToken(userId: string, role: string): string {
-  return jwt.sign({ userId, role }, process.env.JWT_SECRET!, { expiresIn: '24h' });
+  return jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '24h' });
 }
 
 function signRefreshToken(userId: string): string {
-  return jwt.sign({ userId, type: 'refresh' }, process.env.JWT_SECRET!, { expiresIn: '7d' });
+  return jwt.sign({ userId, type: 'refresh' }, getJwtSecret(), { expiresIn: '7d' });
 }
 
 function signInviteToken(memberId: string): string {
-  return jwt.sign({ memberId, type: 'invite' }, process.env.JWT_SECRET!);
+  // Invite tokens expire in 30 days for security
+  return jwt.sign({ memberId, type: 'invite' }, getJwtSecret(), { expiresIn: '30d' });
 }
 
 function signResetToken(memberId: string): string {
-  return jwt.sign({ memberId, type: 'reset' }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+  return jwt.sign({ memberId, type: 'reset' }, getJwtSecret(), { expiresIn: '1h' });
+}
+
+/** Safely verify and decode a JWT, returning the payload or null */
+function verifyToken(token: string): Record<string, unknown> | null {
+  try {
+    const decoded = jwt.verify(token, getJwtSecret());
+    if (typeof decoded === 'object' && decoded !== null) {
+      return decoded as Record<string, unknown>;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // --- Validation schemas ---
 
 const passwordSchema = z.string()
   .min(8, 'Password must be at least 8 characters')
-  .max(128, 'Password must be at most 128 characters')
-  .refine((pw) => /[A-Z]/.test(pw), 'Password must contain at least one uppercase letter')
-  .refine((pw) => /[0-9]/.test(pw), 'Password must contain at least one number')
-  .refine((pw) => /[!@#$%^&*]/.test(pw), 'Password must contain at least one special character (!@#$%^&*)');
+  .max(128, 'Password must be at most 128 characters');
 
 const emailSchema = z.string().email('Invalid email address').max(255);
 
@@ -44,20 +65,24 @@ export const authRouter = router({
       password: z.string().min(1, 'Password is required'),
     }))
     .mutation(async ({ ctx, input }) => {
+      const normalizedEmail = input.email.toLowerCase().trim();
       const member = await ctx.prisma.member.findUnique({
-        where: { email: input.email.toLowerCase().trim() },
+        where: { email: normalizedEmail },
       });
 
       if (!member || !member.passwordHash) {
+        logger.security(`Failed login attempt for unknown or passwordless account: ${normalizedEmail}`, { ip: ctx.req.ip });
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
       }
 
       const valid = await bcrypt.compare(input.password, member.passwordHash);
       if (!valid) {
+        logger.security(`Failed login attempt (bad password) for: ${normalizedEmail}`, { ip: ctx.req.ip });
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid email or password' });
       }
 
       if (!member.isActive) {
+        logger.security(`Deactivated account login attempt: ${normalizedEmail}`, { ip: ctx.req.ip });
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Account is deactivated. Contact a camp admin.' });
       }
 
@@ -139,19 +164,14 @@ export const authRouter = router({
       refreshToken: z.string().min(1, 'Refresh token is required'),
     }))
     .mutation(async ({ ctx, input }) => {
-      let decoded: { userId: string; type: string };
-      try {
-        decoded = jwt.verify(input.refreshToken, process.env.JWT_SECRET!) as any;
-      } catch {
+      const decoded = verifyToken(input.refreshToken);
+      if (!decoded || typeof decoded.userId !== 'string' || decoded.type !== 'refresh') {
+        logger.security('Invalid refresh token presented', { ip: ctx.req.ip });
         throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid or expired refresh token' });
       }
 
-      if (decoded.type !== 'refresh') {
-        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid token type' });
-      }
-
       const member = await ctx.prisma.member.findUnique({
-        where: { id: decoded.userId },
+        where: { id: decoded.userId as string },
         select: { id: true, email: true, name: true, playaName: true, role: true, isActive: true },
       });
 
@@ -160,6 +180,7 @@ export const authRouter = router({
       }
 
       if (!member.isActive) {
+        logger.security(`Refresh token used for deactivated account: ${member.email}`);
         throw new TRPCError({ code: 'FORBIDDEN', message: 'Account is deactivated' });
       }
 
@@ -185,19 +206,14 @@ export const authRouter = router({
       password: passwordSchema,
     }))
     .mutation(async ({ ctx, input }) => {
-      let decoded: { memberId: string; type: string };
-      try {
-        decoded = jwt.verify(input.inviteToken, process.env.JWT_SECRET!) as any;
-      } catch {
+      const decoded = verifyToken(input.inviteToken);
+      if (!decoded || typeof decoded.memberId !== 'string' || decoded.type !== 'invite') {
+        logger.security('Invalid invite token presented for acceptInvite', { ip: ctx.req.ip });
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid or expired invite token' });
       }
 
-      if (decoded.type !== 'invite') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid token type' });
-      }
-
       const member = await ctx.prisma.member.findUnique({
-        where: { id: decoded.memberId },
+        where: { id: decoded.memberId as string },
       });
 
       if (!member) {
@@ -287,9 +303,12 @@ export const authRouter = router({
 
         try {
           await sendPasswordResetEmail(member.email, resetToken);
-        } catch (err: any) {
-          logger.error(`Failed to send password reset email to ${member.email}: ${err.message || err}`);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          logger.error(`Failed to send password reset email to ${member.email}: ${message}`);
         }
+      } else {
+        logger.security(`Password reset requested for non-existent/inactive email: ${input.email.toLowerCase().trim()}`, { ip: ctx.req.ip });
       }
 
       return { success: true, message: 'If an account with that email exists, a reset link has been sent.' };
@@ -301,19 +320,14 @@ export const authRouter = router({
       newPassword: passwordSchema,
     }))
     .mutation(async ({ ctx, input }) => {
-      let decoded: { memberId: string; type: string };
-      try {
-        decoded = jwt.verify(input.token, process.env.JWT_SECRET!) as any;
-      } catch {
+      const decoded = verifyToken(input.token);
+      if (!decoded || typeof decoded.memberId !== 'string' || decoded.type !== 'reset') {
+        logger.security('Invalid reset token presented', { ip: ctx.req.ip });
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid or expired reset token' });
       }
 
-      if (decoded.type !== 'reset') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid token type' });
-      }
-
       const member = await ctx.prisma.member.findUnique({
-        where: { id: decoded.memberId },
+        where: { id: decoded.memberId as string },
       });
 
       if (!member) {
@@ -352,6 +366,7 @@ export const authRouter = router({
 
       const valid = await bcrypt.compare(input.currentPassword, member.passwordHash);
       if (!valid) {
+        logger.security(`Failed password change attempt (wrong current password) for: ${member.email}`);
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Current password is incorrect' });
       }
 

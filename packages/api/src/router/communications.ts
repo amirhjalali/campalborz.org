@@ -137,7 +137,7 @@ export const communicationsRouter = router({
     .input(z.object({
       seasonId: z.string().uuid(),
       subject: z.string().min(1).max(200),
-      body: z.string().min(1),
+      body: z.string().min(1).max(50000),
       recipientFilter: recipientFilterEnum,
       customEmails: z.array(z.string().email()).optional(),
     }))

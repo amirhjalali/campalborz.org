@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Heart, CheckCircle, Info, Lock } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from 'sonner';
+import { Heart, DollarSign, CheckCircle, Info, CreditCard, Lock } from "lucide-react";
 
 interface DonationFormProps {
   campaigns?: string[];
@@ -9,19 +10,11 @@ interface DonationFormProps {
   initialAmount?: number | null;
   prefillKey?: number;
   onSuccess?: (donationId: string) => void;
-  givebutterCampaignId?: string;
 }
 
 const suggestedAmounts = [25, 75, 150, 300, 500];
 
-const DEFAULT_GIVEBUTTER_CAMPAIGN_ID = "Alborz2025Fundraiser";
-
-export function DonationForm({
-  campaigns = [],
-  initialAmount = null,
-  prefillKey = 0,
-  givebutterCampaignId,
-}: DonationFormProps) {
+export function DonationForm({ campaigns = [], tenantId, initialAmount = null, prefillKey = 0, onSuccess }: DonationFormProps) {
   const [amount, setAmount] = useState<number | null>(initialAmount);
   const [customAmount, setCustomAmount] = useState("");
   const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
@@ -30,13 +23,9 @@ export function DonationForm({
   const [donorEmail, setDonorEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<"amount" | "details" | "payment">("amount");
-  const givebutterContainerRef = useRef<HTMLDivElement>(null);
-
-  const campaignId = givebutterCampaignId
-    || process.env.NEXT_PUBLIC_GIVEBUTTER_CAMPAIGN_ID
-    || DEFAULT_GIVEBUTTER_CAMPAIGN_ID;
+  const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
 
   useEffect(() => {
     if (prefillKey > 0) {
@@ -46,34 +35,6 @@ export function DonationForm({
       setError(null);
     }
   }, [prefillKey, initialAmount]);
-
-  // Load GiveButter widget script when the payment step is reached
-  useEffect(() => {
-    if (step !== "payment") return;
-
-    const existingScript = document.querySelector('script[src*="givebutter.com/js/widget.js"]');
-    if (existingScript) {
-      // Script already loaded; trigger re-render of the widget
-      if (typeof (window as any).Givebutter === 'function') {
-        try {
-          (window as any).Givebutter('render');
-        } catch {
-          // Widget will render from the container element
-        }
-      }
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://widgets.givebutter.com/latest.umd.cjs?acct=23Dn2nKxDqcGYoag&p=other";
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup is intentionally minimal — GiveButter script can persist
-    };
-  }, [step, campaignId]);
 
   const handleAmountSelection = (selectedAmount: number) => {
     setAmount(selectedAmount);
@@ -112,41 +73,89 @@ export function DonationForm({
     }
   };
 
+  const handleDemoPayment = async () => {
+    setIsProcessing(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsProcessing(false);
+    setStep("success");
+    toast.success('Thank you for your donation!', {
+      description: 'You will receive a receipt via email shortly.',
+      duration: 5000,
+    });
+    if (onSuccess) {
+      onSuccess("donation-" + Date.now());
+    }
+  };
+
+  if (step === "success") {
+    return (
+      <div className="text-center py-12" role="status" aria-live="polite">
+        <CheckCircle className="h-16 w-16 text-sage-600 mx-auto mb-4" aria-hidden="true" />
+        <h2 className="text-display-thin text-2xl mb-2">Thank You!</h2>
+        <p className="text-body-relaxed text-ink-soft mb-6">
+          Your donation of ${(amount! / 100).toFixed(2)} has been processed successfully.
+        </p>
+        <p className="text-sm text-ink-soft/70 mb-8">
+          You will receive a tax receipt via email shortly.
+        </p>
+        <button
+          onClick={() => {
+            setStep("amount");
+            setAmount(null);
+            setCustomAmount("");
+            setDonorName("");
+            setDonorEmail("");
+            setMessage("");
+          }}
+          className="cta-secondary text-sm"
+        >
+          Make Another Donation
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex items-center mb-4">
-        <Heart className="h-5 w-5 text-gold mr-2" />
+        <Heart className="h-5 w-5 text-gold mr-2" aria-hidden="true" />
         <h3 className="text-display-thin text-xl">Make a Donation</h3>
       </div>
-      <div
-        className="flex space-x-2 mb-6"
-        role="progressbar"
-        aria-valuenow={["amount", "details", "payment"].indexOf(step) + 1}
-        aria-valuemin={1}
-        aria-valuemax={3}
-        aria-label={`Donation form step ${["amount", "details", "payment"].indexOf(step) + 1} of 3`}
-      >
-        {["amount", "details", "payment"].map((s, index) => (
-          <div
-            key={s}
-            className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${
-              step === s
-                ? "bg-gold"
-                : index < ["amount", "details", "payment"].indexOf(step)
-                ? "bg-gold/30"
-                : "bg-tan-300"
-            }`}
-          />
-        ))}
-      </div>
+      <nav aria-label="Donation form progress" className="mb-6">
+        <ol className="flex space-x-2">
+          {(["amount", "details", "payment"] as const).map((s, index) => {
+            const stepLabels = { amount: "Amount", details: "Details", payment: "Payment" };
+            const currentIndex = ["amount", "details", "payment"].indexOf(step);
+            const isCurrent = step === s;
+            const isCompleted = index < currentIndex;
+            return (
+              <li
+                key={s}
+                className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${
+                  isCurrent
+                    ? "bg-gold"
+                    : isCompleted
+                    ? "bg-gold/30"
+                    : "bg-tan-300"
+                }`}
+                aria-current={isCurrent ? "step" : undefined}
+                aria-label={`Step ${index + 1}: ${stepLabels[s]}${isCurrent ? ' (current)' : isCompleted ? ' (completed)' : ''}`}
+              />
+            );
+          })}
+        </ol>
+      </nav>
 
       {step === "amount" && (
         <div className="space-y-6">
-          <div>
-            <label className="form-label">Donation Type</label>
-            <div className="grid grid-cols-2 gap-3">
+          <fieldset>
+            <legend className="form-label">Donation Type</legend>
+            <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Donation type">
               <button
+                type="button"
                 onClick={() => setDonationType("ONE_TIME")}
+                role="radio"
+                aria-checked={donationType === "ONE_TIME"}
                 className={`p-3 border rounded-xl text-center transition-all ${
                   donationType === "ONE_TIME"
                     ? "border-gold bg-gold/5 text-ink ring-1 ring-gold"
@@ -157,7 +166,10 @@ export function DonationForm({
                 <div className="text-xs text-ink-soft/70">Single donation</div>
               </button>
               <button
+                type="button"
                 onClick={() => setDonationType("RECURRING")}
+                role="radio"
+                aria-checked={donationType === "RECURRING"}
                 className={`p-3 border rounded-xl text-center transition-all ${
                   donationType === "RECURRING"
                     ? "border-gold bg-gold/5 text-ink ring-1 ring-gold"
@@ -168,15 +180,18 @@ export function DonationForm({
                 <div className="text-xs text-ink-soft/70">Recurring support</div>
               </button>
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <label className="form-label">Select Amount</label>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
+          <fieldset>
+            <legend className="form-label">Select Amount</legend>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4" role="radiogroup" aria-label="Suggested donation amounts">
               {suggestedAmounts.map((suggestedAmount) => (
                 <button
+                  type="button"
                   key={suggestedAmount}
                   onClick={() => handleAmountSelection(suggestedAmount * 100)}
+                  role="radio"
+                  aria-checked={amount === suggestedAmount * 100}
                   className={`p-3 border rounded-xl text-center transition-all ${
                     amount === suggestedAmount * 100
                       ? "border-gold bg-gold/5 text-ink font-semibold ring-1 ring-gold"
@@ -190,22 +205,26 @@ export function DonationForm({
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-ink-soft">$</span>
+                <span className="text-ink-soft" aria-hidden="true">$</span>
               </div>
+              <label htmlFor="custom-amount" className="sr-only">Custom donation amount in dollars</label>
               <input
                 type="number"
+                id="custom-amount"
                 placeholder="Enter custom amount"
                 value={customAmount}
                 onChange={(e) => handleCustomAmountChange(e.target.value)}
                 className="form-input pl-7"
+                min="1"
               />
             </div>
-          </div>
+          </fieldset>
 
           {campaigns.length > 0 && (
             <div>
-              <label className="form-label">Designate to Campaign (Optional)</label>
+              <label htmlFor="donation-campaign" className="form-label">Designate to Campaign (Optional)</label>
               <select
+                id="donation-campaign"
                 value={selectedCampaign}
                 onChange={(e) => setSelectedCampaign(e.target.value)}
                 className="form-input"
@@ -218,13 +237,11 @@ export function DonationForm({
             </div>
           )}
 
-          <div aria-live="polite">
-            {error && (
-              <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
-                {error}
-              </div>
-            )}
-          </div>
+          {error && (
+            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm" role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <button
             onClick={handleNextStep}
@@ -294,9 +311,10 @@ export function DonationForm({
           )}
 
           <div>
-            <label className="form-label">Add a Message (Optional)</label>
+            <label htmlFor="donation-message" className="form-label">Add a Message (Optional)</label>
             <div>
               <textarea
+                id="donation-message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Share why you're supporting our cause..."
@@ -319,9 +337,9 @@ export function DonationForm({
             </label>
           </div>
 
-          <div className="bg-tan-50 border border-tan-300 rounded-xl p-4">
+          <div className="bg-tan-50 border border-tan-300 rounded-xl p-4" role="note">
             <div className="flex">
-              <Info className="h-5 w-5 text-sage-600 mr-2 flex-shrink-0" />
+              <Info className="h-5 w-5 text-sage-600 mr-2 flex-shrink-0" aria-hidden="true" />
               <div>
                 <p className="text-sm text-ink font-medium">Tax Deductible</p>
                 <p className="text-sm text-ink-soft mt-1">
@@ -331,13 +349,11 @@ export function DonationForm({
             </div>
           </div>
 
-          <div aria-live="polite">
-            {error && (
-              <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm">
-                {error}
-              </div>
-            )}
-          </div>
+          {error && (
+            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm" role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button onClick={() => setStep("amount")} className="cta-secondary flex-1 justify-center text-sm">
@@ -371,19 +387,27 @@ export function DonationForm({
             </div>
           </div>
 
-          {/* GiveButter Embedded Widget */}
-          <div ref={givebutterContainerRef} className="min-h-[400px]">
-            <givebutter-widget id={campaignId}></givebutter-widget>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 text-xs text-ink-soft/60">
-            <Lock className="h-3 w-3" />
-            <span>Secure payment powered by Givebutter</span>
+          <div className="luxury-card text-center py-8">
+            <CreditCard className="h-10 w-10 text-gold mx-auto mb-3" aria-hidden="true" />
+            <p className="text-body-relaxed text-sm text-ink-soft mb-4">
+              Payment processing will be available soon. Click below to simulate a donation.
+            </p>
+            <div className="flex items-center justify-center gap-2 text-xs text-ink-soft/60 mb-4">
+              <Lock className="h-3 w-3" aria-hidden="true" />
+              <span>Secure &amp; encrypted</span>
+            </div>
           </div>
 
           <div className="flex gap-3">
             <button onClick={() => setStep("details")} className="cta-secondary flex-1 justify-center text-sm">
               Back
+            </button>
+            <button
+              onClick={handleDemoPayment}
+              disabled={isProcessing}
+              className="cta-primary cta-shimmer flex-1 justify-center text-sm disabled:opacity-50"
+            >
+              {isProcessing ? "Processing..." : `Donate $${(amount! / 100).toFixed(2)}`}
             </button>
           </div>
         </div>

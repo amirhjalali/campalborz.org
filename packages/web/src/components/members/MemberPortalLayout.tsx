@@ -137,6 +137,7 @@ export function MemberPortalLayout({ children }: MemberPortalLayoutProps) {
                     exit={{ opacity: 0 }}
                     className="fixed inset-0 bg-black/30 z-40 lg:hidden"
                     onClick={() => setMobileSidebarOpen(false)}
+                    aria-hidden="true"
                   />
                   <motion.nav
                     initial={{ x: '-100%' }}

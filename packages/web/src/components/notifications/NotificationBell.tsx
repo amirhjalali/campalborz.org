@@ -142,7 +142,9 @@ export function NotificationBell() {
                             !notification.read && 'bg-gold/[0.03] dark:bg-gold/[0.05]'
                           )}
                           onClick={() => markAsRead(notification.id)}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); markAsRead(notification.id); } }}
                           role="menuitem"
+                          tabIndex={0}
                         >
                           <div className="flex items-start gap-3">
                             {/* Unread indicator */}

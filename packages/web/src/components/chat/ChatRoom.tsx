@@ -134,13 +134,13 @@ export function ChatRoom({ floating = false, className }: ChatRoomProps) {
         </div>
         <div className="flex items-center gap-2">
           {isConnected ? (
-            <span className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400">
-              <Wifi className="h-3 w-3" />
+            <span className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400" id="chat-status" role="status">
+              <Wifi className="h-3 w-3" aria-hidden="true" />
               Live
             </span>
           ) : (
-            <span className="flex items-center gap-1 text-[10px] text-ink-soft/50">
-              <WifiOff className="h-3 w-3" />
+            <span className="flex items-center gap-1 text-[10px] text-ink-soft/50" id="chat-status" role="status">
+              <WifiOff className="h-3 w-3" aria-hidden="true" />
               {error || 'Disconnected'}
             </span>
           )}
@@ -160,6 +160,9 @@ export function ChatRoom({ floating = false, className }: ChatRoomProps) {
       <div
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-4 py-3 space-y-1"
+        role="log"
+        aria-label="Chat messages"
+        aria-live="polite"
       >
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-8">
@@ -235,8 +238,10 @@ export function ChatRoom({ floating = false, className }: ChatRoomProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 5 }}
               className="flex items-center gap-2 mt-2"
+              role="status"
+              aria-live="polite"
             >
-              <div className="flex gap-1 px-3 py-2 rounded-2xl bg-cream dark:bg-white/10">
+              <div className="flex gap-1 px-3 py-2 rounded-2xl bg-cream dark:bg-white/10" aria-hidden="true">
                 <span className="w-1.5 h-1.5 rounded-full bg-ink-soft/40 animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 rounded-full bg-ink-soft/40 animate-bounce" style={{ animationDelay: '150ms' }} />
                 <span className="w-1.5 h-1.5 rounded-full bg-ink-soft/40 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -255,8 +260,10 @@ export function ChatRoom({ floating = false, className }: ChatRoomProps) {
       {/* Input */}
       <div className="px-4 py-3 border-t border-tan/20 dark:border-white/10 bg-white/80 dark:bg-sage-dark/80 backdrop-blur-sm flex-shrink-0">
         <div className="flex items-center gap-2">
+          <label htmlFor="chat-message-input" className="sr-only">Type a chat message</label>
           <input
             ref={inputRef}
+            id="chat-message-input"
             type="text"
             value={input}
             onChange={handleInputChange}
@@ -265,6 +272,7 @@ export function ChatRoom({ floating = false, className }: ChatRoomProps) {
             disabled={!isConnected}
             className="flex-1 px-3 py-2 bg-cream dark:bg-white/10 border border-tan/30 dark:border-white/10 rounded-full text-sm text-ink dark:text-cream placeholder:text-ink-soft/50 dark:placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-gold/50 disabled:opacity-50"
             maxLength={2000}
+            aria-describedby={!isConnected ? 'chat-status' : undefined}
           />
           <button
             onClick={handleSend}

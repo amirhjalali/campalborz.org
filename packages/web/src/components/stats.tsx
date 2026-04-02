@@ -1,13 +1,14 @@
 'use client';
 
-import { motion, useInView, useSpring, useTransform } from 'framer-motion';
+import { motion, useInView, useReducedMotion, useSpring, useTransform } from 'framer-motion';
 import { useContentConfig } from '../hooks/useConfig';
 import { getIcon } from '../lib/icons';
 import { useRef, useEffect } from 'react';
 
-function AnimatedNumber({ value }: { value: string }) {
+function AnimatedNumber({ value, label }: { value: string; label?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
+  const prefersReducedMotion = useReducedMotion();
 
   // Extract numeric part and suffix
   const match = value.match(/^([0-9.]+)(.*)$/);
@@ -29,19 +30,28 @@ function AnimatedNumber({ value }: { value: string }) {
   });
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && !prefersReducedMotion) {
       springValue.set(numericPart);
     }
-  }, [isInView, numericPart, springValue]);
+  }, [isInView, numericPart, springValue, prefersReducedMotion]);
 
   if (!match) {
     return <span ref={ref}>{value}</span>;
   }
 
+  // Skip animation for reduced motion
+  if (prefersReducedMotion) {
+    return (
+      <span ref={ref} aria-label={label ? `${value} ${label}` : undefined}>
+        {value}
+      </span>
+    );
+  }
+
   return (
-    <span ref={ref}>
-      <motion.span>{displayValue}</motion.span>
-      {suffix}
+    <span ref={ref} aria-label={label ? `${value} ${label}` : undefined}>
+      <motion.span aria-hidden="true">{displayValue}</motion.span>
+      <span aria-hidden="true">{suffix}</span>
     </span>
   );
 }
@@ -49,7 +59,7 @@ function AnimatedNumber({ value }: { value: string }) {
 export function Stats() {
   const { stats } = useContentConfig();
   return (
-    <section className="section-alt">
+    <section className="section-alt" aria-labelledby="stats-heading">
       <div className="section-contained space-y-14">
         <motion.div
           initial={{ y: 16, opacity: 0 }}
@@ -58,19 +68,20 @@ export function Stats() {
           transition={{ duration: 0.5 }}
           className="text-center space-y-4"
         >
-          <h2 className="text-display-thin text-3xl md:text-4xl">In Numbers</h2>
+          <h2 id="stats-heading" className="text-display-thin text-3xl md:text-4xl">In Numbers</h2>
           <p className="text-body-relaxed text-base md:text-lg text-ink-soft mx-auto max-w-2xl">
             Each metric reflects our commitment to building community through art, culture, and hospitality.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3" role="list">
           {stats.map((stat, index) => {
             const Icon = getIcon(stat.icon);
 
             return (
               <motion.article
                 key={stat.label}
+                role="listitem"
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true, margin: '-60px' }}
@@ -85,7 +96,7 @@ export function Stats() {
                     <Icon className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <div className="text-stat-number text-4xl md:text-5xl text-gold tracking-tight">
-                    <AnimatedNumber value={stat.value} />
+                    <AnimatedNumber value={stat.value} label={stat.label} />
                   </div>
                 </div>
 

@@ -1,15 +1,15 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import type { Viewport } from 'next';
 import "../styles/globals.css";
 import { Playfair_Display, Inter } from 'next/font/google';
-import { campConfig } from '../../../../config/camp.config';
 import { ThemeProvider } from '../components/theme-provider';
+import { MotionProvider } from '../components/motion-provider';
 import { AuthProvider } from '../contexts/AuthContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
 import { Navigation } from '../components/navigation';
 import { Footer } from '../components/footer';
 import { StructuredData } from '../components/structured-data';
-import { pageMetadata, siteConfig } from '@/lib/metadata';
+import { pageMetadata } from '@/lib/metadata';
 import { Toaster } from 'sonner';
 
 const playfair = Playfair_Display({
@@ -18,6 +18,7 @@ const playfair = Playfair_Display({
   weight: ['400'],
   style: ['normal', 'italic'],
   display: 'swap',
+  preload: true,
 });
 
 const inter = Inter({
@@ -25,6 +26,7 @@ const inter = Inter({
   variable: '--font-inter',
   weight: ['300', '400', '500'],
   display: 'swap',
+  preload: true,
 });
 
 // Use centralized metadata configuration
@@ -48,6 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <head>
+        {/* Resource hints for external services */}
+        <link rel="dns-prefetch" href="https://givebutter.com" />
+        <link rel="preconnect" href="https://givebutter.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.instagram.com" />
+        <link rel="dns-prefetch" href="https://www.youtube.com" />
         <StructuredData />
       </head>
       <body className="font-body antialiased">
@@ -56,21 +63,20 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {/* AuthProvider runs a non-blocking async token check on mount —
-              children render immediately (isLoading starts true, flips false).
-              NotificationProvider only opens a socket when authenticated,
-              so unauthenticated visitors pay zero socket.io cost.
-              Cannot Suspense-wrap NotificationProvider because it calls useAuth(). */}
-          <AuthProvider>
-            <NotificationProvider>
-              <Navigation />
-              <div id="main-content" tabIndex={-1}>
-                {children}
-              </div>
-              <Footer />
-              <Toaster position="top-right" richColors closeButton />
-            </NotificationProvider>
-          </AuthProvider>
+          <MotionProvider>
+            <AuthProvider>
+              <NotificationProvider>
+                <Navigation />
+                <div id="main-content" tabIndex={-1}>
+                  <Suspense>
+                    {children}
+                  </Suspense>
+                </div>
+                <Footer />
+                <Toaster position="top-right" richColors closeButton />
+              </NotificationProvider>
+            </AuthProvider>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>
