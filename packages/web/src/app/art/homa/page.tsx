@@ -39,7 +39,7 @@ export default function HomaPage() {
           style={{ y: backgroundY, scale: backgroundScale }}
         >
           <Image
-            src="/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg"
+            src="/images/migrated/homa/149889f001e2f7945fa917258838a272.webp"
             alt="HOMA art car illuminated at night on the playa, inspired by the mythological Homa Bird"
             fill
             className="object-cover"
@@ -198,7 +198,7 @@ export default function HomaPage() {
       <Reveal>
         <div className="relative aspect-[21/9] md:aspect-[3/1]">
           <Image
-            src="/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg"
+            src="/images/migrated/homa/149889f001e2f7945fa917258838a272.webp"
             alt="HOMA art car illuminated with LED lights on the playa at night"
             fill
             className="object-cover"
@@ -314,7 +314,7 @@ export default function HomaPage() {
             <Reveal className="md:col-span-8" delay={0}>
               <div className="image-frame image-grain image-hover-zoom relative aspect-[16/10]">
                 <Image
-                  src="/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg"
+                  src="/images/migrated/homa/149889f001e2f7945fa917258838a272.webp"
                   alt="HOMA art car illuminated with LED lights on the playa at night"
                   fill
                   className="object-cover"
@@ -328,7 +328,7 @@ export default function HomaPage() {
               <Reveal delay={0.15} direction="right">
                 <div className="image-frame image-grain image-hover-zoom relative aspect-[4/3]">
                   <Image
-                    src="/images/migrated/art/193f4a3f0015480546bb78faa7650751.jpg"
+                    src="/images/migrated/art/193f4a3f0015480546bb78faa7650751.webp"
                     alt="Camp Alborz art installation detail"
                     fill
                     className="object-cover"
@@ -339,7 +339,7 @@ export default function HomaPage() {
               <Reveal delay={0.25} direction="right">
                 <div className="image-frame image-grain image-hover-zoom relative aspect-[4/3]">
                   <Image
-                    src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg"
+                    src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.webp"
                     alt="Camp Alborz community at the playa"
                     fill
                     className="object-cover"
@@ -354,7 +354,7 @@ export default function HomaPage() {
           <Reveal delay={0.2} className="mt-4">
             <div className="image-frame image-grain image-hover-zoom relative aspect-[21/7]">
               <Image
-                src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.jpg"
+                src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.webp"
                 alt="Panoramic view of Camp Alborz and HOMA on the playa"
                 fill
                 className="object-cover"

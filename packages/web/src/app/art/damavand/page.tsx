@@ -29,7 +29,7 @@ export default function DamavandPage() {
           style={{ y: backgroundY, scale: backgroundScale }}
         >
           <Image
-            src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
+            src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.webp"
             alt="DAMAVAND art car on the playa at Burning Man, named after Mt. Damavand in the Alborz range"
             fill
             className="object-cover"
@@ -189,7 +189,7 @@ export default function DamavandPage() {
       <Reveal>
         <div className="relative aspect-[21/9] md:aspect-[3/1]">
           <Image
-            src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
+            src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.webp"
             alt="DAMAVAND art car at Camp Alborz on the playa"
             fill
             className="object-cover"
@@ -351,7 +351,7 @@ export default function DamavandPage() {
             <Reveal className="md:col-span-8" delay={0}>
               <div className="image-frame image-grain image-hover-zoom relative aspect-[16/10]">
                 <Image
-                  src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg"
+                  src="/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.webp"
                   alt="DAMAVAND art car at Camp Alborz on the playa"
                   fill
                   className="object-cover"
@@ -365,7 +365,7 @@ export default function DamavandPage() {
               <Reveal delay={0.15} direction="right">
                 <div className="image-frame image-grain image-hover-zoom relative aspect-[4/3]">
                   <Image
-                    src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+                    src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp"
                     alt="Camp Alborz community gathering"
                     fill
                     className="object-cover"
@@ -376,7 +376,7 @@ export default function DamavandPage() {
               <Reveal delay={0.25} direction="right">
                 <div className="image-frame image-grain image-hover-zoom relative aspect-[4/3]">
                   <Image
-                    src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg"
+                    src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.webp"
                     alt="Camp Alborz on the playa at sunset"
                     fill
                     className="object-cover"
@@ -391,7 +391,7 @@ export default function DamavandPage() {
           <Reveal delay={0.2} className="mt-4">
             <div className="image-frame image-grain image-hover-zoom relative aspect-[21/7]">
               <Image
-                src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.jpg"
+                src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.webp"
                 alt="Panoramic view of DAMAVAND and Camp Alborz"
                 fill
                 className="object-cover"

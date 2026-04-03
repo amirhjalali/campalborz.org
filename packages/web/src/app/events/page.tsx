@@ -52,7 +52,7 @@ export default function EventsPage() {
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp"
             alt="Camp Alborz community event at night on the playa with Persian geometric structures and colorful lights"
             fill
             className="object-cover"

@@ -13,7 +13,7 @@ const artCarData = {
   homa: {
     label: 'ART CAR 001',
     tagline: 'Risen from the Ashes',
-    image: '/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg',
+    image: '/images/migrated/homa/149889f001e2f7945fa917258838a272.webp',
     accent: 'var(--color-terracotta)',
     accentRgb: 'var(--color-terracotta-rgb)',
     year: '2023',
@@ -22,7 +22,7 @@ const artCarData = {
   damavand: {
     label: 'ART CAR 002',
     tagline: 'Our Home on the Move',
-    image: '/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg',
+    image: '/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.webp',
     accent: 'var(--color-gold)',
     accentRgb: 'var(--color-gold-rgb)',
     year: '2022',

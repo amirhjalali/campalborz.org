@@ -39,7 +39,7 @@ export function PageHero() {
         }
       >
         <Image
-          src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg"
+          src="/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.webp"
           alt="Camp Alborz at sunset in Black Rock City"
           fill
           className="object-cover object-center"

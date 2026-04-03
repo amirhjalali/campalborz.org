@@ -202,7 +202,7 @@ export default function AboutPage() {
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp"
             alt="Camp Alborz community members gathering at night under string lights in Black Rock City"
             fill
             className="object-cover object-center"
@@ -330,7 +330,7 @@ export default function AboutPage() {
               <Reveal direction="left" delay={0.15}>
                 <div className="image-frame relative aspect-[4/3] rounded-lg overflow-hidden">
                   <Image
-                    src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.jpg"
+                    src="/images/migrated/alborz/e4956d45216d473ca35c279237d61592.webp"
                     alt="Camp Alborz tea house and gathering space with traditional Persian decor"
                     fill
                     className="object-cover"

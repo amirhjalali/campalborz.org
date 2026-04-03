@@ -56,7 +56,7 @@ export default function DonatePage() {
           style={{ y: backgroundY }}
         >
           <Image
-            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg"
+            src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp"
             alt="Camp Alborz community gathering at night with warm lighting, representing the hospitality and connection your donation supports"
             fill
             className="object-cover"
