@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Loader2, LogOut, LayoutDashboard, Calendar, CreditCard, User, Menu, X } from 'lucide-react';
+import { Loader2, LogOut, LayoutDashboard, CreditCard, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const portalNavItems = [
   { label: 'Dashboard', href: '/portal', icon: LayoutDashboard },
-  { label: 'Season', href: '/portal/season', icon: Calendar },
   { label: 'Payments', href: '/portal/payments', icon: CreditCard },
   { label: 'Profile', href: '/portal/profile', icon: User },
 ];

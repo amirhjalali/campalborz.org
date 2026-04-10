@@ -12,6 +12,7 @@ import {
   FileText,
   Link2,
   ClipboardList,
+  AlertCircle,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { fetchResources, type CampResource } from '../../../lib/mock-member-data';
@@ -82,6 +83,14 @@ export default function ResourcesPage() {
           <h1 className="font-display text-3xl mb-2" style={{ color: '#2C2416' }}>Camp Resources</h1>
           <p className="text-body-relaxed" style={{ color: '#4a4a42' }}>
             Guides, documents, forms, and useful links for Camp Alborz members.
+          </p>
+        </div>
+
+        {/* Demo data notice */}
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-sm text-amber-800">
+            <span className="font-semibold">Demo data:</span> The resources below are placeholder entries and links are not yet active.
           </p>
         </div>
 
@@ -171,13 +180,18 @@ export default function ResourcesPage() {
 function ResourceCard({ resource }: { resource: CampResource }) {
   const config = categoryConfig[resource.category] || categoryConfig.guide;
   const IconComponent = getIcon(resource.icon);
+  const hasValidUrl = resource.url && resource.url !== '#';
 
   return (
     <a
-      href={resource.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="luxury-card p-5 group block"
+      href={hasValidUrl ? resource.url : undefined}
+      target={hasValidUrl ? '_blank' : undefined}
+      rel={hasValidUrl ? 'noopener noreferrer' : undefined}
+      aria-disabled={!hasValidUrl}
+      onClick={(e) => {
+        if (!hasValidUrl) e.preventDefault();
+      }}
+      className={`luxury-card p-5 group block ${!hasValidUrl ? 'cursor-not-allowed opacity-70' : ''}`}
     >
       <div className="flex items-start gap-4">
         <div className="p-2.5 rounded-xl bg-gold/10 border border-gold/20 shrink-0 group-hover:bg-gold/20 transition-colors">

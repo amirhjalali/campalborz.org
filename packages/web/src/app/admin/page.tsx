@@ -15,8 +15,6 @@ import {
   Clock,
   UserPlus,
   Calendar,
-  Megaphone,
-  BarChart3,
   DollarSign,
   FileCheck,
   MessageSquare,
@@ -449,16 +447,6 @@ export default function AdminDashboardPage() {
                   description={data.season?.name || 'Configure season'}
                 />
                 <QuickActionLink
-                  href="/admin/payments"
-                  icon={BarChart3}
-                  label="Payment Reports"
-                  description={
-                    data.totalPayments > 0
-                      ? `${data.totalPayments} payments recorded`
-                      : 'No payments yet'
-                  }
-                />
-                <QuickActionLink
                   href="/admin/communications"
                   icon={Mail}
                   label="Communications"
@@ -468,12 +456,6 @@ export default function AdminDashboardPage() {
                       : 'Email & action items'
                   }
                   highlight={alertCards.length > 0}
-                />
-                <QuickActionLink
-                  href="/admin/announcements"
-                  icon={Megaphone}
-                  label="Announcements"
-                  description="Send updates to members"
                 />
               </div>
             </div>
@@ -532,13 +514,6 @@ export default function AdminDashboardPage() {
               <h2 className="text-display-thin text-xl text-ink">
                 Recent Payments
               </h2>
-              <Link
-                href="/admin/payments"
-                className="text-sm font-medium text-gold hover:text-gold/80 transition-colors flex items-center gap-1"
-              >
-                View All
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
             </div>
 
             {data.recentPayments.length === 0 ? (
@@ -617,12 +592,6 @@ export default function AdminDashboardPage() {
                   </span>{' '}
                   total collected from {data.totalPayments} payment{data.totalPayments !== 1 ? 's' : ''}
                 </p>
-                <Link
-                  href="/admin/payments"
-                  className="text-sm font-medium text-gold hover:text-gold/80 transition-colors"
-                >
-                  View full report
-                </Link>
               </div>
             )}
           </div>

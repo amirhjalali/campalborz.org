@@ -164,7 +164,7 @@ describe('generateEventSchema', () => {
     expect(schema.name).toBe('Persian Music Night');
     expect(schema.startDate).toBe('2024-08-25T20:00:00Z');
     expect(schema.location.name).toBe('Black Rock City');
-    expect(schema.organizer.name).toBe('Camp Alborz');
+    expect(schema.organizer['@id']).toBe('https://campalborz.org/#organization');
   });
 
   it('should use default image when none provided', () => {

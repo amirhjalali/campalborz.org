@@ -24,14 +24,19 @@ for (const envVar of requiredEnvVars) {
 
 const app = express();
 const httpServer = createServer(app);
-const port = process.env.PORT || 3005;
+const port = Number(process.env.PORT) || 3005;
+const host = process.env.HOST || '0.0.0.0';
 
 // Security
 app.use(helmet());
 
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://campalborz.org', 'https://www.campalborz.org']
-  : ['http://localhost:3006', 'http://localhost:3000'];
+// CORS origins: comma-separated list in CORS_ORIGIN (or single FRONTEND_URL) with dev fallback.
+const allowedOrigins =
+  process.env.CORS_ORIGIN?.split(',').map((o) => o.trim()).filter(Boolean) ??
+  (process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : null) ??
+  (process.env.NODE_ENV === 'production'
+    ? ['https://campalborz.org', 'https://www.campalborz.org']
+    : ['http://localhost:3006', 'http://localhost:3000']);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -83,11 +88,23 @@ app.use(
 // Initialize Socket.io on the shared HTTP server
 initializeSocket(httpServer);
 
-httpServer.listen(port, () => {
-  logger.info(`API server running on port ${port}`);
-  logger.info(`Health check: http://localhost:${port}/health`);
-  logger.info(`tRPC endpoint: http://localhost:${port}/api/trpc`);
-  logger.info(`Socket.io ready on port ${port}`);
+httpServer.listen(port, host, () => {
+  const address = httpServer.address();
+  const boundHost =
+    typeof address === 'object' && address ? address.address : host;
+  const boundPort =
+    typeof address === 'object' && address ? address.port : port;
+  // Display host: map wildcard addresses to localhost for clickable log output.
+  const displayHost =
+    boundHost === '0.0.0.0' || boundHost === '::' || boundHost === '::0'
+      ? 'localhost'
+      : boundHost;
+
+  logger.info(`API server listening on ${boundHost}:${boundPort}`);
+  logger.info(`Health check: http://${displayHost}:${boundPort}/health`);
+  logger.info(`tRPC endpoint: http://${displayHost}:${boundPort}/api/trpc`);
+  logger.info(`Socket.io ready on port ${boundPort}`);
+  logger.info(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
 });
 
 // Graceful shutdown

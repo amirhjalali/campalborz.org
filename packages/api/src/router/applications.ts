@@ -271,7 +271,7 @@ export const applicationsRouter = router({
         _count: true,
       });
 
-      const statusMap: Record<string, number> = {
+      const statusMap = {
         PENDING: 0,
         REVIEWED: 0,
         ACCEPTED: 0,
@@ -280,7 +280,9 @@ export const applicationsRouter = router({
       };
 
       for (const c of counts) {
-        statusMap[c.status] = c._count;
+        if (c.status in statusMap) {
+          statusMap[c.status as keyof typeof statusMap] = c._count;
+        }
       }
 
       const total = Object.values(statusMap).reduce((a, b) => a + b, 0);

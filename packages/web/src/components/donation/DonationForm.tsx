@@ -1,37 +1,46 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { toast } from 'sonner';
-import { Heart, DollarSign, CheckCircle, Info, CreditCard, Lock } from "lucide-react";
+import { Heart, ExternalLink, Shield, Award } from "lucide-react";
 
 interface DonationFormProps {
   campaigns?: string[];
   tenantId?: string;
   initialAmount?: number | null;
   prefillKey?: number;
+  givebutterCampaignId?: string;
   onSuccess?: (donationId: string) => void;
 }
 
 const suggestedAmounts = [25, 75, 150, 300, 500];
 
-export function DonationForm({ campaigns = [], tenantId, initialAmount = null, prefillKey = 0, onSuccess }: DonationFormProps) {
+/**
+ * DonationForm
+ *
+ * Camp Alborz processes donations through Givebutter (the registered 501(c)(3)
+ * payment processor). This component lets a donor pick an amount and campaign,
+ * then redirects to the Givebutter campaign page where the actual secure
+ * checkout (card, bank, Apple/Google Pay) is handled.
+ *
+ * This component is intentionally NOT wired to any internal payment API
+ * because Camp Alborz does not run its own Stripe account — all tax-deductible
+ * receipts are issued by Givebutter.
+ */
+export function DonationForm({
+  campaigns = [],
+  initialAmount = null,
+  prefillKey = 0,
+  givebutterCampaignId = "Alborz2025Fundraiser",
+}: DonationFormProps) {
   const [amount, setAmount] = useState<number | null>(initialAmount);
   const [customAmount, setCustomAmount] = useState("");
-  const [donationType, setDonationType] = useState<"ONE_TIME" | "RECURRING">("ONE_TIME");
   const [selectedCampaign, setSelectedCampaign] = useState("");
-  const [donorName, setDonorName] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<"amount" | "details" | "payment" | "success">("amount");
 
   useEffect(() => {
     if (prefillKey > 0) {
       setAmount(initialAmount);
       setCustomAmount("");
-      setStep("amount");
       setError(null);
     }
   }, [prefillKey, initialAmount]);
@@ -53,67 +62,26 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
     }
   };
 
-  const handleNextStep = async () => {
-    if (step === "amount") {
-      if (!amount || amount < 100) {
-        setError("Please select or enter a valid donation amount");
-        return;
-      }
-      setStep("details");
-    } else if (step === "details") {
-      if (!isAnonymous) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!donorEmail || !emailRegex.test(donorEmail)) {
-          setError("Please enter a valid email address to receive your receipt");
-          return;
-        }
-      }
-      setError(null);
-      setStep("payment");
+  const buildGivebutterUrl = () => {
+    const base = `https://givebutter.com/${givebutterCampaignId}`;
+    const params = new URLSearchParams();
+    if (amount && amount >= 100) {
+      // Givebutter accepts amounts in whole dollars via query param
+      params.set("amount", String(Math.round(amount / 100)));
     }
+    if (selectedCampaign) {
+      params.set("designation", selectedCampaign);
+    }
+    const qs = params.toString();
+    return qs ? `${base}?${qs}` : base;
   };
 
-  const handleDemoPayment = async () => {
-    setIsProcessing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setStep("success");
-    toast.success('Thank you for your donation!', {
-      description: 'You will receive a receipt via email shortly.',
-      duration: 5000,
-    });
-    if (onSuccess) {
-      onSuccess("donation-" + Date.now());
+  const handleContinue = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!amount || amount < 100) {
+      e.preventDefault();
+      setError("Please select or enter a donation amount of at least $1");
     }
   };
-
-  if (step === "success") {
-    return (
-      <div className="text-center py-12" role="status" aria-live="polite">
-        <CheckCircle className="h-16 w-16 text-sage-600 mx-auto mb-4" aria-hidden="true" />
-        <h2 className="text-display-thin text-2xl mb-2">Thank You!</h2>
-        <p className="text-body-relaxed text-ink-soft mb-6">
-          Your donation of ${(amount! / 100).toFixed(2)} has been processed successfully.
-        </p>
-        <p className="text-sm text-ink-soft/70 mb-8">
-          You will receive a tax receipt via email shortly.
-        </p>
-        <button
-          onClick={() => {
-            setStep("amount");
-            setAmount(null);
-            setCustomAmount("");
-            setDonorName("");
-            setDonorEmail("");
-            setMessage("");
-          }}
-          className="cta-secondary text-sm"
-        >
-          Make Another Donation
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -121,297 +89,121 @@ export function DonationForm({ campaigns = [], tenantId, initialAmount = null, p
         <Heart className="h-5 w-5 text-gold mr-2" aria-hidden="true" />
         <h3 className="text-display-thin text-xl">Make a Donation</h3>
       </div>
-      <nav aria-label="Donation form progress" className="mb-6">
-        <ol className="flex space-x-2">
-          {(["amount", "details", "payment"] as const).map((s, index) => {
-            const stepLabels = { amount: "Amount", details: "Details", payment: "Payment" };
-            const currentIndex = ["amount", "details", "payment"].indexOf(step);
-            const isCurrent = step === s;
-            const isCompleted = index < currentIndex;
-            return (
-              <li
-                key={s}
-                className={`flex-1 h-1.5 rounded-full transition-all duration-500 ${
-                  isCurrent
-                    ? "bg-gold"
-                    : isCompleted
-                    ? "bg-gold/30"
-                    : "bg-tan-300"
-                }`}
-                aria-current={isCurrent ? "step" : undefined}
-                aria-label={`Step ${index + 1}: ${stepLabels[s]}${isCurrent ? ' (current)' : isCompleted ? ' (completed)' : ''}`}
-              />
-            );
-          })}
-        </ol>
-      </nav>
 
-      {step === "amount" && (
-        <div className="space-y-6">
-          <fieldset>
-            <legend className="form-label">Donation Type</legend>
-            <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Donation type">
-              <button
-                type="button"
-                onClick={() => setDonationType("ONE_TIME")}
-                role="radio"
-                aria-checked={donationType === "ONE_TIME"}
-                className={`p-3 border rounded-xl text-center transition-all ${
-                  donationType === "ONE_TIME"
-                    ? "border-gold bg-gold/5 text-ink ring-1 ring-gold"
-                    : "border-tan-400 hover:border-tan-600"
-                }`}
-              >
-                <div className="font-medium text-sm">One-Time</div>
-                <div className="text-xs text-ink-soft/70">Single donation</div>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDonationType("RECURRING")}
-                role="radio"
-                aria-checked={donationType === "RECURRING"}
-                className={`p-3 border rounded-xl text-center transition-all ${
-                  donationType === "RECURRING"
-                    ? "border-gold bg-gold/5 text-ink ring-1 ring-gold"
-                    : "border-tan-400 hover:border-tan-600"
-                }`}
-              >
-                <div className="font-medium text-sm">Monthly</div>
-                <div className="text-xs text-ink-soft/70">Recurring support</div>
-              </button>
-            </div>
-          </fieldset>
+      <p className="text-sm text-ink-soft mb-6">
+        Camp Alborz donations are processed securely by{" "}
+        <strong>Givebutter</strong>, our 501(c)(3) payment partner. Choose an
+        amount below and you will be taken to Givebutter to complete your
+        tax-deductible gift.
+      </p>
 
-          <fieldset>
-            <legend className="form-label">Select Amount</legend>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4" role="radiogroup" aria-label="Suggested donation amounts">
-              {suggestedAmounts.map((suggestedAmount) => (
-                <button
-                  type="button"
-                  key={suggestedAmount}
-                  onClick={() => handleAmountSelection(suggestedAmount * 100)}
-                  role="radio"
-                  aria-checked={amount === suggestedAmount * 100}
-                  className={`p-3 border rounded-xl text-center transition-all ${
-                    amount === suggestedAmount * 100
-                      ? "border-gold bg-gold/5 text-ink font-semibold ring-1 ring-gold"
-                      : "border-tan-400 hover:border-tan-600"
-                  }`}
-                >
-                  ${suggestedAmount}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-ink-soft" aria-hidden="true">$</span>
-              </div>
-              <label htmlFor="custom-amount" className="sr-only">Custom donation amount in dollars</label>
-              <input
-                type="number"
-                id="custom-amount"
-                placeholder="Enter custom amount"
-                value={customAmount}
-                onChange={(e) => handleCustomAmountChange(e.target.value)}
-                className="form-input pl-7"
-                min="1"
-              />
-            </div>
-          </fieldset>
-
-          {campaigns.length > 0 && (
-            <div>
-              <label htmlFor="donation-campaign" className="form-label">Designate to Campaign (Optional)</label>
-              <select
-                id="donation-campaign"
-                value={selectedCampaign}
-                onChange={(e) => setSelectedCampaign(e.target.value)}
-                className="form-input"
-              >
-                <option value="">General Fund</option>
-                {campaigns.map((campaign) => (
-                  <option key={campaign} value={campaign}>{campaign}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm" role="alert" aria-live="assertive">
-              {error}
-            </div>
-          )}
-
-          <button
-            onClick={handleNextStep}
-            disabled={!amount}
-            className="cta-primary cta-shimmer w-full justify-center text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+      <div className="space-y-6">
+        <fieldset>
+          <legend className="form-label">Select Amount</legend>
+          <div
+            className="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4"
+            role="radiogroup"
+            aria-label="Suggested donation amounts"
           >
-            Continue to Details
-          </button>
-        </div>
-      )}
+            {suggestedAmounts.map((suggestedAmount) => (
+              <button
+                type="button"
+                key={suggestedAmount}
+                onClick={() => handleAmountSelection(suggestedAmount * 100)}
+                role="radio"
+                aria-checked={amount === suggestedAmount * 100}
+                className={`p-3 border rounded-xl text-center transition-all ${
+                  amount === suggestedAmount * 100
+                    ? "border-gold bg-gold/5 text-ink font-semibold ring-1 ring-gold"
+                    : "border-tan-400 hover:border-tan-600"
+                }`}
+              >
+                ${suggestedAmount}
+              </button>
+            ))}
+          </div>
 
-      {step === "details" && (
-        <div className="space-y-6">
-          <div className="bg-tan-50 rounded-xl p-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-ink-soft text-sm">Amount:</span>
-              <span className="font-semibold text-lg font-display">
-                ${(amount! / 100).toFixed(2)}
-                {donationType === "RECURRING" && "/month"}
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span className="text-ink-soft" aria-hidden="true">
+                $
               </span>
             </div>
-            {selectedCampaign && (
-              <div className="flex justify-between items-center">
-                <span className="text-ink-soft text-sm">Campaign:</span>
-                <span className="font-medium text-sm">{selectedCampaign}</span>
-              </div>
-            )}
-          </div>
-
-          {!isAnonymous && (
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="donorName" className="form-label">Your Name</label>
-                <div>
-                  <input
-                    type="text"
-                    id="donorName"
-                    value={donorName}
-                    onChange={(e) => setDonorName(e.target.value)}
-                    placeholder="Your name"
-                    autoComplete="name"
-                    className="form-input"
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="donorEmail" className="form-label">
-                  Email Address <span className="text-gold-600">*</span>
-                </label>
-                <div>
-                  <input
-                    type="email"
-                    id="donorEmail"
-                    value={donorEmail}
-                    onChange={(e) => setDonorEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    autoComplete="email"
-                    className="form-input"
-                  />
-                </div>
-                <p className="text-xs text-ink-soft/60 mt-1">
-                  We&apos;ll send your donation receipt to this email
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label htmlFor="donation-message" className="form-label">Add a Message (Optional)</label>
-            <div>
-              <textarea
-                id="donation-message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Share why you're supporting our cause..."
-                rows={3}
-                className="form-input resize-none"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="anonymous"
-              checked={isAnonymous}
-              onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="h-4 w-4 rounded border-tan-400 text-gold focus:ring-gold"
-            />
-            <label htmlFor="anonymous" className="ml-2 text-sm text-ink-soft">
-              Make this donation anonymous
+            <label htmlFor="custom-amount" className="sr-only">
+              Custom donation amount in dollars
             </label>
+            <input
+              type="number"
+              id="custom-amount"
+              placeholder="Enter custom amount"
+              value={customAmount}
+              onChange={(e) => handleCustomAmountChange(e.target.value)}
+              className="form-input pl-7"
+              min="1"
+            />
           </div>
+        </fieldset>
 
-          <div className="bg-tan-50 border border-tan-300 rounded-xl p-4" role="note">
-            <div className="flex">
-              <Info className="h-5 w-5 text-sage-600 mr-2 flex-shrink-0" aria-hidden="true" />
-              <div>
-                <p className="text-sm text-ink font-medium">Tax Deductible</p>
-                <p className="text-sm text-ink-soft mt-1">
-                  Your donation is tax-deductible. You&apos;ll receive a receipt via email.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {error && (
-            <div className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm" role="alert" aria-live="assertive">
-              {error}
-            </div>
-          )}
-
-          <div className="flex gap-3">
-            <button onClick={() => setStep("amount")} className="cta-secondary flex-1 justify-center text-sm">
-              Back
-            </button>
-            <button onClick={handleNextStep} className="cta-primary cta-shimmer flex-1 justify-center text-sm">
-              Continue to Payment
-            </button>
-          </div>
-        </div>
-      )}
-
-      {step === "payment" && (
-        <div className="space-y-6">
-          <div className="bg-tan-50 rounded-xl p-4">
-            <h4 className="font-medium text-ink mb-3 text-sm">Donation Summary</h4>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-ink-soft">Amount:</span>
-                <span className="font-medium">
-                  ${(amount! / 100).toFixed(2)}
-                  {donationType === "RECURRING" && "/month"}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-ink-soft">Type:</span>
-                <span className="font-medium">
-                  {donationType === "ONE_TIME" ? "One-Time" : "Monthly Recurring"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="luxury-card text-center py-8">
-            <CreditCard className="h-10 w-10 text-gold mx-auto mb-3" aria-hidden="true" />
-            <p className="text-body-relaxed text-sm text-ink-soft mb-4">
-              Payment processing will be available soon. Click below to simulate a donation.
-            </p>
-            <div className="flex items-center justify-center gap-2 text-xs text-ink-soft/60 mb-4">
-              <Lock className="h-3 w-3" aria-hidden="true" />
-              <span>Secure &amp; encrypted</span>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <button onClick={() => setStep("details")} className="cta-secondary flex-1 justify-center text-sm">
-              Back
-            </button>
-            <button
-              onClick={handleDemoPayment}
-              disabled={isProcessing}
-              className="cta-primary cta-shimmer flex-1 justify-center text-sm disabled:opacity-50"
+        {campaigns.length > 0 && (
+          <div>
+            <label htmlFor="donation-campaign" className="form-label">
+              Designate to Campaign (Optional)
+            </label>
+            <select
+              id="donation-campaign"
+              value={selectedCampaign}
+              onChange={(e) => setSelectedCampaign(e.target.value)}
+              className="form-input"
             >
-              {isProcessing ? "Processing..." : `Donate $${(amount! / 100).toFixed(2)}`}
-            </button>
+              <option value="">General Fund</option>
+              {campaigns.map((campaign) => (
+                <option key={campaign} value={campaign}>
+                  {campaign}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {error && (
+          <div
+            className="bg-tan-50 border border-tan-400 text-ink px-4 py-3 rounded-xl text-sm"
+            role="alert"
+            aria-live="assertive"
+          >
+            {error}
+          </div>
+        )}
+
+        <a
+          href={buildGivebutterUrl()}
+          target="_blank"
+          rel="noreferrer"
+          onClick={handleContinue}
+          aria-disabled={!amount}
+          className={`cta-primary cta-shimmer w-full justify-center text-sm ${
+            !amount ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          <span>
+            {amount
+              ? `Donate $${(amount / 100).toFixed(2)} via Givebutter`
+              : "Continue to Givebutter"}
+          </span>
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+        </a>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-ink-soft/70">
+          <div className="flex items-center gap-1.5">
+            <Shield className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Secure checkout</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Award className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>501(c)(3) tax-deductible</span>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

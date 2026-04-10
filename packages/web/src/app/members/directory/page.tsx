@@ -77,6 +77,14 @@ export default function DirectoryPage() {
           </p>
         </div>
 
+        {/* Demo data notice */}
+        <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-sm text-amber-800">
+            <span className="font-semibold">Demo data:</span> The members below are placeholder profiles shown while the live directory is being connected.
+          </p>
+        </div>
+
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1 max-w-sm">

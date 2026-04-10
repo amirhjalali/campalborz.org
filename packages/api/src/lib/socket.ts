@@ -104,10 +104,13 @@ export function getIO(): Server {
 }
 
 export function initializeSocket(httpServer: HttpServer): Server {
+  // CORS origins: comma-separated list in CORS_ORIGIN (or single FRONTEND_URL) with dev fallback.
   const allowedOrigins =
-    process.env.NODE_ENV === 'production'
+    process.env.CORS_ORIGIN?.split(',').map((o) => o.trim()).filter(Boolean) ??
+    (process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : null) ??
+    (process.env.NODE_ENV === 'production'
       ? ['https://campalborz.org', 'https://www.campalborz.org']
-      : ['http://localhost:3006', 'http://localhost:3000'];
+      : ['http://localhost:3006', 'http://localhost:3000']);
 
   io = new Server(httpServer, {
     cors: {

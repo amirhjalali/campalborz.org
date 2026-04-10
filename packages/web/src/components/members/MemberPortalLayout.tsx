@@ -27,7 +27,7 @@ const sidebarLinks = [
   { href: '/members/announcements', label: 'Announcements', icon: Megaphone, exact: false },
   { href: '/members/directory', label: 'Directory', icon: Users, exact: false },
   { href: '/members/resources', label: 'Resources', icon: FolderOpen, exact: false },
-  { href: '/members/profile', label: 'My Profile', icon: User, exact: false },
+  { href: '/portal/profile', label: 'My Profile', icon: User, exact: false },
 ];
 
 export function MemberPortalLayout({ children }: MemberPortalLayoutProps) {

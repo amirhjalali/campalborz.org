@@ -39,6 +39,9 @@ export default function DonatePage() {
   const textY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
+  const givebutterCampaignId = donate?.donationForm?.givebutterCampaignId ?? 'Alborz2025Fundraiser';
+  const givebutterUrl = `https://givebutter.com/${givebutterCampaignId}`;
+
   if (!donate) {
     return (
       <main className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-cream)' }}>
@@ -322,10 +325,11 @@ export default function DonatePage() {
                 </p>
 
                 <a
-                  href="https://givebutter.com/Alborz2025Fundraiser"
+                  href={givebutterUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="cta-primary cta-shimmer inline-flex text-lg px-10 py-4"
+                  aria-label="Donate to Camp Alborz via Givebutter (opens in a new tab)"
                 >
                   <span>Donate via Givebutter</span>
                   <ExternalLink size={20} aria-hidden="true" />

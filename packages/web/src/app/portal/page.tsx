@@ -46,12 +46,6 @@ const quickLinks = [
     icon: CreditCard,
     description: 'Track dues and payment history',
   },
-  {
-    label: 'Season Details',
-    href: '/portal/season',
-    icon: Calendar,
-    description: 'View current season information',
-  },
 ];
 
 const statusLabels: Record<string, string> = {
