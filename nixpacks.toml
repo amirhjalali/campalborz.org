@@ -1,4 +1,10 @@
 # Nixpacks configuration for Coolify deployment
+[phases.install]
+cmds = ["npm ci --ignore-engines || npm install --no-audit"]
+
+[phases.build]
+cmds = ["npm run build --workspace=@camp-platform/web"]
+
 [start]
 cmd = "cd packages/web && npm run start"
 

@@ -43,11 +43,12 @@ campalborz.org/
 - Node.js with Express.js
 - PostgreSQL with Prisma ORM
 - TypeScript
-- Simple REST API (port 3005)
+- tRPC v10 server (routers in `packages/api/src/router/`: `auth`, `members`, `seasons`, `seasonMembers`, `payments`, `applications`, `announcements`, `communications`, `dashboard`, `events`, `import`, `export`, `invitations`)
+- Runs on port 3005 (`packages/api/.env.example`)
 
 ### Design System
 - **Colors:** Sage (#4A5D5A), Desert Tan (#D4C4A8), Antique Gold (#D4AF37), Cream (#FAF7F2), Ink (#2C2416)
-- **Typography:** Cinzel (display/headings), Cormorant (accent/quotes), Inter (body/UI) - loaded via next/font/google
+- **Typography:** Playfair Display (display/accent/editorial), Inter (body/UI) - loaded via next/font/google. The Tailwind `accent` family and the `.font-display`, `.font-accent`, `.font-editorial` utility classes in `globals.css` all map to Playfair Display; `.font-body` maps to Inter.
 - **Animations:** Framer Motion with scroll-triggered reveals
 - **Icons:** Lucide React
 
@@ -94,6 +95,7 @@ components/
 
 ## Pages
 
+Public:
 - `/` - Homepage
 - `/about` - About Camp Alborz
 - `/art` - Art overview
@@ -101,13 +103,27 @@ components/
 - `/art/damavand` - DAMAVAND art car
 - `/events` - Events listing
 - `/culture` - Persian culture
-- `/donate` - Donation form
+- `/donate` - Donation form (donations routed to Givebutter, campaign `Alborz2025Fundraiser`)
 - `/donate/success` - Donation confirmation
-- `/members` - Member login
 - `/apply` - Membership application
 - `/search` - Site search
-- `/admin` - Admin dashboard
-- `/register` - Registration
+- `/login`, `/register`, `/forgot-password`, `/reset-password`, `/invite/[token]` - Auth flows
+
+Member portal:
+- `/members` - Member landing / login
+- `/members/announcements`, `/members/directory`, `/members/resources`
+- `/portal` - Member dashboard
+- `/portal/payments`, `/portal/profile`
+
+Admin (role-gated):
+- `/admin` - Dashboard
+- `/admin/login`
+- `/admin/members`, `/admin/members/[id]`
+- `/admin/season`
+- `/admin/shifts`
+- `/admin/applications`
+- `/admin/communications`
+- `/admin/import`
 
 ## Important Considerations
 

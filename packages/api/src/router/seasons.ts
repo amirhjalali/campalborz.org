@@ -90,14 +90,21 @@ export const seasonsRouter = router({
   activate: leadProcedure
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      // Deactivate all seasons, then activate the target
-      await ctx.prisma.season.updateMany({
-        data: { isActive: false },
-      });
+      // Verify target season exists before deactivating all others
+      const target = await ctx.prisma.season.findUnique({ where: { id: input.id } });
+      if (!target) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Season not found' });
+      }
 
-      return ctx.prisma.season.update({
-        where: { id: input.id },
-        data: { isActive: true },
+      // Deactivate all seasons, then activate the target (transactional)
+      return ctx.prisma.$transaction(async (tx) => {
+        await tx.season.updateMany({
+          data: { isActive: false },
+        });
+        return tx.season.update({
+          where: { id: input.id },
+          data: { isActive: true },
+        });
       });
     }),
 

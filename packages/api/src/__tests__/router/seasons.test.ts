@@ -31,6 +31,8 @@ const mockPrisma = {
   auditLog: {
     create: jest.fn(),
   },
+  // Default $transaction impl: callback-style — invoke callback with mockPrisma as tx
+  $transaction: jest.fn((cb: (tx: unknown) => unknown) => cb(mockPrisma)),
 };
 
 jest.mock('../../lib/prisma', () => ({
@@ -47,6 +49,7 @@ jest.mock('../../lib/logger', () => ({
     error: jest.fn(),
     warn: jest.fn(),
     debug: jest.fn(),
+    security: jest.fn(),
   },
 }));
 
@@ -297,6 +300,11 @@ describe('seasonsRouter', () => {
   // ----------------------------------------------------------------
   describe('update', () => {
     it('should update season fields', async () => {
+      mockPrisma.season.findUnique.mockResolvedValue({
+        id: seasonId,
+        year: 2025,
+        name: 'Season',
+      });
       mockPrisma.season.update.mockResolvedValue({
         id: seasonId,
         year: 2025,
@@ -325,6 +333,11 @@ describe('seasonsRouter', () => {
     it('should handle date field updates', async () => {
       const startDate = '2025-08-24T00:00:00.000Z';
 
+      mockPrisma.season.findUnique.mockResolvedValue({
+        id: seasonId,
+        year: 2025,
+        name: 'Season',
+      });
       mockPrisma.season.update.mockResolvedValue({
         id: seasonId,
         startDate: new Date(startDate),
@@ -345,6 +358,11 @@ describe('seasonsRouter', () => {
     });
 
     it('should allow setting date fields to null', async () => {
+      mockPrisma.season.findUnique.mockResolvedValue({
+        id: seasonId,
+        year: 2025,
+        name: 'Season',
+      });
       mockPrisma.season.update.mockResolvedValue({
         id: seasonId,
         startDate: null,
@@ -387,6 +405,11 @@ describe('seasonsRouter', () => {
   // ----------------------------------------------------------------
   describe('activate', () => {
     it('should deactivate all seasons then activate the target', async () => {
+      mockPrisma.season.findUnique.mockResolvedValue({
+        id: seasonId,
+        year: 2025,
+        name: '2025',
+      });
       mockPrisma.season.updateMany.mockResolvedValue({ count: 2 });
       mockPrisma.season.update.mockResolvedValue({
         id: seasonId,

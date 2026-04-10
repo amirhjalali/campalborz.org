@@ -254,19 +254,13 @@ export const authRouter = router({
       inviteToken: z.string().min(1, 'Invite token is required'),
     }))
     .mutation(async ({ ctx, input }) => {
-      let decoded: { memberId: string; type: string };
-      try {
-        decoded = jwt.verify(input.inviteToken, process.env.JWT_SECRET!) as { memberId: string; type: string };
-      } catch {
+      const decoded = verifyToken(input.inviteToken);
+      if (!decoded || typeof decoded.memberId !== 'string' || decoded.type !== 'invite') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid or expired invite link.' });
       }
 
-      if (decoded.type !== 'invite') {
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid token type' });
-      }
-
       const member = await ctx.prisma.member.findUnique({
-        where: { id: decoded.memberId },
+        where: { id: decoded.memberId as string },
         select: { id: true, email: true, name: true, passwordHash: true },
       });
 

@@ -1,5 +1,7 @@
 # Stripe Payment Integration Setup Guide
 
+> **Status: NOT CURRENTLY IN USE.** Camp Alborz donations are processed by **Givebutter** (campaign `Alborz2025Fundraiser` at https://givebutter.com/Alborz2025Fundraiser), which is the camp's registered 501(c)(3) payment partner. The Next.js route at `packages/web/src/app/api/create-payment-intent/route.ts` returns `501 Not Implemented` and directs clients to the Givebutter URL. The instructions in this document describe how a self-hosted Stripe integration **would** be configured if the camp chose to re-enable one; none of the keys, webhooks, or client code described here are currently wired to live payments.
+
 This guide walks you through setting up Stripe payment processing for the Camp Alborz donation system.
 
 ---
@@ -417,9 +419,8 @@ Check Stripe Dashboard → Webhooks → Click endpoint → View logs
 
 ### Camp Alborz Files
 - Payment form: `packages/web/src/components/donation/DonationForm.tsx`
-- Stripe config: `packages/web/src/lib/stripe.ts`
-- Payment API: `packages/web/src/app/api/create-payment-intent/route.ts`
-- Webhook handler: `packages/web/src/app/api/webhooks/stripe/route.ts`
+- Payment API (currently returns 501 Not Implemented and points at Givebutter): `packages/web/src/app/api/create-payment-intent/route.ts`
+- Webhook handler (unused while donations are on Givebutter): `packages/web/src/app/api/webhooks/stripe/route.ts`
 - Success page: `packages/web/src/app/donate/success/page.tsx`
 
 ---
@@ -436,7 +437,7 @@ If you run into issues:
 
 **For Camp Alborz specific questions:**
 - Email: tech@campalborz.org
-- Refer to: `ENV_SETUP.md` for environment configuration
+- Environment variables: see `packages/api/.env.example` and `packages/web/.env.example`
 
 ---
 

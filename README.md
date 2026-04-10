@@ -1,6 +1,6 @@
 # Camp Alborz - Community Platform
 
-A comprehensive web platform for Camp Alborz, a Persian-themed Burning Man camp that bridges ancient Persian culture with radical self-expression. Built as a modern SaaS platform with multi-tenant capabilities for future expansion to other camps and communities.
+A web platform for Camp Alborz, a Persian-themed Burning Man camp that bridges ancient Persian culture with radical self-expression. This is a **single-tenant** site for campalborz.org specifically. (Note: the root `package.json` still carries the legacy name `camp-management-platform` and some documents use multi-tenant phrasing from an earlier SaaS scaffold -- the actual deployed code is single-camp.)
 
 ## 🏜️ About Camp Alborz
 
@@ -14,12 +14,11 @@ Our platform embodies three core principles:
 - **Luxurious**: Rich earth tones and elegant typography reflecting our Persian heritage
 
 ### Visual Identity
-- **Color Palette**: Playa dust earth tones (burnt sienna, antique gold, desert sand)
-- **Typography**: 
-  - Display: Playfair Display (elegant serif)
-  - Body: Crimson Text (readable serif)
-  - UI: Montserrat (clean sans-serif)
-- **Animations**: Subtle dust particles and smooth transitions
+- **Color Palette**: Sage, desert tan, antique gold, cream, ink (see `config/brand.config.ts`)
+- **Typography**:
+  - Display / accent / editorial: Playfair Display (loaded via `next/font/google`)
+  - Body / UI: Inter (loaded via `next/font/google`)
+- **Animations**: Framer Motion with scroll-triggered reveals
 
 ## 🚀 Features
 
@@ -28,11 +27,12 @@ Our platform embodies three core principles:
 #### Public Pages
 - **Homepage** (`/`): Hero section with camp introduction, statistics, and feature cards
 - **About** (`/about`): Our story, mission, values, and leadership team
-- **Art & Culture** (`/art`): HOMA fire sculpture, DAMAVAND project, artist showcases
-- **Events** (`/events`): Burning Man participation, year-round gatherings, virtual events
-- **Community** (`/community`): Forums, resources, newsletter signup
-- **Donate** (`/donate`): Support our 501(c)(3) mission with secure donations
+- **Art** (`/art`, `/art/homa`, `/art/damavand`): HOMA fire sculpture, DAMAVAND project, artist showcases
+- **Culture** (`/culture`): Persian culture, values, workshops, and resources
+- **Events** (`/events`): Burning Man participation and year-round gatherings
+- **Donate** (`/donate`): Support our 501(c)(3) mission. Donations are processed by Givebutter (campaign `Alborz2025Fundraiser`); there is no self-hosted Stripe checkout at this time.
 - **Apply** (`/apply`): Camp membership application form
+- **Search** (`/search`): Site search
 
 #### Member Features
 - **Member Portal** (`/members`): 
@@ -71,14 +71,9 @@ Our platform embodies three core principles:
 #### Backend Capabilities
 - **tRPC** for type-safe API communication
 - **Prisma ORM** with PostgreSQL
-- **Multi-tenant Architecture** - Scalable to support multiple camps
-- **Real-time Features** - Socket.io for live updates
-- **Email Integration** - SendGrid for transactional emails
-- **Payment Processing** - Stripe integration
-- **SMS Notifications** - Twilio integration
-- **Image Processing** - Sharp for optimization
-- **Background Jobs** - Bull queue system
-- **Redis Caching** - Performance optimization
+- **Single-tenant architecture** for campalborz.org
+- **Email integration** - SendGrid or SMTP via Nodemailer (configured through `packages/api/.env`)
+- **Donation processing** - External via Givebutter. A placeholder `/api/create-payment-intent` Next.js route returns `501 Not Implemented` and points clients at the Givebutter URL.
 
 #### Security & Compliance
 - **JWT Authentication** with refresh tokens
@@ -202,10 +197,12 @@ campalborz.org/
 
 ### Access Points
 
-- **Frontend**: http://localhost:3006
-- **API Server**: http://localhost:3005
+- **Frontend (Next.js)**: http://localhost:3006
+- **API Server (Express)**: http://localhost:3005
 - **API Health Check**: http://localhost:3005/health
 - **Prisma Studio**: `npm run db:studio` (http://localhost:5555)
+
+The web package is pinned to port 3006 via `packages/web/package.json` (`next dev -p 3006`). The API defaults to port 3005 (see `packages/api/.env.example`).
 
 ## 📝 Available Scripts
 
@@ -230,7 +227,7 @@ campalborz.org/
 ## 🎯 Roadmap
 
 ### Phase 1: Foundation ✅
-- [x] Multi-tenant architecture
+- [x] Single-tenant monorepo (Next.js + Express + Prisma) for campalborz.org
 - [x] Basic authentication system
 - [x] Homepage and core pages
 - [x] Persian-inspired design system

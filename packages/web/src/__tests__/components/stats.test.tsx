@@ -24,7 +24,12 @@ jest.mock('framer-motion', () => ({
   },
   useInView: () => true,
   useSpring: () => ({ set: jest.fn(), get: () => 0 }),
-  useTransform: (_value: any, fn: any) => fn(0),
+  useTransform: (_value: any, fn: any) => {
+    if (typeof fn === 'function') return fn(0);
+    return 0;
+  },
+  useReducedMotion: () => false,
+  useMotionValue: (initial: number) => ({ get: () => initial, set: () => {} }),
 }));
 
 // Mock config hooks

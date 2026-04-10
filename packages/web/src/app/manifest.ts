@@ -20,19 +20,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#4A5D5A',
     icons: [
       {
-        src: '/favicon.ico',
+        src: '/images/playa_camp.webp',
         sizes: 'any',
-        type: 'image/x-icon',
-      },
-      {
-        src: '/icon.svg',
-        sizes: 'any',
-        type: 'image/svg+xml',
-      },
-      {
-        src: '/apple-touch-icon.png',
-        sizes: '180x180',
-        type: 'image/png',
+        type: 'image/webp',
       },
     ],
     categories: ['arts', 'culture', 'community', 'nonprofit'],

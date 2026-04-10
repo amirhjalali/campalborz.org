@@ -6,19 +6,32 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-// Mock framer-motion
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: any) => {
-      const { initial, animate, exit, transition, whileHover, whileInView, viewport, ...rest } = props;
-      return <div {...rest}>{children}</div>;
-    },
-    article: ({ children, ...props }: any) => {
-      const { initial, animate, exit, transition, whileHover, whileInView, viewport, ...rest } = props;
-      return <article {...rest}>{children}</article>;
-    },
-  },
-}));
+// Mock framer-motion.
+// feature-cards imports `m` (the LazyMotion "mini" namespace), so we mock
+// both `m` and `motion` to be safe.
+jest.mock('framer-motion', () => {
+  const filter = (props: any) => {
+    const {
+      initial, animate, exit, transition, whileHover, whileInView, whileTap,
+      viewport, variants, layout, layoutId, ...rest
+    } = props;
+    return rest;
+  };
+  const stub = {
+    div: ({ children, ...props }: any) => <div {...filter(props)}>{children}</div>,
+    article: ({ children, ...props }: any) => <article {...filter(props)}>{children}</article>,
+    span: ({ children, ...props }: any) => <span {...filter(props)}>{children}</span>,
+    section: ({ children, ...props }: any) => <section {...filter(props)}>{children}</section>,
+  };
+  return {
+    motion: stub,
+    m: stub,
+    LazyMotion: ({ children }: any) => <>{children}</>,
+    domAnimation: {},
+    domMax: {},
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
 
 // Mock next/image
 jest.mock('next/image', () => {

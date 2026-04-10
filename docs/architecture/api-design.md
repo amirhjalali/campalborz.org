@@ -57,7 +57,7 @@ Camp Alborz is a Burning Man theme camp managing approximately 130--165 members 
 | Layer | Technology |
 |---|---|
 | Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS |
-| API Protocol | tRPC v11 |
+| API Protocol | tRPC v10 (see `packages/api/package.json`) |
 | Server Runtime | Express.js adapter for tRPC |
 | Database | PostgreSQL |
 | ORM | Prisma |

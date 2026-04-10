@@ -1,11 +1,17 @@
 # API Documentation
 
-This document provides complete API reference for the Camp Alborz platform backend.
+This document provides reference for the Camp Alborz platform's HTTP surface.
 
-## Base URL
+Camp Alborz has two services:
 
-- **Development**: `http://localhost:3000/api`
-- **Production**: `https://www.campalborz.org/api`
+- **Next.js web app (`packages/web`)** serves the public site and a small set of Next.js API routes at `/api/*`. In development it runs on **http://localhost:3006**.
+- **Express + tRPC API (`packages/api`)** serves authenticated tRPC routers (auth, members, seasons, payments, applications, announcements, etc.). In development it runs on **http://localhost:3005**. Most of the REST-style endpoints described below under "Future" are served by this API via tRPC, not by the Next.js app.
+
+## Base URLs
+
+- **Next.js web API (dev)**: `http://localhost:3006/api`
+- **Express/tRPC API (dev)**: `http://localhost:3005`
+- **Production (web)**: `https://www.campalborz.org`
 
 ## Authentication
 
@@ -55,75 +61,34 @@ All API responses follow this standard format:
 
 ## Payments & Donations
 
-### Create Payment Intent
+### Create Payment Intent (disabled)
 
-Creates a Stripe Payment Intent for processing donations.
+**Endpoint:** `POST /api/create-payment-intent` (served by the Next.js web app)
 
-**Endpoint:** `POST /api/create-payment-intent`
+**Current behavior:** returns HTTP `501 Not Implemented` and points clients at Givebutter. Camp Alborz donations are processed by Givebutter (campaign `Alborz2025Fundraiser` at `https://givebutter.com/Alborz2025Fundraiser`); there is no self-hosted Stripe integration wired to live payments.
 
-**Request Body:**
-
-```json
-{
-  "amount": 5000,           // Amount in cents (required)
-  "donationType": "one-time",  // "one-time" or "recurring" (optional)
-  "currency": "usd",        // Currency code (optional, default: "usd")
-  "metadata": {             // Additional data (optional)
-    "donorName": "John Doe",
-    "donorEmail": "john@example.com",
-    "campaign": "Burning Man 2024",
-    "message": "Keep up the great work!"
-  }
-}
-```
-
-**Response:**
+**Response (501):**
 
 ```json
 {
-  "clientSecret": "pi_xxx_secret_yyy",
-  "message": "Demo mode - real Stripe integration not configured"
+  "error": "Direct payment processing is not enabled on campalborz.org.",
+  "message": "Donations to Camp Alborz are handled by Givebutter, our 501(c)(3) payment partner. Please use the Givebutter link to complete a tax-deductible donation.",
+  "donationUrl": "https://givebutter.com/Alborz2025Fundraiser"
 }
 ```
 
-**Error Responses:**
-
-- `400 Bad Request` - Invalid amount (minimum $1.00)
-- `500 Internal Server Error` - Payment intent creation failed
-
-**Example:**
-
-```typescript
-const response = await fetch('/api/create-payment-intent', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    amount: 5000, // $50.00
-    donationType: 'one-time',
-    metadata: {
-      donorName: 'Jane Smith',
-      donorEmail: 'jane@example.com',
-    },
-  }),
-});
-
-const { clientSecret } = await response.json();
-```
+`GET` on the same path returns `405 Method Not Allowed`.
 
 **Notes:**
 
-- Amount must be in cents (e.g., $50.00 = 5000)
-- Minimum amount is $1.00 (100 cents)
-- Currently returns mock data for development
-- See STRIPE_SETUP.md for production configuration
+- The route source is `packages/web/src/app/api/create-payment-intent/route.ts`.
+- See `STRIPE_SETUP.md` for what a self-hosted Stripe integration *would* look like if re-enabled.
 
 ---
 
-### Stripe Webhook Handler
+### Stripe Webhook Handler (inactive)
 
-Receives and processes webhook events from Stripe.
+Receives and processes webhook events from Stripe. **This endpoint is currently inactive** because Camp Alborz donations are processed by Givebutter, not self-hosted Stripe. The route file (`packages/web/src/app/api/webhooks/stripe/route.ts`) is kept as scaffolding for a possible future Stripe integration; its handlers log events rather than writing to the database.
 
 **Endpoint:** `POST /api/webhooks/stripe`
 

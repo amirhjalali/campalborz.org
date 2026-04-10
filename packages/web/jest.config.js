@@ -10,7 +10,9 @@ const config = {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.test.{ts,tsx}'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  // Each test file imports @testing-library/jest-dom directly
+  // Registers @testing-library/jest-dom matchers and DOM polyfills
+  // (IntersectionObserver, ResizeObserver, matchMedia) that jsdom lacks.
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   clearMocks: true,
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

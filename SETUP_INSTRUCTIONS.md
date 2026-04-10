@@ -32,7 +32,7 @@ Create a `.env` file in the `packages/api` directory:
 cd packages\api
 ```
 
-Create `.env` file with the following content:
+Copy `packages/api/.env.example` to `packages/api/.env` and fill in values. The canonical variables the API reads are:
 
 ```env
 # Database
@@ -42,33 +42,37 @@ DATABASE_URL="postgresql://postgres:password@localhost:5432/campalborz?schema=pu
 JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
 
 # Server Configuration
-PORT=3001
+PORT=3005
+HOST=0.0.0.0
 NODE_ENV=development
 
-# Frontend URL (for CORS)
-FRONTEND_URL=http://localhost:3000
-ADMIN_URL=http://localhost:3002
+# CORS / Frontend origin(s)
+# FRONTEND_URL: single allowed web origin (simplest case)
+# CORS_ORIGIN: comma-separated list; takes precedence over FRONTEND_URL when set
+FRONTEND_URL="http://localhost:3006"
+CORS_ORIGIN="http://localhost:3006,http://localhost:3000"
 
-# Redis (optional, for caching)
-REDIS_URL="redis://localhost:6379"
-
-# Email Service (optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
+# Email Service (optional) -- use either SendGrid or SMTP
+SENDGRID_API_KEY=""
+SMTP_HOST=""
+SMTP_PORT=""
+SMTP_USER=""
+SMTP_PASS=""
 EMAIL_FROM="Camp Alborz <noreply@campalborz.org>"
+APP_URL="http://localhost:3006"
 
-# Stripe (optional, for payments)
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+# Stripe (placeholder -- not currently wired to real payments; donations are handled by Givebutter)
+STRIPE_SECRET_KEY=""
+STRIPE_WEBHOOK_SECRET=""
 
 # AWS S3 (optional, for file storage)
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_REGION=us-west-2
-AWS_S3_BUCKET=campalborz-uploads
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_REGION=""
+AWS_S3_BUCKET=""
 ```
+
+See `packages/api/.env.example` for the source of truth.
 
 ### 4. Set Up PostgreSQL Database
 
@@ -125,17 +129,17 @@ npm run dev
 ```
 
 This will start:
-- **API Server**: http://localhost:3001
-- **Web Frontend**: http://localhost:3000
-- **Admin Dashboard**: http://localhost:3002
-- **Mobile API**: http://localhost:3003
+- **Web Frontend (Next.js)**: http://localhost:3006
+- **API Server (Express)**: http://localhost:3005
+
+There is no separate admin dashboard or mobile API process. Admin pages (`/admin/*`) are served by the main web app on port 3006.
 
 ## Verify Installation
 
 ### 1. Check API Health
 Open your browser and navigate to:
 ```
-http://localhost:3001/health
+http://localhost:3005/health
 ```
 
 You should see:
@@ -156,10 +160,10 @@ npm run db:studio
 This opens a browser at http://localhost:5555 where you can explore your database tables.
 
 ### 3. Access the Web Application
-Navigate to http://localhost:3000 in your browser. You should see the Camp Alborz homepage.
+Navigate to http://localhost:3006 in your browser. You should see the Camp Alborz homepage.
 
 ### 4. Access the Admin Dashboard
-Navigate to http://localhost:3002 for the admin interface.
+Navigate to http://localhost:3006/admin for the admin interface (authentication required).
 
 ## Common Issues & Solutions
 
@@ -178,16 +182,20 @@ Navigate to http://localhost:3002 for the admin interface.
 3. Check PostgreSQL is listening on port 5432
 
 ### Issue: Port Already in Use
-**Error:** `EADDRINUSE: address already in use :::3001`
+**Error:** `EADDRINUSE: address already in use :::3005` (API) or `:::3006` (web)
 
 **Solution:**
 1. Kill the process using the port:
    ```bash
+   # macOS / Linux
+   lsof -ti :3005 | xargs kill -9
+   lsof -ti :3006 | xargs kill -9
+
    # Windows
-   netstat -ano | findstr :3001
+   netstat -ano | findstr :3005
    taskkill /PID <PID> /F
    ```
-2. Or change the PORT in your `.env` file
+2. Or change the API `PORT` in `packages/api/.env` (the web port is pinned in `packages/web/package.json`)
 
 ### Issue: Prisma Migration Fails
 **Error:** `P3009: migrate found failed migrations`

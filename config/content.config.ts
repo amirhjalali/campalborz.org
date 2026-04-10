@@ -50,15 +50,15 @@ export const contentConfig: ContentConfig = {
       description: "Scenes from our tea house, art cars, and the community members who make Alborz home.",
       images: [
         {
-          src: "/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.jpg",
+          src: "/images/migrated/alborz/025df5a3f099c8c74d1529f817f5d5f5.webp",
           caption: "The Alborz mountain range — inspiration for our camp's name and spirit.",
         },
         {
-          src: "/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.jpg",
+          src: "/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp",
           caption: "Night riders gathering at our camp for a playa adventure.",
         },
         {
-          src: "/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.jpg",
+          src: "/images/migrated/alborz/bc5ba4c0e8a110e8e110b58c81189ff8.webp",
           caption: "Persian calligraphy and poetry — the heart of our cultural expression.",
         },
       ],
@@ -131,7 +131,7 @@ export const contentConfig: ContentConfig = {
       icon: "coffee",
       link: "/culture",
       gradient: "from-burnt-sienna to-antique-gold",
-      image: "/images/migrated/alborz/e4956d45216d473ca35c279237d61592.jpg",
+      image: "/images/migrated/alborz/e4956d45216d473ca35c279237d61592.webp",
     },
     {
       title: "HOMA & DAMAVAND Art Cars",
@@ -139,7 +139,7 @@ export const contentConfig: ContentConfig = {
       icon: "truck",
       link: "/art",
       gradient: "from-persian-purple to-desert-gold",
-      image: "/images/migrated/homa/149889f001e2f7945fa917258838a272.jpg",
+      image: "/images/migrated/homa/149889f001e2f7945fa917258838a272.webp",
     },
     {
       title: "Fundraisers & Events",
@@ -147,7 +147,7 @@ export const contentConfig: ContentConfig = {
       icon: "calendar",
       link: "/events",
       gradient: "from-saffron to-desert-orange",
-      image: "/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.jpg",
+      image: "/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.webp",
     },
     {
       title: "Community Service",
@@ -155,7 +155,7 @@ export const contentConfig: ContentConfig = {
       icon: "check-circle",
       link: "/events",
       gradient: "from-desert-gold to-saffron",
-      image: "/images/migrated/events/8778bd1886dd14180e8bcb3823e2886a.jpg",
+      image: "/images/migrated/events/8778bd1886dd14180e8bcb3823e2886a.webp",
     },
     {
       title: "Immersive Storytelling",
@@ -163,7 +163,7 @@ export const contentConfig: ContentConfig = {
       icon: "book-open",
       link: "/art",
       gradient: "from-persian-violet to-pink-500",
-      image: "/images/migrated/art/193f4a3f0015480546bb78faa7650751.jpg",
+      image: "/images/migrated/art/193f4a3f0015480546bb78faa7650751.webp",
     },
     {
       title: "Sound Archives",
@@ -171,7 +171,7 @@ export const contentConfig: ContentConfig = {
       icon: "music",
       link: "https://soundcloud.com/camp_alborz",
       gradient: "from-antique-gold to-sunrise-coral",
-      image: "/images/migrated/members/6975d80c8b032f4c5b95a1dbbea8920d.jpg",
+      image: "/images/migrated/members/6975d80c8b032f4c5b95a1dbbea8920d.webp",
     },
   ],
 
@@ -667,7 +667,7 @@ export const contentConfig: ContentConfig = {
     taxInfo: {
       title: "Tax Deductible Donations",
       description: "Camp Alborz is a registered 501(c)(3) non-profit organization. All donations are tax-deductible to the full extent allowed by law.",
-      ein: "XX-XXXXXXX",
+      ein: undefined,
     },
     donationForm: {
       title: "Pitch In",

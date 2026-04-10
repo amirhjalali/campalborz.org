@@ -3,7 +3,7 @@
 ## Overview
 
 21 total pages across 3 sections: Public (KEEP), Member Portal (NEW), Admin Dashboard (NEW).
-Uses existing design system: Tailwind CSS, Framer Motion, Lucide React, Cinzel/Cormorant/Inter fonts.
+Uses existing design system: Tailwind CSS, Framer Motion, Lucide React, Playfair Display + Inter fonts (loaded via `next/font/google` in `packages/web/src/app/layout.tsx`).
 
 ---
 

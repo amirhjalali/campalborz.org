@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { Prisma } from '@prisma/client';
 import { router, memberProcedure, managerProcedure, leadProcedure } from '../trpc';
 import { signInviteToken } from './auth';
+import { sendInviteEmail } from '../lib/email';
 import logger from '../lib/logger';
 
 // --- Validation schemas ---
@@ -127,8 +128,12 @@ export const membersRouter = router({
 
       logger.info(`Member invited: ${member.email} by ${ctx.user.email}`);
 
-      // TODO: Send invite email via SendGrid/Nodemailer
-      // await sendInviteEmail(member.email, inviteToken);
+      try {
+        await sendInviteEmail(member.email, ctx.user.name, inviteToken);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        logger.error(`Failed to send invite email to ${member.email}: ${message}`);
+      }
 
       return { member, inviteToken };
     }),

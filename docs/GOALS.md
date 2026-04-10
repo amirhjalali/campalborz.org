@@ -199,7 +199,7 @@ External Services:
 ### Visual Identity
 - **Persian-modern fusion** -- Ancient patterns meet contemporary minimalism
 - **Warm earth tones** -- Sage, desert tan, antique gold, cream
-- **Elegant typography** -- Cinzel for headings, Cormorant for accents, Inter for body
+- **Elegant typography** -- Playfair Display for headings/accents/editorial, Inter for body/UI (loaded via `next/font/google` in `packages/web/src/app/layout.tsx`)
 - **Textural depth** -- Grain overlays, parallax, scroll-triggered animations
 - **Cultural authenticity** -- Rumi poetry, Persian motifs, mountain silhouettes
 

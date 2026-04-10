@@ -145,10 +145,10 @@ Member ──── 1:N ──── SeasonMember ──── N:1 ──── 
 
 ## Detailed Architecture Documents
 
-- **[Schema Design](./schema.new.prisma)** - Complete Prisma schema with all entities
+- **Schema Design** - See the live Prisma schema at `packages/api/prisma/schema.prisma`
 - **[API Design](./api-design.md)** - tRPC router specifications
 - **[Frontend Design](./frontend-design.md)** - Page architecture and components
-- **[Code Audit](./code-audit.md)** - File-by-file KEEP/MODIFY/REMOVE/REPLACE analysis
+- **[Code Audit](./code-audit.md)** - File-by-file KEEP/MODIFY/REMOVE/REPLACE analysis (historical; captured state pre-cleanup)
 
 ## Migration Strategy
 

@@ -174,17 +174,22 @@ export const invitationsRouter = router({
       token: z.string().min(1, 'Invite token is required'),
     }))
     .query(async ({ ctx, input }) => {
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Server misconfigured' });
+      }
+
       let decoded: { memberId: string; type: string };
       try {
-        decoded = jwt.verify(input.token, process.env.JWT_SECRET!) as any;
+        decoded = jwt.verify(input.token, jwtSecret) as any;
       } catch (err: any) {
-        if (err.name === 'TokenExpiredError') {
+        if (err && err.name === 'TokenExpiredError') {
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'This invite has expired. Please request a new one.' });
         }
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid invite token' });
       }
 
-      if (decoded.type !== 'invite') {
+      if (!decoded || decoded.type !== 'invite' || typeof decoded.memberId !== 'string') {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid token type' });
       }
 

@@ -49,8 +49,9 @@ Replace `YOUR_PASSWORD` with your actual PostgreSQL password.
 
 ### 4. Run Database Migration
 
+From the repository root (`/path/to/campalborz.org`):
+
 ```bash
-cd C:\Users\amirh\campalborz.org
 npm run db:migrate
 ```
 
@@ -126,18 +127,20 @@ Run Command Prompt as Administrator when installing PostgreSQL or creating datab
 ## What's Working Now
 
 The platform has been built with:
-- ✅ Multi-tenant architecture
-- ✅ Core models (Tenants, Users, Organizations, Campaigns, Events, Donations)
-- ✅ Prisma ORM setup
-- ✅ TypeScript configuration
-- ✅ Monorepo structure with Turborepo
+- Single-tenant site for campalborz.org
+- Core models (Member, Season, SeasonMember, Payment, Application, Announcement, etc. -- see `packages/api/prisma/schema.prisma`)
+- Prisma ORM setup
+- TypeScript configuration
+- Monorepo structure with Turborepo
 
 ## Services Available (Once Running)
 
-- **API Server**: http://localhost:3001
-- **Web Frontend**: http://localhost:3000
-- **Admin Dashboard**: http://localhost:3002
+- **Web Frontend (Next.js)**: http://localhost:3006
+- **API Server (Express)**: http://localhost:3005
+- **API Health Check**: http://localhost:3005/health
 - **Prisma Studio**: http://localhost:5555 (run `npm run db:studio`)
+
+There is no separate admin dashboard process -- `/admin/*` routes are served by the main web app on port 3006.
 
 ## Quick Commands
 

@@ -36,7 +36,7 @@ const allowedOrigins =
   (process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : null) ??
   (process.env.NODE_ENV === 'production'
     ? ['https://campalborz.org', 'https://www.campalborz.org']
-    : ['http://localhost:3006', 'http://localhost:3000']);
+    : ['http://localhost:3006']);
 
 app.use(cors({
   origin: allowedOrigins,

@@ -15,7 +15,7 @@ export const siteConfig = {
   shortDescription:
     'A Burning Man theme camp celebrating Persian culture, art, and community.',
   url: 'https://campalborz.org',
-  ogImage: 'https://campalborz.org/og-image.jpg',
+  ogImage: 'https://campalborz.org/images/playa_camp.webp',
   foundingYear: 2008,
   email: 'info@campalborz.org',
   locale: 'en_US',
@@ -81,25 +81,10 @@ export function generateMetadata({
     authors: [{ name: 'Camp Alborz', url: siteConfig.url }],
     creator: 'Camp Alborz',
     publisher: 'Camp Alborz',
-    robots: noIndex
-      ? { index: false, follow: false, nocache: true }
-      : {
-          index: true,
-          follow: true,
-          'max-video-preview': -1,
-          'max-image-preview': 'large' as const,
-          'max-snippet': -1,
-        },
+    robots: noIndex ? 'noindex,nofollow' : 'index,follow',
     metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical: pageUrl,
-    },
-    icons: {
-      icon: [
-        { url: '/favicon.ico', sizes: 'any' },
-        { url: '/icon.svg', type: 'image/svg+xml' },
-      ],
-      apple: '/apple-touch-icon.png',
     },
     openGraph: {
       type,
@@ -114,7 +99,7 @@ export function generateMetadata({
           width: 1200,
           height: 630,
           alt: `${title} - Camp Alborz`,
-          type: 'image/jpeg',
+          type: 'image/webp',
         },
       ],
     },
@@ -386,7 +371,7 @@ export const pageMetadata = {
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': ['Organization', 'NonprofitOrganization'],
+    '@type': 'NonprofitOrganization',
     '@id': `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     legalName: siteConfig.legalName,
@@ -394,9 +379,7 @@ export function generateOrganizationSchema() {
     url: siteConfig.url,
     logo: {
       '@type': 'ImageObject',
-      url: `${siteConfig.url}/logo.png`,
-      width: 512,
-      height: 512,
+      url: siteConfig.ogImage,
     },
     image: siteConfig.ogImage,
     foundingDate: '2008',

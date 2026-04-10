@@ -9,17 +9,40 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-// Mock framer-motion
-jest.mock('framer-motion', () => ({
-  motion: {
-    nav: ({ children, ...props }: any) => <nav {...filterProps(props)}>{children}</nav>,
-    div: ({ children, ...props }: any) => <div {...filterProps(props)}>{children}</div>,
-    span: ({ children, ...props }: any) => <span {...filterProps(props)}>{children}</span>,
-  },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
-  useScroll: () => ({ scrollY: { get: () => 0, on: () => () => {} } }),
-  useMotionValueEvent: () => {},
-}));
+// Mock framer-motion.
+// `motion` is a Proxy so any tag (motion.nav, motion.button, motion.li, …)
+// is auto-stubbed as the corresponding plain HTML element with motion-only
+// props stripped.
+jest.mock('framer-motion', () => {
+  const React = require('react');
+  const makeStub = (tag: string) => {
+    const Component = ({ children, ...props }: any) =>
+      React.createElement(tag, filterProps(props), children);
+    Component.displayName = `MotionStub(${tag})`;
+    return Component;
+  };
+  const motion: any = new Proxy(
+    {},
+    {
+      get: (_target, prop: string) => makeStub(prop),
+    }
+  );
+  return {
+    motion,
+    m: motion,
+    LazyMotion: ({ children }: any) => <>{children}</>,
+    domAnimation: {},
+    domMax: {},
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+    useScroll: () => ({ scrollY: { get: () => 0, on: () => () => {} } }),
+    useMotionValueEvent: () => {},
+    useTransform: () => 0,
+    useMotionValue: (initial: number) => ({ get: () => initial, set: () => {} }),
+    useSpring: (value: any) => value,
+    useReducedMotion: () => false,
+    useInView: () => true,
+  };
+});
 
 // Helper to remove motion-specific props from DOM elements
 function filterProps(props: any) {

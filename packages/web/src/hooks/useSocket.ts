@@ -33,6 +33,10 @@ interface UseSocketReturn {
  */
 export function useSocket({ namespace, autoConnect = true, disabled = false }: UseSocketOptions): UseSocketReturn {
   const socketRef = useRef<SocketInstance | null>(null);
+  // Tracks whether the current effect instance has been cleaned up, so that
+  // an in-flight lazy-loaded connect() can bail out instead of assigning a
+  // zombie socket after unmount.
+  const cancelledRef = useRef(false);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,6 +53,7 @@ export function useSocket({ namespace, autoConnect = true, disabled = false }: U
     // Lazy-load socket.io-client only when actually connecting
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mod = await (import('socket.io-client') as Promise<any>);
+    if (cancelledRef.current) return;
     const io = mod.default || mod;
 
     const socket = io(`${API_BASE_URL}${namespace}`, {
@@ -58,6 +63,13 @@ export function useSocket({ namespace, autoConnect = true, disabled = false }: U
       reconnectionAttempts: 5,
       reconnectionDelay: 2000,
     });
+
+    // Guard again in case the consumer unmounted during module load
+    if (cancelledRef.current) {
+      socket.removeAllListeners();
+      socket.disconnect();
+      return;
+    }
 
     socket.on('connect', () => {
       setIsConnected(true);
@@ -89,10 +101,12 @@ export function useSocket({ namespace, autoConnect = true, disabled = false }: U
   // Auto-connect on mount if autoConnect is true
   useEffect(() => {
     if (disabled) return;
+    cancelledRef.current = false;
     if (autoConnect) {
       connect();
     }
     return () => {
+      cancelledRef.current = true;
       disconnect();
     };
   }, [autoConnect, disabled, connect, disconnect]);

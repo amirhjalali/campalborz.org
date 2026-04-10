@@ -230,6 +230,7 @@ describe('paymentsRouter', () => {
         id: validPaymentInput.seasonMemberId,
         memberId: 'member-1',
         seasonId: 'season-1',
+        member: { name: 'Alice', email: 'alice@example.com' },
       };
 
       const mockCreatedPayment = {
@@ -249,9 +250,11 @@ describe('paymentsRouter', () => {
       const result = await caller.payments.create(validPaymentInput);
 
       expect(result).toEqual(mockCreatedPayment);
-      expect(mockPrisma.seasonMember.findUnique).toHaveBeenCalledWith({
-        where: { id: validPaymentInput.seasonMemberId },
-      });
+      expect(mockPrisma.seasonMember.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: validPaymentInput.seasonMemberId },
+        })
+      );
       expect(mockPrisma.payment.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           seasonMemberId: validPaymentInput.seasonMemberId,
@@ -265,7 +268,10 @@ describe('paymentsRouter', () => {
     });
 
     it('should use custom recordedBy when provided', async () => {
-      mockPrisma.seasonMember.findUnique.mockResolvedValue({ id: validPaymentInput.seasonMemberId });
+      mockPrisma.seasonMember.findUnique.mockResolvedValue({
+        id: validPaymentInput.seasonMemberId,
+        member: { name: 'Alice', email: 'alice@example.com' },
+      });
       mockPrisma.payment.create.mockResolvedValue({ id: 'pay-new' });
 
       const caller = createTestCaller(managerUser);

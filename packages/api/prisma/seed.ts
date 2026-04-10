@@ -263,8 +263,12 @@ async function main() {
   // ─────────────────────────────────────────────────
   // 1. HASH THE ADMIN PASSWORD
   // ─────────────────────────────────────────────────
+  // Admin credentials come from env so they are not baked into source control.
+  // See .env.example for SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD.
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@localhost';
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'change-me-please';
   console.log('[1/7] Hashing admin password...');
-  const adminPasswordHash = await bcrypt.hash('p@ssw0rd17', 12);
+  const adminPasswordHash = await bcrypt.hash(adminPassword, 12);
 
   // ─────────────────────────────────────────────────
   // 2. CREATE / UPSERT SEASONS
@@ -337,7 +341,7 @@ async function main() {
   const memberIdByName = new Map<string, string>();
 
   for (const m of membersData) {
-    const isAdmin = m.email === 'amirhjalali@gmail.com';
+    const isAdmin = m.email === adminEmail;
 
     const member = await prisma.member.upsert({
       where: { email: m.email },
@@ -438,30 +442,33 @@ async function main() {
   console.log(`  -> ${seasonMembersCreated} season memberships upserted for 2025`);
 
   // ─────────────────────────────────────────────────
-  // 5. ENROLL AMIR IN 2026 SEASON
+  // 5. ENROLL ADMIN IN 2026 SEASON
   // ─────────────────────────────────────────────────
-  console.log('[5/7] Enrolling Amir in 2026 season...');
+  console.log('[5/7] Enrolling admin in 2026 season...');
 
-  const amirId = memberIdByEmail.get('amirhjalali@gmail.com')!;
+  const adminId = memberIdByEmail.get(adminEmail);
 
-  await prisma.seasonMember.upsert({
-    where: {
-      seasonId_memberId: {
-        seasonId: season2026.id,
-        memberId: amirId,
+  if (adminId) {
+    await prisma.seasonMember.upsert({
+      where: {
+        seasonId_memberId: {
+          seasonId: season2026.id,
+          memberId: adminId,
+        },
       },
-    },
-    update: {
-      status: 'CONFIRMED',
-    },
-    create: {
-      seasonId: season2026.id,
-      memberId: amirId,
-      status: 'CONFIRMED',
-    },
-  });
-
-  console.log(`  -> Amir enrolled in 2026 as CONFIRMED`);
+      update: {
+        status: 'CONFIRMED',
+      },
+      create: {
+        seasonId: season2026.id,
+        memberId: adminId,
+        status: 'CONFIRMED',
+      },
+    });
+    console.log(`  -> Admin (${adminEmail}) enrolled in 2026 as CONFIRMED`);
+  } else {
+    console.log(`  -> Skipped: admin email ${adminEmail} not found in members data`);
+  }
 
   // ─────────────────────────────────────────────────
   // 6. CREATE EXPENSES
@@ -520,8 +527,8 @@ async function main() {
   console.log('========================================');
   console.log('');
   console.log('Admin login:');
-  console.log('  Email:    amirhjalali@gmail.com');
-  console.log('  Password: p@ssw0rd17');
+  console.log(`  Email:    ${adminEmail}`);
+  console.log(`  Password: (from SEED_ADMIN_PASSWORD env var)`);
   console.log('');
 }
 

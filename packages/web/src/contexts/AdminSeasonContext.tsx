@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
@@ -26,32 +26,42 @@ export function AdminSeasonProvider({ children }: { children: ReactNode }) {
   const [selectedSeasonId, setSelectedSeasonId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchSeasons = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      const res = await fetch(`${API_BASE_URL}/api/trpc/seasons.list`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (!res.ok) return;
-      const json = await res.json();
-      const list: Season[] = json.result?.data || [];
-      setSeasons(list);
-
-      // Default to active season, or first in list
-      if (!selectedSeasonId && list.length > 0) {
-        const active = list.find((s) => s.isActive);
-        setSelectedSeasonId(active?.id || list[0].id);
-      }
-    } catch {
-      // API unavailable
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedSeasonId]);
-
+  // Fetch seasons once on mount. We use a functional setter for
+  // selectedSeasonId so that fetchSeasons does not need selectedSeasonId
+  // in its dependency array — avoiding a redundant refetch every time
+  // the user switches seasons in the dropdown.
   useEffect(() => {
+    let cancelled = false;
+    const fetchSeasons = async () => {
+      try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+        const res = await fetch(`${API_BASE_URL}/api/trpc/seasons.list`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        const list: Season[] = json.result?.data || [];
+        if (cancelled) return;
+        setSeasons(list);
+
+        // Default to active season, or first in list — only if nothing selected yet
+        setSelectedSeasonId((current) => {
+          if (current || list.length === 0) return current;
+          const active = list.find((s) => s.isActive);
+          return active?.id || list[0].id;
+        });
+      } catch {
+        // API unavailable
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
     fetchSeasons();
-  }, [fetchSeasons]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const selectedSeason = seasons.find((s) => s.id === selectedSeasonId) || null;
 

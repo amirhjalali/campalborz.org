@@ -512,40 +512,51 @@ What actually happens
 
 ---
 
-## Automated Testing (Future)
+## Automated Testing
+
+Both jest (unit / component) and Playwright (end-to-end) are installed and configured.
+
+### Running Tests
+
+Web package (from `packages/web`):
+
+```bash
+npm run test          # jest unit/component tests
+npm run test:watch    # jest in watch mode
+npm run test:coverage # jest with coverage
+npm run test:e2e      # Playwright end-to-end tests
+npm run test:e2e:ui   # Playwright UI mode
+```
+
+API package (from `packages/api`):
+
+```bash
+npm run test          # jest tests against tRPC routers, Prisma mocks, and context
+```
 
 ### Test Coverage Goals
 
-**Unit Tests:**
-- Target: 80% coverage
-- Focus on business logic
-- Test edge cases
+- **Unit tests (jest):** Business logic, lib utilities, components. Target 80% coverage over time.
+- **Integration tests (jest in `packages/api`):** tRPC routers, Prisma client wiring, auth context.
+- **End-to-end (Playwright in `packages/web/e2e`):** Critical public flows -- homepage, navigation, donate page, public page smoke tests.
 
-**Integration Tests:**
-- Test API endpoints
-- Test database operations
-- Test authentication
-
-**End-to-End Tests:**
-- Test critical user flows
-- Use Playwright or Cypress
-- Run on every deploy
-
-### Example Test Structure
+### Current Test Layout
 
 ```
-tests/
-├── unit/
-│   ├── lib/
-│   ├── components/
-│   └── utils/
-├── integration/
-│   ├── api/
-│   └── database/
+packages/api/src/__tests__/
+├── context.test.ts
+├── trpc.test.ts
+├── lib/
+└── router/
+
+packages/web/
+├── jest.config.js
+├── playwright.config.ts
 └── e2e/
-    ├── donation-flow.spec.ts
-    ├── application-flow.spec.ts
-    └── admin-flow.spec.ts
+    ├── home.spec.ts
+    ├── navigation.spec.ts
+    ├── donate.spec.ts
+    └── public-pages.spec.ts
 ```
 
 ---

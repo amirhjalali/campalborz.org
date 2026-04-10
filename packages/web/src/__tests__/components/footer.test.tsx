@@ -44,7 +44,10 @@ describe('Footer', () => {
 
   it('should render the tax status', () => {
     render(<Footer />);
-    expect(screen.getByText('501(c)(3) Non-Profit Organization')).toBeInTheDocument();
+    // Tax status is rendered inline inside a descriptive sentence
+    expect(
+      screen.getByText(/501\(c\)\(3\).*non-profit organization/i)
+    ).toBeInTheDocument();
   });
 
   it('should render navigation links', () => {
@@ -101,13 +104,18 @@ describe('Footer', () => {
     expect(footer).toBeInTheDocument();
   });
 
-  it('should render the Navigation heading', () => {
+  it('should render the Explore nav section heading', () => {
     render(<Footer />);
-    expect(screen.getByText('Navigation')).toBeInTheDocument();
+    expect(screen.getByText('Explore')).toBeInTheDocument();
   });
 
-  it('should render the Connect heading', () => {
+  it('should render the Join Us nav section heading', () => {
     render(<Footer />);
-    expect(screen.getByText('Connect')).toBeInTheDocument();
+    expect(screen.getByText('Join Us')).toBeInTheDocument();
+  });
+
+  it('should render the Organization section heading', () => {
+    render(<Footer />);
+    expect(screen.getByText('Organization')).toBeInTheDocument();
   });
 });

@@ -2,8 +2,10 @@
 
 **Date:** 2026-02-16
 **Auditor:** Architecture Review
-**Scope:** Full codebase at `/Users/amirjalali/campalborz.org`
+**Scope:** Full codebase at `/Users/amirhjalali/campalborz.org`
 **Context:** Transition from broken multi-tenant SaaS backend to single-camp member management system
+
+> **Status:** HISTORICAL. This audit captures the codebase state as of 2026-02-16 and drove the Phase 1 cleanup. The items below have already been acted on; many files in the REMOVE lists (including `create-clean-schema.js`, `fix-schema.js`, `packagesapiprismaschema.prisma`, the 35+ unused routers/services, and the multi-tenant middleware) have been deleted. Refer to `packages/api/src/router/` and the live Prisma schema at `packages/api/prisma/schema.prisma` for the current state. This document is preserved as a record of the migration rationale, not as an active task list.
 
 ---
 

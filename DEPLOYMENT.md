@@ -25,10 +25,9 @@ Complete guide for deploying the Camp Alborz platform to production.
 The Camp Alborz platform is a Next.js 14 application that can be deployed to various platforms. This guide covers the most common deployment scenarios.
 
 **Current Status:**
-- ✅ Frontend: Production ready
-- ⚠️ Backend: Partially implemented (tRPC mocked)
-- ⚠️ Database: Schema defined, not connected
-- ✅ Stripe: Demo mode (requires API keys for production)
+- Frontend: Production ready (Next.js 14 App Router)
+- Backend: Express + tRPC + Prisma/PostgreSQL; partially wired into frontend
+- Donations: Handled externally by Givebutter (campaign `Alborz2025Fundraiser`). The `/api/create-payment-intent` Next.js route returns `501 Not Implemented` -- Stripe is not currently wired to real payments on this site.
 
 ---
 
@@ -101,7 +100,7 @@ NEXT_PUBLIC_PLATFORM_NAME=Camp Alborz
 NODE_ENV=production
 ```
 
-See `ENV_SETUP.md` for complete documentation.
+See `packages/api/.env.example` and `packages/web/.env.example` for the source-of-truth list of variables.
 
 ---
 
@@ -212,14 +211,9 @@ packages/web
    ```
 4. Wait for DNS propagation (5-60 minutes)
 
-### Step 7: Configure Stripe Webhooks
+### Step 7: Configure Stripe Webhooks (not currently in use)
 
-1. Get your deployment URL
-2. Add webhook in Stripe Dashboard
-3. Endpoint: `https://www.campalborz.org/api/webhooks/stripe`
-4. Copy webhook secret
-5. Add to Vercel environment variables: `STRIPE_WEBHOOK_SECRET`
-6. Redeploy
+Camp Alborz currently routes all donations through Givebutter, so no Stripe webhook is required. If/when self-hosted Stripe is re-enabled, the webhook endpoint would be `https://www.campalborz.org/api/webhooks/stripe` and the webhook secret would be stored as `STRIPE_WEBHOOK_SECRET`. Until then, the `/api/create-payment-intent` route returns `501 Not Implemented`.
 
 ---
 
@@ -650,9 +644,9 @@ module.exports = {
 
 ### Camp Alborz Files
 
-- Environment guide: `ENV_SETUP.md`
-- Stripe guide: `STRIPE_SETUP.md`
-- Status document: `ACTUAL_STATUS.md`
+- Environment variables: `packages/api/.env.example`, `packages/web/.env.example`
+- Stripe guide: `STRIPE_SETUP.md` (note: Stripe is not currently wired to real payments; donations are processed by Givebutter)
+- Project goals and status: `docs/GOALS.md`
 
 ### Getting Help
 
