@@ -509,6 +509,184 @@ export default function HomePage() {
         </section>
 
         {/* ============================================ */}
+        {/* 2b. MEMBER TESTIMONIALS -- Voices from the Playa */}
+        {/* ============================================ */}
+        <section className="py-24 md:py-36">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="text-center mb-20">
+                <p className="text-eyebrow mb-4">Our Community</p>
+                <h2
+                  className="font-accent text-3xl md:text-4xl tracking-wide mb-4"
+                  style={{ color: '#2C2416' }}
+                >
+                  Voices from the Playa
+                </h2>
+                <div className="ornate-divider mt-6">
+                  <span
+                    className="text-xs tracking-[0.4em] uppercase"
+                    style={{ color: 'var(--color-gold-muted)' }}
+                    aria-hidden="true"
+                  >
+                    &#10022;
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+              {[
+                {
+                  quote:
+                    'Camp Alborz gave me a home on the playa. For the first time at Burning Man, I heard my grandmother\u2019s language over tea, watched fire dance to setar music, and felt like I truly belonged.',
+                  name: 'Shirin Mohammadi',
+                  playaName: 'Desert Rose',
+                  years: '6 years',
+                },
+                {
+                  quote:
+                    'I came for the art cars and stayed for the family. There\u2019s something magical about building HOMA with people who understand both the engineering AND why the Simorgh matters.',
+                  name: 'Dariush Tehrani',
+                  playaName: 'Dari',
+                  years: '4 years',
+                },
+                {
+                  quote:
+                    'As a first-generation Iranian-American, I struggled to connect with my heritage. Camp Alborz bridges two worlds \u2014 the radical self-expression of the playa and the deep hospitality of Persian culture.',
+                  name: 'Leila Azari',
+                  playaName: 'Moonlight',
+                  years: '3 years',
+                },
+              ].map((testimonial, i) => (
+                <Reveal key={testimonial.name} delay={i * 0.1} direction="up">
+                  <div
+                    className="luxury-card p-8 md:p-10 h-full flex flex-col"
+                    style={{
+                      borderTop: '2px solid var(--color-gold-muted)',
+                    }}
+                  >
+                    {/* Gold quote mark */}
+                    <span
+                      className="font-display text-4xl leading-none mb-4 block"
+                      style={{ color: 'var(--color-gold-muted)' }}
+                      aria-hidden="true"
+                    >
+                      &ldquo;
+                    </span>
+
+                    <p
+                      className="text-sm leading-[1.85] flex-1 mb-8"
+                      style={{ color: 'var(--color-ink-soft)' }}
+                    >
+                      {testimonial.quote}
+                    </p>
+
+                    {/* Divider */}
+                    <div
+                      className="h-px w-12 mb-5"
+                      style={{ backgroundColor: 'var(--color-warm-border)' }}
+                      aria-hidden="true"
+                    />
+
+                    {/* Attribution */}
+                    <div>
+                      <p
+                        className="font-accent text-base tracking-wide"
+                        style={{ color: '#2C2416' }}
+                      >
+                        {testimonial.name}
+                      </p>
+                      <p
+                        className="text-xs mt-1"
+                        style={{ color: 'var(--color-ink-faint)' }}
+                      >
+                        &ldquo;{testimonial.playaName}&rdquo;
+                        <span
+                          className="mx-2"
+                          aria-hidden="true"
+                        >
+                          &#183;
+                        </span>
+                        {testimonial.years}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================ */}
+        {/* 2c. COMMUNITY IMPACT -- By the Numbers        */}
+        {/* ============================================ */}
+        <section
+          className="py-24 md:py-36"
+          style={{ backgroundColor: 'var(--color-cream-warm)' }}
+        >
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="text-center mb-16">
+                <p className="text-eyebrow mb-4">Our Impact</p>
+                <h2
+                  className="font-accent text-3xl md:text-4xl tracking-wide mb-6"
+                  style={{ color: '#2C2416' }}
+                >
+                  A Community Without Borders
+                </h2>
+                <p
+                  className="text-sm max-w-xl mx-auto leading-[1.85]"
+                  style={{ color: 'var(--color-ink-soft)' }}
+                >
+                  From Tehran to Black Rock City, our community spans
+                  continents and generations &mdash; united by a shared
+                  love of Persian art, radical hospitality, and creative
+                  expression.
+                </p>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+              {[
+                { value: '50+', label: 'Active Members' },
+                { value: '12+', label: 'Countries Represented' },
+                { value: '8', label: 'Art Installations Built' },
+                { value: '$150K+', label: 'Raised for Arts & Culture' },
+              ].map((stat, i) => (
+                <Reveal key={stat.label} delay={i * 0.08} direction="up">
+                  <div
+                    className="luxury-card p-8 md:p-10 text-center"
+                    style={{
+                      borderTop: '2px solid var(--color-gold-muted)',
+                    }}
+                  >
+                    <p
+                      className="font-display text-3xl md:text-4xl font-light tracking-wide mb-3"
+                      style={{ color: 'var(--color-terracotta)' }}
+                    >
+                      {stat.value}
+                    </p>
+                    <p
+                      className="text-xs tracking-[0.15em] uppercase"
+                      style={{ color: 'var(--color-ink-faint)' }}
+                    >
+                      {stat.label}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div
+          className="h-px"
+          style={{
+            backgroundColor: 'var(--color-warm-border)',
+          }}
+        />
+
+        {/* ============================================ */}
         {/* 3. STORY SECTION -- Who We Are                */}
         {/* ============================================ */}
         <section className="py-24 md:py-36">
@@ -970,6 +1148,107 @@ export default function HomePage() {
             }}
           />
         </div>
+
+        {/* ============================================ */}
+        {/* 8b. GET INVOLVED -- Find Your Place            */}
+        {/* ============================================ */}
+        <section className="py-24 md:py-36">
+          <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+            <Reveal>
+              <div className="text-center mb-20">
+                <p className="text-eyebrow mb-4">Get Involved</p>
+                <h2
+                  className="font-accent text-3xl md:text-4xl tracking-wide mb-4"
+                  style={{ color: '#2C2416' }}
+                >
+                  Find Your Place in Camp Alborz
+                </h2>
+                <div className="ornate-divider mt-6">
+                  <span
+                    className="text-xs tracking-[0.4em] uppercase"
+                    style={{ color: 'var(--color-gold-muted)' }}
+                    aria-hidden="true"
+                  >
+                    &#10022;
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+              {[
+                {
+                  title: 'Join as a Member',
+                  description:
+                    'Bring your talents, passion, and curiosity. No experience required \u2014 just an open heart.',
+                  href: '/apply',
+                  linkText: 'Apply Now',
+                },
+                {
+                  title: 'Support Our Art',
+                  description:
+                    'Help us bring Persian art and culture to the playa. Every contribution fuels the fire.',
+                  href: '/donate',
+                  linkText: 'Donate',
+                },
+                {
+                  title: 'Explore Our Culture',
+                  description:
+                    'Discover the traditions, music, and stories that make Camp Alborz unique.',
+                  href: '/culture',
+                  linkText: 'Learn More',
+                },
+              ].map((pathway, i) => (
+                <Reveal key={pathway.title} delay={i * 0.1} direction="up">
+                  <Link href={pathway.href} className="block group h-full">
+                    <div
+                      className="luxury-card p-8 md:p-10 h-full flex flex-col text-center transition-all duration-300 group-hover:shadow-lg"
+                      style={{
+                        borderTop: '2px solid var(--color-gold-muted)',
+                      }}
+                    >
+                      {/* Diamond accent */}
+                      <span
+                        className="text-xs mb-6 block"
+                        style={{ color: 'var(--color-gold-muted)' }}
+                        aria-hidden="true"
+                      >
+                        &#9670;
+                      </span>
+
+                      <h3
+                        className="font-accent text-xl md:text-2xl tracking-wide mb-4 transition-colors duration-300 group-hover:text-terracotta"
+                        style={{ color: '#2C2416' }}
+                      >
+                        {pathway.title}
+                      </h3>
+
+                      <p
+                        className="text-sm leading-[1.85] flex-1 mb-8"
+                        style={{ color: 'var(--color-ink-soft)' }}
+                      >
+                        {pathway.description}
+                      </p>
+
+                      <span
+                        className="inline-flex items-center justify-center gap-2 text-xs tracking-[0.2em] uppercase font-medium transition-colors duration-300 group-hover:text-terracotta"
+                        style={{ color: 'var(--color-ink-soft)' }}
+                      >
+                        {pathway.linkText}
+                        <span
+                          className="inline-block transition-transform duration-300 group-hover:translate-x-1"
+                          aria-hidden="true"
+                        >
+                          &rarr;
+                        </span>
+                      </span>
+                    </div>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* ============================================ */}
         {/* 9. CTA SECTION -- 2026 Season                 */}

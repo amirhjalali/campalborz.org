@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
-import { ArrowRight, Calendar, Clock, MapPin, ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, MapPin, ExternalLink, Sparkles, Users, Heart } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef, useState } from 'react';
@@ -103,6 +103,51 @@ export default function EventsPage() {
             style={{ filter: 'brightness(1.5)' }}
           />
         </motion.div>
+      </section>
+
+      {/* Why We Gather -- Intro Section */}
+      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
+              <p className="text-eyebrow">MORE THAN EVENTS</p>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
+                Every Gathering Tells a Story
+              </h2>
+              <p className="font-accent text-lg leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
+                Camp Alborz events aren&apos;t just dates on a calendar &mdash; they&apos;re where our community comes alive. Whether it&apos;s a warehouse build day where art takes shape, a fundraiser filled with Persian music and dance, or a quiet planning session over chai, every gathering strengthens the bonds that carry us to the playa and back.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {[
+              { icon: Calendar, stat: '20+', label: 'Events Per Year' },
+              { icon: Users, stat: '200+', label: 'Annual Attendees' },
+              { icon: Heart, stat: '100%', label: 'Community-Powered' },
+            ].map((item, index) => (
+              <Reveal key={item.label} delay={index * 0.1}>
+                <motion.div
+                  className="luxury-card text-center group"
+                  whileHover={{ y: -4 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                >
+                  <div
+                    className="inline-flex p-4 rounded-full mb-4"
+                    style={{
+                      backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
+                      border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
+                    }}
+                  >
+                    <item.icon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
+                  </div>
+                  <p className="font-display text-3xl mb-1" style={{ color: 'var(--color-ink)' }}>{item.stat}</p>
+                  <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>{item.label}</p>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Event Types -- Visual Category Cards */}
@@ -385,6 +430,68 @@ export default function EventsPage() {
                 </p>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Past Highlights */}
+      <section className="py-24 md:py-32">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal>
+            <div className="text-center space-y-3 mb-14">
+              <p className="text-eyebrow">LOOKING BACK</p>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
+                Moments That Made Us
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Nowruz Gala 2025',
+                image: '/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.webp',
+                description:
+                  'Over 150 friends and family gathered to celebrate Persian New Year with live music, haft-sin, and the announcement of our 2025 playa art lineup.',
+              },
+              {
+                title: 'HOMA Build Weekend',
+                image: '/images/migrated/homa/149889f001e2f7945fa917258838a272.webp',
+                description:
+                  'Twenty volunteers spent a weekend in the warehouse breathing life into HOMA. Three welders, five painters, and twelve people who\u2019d never touched a power tool \u2014 all learning together.',
+              },
+              {
+                title: 'Yalda Solstice Night',
+                image: '/images/migrated/events/8778bd1886dd14180e8bcb3823e2886a.webp',
+                description:
+                  'Our longest night celebration: pomegranates, Hafez readings by candlelight, and stories that went until dawn. The kind of evening that reminds you why community matters.',
+              },
+            ].map((highlight, index) => (
+              <Reveal key={highlight.title} delay={index * 0.12}>
+                <motion.div
+                  className="luxury-card group h-full overflow-hidden"
+                  whileHover={{ y: -6 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                >
+                  <div className="relative h-48 -mx-6 -mt-6 mb-6 overflow-hidden rounded-t-2xl">
+                    <Image
+                      src={highlight.image}
+                      alt={highlight.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  </div>
+                  <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>
+                    {highlight.title}
+                  </h3>
+                  <p className="font-accent text-sm leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
+                    {highlight.description}
+                  </p>
+                </motion.div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>

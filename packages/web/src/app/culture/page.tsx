@@ -451,6 +451,76 @@ export default function CulturePage() {
         <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
       </div>
 
+      {/* Our Camp Traditions */}
+      <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+          <Reveal direction="up">
+            <div className="text-center space-y-3 mb-14">
+              <p className="text-eyebrow">BORN ON THE PLAYA</p>
+              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
+                Our Camp Traditions
+              </h2>
+              <p className="font-body text-base max-w-3xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
+                Beyond Persian heritage, Camp Alborz has developed its own rituals — traditions born on the playa
+                that have become the heartbeat of our community. These aren&apos;t prescribed; they emerged naturally
+                from years of building, celebrating, and caring for each other.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                title: 'Sunrise Chai Circle',
+                description:
+                  'Every morning at Camp Alborz begins the same way: gathered around the samovar as dawn paints the playa gold. No phones, no plans — just Persian tea, cardamom, and whatever conversation finds us. It\u2019s where strangers become family.',
+              },
+              {
+                title: 'The Simorgh Gathering',
+                description:
+                  'Named for the mythical bird that is all birds united as one, our pre-Temple-burn circle is where we share what we\u2019re leaving behind and what we\u2019re carrying forward. Thirty voices become one.',
+              },
+              {
+                title: 'First-Timer\u2019s Welcome',
+                description:
+                  'Every virgin burner at Camp Alborz gets a personal guide, a playa name ceremony, and a spot at the chai circle. We remember what it\u2019s like to arrive overwhelmed — and we make sure nobody feels alone.',
+              },
+              {
+                title: 'The Hafez Oracle',
+                description:
+                  'In Persian tradition, you open the poet Hafez at random for guidance. At Camp Alborz, we keep a weathered volume of Hafez in the common space. Before big decisions — or just on quiet afternoons — members seek the poet\u2019s wisdom.',
+              },
+              {
+                title: 'Build Week Bonding',
+                description:
+                  'The week before Burning Man is when Camp Alborz truly comes alive. Long days of building shade structures, wiring HOMA, and hanging lights — fueled by ghormeh sabzi and shared purpose. The camp we build is the community we\u2019ve become.',
+              },
+              {
+                title: 'Playa Name Ceremony',
+                description:
+                  'Your playa name isn\u2019t chosen — it finds you. At Camp Alborz, names emerge from stories told over chai, moments on the dance floor, or the way you hammer a nail. When the name sticks, we celebrate with a toast.',
+              },
+            ].map((tradition, index) => (
+              <Reveal key={tradition.title} direction="up" delay={index * 0.1}>
+                <div className="luxury-card h-full">
+                  <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>
+                    {tradition.title}
+                  </h3>
+                  <div
+                    className="w-6 h-px mb-4"
+                    style={{ backgroundColor: 'var(--color-gold)' }}
+                    aria-hidden="true"
+                  />
+                  <p className="font-body text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                    {tradition.description}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section - Config-driven */}
       {culture.cta && (
         <section className="py-24 md:py-32">

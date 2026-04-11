@@ -31,6 +31,10 @@ const navItems = [
     href: '/culture',
   },
   {
+    label: 'Community',
+    href: '/community',
+  },
+  {
     label: 'Members',
     href: '/members',
   },

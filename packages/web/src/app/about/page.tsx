@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Snowflake, Sprout, Sun, Leaf, Quote } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef, useState } from 'react';
@@ -489,6 +489,109 @@ export default function AboutPage() {
       <TimelineSection about={about} />
 
       {/* ============================================================ */}
+      {/*  HOW WE BUILD TOGETHER - Camp year cycle                     */}
+      {/* ============================================================ */}
+      <section className="section-contrast py-28 md:py-36 relative overflow-hidden">
+        <div className="absolute inset-0 pattern-persian opacity-[0.04]" />
+        <div
+          className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-[120px] opacity-10"
+          style={{ background: 'radial-gradient(circle, var(--color-gold), transparent 70%)' }}
+        />
+
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 relative z-10">
+          <Reveal>
+            <div className="mb-8 text-center">
+              <p className="text-eyebrow" style={{ color: 'var(--color-gold-muted)' }}>THE COLLECTIVE</p>
+              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl tracking-tight mt-4" style={{ color: 'var(--color-cream)' }}>
+                How We Build Together
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p className="font-accent text-lg md:text-xl text-center max-w-3xl mx-auto leading-relaxed mb-16" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
+              Camp Alborz isn&rsquo;t built by a few people&nbsp;&mdash; it&rsquo;s built by everyone. Every year, dozens of hands come together to raise structures, wire art cars, prepare meals, and create something none of us could build alone. Here&rsquo;s what a year in the life of Camp Alborz looks like.
+            </p>
+          </Reveal>
+
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+          >
+            {[
+              {
+                icon: Snowflake,
+                season: 'Winter',
+                months: 'Jan \u2013 Mar',
+                title: 'Planning & Dreaming',
+                description: 'We gather in living rooms and video calls to plan the coming year. What will HOMA become? What new art should we build? What traditions will we keep?',
+              },
+              {
+                icon: Sprout,
+                season: 'Spring',
+                months: 'Apr \u2013 Jun',
+                title: 'Building & Fundraising',
+                description: 'Warehouse weekends begin. Art car maintenance, new projects take shape, fundraisers bring the community together off-playa.',
+              },
+              {
+                icon: Sun,
+                season: 'Summer',
+                months: 'Jul \u2013 Aug',
+                title: 'Build Week & Burn',
+                description: 'The magic week. We arrive early, build camp from dust, and for seven days live the community we\u2019ve spent all year creating.',
+              },
+              {
+                icon: Leaf,
+                season: 'Fall',
+                months: 'Sep \u2013 Dec',
+                title: 'Reflection & Gratitude',
+                description: 'We decompress, share photos and stories, celebrate at our annual Yalda gathering, and start dreaming about next year.',
+              },
+            ].map((item, index) => {
+              const SeasonIcon = item.icon;
+              return (
+                <motion.div key={item.season} variants={staggerItem}>
+                  <motion.div
+                    whileHover={{ y: -4, borderColor: 'rgba(212, 175, 55, 0.35)' }}
+                    className="rounded-2xl p-8 h-full group transition-colors duration-500"
+                    style={{
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    }}
+                  >
+                    <div
+                      className="inline-flex p-4 rounded-full mb-6 transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
+                        border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
+                      }}
+                    >
+                      <SeasonIcon className="h-7 w-7" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
+                    </div>
+                    <p
+                      className="text-xs tracking-[0.15em] uppercase font-medium mb-2"
+                      style={{ color: 'var(--color-gold)' }}
+                    >
+                      {item.season} &middot; {item.months}
+                    </p>
+                    <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
+                      {item.title}
+                    </h3>
+                    <p className="text-body-relaxed text-sm leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.75)' }}>
+                      {item.description}
+                    </p>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
       {/*  TEAM - Magazine-style layout                                */}
       {/* ============================================================ */}
       <section className="py-28 md:py-36 relative" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
@@ -546,6 +649,85 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  JOIN THE STORY - Community invitation & testimonials         */}
+      {/* ============================================================ */}
+      <section className="py-28 md:py-36 relative overflow-hidden">
+        <div className="absolute inset-0 pattern-persian opacity-[0.03]" />
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[160px] opacity-[0.06]"
+          style={{ background: 'radial-gradient(circle, var(--color-gold), transparent 70%)' }}
+        />
+
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 relative z-10">
+          <Reveal>
+            <div className="text-center mb-8">
+              <p className="text-eyebrow">COMMUNITY</p>
+              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl tracking-tight mt-4" style={{ color: 'var(--color-ink)' }}>
+                Every Member Has a Story
+              </h2>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p className="text-body-relaxed text-base md:text-lg leading-[1.85] text-center max-w-3xl mx-auto mb-16" style={{ color: 'var(--color-ink-soft)' }}>
+              Camp Alborz started with a handful of friends who wanted to share Persian culture on the playa. Today we&rsquo;re 50+ members from 12+ countries&nbsp;&mdash; engineers and artists, students and professors, first-timers and decade veterans. What unites us isn&rsquo;t background&nbsp;&mdash; it&rsquo;s a belief that the best things in life are built together, shared freely, and celebrated loudly.
+            </p>
+          </Reveal>
+
+          <div className="ornate-divider mb-16" />
+
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+          >
+            {[
+              {
+                quote: 'I showed up knowing nobody. By Wednesday, I had a playa name and 30 new siblings.',
+                attribution: 'First-year member',
+              },
+              {
+                quote: 'Building HOMA in 110\u00B0F heat with people who get why the Simorgh matters \u2014 that\u2019s my happy place.',
+                attribution: 'Art crew lead',
+              },
+              {
+                quote: 'My kids now ask every year: \u201CWhen do we go home to the desert?\u201D',
+                attribution: 'Camp Alborz family',
+              },
+            ].map((item, index) => (
+              <motion.div key={index} variants={staggerItem}>
+                <motion.div
+                  whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(26, 26, 24, 0.12)' }}
+                  className="luxury-card h-full flex flex-col justify-between"
+                >
+                  <div>
+                    <Quote className="h-6 w-6 mb-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.6 }} aria-hidden="true" />
+                    <p className="font-accent text-base md:text-lg italic leading-relaxed mb-6" style={{ color: 'var(--color-ink)', opacity: 0.85 }}>
+                      &ldquo;{item.quote}&rdquo;
+                    </p>
+                  </div>
+                  <p className="text-caption text-xs tracking-widest uppercase" style={{ color: 'var(--color-gold)' }}>
+                    &mdash; {item.attribution}
+                  </p>
+                </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <Reveal delay={0.2}>
+            <div className="text-center">
+              <Link href="/apply" className="cta-primary cta-shimmer">
+                <span>Become Part of the Story</span>
+                <span><ArrowRight size={18} aria-hidden="true" /></span>
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 

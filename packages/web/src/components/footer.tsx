@@ -64,14 +64,15 @@ export function Footer() {
         { label: 'Events', href: '/events' },
         { label: 'Art', href: '/art' },
         { label: 'Culture', href: '/culture' },
+        { label: 'Community', href: '/community' },
       ],
     },
     {
       title: 'Join Us',
       links: [
-        { label: 'Apply', href: '/apply' },
+        { label: 'Join Us', href: '/apply' },
         { label: 'Donate', href: '/donate' },
-        { label: 'Members', href: '/members' },
+        { label: 'Member Portal', href: '/members' },
       ],
     },
   ];
@@ -280,7 +281,7 @@ export function Footer() {
                     className="text-sm leading-relaxed"
                     style={{ color: 'rgba(var(--color-cream-rgb), 0.55)' }}
                   >
-                    {campConfig.taxStatus} non-profit organization dedicated to community, art, and cultural exchange.
+                    {campConfig.taxStatus} non-profit organization building community through Persian art, radical hospitality, and shared creative expression.
                   </p>
 
                   <div

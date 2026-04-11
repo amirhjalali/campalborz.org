@@ -30,6 +30,9 @@ interface ApplicationFormData {
   contribution: string;
   dietary: string;
   emergency_contact: string;
+  motivation: string;
+  helpAreas: string[];
+  campBuddy: string;
 }
 
 interface FieldErrors {
@@ -105,6 +108,9 @@ export default function ApplyPage() {
     contribution: '',
     dietary: '',
     emergency_contact: '',
+    motivation: '',
+    helpAreas: [],
+    campBuddy: '',
   });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
@@ -296,6 +302,9 @@ export default function ApplyPage() {
         contribution: '',
         dietary: '',
         emergency_contact: '',
+        motivation: '',
+        helpAreas: [],
+        campBuddy: '',
       });
       setCurrentStep(0);
       setFieldErrors({});
@@ -373,7 +382,7 @@ export default function ApplyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            MEMBERSHIP APPLICATION
+            BECOME PART OF OUR STORY
           </motion.p>
           <motion.h1
             className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
@@ -381,7 +390,7 @@ export default function ApplyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
-            {apply.title}
+            Join Our Community
           </motion.h1>
           <motion.p
             className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto italic"
@@ -389,7 +398,7 @@ export default function ApplyPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            {apply.subtitle}
+            Camp Alborz grows through the people who join us. Tell us about yourself — we're excited to meet you.
           </motion.p>
 
           <motion.div
@@ -673,6 +682,24 @@ export default function ApplyPage() {
                             <FieldError error={touchedFields.has('emergency_contact') ? fieldErrors.emergency_contact : undefined} />
                           </div>
                         </div>
+
+                        <div>
+                          <label htmlFor="apply-motivation" className="form-label">
+                            What draws you to Camp Alborz?
+                          </label>
+                          <div className="input-glow rounded-xl">
+                            <textarea
+                              id="apply-motivation"
+                              name="motivation"
+                              rows={3}
+                              className="form-input border-0 bg-transparent"
+                              placeholder="Tell us what excites you about our community — whether it's the art, the culture, the people, or something else entirely..."
+                              value={formData.motivation}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <p className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>Optional — we love hearing what inspires you.</p>
+                        </div>
                       </motion.div>
                     )}
 
@@ -805,6 +832,75 @@ export default function ApplyPage() {
                           <CharacterCount value={formData.contribution} min={50} />
                           <FieldError error={touchedFields.has('contribution') ? fieldErrors.contribution : undefined} />
                         </div>
+
+                        <div>
+                          <fieldset>
+                            <legend className="form-label">I&apos;m interested in helping with...</legend>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                              {[
+                                'Art Builds',
+                                'Kitchen & Chai',
+                                'Music & Sound',
+                                'Camp Setup/Teardown',
+                                'Fundraising & Events',
+                                'Mentoring New Members',
+                                'Photography & Documentation',
+                              ].map((area) => (
+                                <label
+                                  key={area}
+                                  className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border-2 ${
+                                    formData.helpAreas.includes(area)
+                                      ? 'border-[var(--color-gold)] bg-[var(--color-gold)]/5'
+                                      : 'border-transparent bg-white/50 hover:bg-white/80'
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    name="helpAreas"
+                                    value={area}
+                                    checked={formData.helpAreas.includes(area)}
+                                    onChange={(e) => {
+                                      const { value, checked } = e.target;
+                                      setFormData((prev) => ({
+                                        ...prev,
+                                        helpAreas: checked
+                                          ? [...prev.helpAreas, value]
+                                          : prev.helpAreas.filter((a) => a !== value),
+                                      }));
+                                    }}
+                                    className="sr-only"
+                                  />
+                                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${
+                                    formData.helpAreas.includes(area)
+                                      ? 'border-[var(--color-gold)] bg-[var(--color-gold)]'
+                                      : 'border-gray-300'
+                                  }`}>
+                                    {formData.helpAreas.includes(area) && (
+                                      <motion.svg
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="w-3 h-3 text-white"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        aria-hidden="true"
+                                      >
+                                        <path d="M2 6l3 3 5-5" />
+                                      </motion.svg>
+                                    )}
+                                  </div>
+                                  <span className="text-sm font-medium" style={{ color: '#2C2416' }}>
+                                    {area}
+                                  </span>
+                                </label>
+                              ))}
+                            </div>
+                            <p className="text-xs mt-2" style={{ color: 'var(--color-ink-faint)' }}>Optional — select all that interest you.</p>
+                          </fieldset>
+                        </div>
                       </motion.div>
                     )}
 
@@ -843,6 +939,58 @@ export default function ApplyPage() {
                           </div>
                           <p className="text-xs mt-1" style={{ color: 'var(--color-ink-faint)' }}>Optional -- helps us plan camp meals.</p>
                         </div>
+
+                        {/* Camp Buddy — shown for first-timers */}
+                        {(formData.experience === 'first-time' || formData.experience === '1-3-years') && (
+                          <div>
+                            <fieldset>
+                              <legend className="form-label">Would you like a camp buddy for your first Burn?</legend>
+                              <div className="space-y-2 mt-2">
+                                {[
+                                  { value: 'yes', label: 'Yes, I\'d love a guide!' },
+                                  { value: 'maybe', label: 'Maybe — tell me more' },
+                                  { value: 'no', label: 'No thanks, I\'m experienced' },
+                                ].map((option) => (
+                                  <label
+                                    key={option.value}
+                                    className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all duration-200 border-2 ${
+                                      formData.campBuddy === option.value
+                                        ? 'border-[var(--color-gold)] bg-[var(--color-gold)]/5'
+                                        : 'border-transparent bg-white/50 hover:bg-white/80'
+                                    }`}
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="campBuddy"
+                                      value={option.value}
+                                      checked={formData.campBuddy === option.value}
+                                      onChange={handleChange}
+                                      className="sr-only"
+                                    />
+                                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                                      formData.campBuddy === option.value
+                                        ? 'border-[var(--color-gold)]'
+                                        : 'border-gray-300'
+                                    }`}>
+                                      {formData.campBuddy === option.value && (
+                                        <motion.div
+                                          initial={{ scale: 0 }}
+                                          animate={{ scale: 1 }}
+                                          className="w-2.5 h-2.5 rounded-full"
+                                          style={{ backgroundColor: 'var(--color-gold)' }}
+                                        />
+                                      )}
+                                    </div>
+                                    <span className="text-sm font-medium" style={{ color: '#2C2416' }}>
+                                      {option.label}
+                                    </span>
+                                  </label>
+                                ))}
+                              </div>
+                              <p className="text-xs mt-2" style={{ color: 'var(--color-ink-faint)' }}>Optional — we pair newer members with experienced campmates.</p>
+                            </fieldset>
+                          </div>
+                        )}
 
                         {/* Terms */}
                         <div className="p-6 rounded-xl" style={{ backgroundColor: 'rgba(var(--color-tan-50), 0.5)' }}>
