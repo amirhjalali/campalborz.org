@@ -57,7 +57,7 @@ describe('Footer', () => {
     expect(screen.getByText('Art')).toBeInTheDocument();
     expect(screen.getByText('Culture')).toBeInTheDocument();
     expect(screen.getByText('Donate')).toBeInTheDocument();
-    expect(screen.getByText('Members')).toBeInTheDocument();
+    expect(screen.getByText('Member Portal')).toBeInTheDocument();
   });
 
   it('should render navigation links with correct hrefs', () => {
@@ -111,7 +111,7 @@ describe('Footer', () => {
 
   it('should render the Join Us nav section heading', () => {
     render(<Footer />);
-    expect(screen.getByText('Join Us')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Join Us' })).toBeInTheDocument();
   });
 
   it('should render the Organization section heading', () => {

@@ -76,6 +76,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
     },
     {
+      url: '/community',
+      priority: 0.8,
+      changeFrequency: 'monthly',
+      lastModified: now,
+    },
+    {
       url: '/apply',
       priority: 0.8,
       changeFrequency: 'monthly',
