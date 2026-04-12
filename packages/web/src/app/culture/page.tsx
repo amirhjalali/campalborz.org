@@ -4,9 +4,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
-import { ArrowRight, Calendar, Star, BookOpen } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
-import { getIcon } from '../../lib/icons';
 import { useRef } from 'react';
 
 export default function CulturePage() {
@@ -115,63 +114,40 @@ export default function CulturePage() {
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {culture.culturalElements.map((element, index) => {
-              const ElementIcon = getIcon(element.icon);
-
-              return (
-                <Reveal key={element.title} direction="up" delay={index * 0.1}>
-                  <div
-                    className="luxury-card group h-full"
-                  >
-                    <div
-                      className="inline-flex p-4 rounded-full mb-5 transition-transform duration-300 group-hover:scale-110"
-                      style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
-                    >
-                      <ElementIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
+            {culture.culturalElements.map((element) => (
+              <div
+                key={element.title}
+                className="luxury-card h-full"
+              >
+                <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>{element.title}</h3>
+                <p className="text-body-relaxed text-sm mb-4" style={{ color: 'var(--color-ink-soft)' }}>
+                  {element.description}
+                </p>
+                <div className="space-y-2">
+                  {element.activities.map((activity, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-gold-muted)' }}>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-gold)' }} />
+                      {activity}
                     </div>
-                    <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>{element.title}</h3>
-                    <p className="text-body-relaxed text-sm mb-4" style={{ color: 'var(--color-ink-soft)' }}>
-                      {element.description}
-                    </p>
-                    <div className="space-y-2">
-                      {element.activities.map((activity, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-gold-muted)' }}>
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-gold)' }} />
-                          {activity}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
-      {/* Persian Proverb */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
-          <Reveal direction="up">
-            <div className="text-center">
-              <div className="persian-line max-w-md mx-auto mb-8">
-                <span className="text-eyebrow">MUSIC & POETRY</span>
-              </div>
-              <blockquote className="max-w-2xl mx-auto">
-                <p className="font-accent text-xl md:text-2xl leading-relaxed" style={{ color: 'var(--color-ink)' }}>
-                  The wound is the place where the Light enters you.
-                </p>
-                <footer className="mt-4 text-caption" style={{ color: 'var(--color-gold-muted)' }}>
-                  Rumi
-                </footer>
-              </blockquote>
-            </div>
-          </Reveal>
+      {/* Persian Proverb — full-bleed dark */}
+      <section className="py-28 md:py-40" style={{ backgroundColor: 'var(--color-ink)' }}>
+        <div className="max-w-[960px] mx-auto px-8 md:px-16">
+          <blockquote className="text-center">
+            <p className="font-accent text-2xl sm:text-3xl md:text-4xl italic leading-relaxed" style={{ color: 'var(--color-cream)' }}>
+              The wound is the place where the Light enters you.
+            </p>
+            <footer className="mt-8 font-display text-sm tracking-widest uppercase" style={{ color: 'var(--color-gold-muted)' }}>
+              Rumi
+            </footer>
+          </blockquote>
         </div>
       </section>
 
@@ -188,35 +164,19 @@ export default function CulturePage() {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {culture.culturalValues.map((value, index) => {
-              const ValueIcon = getIcon(value.icon);
-
-              return (
-                <Reveal key={value.title} direction={index % 2 === 0 ? 'left' : 'right'} delay={index * 0.1}>
-                  <div className="border border-white/10 rounded-2xl p-8 bg-white/5">
-                    <div className="flex items-start gap-5">
-                      <div
-                        className="flex-shrink-0 p-4 rounded-full"
-                        style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
-                      >
-                        <ValueIcon className="h-6 w-6" style={{ color: 'var(--color-gold-muted)' }} />
-                      </div>
-                      <div className="space-y-3">
-                        <h3 className="font-display text-xl" style={{ color: 'var(--color-cream)' }}>
-                          {value.title}
-                        </h3>
-                        <p className="text-body-relaxed text-sm" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
-                          {value.description}
-                        </p>
-                        <p className="font-accent text-sm" style={{ color: 'var(--color-gold-muted)' }}>
-                          In Practice: {value.example}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
+            {culture.culturalValues.map((value) => (
+              <div key={value.title} className="border border-white/10 rounded-2xl p-8 bg-white/5">
+                <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
+                  {value.title}
+                </h3>
+                <p className="text-body-relaxed text-sm mb-3" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
+                  {value.description}
+                </p>
+                <p className="font-accent text-sm" style={{ color: 'var(--color-gold-muted)' }}>
+                  In Practice: {value.example}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -237,49 +197,45 @@ export default function CulturePage() {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {culture.workshops.map((workshop, index) => (
-              <Reveal key={workshop.title} direction={index % 2 === 0 ? 'left' : 'right'} delay={index * 0.1}>
-                <div className={`luxury-card h-full ${index === 0 ? 'md:col-span-2' : ''}`}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-display text-xl" style={{ color: 'var(--color-ink)' }}>{workshop.title}</h3>
-                    <span
-                      className="px-3 py-1 rounded-full text-xs tracking-[0.1em] uppercase"
-                      style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', color: 'var(--color-gold-muted)' }}
-                    >
-                      {workshop.frequency}
-                    </span>
-                  </div>
-                  <p className="text-sm mb-4" style={{ color: 'var(--color-gold-muted)' }}>Led by {workshop.instructor}</p>
-                  <p className="font-accent text-sm mb-6" style={{ color: 'var(--color-ink-soft)' }}>
-                    {workshop.description}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-                    <div>
-                      <span className="text-caption" style={{ color: 'var(--color-ink-faint)' }}>Level</span>
-                      <p style={{ color: 'var(--color-ink)' }}>{workshop.level}</p>
-                    </div>
-                    <div>
-                      <span className="text-caption" style={{ color: 'var(--color-ink-faint)' }}>Duration</span>
-                      <p style={{ color: 'var(--color-ink)' }}>{workshop.duration}</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <span className="text-caption" style={{ color: 'var(--color-ink-faint)' }}>Materials</span>
-                    <p className="text-sm" style={{ color: 'var(--color-ink)' }}>{workshop.materials}</p>
-                  </div>
-
-                  <Link
-                    href="/events"
-                    className="inline-flex items-center gap-2 text-sm transition-colors group/link"
-                    style={{ color: 'var(--color-terracotta)' }}
+            {culture.workshops.map((workshop) => (
+              <div key={workshop.title} className="border rounded-2xl p-8 h-full" style={{ borderColor: 'var(--color-warm-border)' }}>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <h3 className="font-display text-xl" style={{ color: 'var(--color-ink)' }}>{workshop.title}</h3>
+                  <span
+                    className="flex-shrink-0 px-3 py-1 text-xs tracking-[0.08em] uppercase border rounded"
+                    style={{ borderColor: 'var(--color-warm-border)', color: 'var(--color-ink-soft)' }}
                   >
-                    View Schedule
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
-                  </Link>
+                    {workshop.frequency}
+                  </span>
                 </div>
-              </Reveal>
+                <p className="text-sm mb-4" style={{ color: 'var(--color-gold-muted)' }}>Led by {workshop.instructor}</p>
+                <p className="font-accent text-sm mb-6" style={{ color: 'var(--color-ink-soft)' }}>
+                  {workshop.description}
+                </p>
+
+                <div className="flex flex-wrap gap-3 mb-6 text-sm">
+                  <span className="px-3 py-1 rounded border" style={{ borderColor: 'var(--color-warm-border)', color: 'var(--color-ink-soft)' }}>
+                    {workshop.level}
+                  </span>
+                  <span className="px-3 py-1 rounded border" style={{ borderColor: 'var(--color-warm-border)', color: 'var(--color-ink-soft)' }}>
+                    {workshop.duration}
+                  </span>
+                </div>
+
+                <p className="text-sm mb-6" style={{ color: 'var(--color-ink-soft)' }}>
+                  <span className="text-caption" style={{ color: 'var(--color-ink-faint)' }}>Materials: </span>
+                  {workshop.materials}
+                </p>
+
+                <Link
+                  href="/events"
+                  className="inline-flex items-center gap-2 text-sm transition-colors group/link"
+                  style={{ color: 'var(--color-terracotta)' }}
+                >
+                  View Schedule
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -301,45 +257,35 @@ export default function CulturePage() {
           </Reveal>
 
           <div className="space-y-8">
-            {culture.celebrations.map((celebration, index) => (
-              <Reveal key={celebration.name} direction="up" delay={index * 0.1}>
-                <div className="luxury-card">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className="p-3 rounded-full"
-                        style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
-                      >
-                        <Star className="h-5 w-5" style={{ color: 'var(--color-gold)' }} />
-                      </div>
-                      <h3 className="font-display text-xl" style={{ color: 'var(--color-ink)' }}>{celebration.name}</h3>
-                    </div>
-                    <div className="flex items-center gap-2" style={{ color: 'var(--color-gold-muted)' }}>
-                      <Calendar className="h-4 w-4" />
-                      <span className="text-sm">{celebration.date}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-body-relaxed mb-6 pl-0 md:pl-16" style={{ color: 'var(--color-ink-soft)' }}>
-                    {celebration.description}
-                  </p>
-
-                  <div className="pl-0 md:pl-16">
-                    <p className="text-caption mb-3" style={{ color: 'var(--color-ink-faint)' }}>Traditions</p>
-                    <div className="flex flex-wrap gap-2">
-                      {celebration.traditions.map((tradition, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1.5 rounded-full text-sm"
-                          style={{ backgroundColor: 'var(--color-cream-warm)', color: 'var(--color-ink-soft)' }}
-                        >
-                          {tradition}
-                        </span>
-                      ))}
-                    </div>
+            {culture.celebrations.map((celebration) => (
+              <div key={celebration.name} className="border rounded-2xl p-8" style={{ borderColor: 'var(--color-warm-border)' }}>
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+                  <h3 className="font-display text-xl" style={{ color: 'var(--color-ink)' }}>{celebration.name}</h3>
+                  <div className="flex items-center gap-2" style={{ color: 'var(--color-gold-muted)' }}>
+                    <Calendar className="h-4 w-4" />
+                    <span className="text-sm">{celebration.date}</span>
                   </div>
                 </div>
-              </Reveal>
+
+                <p className="text-body-relaxed mb-6" style={{ color: 'var(--color-ink-soft)' }}>
+                  {celebration.description}
+                </p>
+
+                <div>
+                  <p className="text-caption mb-3" style={{ color: 'var(--color-ink-faint)' }}>Traditions</p>
+                  <div className="flex flex-wrap gap-2">
+                    {celebration.traditions.map((tradition, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1.5 rounded-full text-sm"
+                        style={{ backgroundColor: 'var(--color-cream)', color: 'var(--color-ink-soft)' }}
+                      >
+                        {tradition}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -352,34 +298,26 @@ export default function CulturePage() {
             <div className="frame-panel">
               <div className="text-center space-y-4 mb-10">
                 <p className="text-eyebrow">KNOWLEDGE</p>
-                <div
-                  className="inline-flex p-3 rounded-full"
-                  style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)', border: '1px solid rgba(var(--color-gold-rgb), 0.25)' }}
-                >
-                  <BookOpen className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
-                </div>
                 <h2 className="font-accent text-2xl md:text-3xl" style={{ color: '#2C2416' }}>
                   Cultural Learning Topics
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {culture.learningResources.map((section, index) => (
-                  <Reveal key={section.category} direction="up" delay={index * 0.1}>
-                    <div>
-                      <h3 className="font-display text-lg mb-4 pb-3" style={{ borderBottom: '1px solid var(--color-warm-border)', color: 'var(--color-ink)' }}>
-                        {section.category}
-                      </h3>
-                      <ul className="space-y-3">
-                        {section.resources.map((resource, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                            <span className="mt-1" style={{ color: 'var(--color-gold)' }}>&#9670;</span>
-                            {resource}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </Reveal>
+                {culture.learningResources.map((section) => (
+                  <div key={section.category}>
+                    <h3 className="font-display text-lg mb-4 pb-3" style={{ borderBottom: '1px solid var(--color-warm-border)', color: 'var(--color-ink)' }}>
+                      {section.category}
+                    </h3>
+                    <ul className="space-y-3">
+                      {section.resources.map((resource, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                          <span className="mt-1" style={{ color: 'var(--color-gold)' }}>&#9670;</span>
+                          {resource}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
               </div>
             </div>
@@ -401,74 +339,54 @@ export default function CulturePage() {
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Reveal direction="left" delay={0.1}>
-                <div className="border border-white/10 rounded-2xl p-8 bg-white/5 h-full">
-                  <h3 className="font-display text-xl mb-6" style={{ color: 'var(--color-cream)' }}>
-                    {culture.culturalBridge.missionTitle}
-                  </h3>
-                  <div className="space-y-4">
-                    {culture.culturalBridge.mission.map((paragraph, index) => (
-                      <p key={index} className={`text-body-relaxed ${index === 0 ? 'drop-cap' : ''}`} style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
+              <div className="border border-white/10 rounded-2xl p-8 bg-white/5 h-full">
+                <h3 className="font-display text-xl mb-6" style={{ color: 'var(--color-cream)' }}>
+                  {culture.culturalBridge.missionTitle}
+                </h3>
+                <div className="space-y-4">
+                  {culture.culturalBridge.mission.map((paragraph, index) => (
+                    <p key={index} className={`text-body-relaxed ${index === 0 ? 'drop-cap' : ''}`} style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
-              </Reveal>
+              </div>
 
-              <Reveal direction="right" delay={0.2}>
-                <div className="border border-white/10 rounded-2xl p-8 bg-white/5 h-full">
-                  <h3 className="font-display text-xl mb-6" style={{ color: 'var(--color-cream)' }}>
-                    {culture.culturalBridge.howWeDoItTitle}
-                  </h3>
-                  <ul className="space-y-4">
-                    {culture.culturalBridge.howWeDoIt.map((action, index) => {
-                      const ActionIcon = getIcon(action.icon);
-                      return (
-                        <li key={index} className="flex items-start gap-4">
-                          <div
-                            className="flex-shrink-0 p-2 rounded-full"
-                            style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)' }}
-                          >
-                            <ActionIcon className="h-4 w-4" style={{ color: 'var(--color-gold-muted)' }} />
-                          </div>
-                          <span className="text-body-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
-                            {action.text}
-                          </span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </Reveal>
+              <div className="border border-white/10 rounded-2xl p-8 bg-white/5 h-full">
+                <h3 className="font-display text-xl mb-6" style={{ color: 'var(--color-cream)' }}>
+                  {culture.culturalBridge.howWeDoItTitle}
+                </h3>
+                <ul className="space-y-4">
+                  {culture.culturalBridge.howWeDoIt.map((action, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <span className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--color-gold-muted)' }} />
+                      <span className="text-body-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.8)' }}>
+                        {action.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Ornate Divider */}
-      <div className="ornate-divider" aria-hidden="true">
-        <span style={{ color: 'var(--color-gold-muted)' }}>&#9670;</span>
-      </div>
-
-      {/* Our Camp Traditions */}
+      {/* Our Camp Traditions — editorial list */}
       <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10">
+        <div className="max-w-[720px] mx-auto px-5 md:px-10">
           <Reveal direction="up">
-            <div className="text-center space-y-3 mb-14">
-              <p className="text-eyebrow">BORN ON THE PLAYA</p>
-              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
-                Our Camp Traditions
-              </h2>
-              <p className="font-body text-base max-w-3xl mx-auto" style={{ color: 'var(--color-ink-soft)' }}>
-                Beyond Persian heritage, Camp Alborz has developed its own rituals — traditions born on the playa
-                that have become the heartbeat of our community. These aren&apos;t prescribed; they emerged naturally
-                from years of building, celebrating, and caring for each other.
-              </p>
-            </div>
+            <h2 className="font-accent text-3xl md:text-4xl tracking-tight mb-4" style={{ color: '#2C2416' }}>
+              Our Camp Traditions
+            </h2>
+            <p className="font-body text-base mb-14" style={{ color: 'var(--color-ink-soft)' }}>
+              Beyond Persian heritage, Camp Alborz has developed its own rituals — traditions born on the playa
+              that have become the heartbeat of our community. These aren&apos;t prescribed; they emerged naturally
+              from years of building, celebrating, and caring for each other.
+            </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-0">
             {[
               {
                 title: 'Sunrise Chai Circle',
@@ -500,22 +418,18 @@ export default function CulturePage() {
                 description:
                   'Your playa name isn\u2019t chosen — it finds you. At Camp Alborz, names emerge from stories told over chai, moments on the dance floor, or the way you hammer a nail. When the name sticks, we celebrate with a toast.',
               },
-            ].map((tradition, index) => (
-              <Reveal key={tradition.title} direction="up" delay={index * 0.1}>
-                <div className="luxury-card h-full">
-                  <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>
-                    {tradition.title}
-                  </h3>
-                  <div
-                    className="w-6 h-px mb-4"
-                    style={{ backgroundColor: 'var(--color-gold)' }}
-                    aria-hidden="true"
-                  />
-                  <p className="font-body text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                    {tradition.description}
-                  </p>
-                </div>
-              </Reveal>
+            ].map((tradition, index, arr) => (
+              <article key={tradition.title}>
+                <h3 className="font-display text-lg mb-2" style={{ color: 'var(--color-ink)' }}>
+                  {tradition.title}
+                </h3>
+                <p className="font-body text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                  {tradition.description}
+                </p>
+                {index < arr.length - 1 && (
+                  <hr className="my-8" style={{ borderColor: 'var(--color-warm-border)' }} aria-hidden="true" />
+                )}
+              </article>
             ))}
           </div>
         </div>

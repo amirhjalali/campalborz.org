@@ -513,29 +513,8 @@ export default function HomePage() {
         {/* ============================================ */}
         <section className="py-24 md:py-36">
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
-            <Reveal>
-              <div className="text-center mb-20">
-                <p className="text-eyebrow mb-4">Our Community</p>
-                <h2
-                  className="font-accent text-3xl md:text-4xl tracking-wide mb-4"
-                  style={{ color: '#2C2416' }}
-                >
-                  Voices from the Playa
-                </h2>
-                <div className="ornate-divider mt-6">
-                  <span
-                    className="text-xs tracking-[0.4em] uppercase"
-                    style={{ color: 'var(--color-gold-muted)' }}
-                    aria-hidden="true"
-                  >
-                    &#10022;
-                  </span>
-                </div>
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
-              {[
+            {(() => {
+              const testimonials = [
                 {
                   quote:
                     'Camp Alborz gave me a home on the playa. For the first time at Burning Man, I heard my grandmother\u2019s language over tea, watched fire dance to setar music, and felt like I truly belonged.',
@@ -557,63 +536,103 @@ export default function HomePage() {
                   playaName: 'Moonlight',
                   years: '3 years',
                 },
-              ].map((testimonial, i) => (
-                <Reveal key={testimonial.name} delay={i * 0.1} direction="up">
-                  <div
-                    className="luxury-card p-8 md:p-10 h-full flex flex-col"
-                    style={{
-                      borderTop: '2px solid var(--color-gold-muted)',
-                    }}
-                  >
-                    {/* Gold quote mark */}
-                    <span
-                      className="font-display text-4xl leading-none mb-4 block"
-                      style={{ color: 'var(--color-gold-muted)' }}
-                      aria-hidden="true"
-                    >
-                      &ldquo;
-                    </span>
+              ];
+              const first = testimonials[0];
+              const rest = testimonials.slice(1);
+              return (
+                <>
+                  {/* First testimonial alongside section heading */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 mb-16 md:mb-20">
+                    <Reveal>
+                      <div>
+                        <p className="text-eyebrow mb-4">Our Community</p>
+                        <h2
+                          className="font-accent text-3xl md:text-4xl tracking-wide"
+                          style={{ color: '#2C2416' }}
+                        >
+                          Voices from the Playa
+                        </h2>
+                      </div>
+                    </Reveal>
 
-                    <p
-                      className="text-sm leading-[1.85] flex-1 mb-8"
-                      style={{ color: 'var(--color-ink-soft)' }}
-                    >
-                      {testimonial.quote}
-                    </p>
-
-                    {/* Divider */}
-                    <div
-                      className="h-px w-12 mb-5"
-                      style={{ backgroundColor: 'var(--color-warm-border)' }}
-                      aria-hidden="true"
-                    />
-
-                    {/* Attribution */}
                     <div>
+                      <span
+                        className="font-display text-5xl leading-none mb-4 block"
+                        style={{ color: 'var(--color-gold-muted)' }}
+                        aria-hidden="true"
+                      >
+                        &ldquo;
+                      </span>
+                      <p
+                        className="text-sm leading-[1.85] mb-6"
+                        style={{ color: 'var(--color-ink-soft)' }}
+                      >
+                        {first.quote}
+                      </p>
+                      <div
+                        className="h-px w-12 mb-4"
+                        style={{ backgroundColor: 'var(--color-warm-border)' }}
+                        aria-hidden="true"
+                      />
                       <p
                         className="font-accent text-base tracking-wide"
                         style={{ color: '#2C2416' }}
                       >
-                        {testimonial.name}
+                        {first.name}
                       </p>
                       <p
                         className="text-xs mt-1"
                         style={{ color: 'var(--color-ink-faint)' }}
                       >
-                        &ldquo;{testimonial.playaName}&rdquo;
-                        <span
-                          className="mx-2"
-                          aria-hidden="true"
-                        >
-                          &#183;
-                        </span>
-                        {testimonial.years}
+                        &ldquo;{first.playaName}&rdquo;
+                        <span className="mx-2" aria-hidden="true">&#183;</span>
+                        {first.years}
                       </p>
                     </div>
                   </div>
-                </Reveal>
-              ))}
-            </div>
+
+                  {/* Remaining testimonials */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+                    {rest.map((testimonial) => (
+                      <div key={testimonial.name}>
+                        <span
+                          className="font-display text-5xl leading-none mb-4 block"
+                          style={{ color: 'var(--color-gold-muted)' }}
+                          aria-hidden="true"
+                        >
+                          &ldquo;
+                        </span>
+                        <p
+                          className="text-sm leading-[1.85] mb-6"
+                          style={{ color: 'var(--color-ink-soft)' }}
+                        >
+                          {testimonial.quote}
+                        </p>
+                        <div
+                          className="h-px w-12 mb-4"
+                          style={{ backgroundColor: 'var(--color-warm-border)' }}
+                          aria-hidden="true"
+                        />
+                        <p
+                          className="font-accent text-base tracking-wide"
+                          style={{ color: '#2C2416' }}
+                        >
+                          {testimonial.name}
+                        </p>
+                        <p
+                          className="text-xs mt-1"
+                          style={{ color: 'var(--color-ink-faint)' }}
+                        >
+                          &ldquo;{testimonial.playaName}&rdquo;
+                          <span className="mx-2" aria-hidden="true">&#183;</span>
+                          {testimonial.years}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </section>
 
@@ -646,34 +665,38 @@ export default function HomePage() {
               </div>
             </Reveal>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            <div
+              className="border-t border-b flex flex-wrap md:flex-nowrap"
+              style={{ borderColor: 'var(--color-warm-border)' }}
+            >
               {[
                 { value: '50+', label: 'Active Members' },
                 { value: '12+', label: 'Countries Represented' },
                 { value: '8', label: 'Art Installations Built' },
                 { value: '$150K+', label: 'Raised for Arts & Culture' },
               ].map((stat, i) => (
-                <Reveal key={stat.label} delay={i * 0.08} direction="up">
-                  <div
-                    className="luxury-card p-8 md:p-10 text-center"
-                    style={{
-                      borderTop: '2px solid var(--color-gold-muted)',
-                    }}
+                <div
+                  key={stat.label}
+                  className={`flex-1 py-10 md:py-14 text-center${
+                    i < 3 ? ' border-r' : ''
+                  }${i < 2 ? ' max-md:border-b' : ''}${
+                    i === 1 ? ' max-md:border-r-0' : ''
+                  } min-w-[50%] md:min-w-0`}
+                  style={{ borderColor: 'var(--color-warm-border)' }}
+                >
+                  <p
+                    className="font-display text-3xl md:text-4xl font-light tracking-wide mb-2"
+                    style={{ color: 'var(--color-terracotta)' }}
                   >
-                    <p
-                      className="font-display text-3xl md:text-4xl font-light tracking-wide mb-3"
-                      style={{ color: 'var(--color-terracotta)' }}
-                    >
-                      {stat.value}
-                    </p>
-                    <p
-                      className="text-xs tracking-[0.15em] uppercase"
-                      style={{ color: 'var(--color-ink-faint)' }}
-                    >
-                      {stat.label}
-                    </p>
-                  </div>
-                </Reveal>
+                    {stat.value}
+                  </p>
+                  <p
+                    className="text-xs tracking-[0.15em] uppercase"
+                    style={{ color: 'var(--color-ink-faint)' }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -800,14 +823,9 @@ export default function HomePage() {
             </Reveal>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
-              {offerings.map((item, i) => (
-                <Reveal
-                  key={item.title}
-                  delay={i * 0.08}
-                  direction="up"
-                >
-                  <div className="group text-center lg:text-left p-6 rounded-lg transition-all duration-400 hover:bg-white/60 dark:hover:bg-white/5 hover:shadow-sm">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 transition-all duration-300 text-terracotta bg-terracotta/10 group-hover:scale-110 group-hover:bg-terracotta/15">
+              {offerings.map((item) => (
+                  <div key={item.title} className="group text-center lg:text-left p-6 rounded-lg transition-all duration-400 hover:bg-white/60 dark:hover:bg-white/5 hover:shadow-sm">
+                    <div className="inline-flex mb-5 text-terracotta [&_svg]:w-8 [&_svg]:h-8">
                       {item.icon}
                     </div>
                     <h3 className="font-display text-lg tracking-wide mb-3">
@@ -822,7 +840,6 @@ export default function HomePage() {
                       {item.description}
                     </p>
                   </div>
-                </Reveal>
               ))}
             </div>
           </div>
@@ -1044,12 +1061,7 @@ export default function HomePage() {
                       : 'md:mt-10';
 
                 return (
-                  <Reveal
-                    key={artist.number}
-                    delay={i * 0.12}
-                    direction="up"
-                  >
-                    <article className={`${marginTop} group`}>
+                    <article key={artist.number} className={`${marginTop} group`}>
                       {/* Image with hover zoom and fallback */}
                       <div
                         className="relative aspect-[3/4] overflow-hidden rounded-sm mb-6 image-hover-zoom"
@@ -1114,7 +1126,6 @@ export default function HomePage() {
                         {artist.bio}
                       </p>
                     </article>
-                  </Reveal>
                 );
               })}
             </div>
@@ -1158,20 +1169,11 @@ export default function HomePage() {
               <div className="text-center mb-20">
                 <p className="text-eyebrow mb-4">Get Involved</p>
                 <h2
-                  className="font-accent text-3xl md:text-4xl tracking-wide mb-4"
+                  className="font-accent text-3xl md:text-4xl tracking-wide"
                   style={{ color: '#2C2416' }}
                 >
                   Find Your Place in Camp Alborz
                 </h2>
-                <div className="ornate-divider mt-6">
-                  <span
-                    className="text-xs tracking-[0.4em] uppercase"
-                    style={{ color: 'var(--color-gold-muted)' }}
-                    aria-hidden="true"
-                  >
-                    &#10022;
-                  </span>
-                </div>
               </div>
             </Reveal>
 
@@ -1198,9 +1200,8 @@ export default function HomePage() {
                   href: '/culture',
                   linkText: 'Learn More',
                 },
-              ].map((pathway, i) => (
-                <Reveal key={pathway.title} delay={i * 0.1} direction="up">
-                  <Link href={pathway.href} className="block group h-full">
+              ].map((pathway) => (
+                  <Link key={pathway.title} href={pathway.href} className="block group h-full">
                     <div
                       className="luxury-card p-8 md:p-10 h-full flex flex-col text-center transition-all duration-300 group-hover:shadow-lg"
                       style={{
@@ -1244,7 +1245,6 @@ export default function HomePage() {
                       </span>
                     </div>
                   </Link>
-                </Reveal>
               ))}
             </div>
           </div>
@@ -1372,9 +1372,8 @@ export default function HomePage() {
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-14">
-              {campQAs.map(({ question, answer }, i) => (
-                <Reveal key={question} delay={i * 0.08}>
-                  <div className="group">
+              {campQAs.map(({ question, answer }) => (
+                  <div key={question} className="group">
                     <h3
                       className="font-accent text-lg md:text-xl mb-3 transition-colors duration-300 group-hover:text-terracotta"
                       style={{ color: '#2C2416' }}
@@ -1388,7 +1387,6 @@ export default function HomePage() {
                       {answer}
                     </p>
                   </div>
-                </Reveal>
               ))}
             </div>
 

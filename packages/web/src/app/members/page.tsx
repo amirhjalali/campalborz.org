@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, LogIn, Eye, EyeOff, AlertCircle, Users, Globe, Flame, Palette, Quote, Calendar, Sparkles } from 'lucide-react';
+import { ArrowRight, LogIn, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useAuth } from '../../contexts/AuthContext';
@@ -11,7 +11,7 @@ import { Reveal } from '../../components/reveal';
 
 const campVoices = [
   {
-    quote: 'The playa can feel overwhelming \u2014 but the moment you smell the chai at Camp Alborz, you\u2019re home.',
+    quote: 'The playa can feel overwhelming — but the moment you smell the chai at Camp Alborz, you\u2019re home.',
     name: 'Maryam',
     years: '5th year',
   },
@@ -28,10 +28,10 @@ const campVoices = [
 ];
 
 const communityStats = [
-  { label: 'Members', value: '50+', Icon: Users },
-  { label: 'Countries', value: '12+', Icon: Globe },
-  { label: 'Founded', value: '2008', Icon: Flame },
-  { label: 'Art Installations', value: '8', Icon: Palette },
+  { label: 'Members', value: '50+' },
+  { label: 'Countries', value: '12+' },
+  { label: 'Founded', value: '2008' },
+  { label: 'Art Installations', value: '8' },
 ];
 
 export default function MembersPage() {
@@ -90,96 +90,97 @@ export default function MembersPage() {
   // Login view (not authenticated)
   return (
       <main className="min-h-screen" style={{ backgroundColor: 'var(--color-cream)' }}>
-        {/* Hero Section — warm community-first framing */}
-        <section className="pt-32 pb-16">
-          <div className="section-contained text-center">
+        {/* Opening — warm, text-first, no hero image */}
+        <section className="pt-32 pb-12">
+          <div className="section-contained">
             <Reveal direction="up">
               <p className="text-caption tracking-widest uppercase mb-4" style={{ color: 'var(--color-gold)' }}>
                 Our People
               </p>
-            </Reveal>
-            <Reveal direction="up" delay={0.1}>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl mb-6" style={{ color: '#2C2416' }}>
                 The Heart of Camp Alborz
               </h1>
             </Reveal>
-            <Reveal direction="up" delay={0.2}>
-              <p className="font-accent text-lg md:text-xl max-w-2xl mx-auto leading-relaxed" style={{ color: '#4a4a42' }}>
-                Fifty families, one camp. Here&apos;s who we are and what we build together.
-              </p>
-            </Reveal>
-            <Reveal direction="up" delay={0.3}>
-              <div className="ornate-divider mt-8" aria-hidden="true">
-                <span />
-              </div>
-            </Reveal>
+            <p className="font-accent text-lg md:text-xl max-w-2xl leading-relaxed" style={{ color: '#4a4a42' }}>
+              Fifty families, one camp. Here&apos;s who we are and what we build together.
+            </p>
           </div>
         </section>
 
-        {/* Who We Are — community snapshot */}
+        {/* Who We Are — left-aligned intro with inline stat strip */}
         <section className="py-16 section-alt">
           <div className="section-contained">
             <Reveal direction="up">
-              <div className="max-w-3xl mx-auto text-center mb-14">
-                <h2 className="font-display text-3xl md:text-4xl mb-6" style={{ color: '#2C2416' }}>
-                  Who We Are
-                </h2>
-                <p className="text-body-relaxed text-lg leading-relaxed" style={{ color: '#4a4a42' }}>
-                  Camp Alborz is home to engineers, artists, teachers, students, musicians, and dreamers
-                  &mdash; bound together by Persian hospitality and a love of creating. Some of us have
-                  burned for a decade; some are preparing for their first year. All of us belong.
-                </p>
-              </div>
+              <h2 className="font-display text-3xl md:text-4xl mb-6" style={{ color: '#2C2416' }}>
+                Who We Are
+              </h2>
             </Reveal>
+            <p className="text-body-relaxed text-lg leading-relaxed max-w-3xl mb-10" style={{ color: '#4a4a42' }}>
+              Camp Alborz is home to engineers, artists, teachers, students, musicians, and dreamers
+              &mdash; bound together by Persian hospitality and a love of creating. Some of us have
+              burned for a decade; some are preparing for their first year. All of us belong.
+            </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="flex items-center gap-0 flex-wrap">
               {communityStats.map((stat, index) => (
-                <Reveal key={stat.label} direction="up" delay={index * 0.1}>
-                  <div className="luxury-card p-6 text-center">
-                    <stat.Icon className="h-7 w-7 mx-auto mb-3" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
-                    <div className="font-display text-3xl md:text-4xl mb-1" style={{ color: 'var(--color-gold)' }}>
+                <div key={stat.label} className="flex items-center">
+                  {index > 0 && (
+                    <div className="w-px h-10 mx-6 md:mx-8" style={{ backgroundColor: 'var(--color-gold)', opacity: 0.3 }} aria-hidden="true" />
+                  )}
+                  <div>
+                    <span className="font-display text-2xl md:text-3xl" style={{ color: 'var(--color-gold)' }}>
                       {stat.value}
-                    </div>
-                    <div className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
+                    </span>
+                    <span className="text-body-relaxed text-sm ml-2" style={{ color: '#4a4a42' }}>
                       {stat.label}
-                    </div>
+                    </span>
                   </div>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Camp Voices — member quotes */}
+        {/* Camp Voices — one featured quote, two smaller pull-quotes */}
         <section className="py-16">
           <div className="section-contained">
             <Reveal direction="up">
-              <div className="text-center mb-12">
-                <h2 className="font-display text-3xl md:text-4xl mb-4" style={{ color: '#2C2416' }}>
-                  Camp Voices
-                </h2>
-                <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
-                  In their own words, why our members keep coming back.
-                </p>
-              </div>
+              <h2 className="font-display text-3xl md:text-4xl mb-4" style={{ color: '#2C2416' }}>
+                Camp Voices
+              </h2>
+              <p className="text-body-relaxed text-lg max-w-2xl mb-12" style={{ color: '#4a4a42' }}>
+                In their own words, why our members keep coming back.
+              </p>
             </Reveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {campVoices.map((voice, index) => (
-                <Reveal key={voice.name} direction="up" delay={index * 0.12}>
-                  <div className="luxury-card p-6 h-full flex flex-col justify-between">
-                    <div>
-                      <Quote className="h-6 w-6 mb-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.6 }} aria-hidden="true" />
-                      <p className="font-accent text-base md:text-lg italic leading-relaxed mb-6" style={{ color: '#2C2416', opacity: 0.85 }}>
-                        &ldquo;{voice.quote}&rdquo;
-                      </p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-10 max-w-5xl">
+              {/* Featured quote */}
+              <div className="md:col-span-3">
+                <span className="font-display text-5xl leading-none block mb-2" style={{ color: 'var(--color-gold)' }} aria-hidden="true">&ldquo;</span>
+                <p className="font-accent text-xl md:text-2xl italic leading-relaxed mb-6" style={{ color: '#2C2416' }}>
+                  {campVoices[0].quote}
+                </p>
+                <hr className="w-12 mb-4" style={{ borderColor: 'var(--color-gold)', opacity: 0.4 }} />
+                <p className="text-caption text-xs tracking-widest uppercase" style={{ color: 'var(--color-gold)' }}>
+                  {campVoices[0].name} &mdash; {campVoices[0].years}
+                </p>
+              </div>
+
+              {/* Smaller pull-quotes */}
+              <div className="md:col-span-2 flex flex-col justify-between gap-10">
+                {campVoices.slice(1).map((voice) => (
+                  <div key={voice.name}>
+                    <span className="font-display text-3xl leading-none block mb-1" style={{ color: 'var(--color-gold)' }} aria-hidden="true">&ldquo;</span>
+                    <p className="font-accent text-base italic leading-relaxed mb-4" style={{ color: '#2C2416', opacity: 0.85 }}>
+                      {voice.quote}
+                    </p>
+                    <hr className="w-8 mb-3" style={{ borderColor: 'var(--color-gold)', opacity: 0.4 }} />
                     <p className="text-caption text-xs tracking-widest uppercase" style={{ color: 'var(--color-gold)' }}>
                       {voice.name} &mdash; {voice.years}
                     </p>
                   </div>
-                </Reveal>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -188,111 +189,98 @@ export default function MembersPage() {
         <section className="py-16 section-alt">
           <div className="section-contained">
             <Reveal direction="up">
-              <div className="text-center mb-12">
-                <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
-                  {members.spotlight.title}
-                </h2>
-                <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
-                  {members.spotlight.subtitle}
-                </p>
-              </div>
+              <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
+                {members.spotlight.title}
+              </h2>
+              <p className="text-body-relaxed text-lg max-w-2xl mb-12" style={{ color: '#4a4a42' }}>
+                {members.spotlight.subtitle}
+              </p>
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {members.spotlight.members.map((member, index) => (
-                <Reveal key={member.name} direction="up" delay={index * 0.1}>
-                  <div className="text-center">
-                    <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-sage-light/30 border-2 border-gold/30" />
-                    <h3 className="font-display text-xl mb-1" style={{ color: '#2C2416' }}>
-                      {member.name}
-                    </h3>
-                    <p className="font-medium mb-2" style={{ color: 'var(--color-gold)' }}>
-                      {member.role}
-                    </p>
-                    <p className="text-sm mb-3" style={{ color: '#4a4a42' }}>
-                      Member for {member.years}
-                    </p>
-                    <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
-                      {member.contribution}
-                    </p>
-                  </div>
-                </Reveal>
+              {members.spotlight.members.map((member) => (
+                <div key={member.name} className="text-center">
+                  <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold/30 to-sage-light/30 border-2 border-gold/30" />
+                  <h3 className="font-display text-xl mb-1" style={{ color: '#2C2416' }}>
+                    {member.name}
+                  </h3>
+                  <p className="font-medium mb-2" style={{ color: 'var(--color-gold)' }}>
+                    {member.role}
+                  </p>
+                  <p className="text-sm mb-3" style={{ color: '#4a4a42' }}>
+                    Member for {member.years}
+                  </p>
+                  <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
+                    {member.contribution}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Community at a Glance — config-driven stats */}
+        {/* Community at a Glance — config-driven stats, bare strip */}
         <section className="py-16">
           <div className="section-contained">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="flex items-center justify-center gap-0 flex-wrap">
               {members.communityStats.map((stat, index) => {
                 const StatIcon = getIcon(stat.icon);
                 return (
-                  <Reveal key={stat.label} direction="up" delay={index * 0.08}>
-                    <div>
-                      <StatIcon className="h-8 w-8 mx-auto mb-3" style={{ color: 'var(--color-gold)' }} />
-                      <div className="font-display text-4xl mb-1" style={{ color: 'var(--color-gold)' }}>
+                  <div key={stat.label} className="flex items-center">
+                    {index > 0 && (
+                      <div className="w-px h-10 mx-6 md:mx-8" style={{ backgroundColor: 'var(--color-gold)', opacity: 0.3 }} aria-hidden="true" />
+                    )}
+                    <div className="text-center">
+                      <div className="font-display text-3xl md:text-4xl mb-1" style={{ color: 'var(--color-gold)' }}>
                         {stat.value}
                       </div>
-                      <div className="text-body-relaxed" style={{ color: '#4a4a42' }}>
+                      <div className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
                         {stat.label}
                       </div>
                     </div>
-                  </Reveal>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        {/* What It Means to Be Part of Camp Alborz — softer benefits framing */}
+        {/* What It Means to Be Part of Camp Alborz */}
         <section className="py-16 section-alt">
           <div className="section-contained">
             <Reveal direction="up">
-              <div className="text-center mb-12">
-                <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
-                  What It Means to Be Part of Camp Alborz
-                </h2>
-                <p className="text-body-relaxed text-lg max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
-                  {members.benefits.subtitle}
-                </p>
-              </div>
+              <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
+                What It Means to Be Part of Camp Alborz
+              </h2>
+              <p className="text-body-relaxed text-lg max-w-2xl mb-12" style={{ color: '#4a4a42' }}>
+                {members.benefits.subtitle}
+              </p>
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {members.benefits.items.map((benefit, index) => {
+              {members.benefits.items.map((benefit) => {
                 const BenefitIcon = getIcon(benefit.icon);
                 return (
-                  <Reveal key={benefit.title} direction="up" delay={index * 0.08}>
-                    <div className="luxury-card p-6">
-                      <div className="inline-flex p-3 rounded-lg bg-gradient-to-br from-gold/20 to-gold/10 border border-gold/30 mb-4">
-                        <BenefitIcon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} />
-                      </div>
-                      <h3 className="font-display text-lg mb-2" style={{ color: '#2C2416' }}>
-                        {benefit.title}
-                      </h3>
-                      <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
-                        {benefit.description}
-                      </p>
-                    </div>
-                  </Reveal>
+                  <div key={benefit.title} className="p-6">
+                    <BenefitIcon className="h-6 w-6 mb-4" style={{ color: 'var(--color-gold)' }} />
+                    <h3 className="font-display text-lg mb-2" style={{ color: '#2C2416' }}>
+                      {benefit.title}
+                    </h3>
+                    <p className="text-body-relaxed text-sm" style={{ color: '#4a4a42' }}>
+                      {benefit.description}
+                    </p>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        {/* Member Login — moved below community content */}
+        {/* Member Login */}
         <section className="py-16">
           <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
             <Reveal direction="up">
               <div className="luxury-card p-8">
-                <div className="flex justify-center mb-6">
-                  <div className="p-3 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full border border-gold/30">
-                    <LogIn className="h-8 w-8" style={{ color: 'var(--color-gold)' }} />
-                  </div>
-                </div>
                 <h2 className="font-display text-2xl text-center mb-2" style={{ color: '#2C2416' }}>
                   {members.loginSection.title}
                 </h2>
@@ -396,59 +384,51 @@ export default function MembersPage() {
         {/* CTA Section — config driven */}
         {members.cta && (
           <section className="py-16 section-alt">
-            <div className="section-contained text-center">
+            <div className="section-contained">
               <Reveal direction="up">
-                <div className="frame-panel max-w-4xl mx-auto">
-                  <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
-                    {members.cta.title}
-                  </h2>
-                  <p className="text-body-relaxed text-lg mb-8 max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
-                    {members.cta.description}
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href={members.cta.buttons.primary.link} className="cta-primary">
-                      <span>{members.cta.buttons.primary.text}</span>
-                      <span><ArrowRight className="ml-2 h-5 w-5" /></span>
-                    </Link>
-                    <Link href={members.cta.buttons.secondary.link} className="cta-secondary">
-                      <span>{members.cta.buttons.secondary.text}</span>
-                      <span><ArrowRight className="ml-2 h-5 w-5" /></span>
-                    </Link>
-                  </div>
+                <h2 className="font-display text-3xl mb-4" style={{ color: '#2C2416' }}>
+                  {members.cta.title}
+                </h2>
+                <p className="text-body-relaxed text-lg mb-8 max-w-2xl" style={{ color: '#4a4a42' }}>
+                  {members.cta.description}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link href={members.cta.buttons.primary.link} className="cta-primary">
+                    <span>{members.cta.buttons.primary.text}</span>
+                    <span><ArrowRight className="ml-2 h-5 w-5" /></span>
+                  </Link>
+                  <Link href={members.cta.buttons.secondary.link} className="cta-secondary">
+                    <span>{members.cta.buttons.secondary.text}</span>
+                  </Link>
                 </div>
               </Reveal>
             </div>
           </section>
         )}
 
-        {/* Not a member yet? — warm welcome CTA */}
+        {/* Not a member yet? — conversational paragraph with inline links */}
         <section className="py-16">
-          <div className="section-contained text-center">
+          <div className="section-contained">
             <Reveal direction="up">
-              <div className="max-w-3xl mx-auto">
-                <Sparkles className="h-8 w-8 mx-auto mb-4" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
-                <h2 className="font-display text-3xl md:text-4xl mb-4" style={{ color: '#2C2416' }}>
-                  Not a Member Yet?
-                </h2>
-                <p className="text-body-relaxed text-lg mb-10 max-w-2xl mx-auto" style={{ color: '#4a4a42' }}>
-                  Everyone&apos;s welcome. Start with an event, explore our culture, or apply to join.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/events" className="cta-secondary">
-                    <span><Calendar className="mr-2 h-5 w-5" aria-hidden="true" /></span>
-                    <span>Upcoming Events</span>
-                  </Link>
-                  <Link href="/culture" className="cta-secondary">
-                    <span><Globe className="mr-2 h-5 w-5" aria-hidden="true" /></span>
-                    <span>Our Culture</span>
-                  </Link>
-                  <Link href="/apply" className="cta-primary">
-                    <span>Apply to Join</span>
-                    <span><ArrowRight className="ml-2 h-5 w-5" /></span>
-                  </Link>
-                </div>
-              </div>
+              <h2 className="font-display text-3xl md:text-4xl mb-6" style={{ color: '#2C2416' }}>
+                Not a Member Yet?
+              </h2>
             </Reveal>
+            <p className="text-body-relaxed text-lg leading-relaxed max-w-2xl" style={{ color: '#4a4a42' }}>
+              Everyone&apos;s welcome. Come to one of our{' '}
+              <Link href="/events" className="text-gold font-medium hover:text-gold/80 transition-colors underline underline-offset-4 decoration-gold/30">
+                upcoming events
+              </Link>
+              , learn about{' '}
+              <Link href="/culture" className="text-gold font-medium hover:text-gold/80 transition-colors underline underline-offset-4 decoration-gold/30">
+                our culture
+              </Link>
+              , or{' '}
+              <Link href="/apply" className="text-gold font-medium hover:text-gold/80 transition-colors underline underline-offset-4 decoration-gold/30">
+                apply to join
+              </Link>
+              {' '}when you&apos;re ready.
+            </p>
           </div>
         </section>
       </main>

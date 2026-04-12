@@ -1,27 +1,17 @@
 'use client';
 
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
-import { ArrowRight, Calendar, Clock, MapPin, ExternalLink, Sparkles, Users, Heart } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, MapPin, ExternalLink, Sparkles } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 export default function EventsPage() {
   const { events } = useContentConfig();
-  const heroRef = useRef<HTMLElement>(null);
   const [activeFilter, setActiveFilter] = useState<string>('all');
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '22%']);
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   if (!events) {
     return (
@@ -39,18 +29,14 @@ export default function EventsPage() {
 
   return (
     <main style={{ backgroundColor: 'var(--color-cream)' }}>
-      {/* Hero Section with Parallax */}
+      {/* Hero Section — static editorial image */}
       <section
-        ref={heroRef}
         className="relative min-h-hero-sm overflow-hidden flex items-center justify-center"
         style={{
           background: 'linear-gradient(160deg, #1a1f1a 0%, #4A5D5A 30%, #2C2416 60%, #D4AF37 90%, #D4C4A8 100%)',
         }}
       >
-        <motion.div
-          className="absolute inset-0 z-0"
-          style={{ y: backgroundY }}
-        >
+        <div className="absolute inset-0 z-0">
           <Image
             src="/images/migrated/alborz/741b0955e065164bc12eadd8b26f0af4.webp"
             alt="Camp Alborz community event at night on the playa with Persian geometric structures and colorful lights"
@@ -61,96 +47,71 @@ export default function EventsPage() {
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
-        </motion.div>
+        </div>
 
-        <div className="absolute inset-0 pattern-persian opacity-20 z-[1]" />
-
-        <motion.div
-          className="relative z-10 text-center py-24 max-w-[1200px] mx-auto px-5 md:px-10"
-          style={{ y: textY, opacity }}
-        >
-          <motion.p
-            className="text-eyebrow mb-6"
-            style={{ color: 'rgba(255, 255, 255, 0.8)' }}
-            initial={{ y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          >
-            GATHER WITH US
-          </motion.p>
+        <div className="relative z-10 text-center py-24 max-w-[1200px] mx-auto px-5 md:px-10">
           <motion.h1
             className="font-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-white drop-shadow-lg mb-6"
-            initial={{ y: 20 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             {events.title}
           </motion.h1>
           <motion.p
             className="font-accent text-lg md:text-xl text-white/90 max-w-3xl mx-auto"
-            initial={{ y: 14 }}
+            initial={{ y: 14, opacity: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: 0.25, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             {events.subtitle}
           </motion.p>
-
-          <motion.div
-            className="ornate-divider mt-8"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{ filter: 'brightness(1.5)' }}
-          />
-        </motion.div>
+        </div>
       </section>
 
-      {/* Why We Gather -- Intro Section */}
+      {/* Why We Gather — editorial layout */}
       <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
           <Reveal>
-            <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-              <p className="text-eyebrow">MORE THAN EVENTS</p>
-              <h2 className="font-accent text-3xl md:text-4xl tracking-tight" style={{ color: '#2C2416' }}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-10 md:gap-16 items-start mb-16">
+              <h2 className="font-accent text-3xl md:text-4xl lg:text-5xl tracking-tight leading-tight" style={{ color: '#2C2416' }}>
                 Every Gathering Tells a Story
               </h2>
-              <p className="font-accent text-lg leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
+              <p className="font-accent text-lg leading-relaxed pt-1 md:pt-2" style={{ color: 'var(--color-ink-soft)' }}>
                 Camp Alborz events aren&apos;t just dates on a calendar &mdash; they&apos;re where our community comes alive. Whether it&apos;s a warehouse build day where art takes shape, a fundraiser filled with Persian music and dance, or a quiet planning session over chai, every gathering strengthens the bonds that carry us to the playa and back.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {/* Stat strip — bare numbers with vertical dividers */}
+          <div
+            className="flex items-center justify-center gap-0 py-6"
+            style={{ borderTop: '1px solid var(--color-line)', borderBottom: '1px solid var(--color-line)' }}
+          >
             {[
-              { icon: Calendar, stat: '20+', label: 'Events Per Year' },
-              { icon: Users, stat: '200+', label: 'Annual Attendees' },
-              { icon: Heart, stat: '100%', label: 'Community-Powered' },
+              { stat: '20+', label: 'Events Per Year' },
+              { stat: '200+', label: 'Annual Attendees' },
+              { stat: '100%', label: 'Community-Powered' },
             ].map((item, index) => (
-              <Reveal key={item.label} delay={index * 0.1}>
-                <motion.div
-                  className="luxury-card text-center group"
-                  whileHover={{ y: -4 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                >
+              <div key={item.label} className="flex items-center">
+                {index > 0 && (
                   <div
-                    className="inline-flex p-4 rounded-full mb-4"
-                    style={{
-                      backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
-                      border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
-                    }}
-                  >
-                    <item.icon className="h-6 w-6" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
-                  </div>
-                  <p className="font-display text-3xl mb-1" style={{ color: 'var(--color-ink)' }}>{item.stat}</p>
-                  <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>{item.label}</p>
-                </motion.div>
-              </Reveal>
+                    className="w-px h-10 mx-6 sm:mx-10 flex-shrink-0"
+                    style={{ backgroundColor: 'var(--color-line)' }}
+                    aria-hidden="true"
+                  />
+                )}
+                <div className="text-center">
+                  <p className="font-display text-3xl md:text-4xl mb-1" style={{ color: 'var(--color-ink)' }}>{item.stat}</p>
+                  <p className="text-body-relaxed text-xs sm:text-sm tracking-wide uppercase" style={{ color: 'var(--color-ink-soft)' }}>{item.label}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Event Types -- Visual Category Cards */}
+      {/* Event Types — Category Cards */}
       <section className="py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
           <Reveal>
@@ -166,56 +127,55 @@ export default function EventsPage() {
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {events.eventTypes.map((type, index) => {
+            {events.eventTypes.map((type) => {
               const TypeIcon = getIcon(type.icon);
 
               return (
-                <Reveal key={type.name} delay={index * 0.1}>
-                  <motion.div
-                    className="luxury-card text-center group h-full relative overflow-hidden"
-                    whileHover={{ y: -6 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  >
-                    {/* Subtle decorative gradient on hover */}
+                <motion.div
+                  key={type.name}
+                  className="luxury-card text-center group h-full relative overflow-hidden"
+                  whileHover={{ y: -6 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                >
+                  {/* Subtle decorative gradient on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(circle at 50% 0%, rgba(var(--color-gold-rgb), 0.08), transparent 70%)',
+                    }}
+                  />
+                  <div className="relative z-10">
                     <div
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                      className="inline-flex p-4 rounded-full mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
                       style={{
-                        background: 'radial-gradient(circle at 50% 0%, rgba(var(--color-gold-rgb), 0.08), transparent 70%)',
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
+                        border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
                       }}
-                    />
-                    <div className="relative z-10">
-                      <div
-                        className="inline-flex p-4 rounded-full mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-                        style={{
-                          backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
-                          border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
-                        }}
-                      >
-                        <TypeIcon className="h-7 w-7" style={{ color: 'var(--color-gold)' }} />
-                      </div>
-                      <h3 className="font-display text-lg mb-2" style={{ color: 'var(--color-ink)' }}>{type.name}</h3>
-                      <p
-                        className="inline-block px-3 py-0.5 rounded-full text-xs font-medium mb-3"
-                        style={{
-                          backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
-                          color: 'var(--color-gold)',
-                        }}
-                      >
-                        {type.count} events yearly
-                      </p>
-                      <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
-                        {type.description}
-                      </p>
+                    >
+                      <TypeIcon className="h-7 w-7" style={{ color: 'var(--color-gold)' }} />
                     </div>
-                  </motion.div>
-                </Reveal>
+                    <h3 className="font-display text-lg mb-2" style={{ color: 'var(--color-ink)' }}>{type.name}</h3>
+                    <p
+                      className="inline-block px-3 py-0.5 rounded-full text-xs font-medium mb-3"
+                      style={{
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
+                        color: 'var(--color-gold)',
+                      }}
+                    >
+                      {type.count} events yearly
+                    </p>
+                    <p className="text-body-relaxed text-sm" style={{ color: 'var(--color-ink-soft)' }}>
+                      {type.description}
+                    </p>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Upcoming Events -- Timeline Layout */}
+      {/* Upcoming Events — Timeline Layout */}
       <section className="section-contrast py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
           <Reveal>
@@ -233,39 +193,37 @@ export default function EventsPage() {
           </Reveal>
 
           {/* Filter pills */}
-          <Reveal delay={0.15}>
-            <div className="flex flex-wrap justify-center gap-2 mb-12" role="tablist" aria-label="Filter events by type">
-              {eventTypes.map((type) => (
-                <button
-                  key={type}
-                  role="tab"
-                  aria-selected={activeFilter === type}
-                  onClick={() => setActiveFilter(type)}
-                  className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
-                  style={{
-                    backgroundColor:
-                      activeFilter === type
-                        ? 'var(--color-gold)'
-                        : 'rgba(255, 255, 255, 0.08)',
-                    color:
-                      activeFilter === type
-                        ? '#1a1a18'
-                        : 'rgba(var(--color-tan-50), 0.8)',
-                    border:
-                      activeFilter === type
-                        ? '1px solid var(--color-gold)'
-                        : '1px solid rgba(255, 255, 255, 0.15)',
-                  }}
-                >
-                  {type === 'all' ? 'All Events' : type}
-                </button>
-              ))}
-            </div>
-          </Reveal>
+          <div className="flex flex-wrap justify-center gap-2 mb-12" role="tablist" aria-label="Filter events by type">
+            {eventTypes.map((type) => (
+              <button
+                key={type}
+                role="tab"
+                aria-selected={activeFilter === type}
+                onClick={() => setActiveFilter(type)}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
+                style={{
+                  backgroundColor:
+                    activeFilter === type
+                      ? 'var(--color-gold)'
+                      : 'rgba(255, 255, 255, 0.08)',
+                  color:
+                    activeFilter === type
+                      ? '#1a1a18'
+                      : 'rgba(var(--color-tan-50), 0.8)',
+                  border:
+                    activeFilter === type
+                      ? '1px solid var(--color-gold)'
+                      : '1px solid rgba(255, 255, 255, 0.15)',
+                }}
+              >
+                {type === 'all' ? 'All Events' : type}
+              </button>
+            ))}
+          </div>
 
           {/* Timeline */}
           <div className="relative">
-            {/* Vertical timeline line -- hidden on mobile */}
+            {/* Vertical timeline line — hidden on mobile */}
             <div
               className="hidden md:block absolute left-8 top-0 bottom-0 w-px"
               style={{ backgroundColor: 'rgba(var(--color-gold-rgb), 0.2)' }}
@@ -281,143 +239,136 @@ export default function EventsPage() {
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 className="space-y-8"
               >
-                {filteredEvents.map((event, index) => {
+                {filteredEvents.map((event) => {
                   const EventIcon = getIcon(event.icon);
                   const isExternalLink = event.linkUrl?.startsWith('http');
                   const isFeatured = event.type === 'Burning Man';
 
                   return (
-                    <Reveal key={event.id} delay={index * 0.08}>
-                      <div className="relative md:pl-20">
-                        {/* Timeline dot */}
+                    <div key={event.id} className="relative md:pl-20">
+                      {/* Timeline dot */}
+                      <div
+                        className="hidden md:flex absolute left-5 top-6 w-7 h-7 rounded-full items-center justify-center z-10"
+                        style={{
+                          backgroundColor: isFeatured
+                            ? 'var(--color-gold)'
+                            : 'rgba(var(--color-gold-rgb), 0.2)',
+                          border: '2px solid rgba(var(--color-gold-rgb), 0.4)',
+                        }}
+                        aria-hidden="true"
+                      >
                         <div
-                          className="hidden md:flex absolute left-5 top-6 w-7 h-7 rounded-full items-center justify-center z-10"
+                          className="w-2 h-2 rounded-full"
                           style={{
                             backgroundColor: isFeatured
-                              ? 'var(--color-gold)'
-                              : 'rgba(var(--color-gold-rgb), 0.2)',
-                            border: '2px solid rgba(var(--color-gold-rgb), 0.4)',
+                              ? '#1a1a18'
+                              : 'var(--color-gold)',
                           }}
-                          aria-hidden="true"
-                        >
-                          <div
-                            className="w-2 h-2 rounded-full"
-                            style={{
-                              backgroundColor: isFeatured
-                                ? '#1a1a18'
-                                : 'var(--color-gold)',
-                            }}
-                          />
-                        </div>
+                        />
+                      </div>
 
-                        <motion.article
-                          className={`rounded-2xl p-6 sm:p-8 group transition-all duration-300 ${
-                            isFeatured ? 'ring-1' : ''
-                          }`}
-                          style={{
-                            backgroundColor: isFeatured
-                              ? 'rgba(var(--color-gold-rgb), 0.08)'
-                              : 'rgba(255, 255, 255, 0.05)',
-                            borderColor: isFeatured
-                              ? 'rgba(var(--color-gold-rgb), 0.3)'
-                              : 'rgba(255, 255, 255, 0.08)',
-                            border: isFeatured
-                              ? undefined
-                              : '1px solid rgba(255, 255, 255, 0.08)',
-                            boxShadow: isFeatured
-                              ? '0 0 0 2px rgba(var(--color-gold-rgb), 0.25)'
-                              : undefined,
-                          }}
-                          whileHover={{
-                            backgroundColor: isFeatured
-                              ? 'rgba(184, 150, 12, 0.12)'
-                              : 'rgba(255, 255, 255, 0.08)',
-                          }}
-                        >
-                          {/* Featured badge */}
-                          {isFeatured && (
-                            <div className="flex items-center gap-2 mb-4">
-                              <Sparkles className="h-4 w-4" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
+                      <article
+                        className={`rounded-2xl p-6 sm:p-8 group transition-all duration-300 ${
+                          isFeatured ? 'ring-1' : ''
+                        }`}
+                        style={{
+                          backgroundColor: isFeatured
+                            ? 'rgba(var(--color-gold-rgb), 0.08)'
+                            : 'rgba(255, 255, 255, 0.05)',
+                          borderColor: isFeatured
+                            ? 'rgba(var(--color-gold-rgb), 0.3)'
+                            : 'rgba(255, 255, 255, 0.08)',
+                          border: isFeatured
+                            ? undefined
+                            : '1px solid rgba(255, 255, 255, 0.08)',
+                          boxShadow: isFeatured
+                            ? '0 0 0 2px rgba(var(--color-gold-rgb), 0.25)'
+                            : undefined,
+                        }}
+                      >
+                        {/* Featured badge */}
+                        {isFeatured && (
+                          <div className="flex items-center gap-2 mb-4">
+                            <Sparkles className="h-4 w-4" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
+                            <span
+                              className="text-xs uppercase tracking-[0.15em] font-medium"
+                              style={{ color: 'var(--color-gold)' }}
+                            >
+                              Featured Event
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="flex flex-col sm:flex-row sm:items-start gap-5">
+                          {/* Date block */}
+                          <div
+                            className="flex-shrink-0 flex sm:flex-col items-center sm:items-center gap-3 sm:gap-1 sm:w-20 sm:text-center sm:pt-1"
+                          >
+                            <div
+                              className="flex sm:flex-col items-center gap-2 sm:gap-1 px-3 py-2 sm:px-4 sm:py-3 rounded-xl"
+                              style={{
+                                backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
+                                border: '1px solid rgba(var(--color-gold-rgb), 0.15)',
+                              }}
+                            >
+                              <EventIcon className="h-5 w-5" style={{ color: 'var(--color-gold-muted)' }} />
                               <span
-                                className="text-xs uppercase tracking-[0.15em] font-medium"
-                                style={{ color: 'var(--color-gold)' }}
+                                className="text-xs uppercase tracking-wider font-medium"
+                                style={{ color: 'var(--color-gold-muted)' }}
                               >
-                                Featured Event
+                                {event.type}
                               </span>
                             </div>
-                          )}
+                          </div>
 
-                          <div className="flex flex-col sm:flex-row sm:items-start gap-5">
-                            {/* Date block */}
-                            <div
-                              className="flex-shrink-0 flex sm:flex-col items-center sm:items-center gap-3 sm:gap-1 sm:w-20 sm:text-center sm:pt-1"
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <h3
+                              className={`font-display mb-3 ${isFeatured ? 'text-2xl' : 'text-xl'}`}
+                              style={{ color: 'var(--color-cream)' }}
                             >
-                              <div
-                                className="flex sm:flex-col items-center gap-2 sm:gap-1 px-3 py-2 sm:px-4 sm:py-3 rounded-xl"
+                              {event.title}
+                            </h3>
+
+                            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm mb-4" style={{ color: 'rgba(var(--color-tan-50), 0.7)' }}>
+                              <div className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
+                                <span>{event.date}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
+                                <span>{event.time}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
+                                <span>{event.location}</span>
+                              </div>
+                            </div>
+
+                            <p className="font-accent text-sm leading-relaxed mb-4" style={{ color: 'rgba(var(--color-tan-50), 0.8)' }}>
+                              {event.description}
+                            </p>
+
+                            {event.linkUrl && (
+                              <Link
+                                href={event.linkUrl}
+                                target={isExternalLink ? '_blank' : undefined}
+                                rel={isExternalLink ? 'noreferrer' : undefined}
+                                className="inline-flex items-center gap-2 text-sm font-medium transition-all duration-200 group/link rounded-full px-4 py-2"
                                 style={{
+                                  color: 'var(--color-gold)',
                                   backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
-                                  border: '1px solid rgba(var(--color-gold-rgb), 0.15)',
+                                  border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
                                 }}
                               >
-                                <EventIcon className="h-5 w-5" style={{ color: 'var(--color-gold-muted)' }} />
-                                <span
-                                  className="text-xs uppercase tracking-wider font-medium"
-                                  style={{ color: 'var(--color-gold-muted)' }}
-                                >
-                                  {event.type}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <h3
-                                className={`font-display mb-3 ${isFeatured ? 'text-2xl' : 'text-xl'}`}
-                                style={{ color: 'var(--color-cream)' }}
-                              >
-                                {event.title}
-                              </h3>
-
-                              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm mb-4" style={{ color: 'rgba(var(--color-tan-50), 0.7)' }}>
-                                <div className="flex items-center gap-2">
-                                  <Calendar className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
-                                  <span>{event.date}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <Clock className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
-                                  <span>{event.time}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <MapPin className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-gold-muted)', opacity: 0.7 }} aria-hidden="true" />
-                                  <span>{event.location}</span>
-                                </div>
-                              </div>
-
-                              <p className="font-accent text-sm leading-relaxed mb-4" style={{ color: 'rgba(var(--color-tan-50), 0.8)' }}>
-                                {event.description}
-                              </p>
-
-                              {event.linkUrl && (
-                                <Link
-                                  href={event.linkUrl}
-                                  target={isExternalLink ? '_blank' : undefined}
-                                  rel={isExternalLink ? 'noreferrer' : undefined}
-                                  className="inline-flex items-center gap-2 text-sm font-medium transition-all duration-200 group/link rounded-full px-4 py-2"
-                                  style={{
-                                    color: 'var(--color-gold)',
-                                    backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
-                                    border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
-                                  }}
-                                >
-                                  {event.linkText || 'View Details'}
-                                  <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
-                                </Link>
-                              )}
-                            </div>
+                                {event.linkText || 'View Details'}
+                                <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5" aria-hidden="true" />
+                              </Link>
+                            )}
                           </div>
-                        </motion.article>
-                      </div>
-                    </Reveal>
+                        </div>
+                      </article>
+                    </div>
                   );
                 })}
               </motion.div>
@@ -434,7 +385,7 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Past Highlights */}
+      {/* Past Highlights — masonry-style varied sizing */}
       <section className="py-24 md:py-32">
         <div className="max-w-[1200px] mx-auto px-5 md:px-10">
           <Reveal>
@@ -446,34 +397,36 @@ export default function EventsPage() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start">
             {[
               {
                 title: 'Nowruz Gala 2025',
                 image: '/images/migrated/events/6300ec6946cc0241c54b7982d2f32e89.webp',
                 description:
                   'Over 150 friends and family gathered to celebrate Persian New Year with live music, haft-sin, and the announcement of our 2025 playa art lineup.',
+                span: 'md:col-span-4',
+                imageHeight: 'h-48',
               },
               {
                 title: 'HOMA Build Weekend',
                 image: '/images/migrated/homa/149889f001e2f7945fa917258838a272.webp',
                 description:
                   'Twenty volunteers spent a weekend in the warehouse breathing life into HOMA. Three welders, five painters, and twelve people who\u2019d never touched a power tool \u2014 all learning together.',
+                span: 'md:col-span-5',
+                imageHeight: 'h-64',
               },
               {
                 title: 'Yalda Solstice Night',
                 image: '/images/migrated/events/8778bd1886dd14180e8bcb3823e2886a.webp',
                 description:
                   'Our longest night celebration: pomegranates, Hafez readings by candlelight, and stories that went until dawn. The kind of evening that reminds you why community matters.',
+                span: 'md:col-span-3',
+                imageHeight: 'h-44',
               },
-            ].map((highlight, index) => (
-              <Reveal key={highlight.title} delay={index * 0.12}>
-                <motion.div
-                  className="luxury-card group h-full overflow-hidden"
-                  whileHover={{ y: -6 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                >
-                  <div className="relative h-48 -mx-6 -mt-6 mb-6 overflow-hidden rounded-t-2xl">
+            ].map((highlight) => (
+              <div key={highlight.title} className={`${highlight.span} group`}>
+                <div className="relative overflow-hidden rounded-2xl mb-4">
+                  <div className={`relative ${highlight.imageHeight} w-full`}>
                     <Image
                       src={highlight.image}
                       alt={highlight.title}
@@ -481,22 +434,22 @@ export default function EventsPage() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                   </div>
-                  <h3 className="font-display text-lg mb-3" style={{ color: 'var(--color-ink)' }}>
-                    {highlight.title}
-                  </h3>
-                  <p className="font-accent text-sm leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
-                    {highlight.description}
-                  </p>
-                </motion.div>
-              </Reveal>
+                </div>
+                <h3 className="font-display text-lg mb-2" style={{ color: 'var(--color-ink)' }}>
+                  {highlight.title}
+                </h3>
+                <p className="font-accent text-sm leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
+                  {highlight.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Burning Man Schedule -- Refined Timeline Cards */}
+      {/* Burning Man Schedule — Timeline Cards */}
       {events.burningManSchedule && events.burningManSchedule.length > 0 && (
         <section className="py-24 md:py-32" style={{ backgroundColor: 'var(--color-cream-warm)' }}>
           <div className="max-w-[1200px] mx-auto px-5 md:px-10">
@@ -514,59 +467,57 @@ export default function EventsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {events.burningManSchedule.map((day, dayIndex) => (
-                <Reveal key={day.day} delay={dayIndex * 0.1}>
-                  <div className="luxury-card h-full">
-                    <h3
-                      className="font-display text-xl mb-6 pb-4 flex items-center gap-3"
-                      style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)', color: 'var(--color-ink)' }}
+                <div key={day.day} className="luxury-card h-full">
+                  <h3
+                    className="font-display text-xl mb-6 pb-4 flex items-center gap-3"
+                    style={{ borderBottom: '1px solid rgba(var(--color-line-rgb), 0.3)', color: 'var(--color-ink)' }}
+                  >
+                    <span
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-full text-sm"
+                      style={{
+                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
+                        color: 'var(--color-gold)',
+                      }}
+                      aria-hidden="true"
                     >
-                      <span
-                        className="inline-flex items-center justify-center w-8 h-8 rounded-full text-sm"
+                      {dayIndex + 1}
+                    </span>
+                    {day.day}
+                  </h3>
+                  <div className="space-y-0">
+                    {day.events.map((scheduleEvent, eventIndex) => (
+                      <div
+                        key={eventIndex}
+                        className="flex gap-4 group relative py-4 first:pt-0 last:pb-0"
                         style={{
-                          backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
-                          color: 'var(--color-gold)',
+                          borderBottom:
+                            eventIndex < day.events.length - 1
+                              ? '1px solid rgba(var(--color-line-rgb), 0.15)'
+                              : 'none',
                         }}
-                        aria-hidden="true"
                       >
-                        {dayIndex + 1}
-                      </span>
-                      {day.day}
-                    </h3>
-                    <div className="space-y-0">
-                      {day.events.map((scheduleEvent, eventIndex) => (
+                        {/* Time pill */}
                         <div
-                          key={eventIndex}
-                          className="flex gap-4 group relative py-4 first:pt-0 last:pb-0"
+                          className="flex-shrink-0 w-[4.5rem] py-1 px-2 rounded-lg text-center text-xs font-medium self-start mt-0.5"
                           style={{
-                            borderBottom:
-                              eventIndex < day.events.length - 1
-                                ? '1px solid rgba(var(--color-line-rgb), 0.15)'
-                                : 'none',
+                            backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
+                            color: 'var(--color-gold)',
                           }}
                         >
-                          {/* Time pill */}
-                          <div
-                            className="flex-shrink-0 w-[4.5rem] py-1 px-2 rounded-lg text-center text-xs font-medium self-start mt-0.5"
-                            style={{
-                              backgroundColor: 'rgba(var(--color-gold-rgb), 0.1)',
-                              color: 'var(--color-gold)',
-                            }}
-                          >
-                            {scheduleEvent.time}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-display text-sm mb-1 transition-colors duration-200" style={{ color: 'var(--color-ink)' }}>
-                              {scheduleEvent.title}
-                            </h4>
-                            <p className="font-accent text-xs leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
-                              {scheduleEvent.description}
-                            </p>
-                          </div>
+                          {scheduleEvent.time}
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-display text-sm mb-1 transition-colors duration-200" style={{ color: 'var(--color-ink)' }}>
+                            {scheduleEvent.title}
+                          </h4>
+                          <p className="font-accent text-xs leading-relaxed" style={{ color: 'var(--color-ink-soft)' }}>
+                            {scheduleEvent.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </Reveal>
+                </div>
               ))}
             </div>
           </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Reveal } from '../../components/reveal';
-import { ArrowRight, Snowflake, Sprout, Sun, Leaf, Quote } from 'lucide-react';
+import { ArrowRight, Snowflake, Sprout, Sun, Leaf } from 'lucide-react';
 import { useContentConfig } from '../../hooks/useConfig';
 import { getIcon } from '../../lib/icons';
 import { useRef, useState } from 'react';
@@ -67,14 +67,6 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
 /*  Timeline section (extracted for cleanliness)                       */
 /* ------------------------------------------------------------------ */
 function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useContentConfig>['about']> }) {
-  const timelineRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ['start center', 'end center'],
-  });
-
-  const scaleY = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
   return (
     <section className="py-28 md:py-36 relative overflow-hidden">
       {/* Subtle background texture */}
@@ -95,69 +87,40 @@ function TimelineSection({ about }: { about: NonNullable<ReturnType<typeof useCo
 
         <div className="ornate-divider mb-16" />
 
-        <div ref={timelineRef} className="relative max-w-3xl mx-auto">
-          {/* Timeline Line Background */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Timeline line */}
           <div
-            className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px"
-            style={{ backgroundColor: 'rgba(var(--color-line-rgb), 0.5)' }}
+            className="absolute left-3 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-px"
+            style={{ backgroundColor: 'var(--color-warm-border)' }}
           />
 
-          {/* Animated Timeline Line */}
-          <motion.div
-            className="absolute left-8 md:left-1/2 md:-translate-x-1/2 top-0 w-px origin-top"
-            style={{
-              scaleY,
-              height: '100%',
-              background: 'linear-gradient(to bottom, var(--color-gold), var(--color-gold-muted), var(--color-gold))',
-            }}
-          />
-
-          <div className="space-y-12">
+          <div className="space-y-10">
             {about.timeline.map((milestone, index) => (
-              <motion.div
+              <div
                 key={milestone.year}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className={`relative flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                className={`relative flex items-start ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
-                {/* Timeline Dot */}
-                <motion.div
-                  className="absolute left-8 md:left-1/2 md:-translate-x-1/2 z-10"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 + 0.2, type: 'spring', stiffness: 200 }}
-                >
+                {/* Dot */}
+                <div className="absolute left-3 md:left-1/2 -translate-x-1/2 top-1 z-10">
                   <div
-                    className="w-5 h-5 rounded-full border-4 shadow-md"
-                    style={{
-                      backgroundColor: 'var(--color-gold)',
-                      borderColor: 'var(--color-cream)',
-                      boxShadow: '0 0 12px rgba(212, 175, 55, 0.35)',
-                    }}
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: 'var(--color-gold)' }}
                   />
-                </motion.div>
-
-                {/* Content Card */}
-                <div className={`ml-20 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-16' : 'md:pl-16'}`}>
-                  <motion.div
-                    className="luxury-card card-tilt"
-                    whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(26, 26, 24, 0.12)' }}
-                  >
-                    <p
-                      className="font-display text-sm tracking-[0.2em] mb-2"
-                      style={{ color: 'var(--color-gold)' }}
-                    >
-                      {milestone.year}
-                    </p>
-                    <p className="text-body-relaxed text-base" style={{ color: 'var(--color-ink-soft)' }}>
-                      {milestone.event}
-                    </p>
-                  </motion.div>
                 </div>
-              </motion.div>
+
+                {/* Content */}
+                <div className={`ml-10 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-14' : 'md:pl-14'}`}>
+                  <p
+                    className="font-display text-sm tracking-[0.2em] mb-1"
+                    style={{ color: 'var(--color-gold)' }}
+                  >
+                    {milestone.year}
+                  </p>
+                  <p className="text-body-relaxed text-base" style={{ color: 'var(--color-ink-soft)' }}>
+                    {milestone.event}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -407,24 +370,15 @@ export default function AboutPage() {
             const FirstIcon = getIcon(firstValue.icon);
             return (
               <Reveal direction="up" className="mb-10">
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="rounded-2xl p-10 md:p-14 relative overflow-hidden group"
+                <div
+                  className="rounded-2xl p-10 md:p-14 relative overflow-hidden"
                   style={{
                     border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
                     background: 'linear-gradient(135deg, rgba(var(--color-gold-rgb), 0.08), rgba(255,255,255,0.03))',
                   }}
                 >
                   <div className="flex flex-col md:flex-row items-start gap-8">
-                    <div
-                      className="flex-shrink-0 inline-flex p-5 rounded-2xl transition-transform duration-500 group-hover:scale-110"
-                      style={{
-                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.15)',
-                        border: '1px solid rgba(var(--color-gold-rgb), 0.25)',
-                      }}
-                    >
-                      <FirstIcon className="h-10 w-10" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
-                    </div>
+                    <FirstIcon className="h-12 w-12 flex-shrink-0" style={{ color: 'var(--color-gold)' }} aria-hidden="true" />
                     <div>
                       <h3 className="font-display text-2xl md:text-3xl mb-4" style={{ color: 'var(--color-cream)' }}>
                         {firstValue.title}
@@ -434,52 +388,36 @@ export default function AboutPage() {
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </Reveal>
             );
           })()}
 
           {/* Remaining values -- grid */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {about.values.slice(1).map((value, index) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {about.values.slice(1).map((value) => {
               const ValueIcon = getIcon(value.icon);
 
               return (
-                <motion.div key={value.title} variants={staggerItem}>
-                  <motion.div
-                    whileHover={{ y: -4, borderColor: 'rgba(212, 175, 55, 0.35)' }}
-                    className="rounded-2xl p-8 h-full group transition-colors duration-500"
-                    style={{
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    }}
-                  >
-                    <div
-                      className="inline-flex p-4 rounded-full mb-6 transition-transform duration-500 group-hover:scale-110"
-                      style={{
-                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
-                        border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
-                      }}
-                    >
-                      <ValueIcon className="h-7 w-7" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
-                    </div>
-                    <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
-                      {value.title}
-                    </h3>
-                    <p className="text-body-relaxed text-sm leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.75)' }}>
-                      {value.description}
-                    </p>
-                  </motion.div>
-                </motion.div>
+                <div
+                  key={value.title}
+                  className="rounded-2xl p-8 h-full"
+                  style={{
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  }}
+                >
+                  <ValueIcon className="h-9 w-9 mb-6" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
+                  <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
+                    {value.title}
+                  </h3>
+                  <p className="text-body-relaxed text-sm leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.75)' }}>
+                    {value.description}
+                  </p>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -514,13 +452,7 @@ export default function AboutPage() {
             </p>
           </Reveal>
 
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 icon: Snowflake,
@@ -550,44 +482,34 @@ export default function AboutPage() {
                 title: 'Reflection & Gratitude',
                 description: 'We decompress, share photos and stories, celebrate at our annual Yalda gathering, and start dreaming about next year.',
               },
-            ].map((item, index) => {
+            ].map((item) => {
               const SeasonIcon = item.icon;
               return (
-                <motion.div key={item.season} variants={staggerItem}>
-                  <motion.div
-                    whileHover={{ y: -4, borderColor: 'rgba(212, 175, 55, 0.35)' }}
-                    className="rounded-2xl p-8 h-full group transition-colors duration-500"
-                    style={{
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                    }}
+                <div
+                  key={item.season}
+                  className="rounded-2xl p-8 h-full"
+                  style={{
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                  }}
+                >
+                  <SeasonIcon className="h-9 w-9 mb-6" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
+                  <p
+                    className="text-xs tracking-[0.15em] uppercase font-medium mb-2"
+                    style={{ color: 'var(--color-gold)' }}
                   >
-                    <div
-                      className="inline-flex p-4 rounded-full mb-6 transition-transform duration-500 group-hover:scale-110"
-                      style={{
-                        backgroundColor: 'rgba(var(--color-gold-rgb), 0.12)',
-                        border: '1px solid rgba(var(--color-gold-rgb), 0.2)',
-                      }}
-                    >
-                      <SeasonIcon className="h-7 w-7" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true" />
-                    </div>
-                    <p
-                      className="text-xs tracking-[0.15em] uppercase font-medium mb-2"
-                      style={{ color: 'var(--color-gold)' }}
-                    >
-                      {item.season} &middot; {item.months}
-                    </p>
-                    <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
-                      {item.title}
-                    </h3>
-                    <p className="text-body-relaxed text-sm leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.75)' }}>
-                      {item.description}
-                    </p>
-                  </motion.div>
-                </motion.div>
+                    {item.season} &middot; {item.months}
+                  </p>
+                  <h3 className="font-display text-xl mb-3" style={{ color: 'var(--color-cream)' }}>
+                    {item.title}
+                  </h3>
+                  <p className="text-body-relaxed text-sm leading-relaxed" style={{ color: 'rgba(var(--color-cream-rgb), 0.75)' }}>
+                    {item.description}
+                  </p>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -663,64 +585,60 @@ export default function AboutPage() {
         />
 
         <div className="max-w-[1200px] mx-auto px-5 md:px-10 relative z-10">
-          <Reveal>
-            <div className="text-center mb-8">
-              <p className="text-eyebrow">COMMUNITY</p>
-              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl tracking-tight mt-4" style={{ color: 'var(--color-ink)' }}>
-                Every Member Has a Story
-              </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start mb-16">
+            {/* Left column -- heading & intro */}
+            <div className="lg:col-span-5">
+              <Reveal>
+                <p className="text-eyebrow mb-4">COMMUNITY</p>
+                <h2 className="font-display text-3xl md:text-4xl lg:text-5xl tracking-tight" style={{ color: 'var(--color-ink)' }}>
+                  Every Member Has a Story
+                </h2>
+                <p className="text-body-relaxed text-base md:text-lg leading-[1.85] mt-6" style={{ color: 'var(--color-ink-soft)' }}>
+                  Camp Alborz started with a handful of friends who wanted to share Persian culture on the playa. Today we&rsquo;re 50+ members from 12+ countries&nbsp;&mdash; engineers and artists, students and professors, first-timers and decade veterans.
+                </p>
+              </Reveal>
             </div>
-          </Reveal>
 
-          <Reveal delay={0.1}>
-            <p className="text-body-relaxed text-base md:text-lg leading-[1.85] text-center max-w-3xl mx-auto mb-16" style={{ color: 'var(--color-ink-soft)' }}>
-              Camp Alborz started with a handful of friends who wanted to share Persian culture on the playa. Today we&rsquo;re 50+ members from 12+ countries&nbsp;&mdash; engineers and artists, students and professors, first-timers and decade veterans. What unites us isn&rsquo;t background&nbsp;&mdash; it&rsquo;s a belief that the best things in life are built together, shared freely, and celebrated loudly.
-            </p>
-          </Reveal>
-
-          <div className="ornate-divider mb-16" />
-
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-          >
-            {[
-              {
-                quote: 'I showed up knowing nobody. By Wednesday, I had a playa name and 30 new siblings.',
-                attribution: 'First-year member',
-              },
-              {
-                quote: 'Building HOMA in 110\u00B0F heat with people who get why the Simorgh matters \u2014 that\u2019s my happy place.',
-                attribution: 'Art crew lead',
-              },
-              {
-                quote: 'My kids now ask every year: \u201CWhen do we go home to the desert?\u201D',
-                attribution: 'Camp Alborz family',
-              },
-            ].map((item, index) => (
-              <motion.div key={index} variants={staggerItem}>
-                <motion.div
-                  whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(26, 26, 24, 0.12)' }}
-                  className="luxury-card h-full flex flex-col justify-between"
-                >
-                  <div>
-                    <Quote className="h-6 w-6 mb-4" style={{ color: 'var(--color-gold-muted)', opacity: 0.6 }} aria-hidden="true" />
-                    <p className="font-accent text-base md:text-lg italic leading-relaxed mb-6" style={{ color: 'var(--color-ink)', opacity: 0.85 }}>
-                      &ldquo;{item.quote}&rdquo;
-                    </p>
-                  </div>
-                  <p className="text-caption text-xs tracking-widest uppercase" style={{ color: 'var(--color-gold)' }}>
-                    &mdash; {item.attribution}
+            {/* Right column -- testimonials stacked */}
+            <div className="lg:col-span-7 space-y-10">
+              {[
+                {
+                  quote: 'I showed up knowing nobody. By Wednesday, I had a playa name and 30 new siblings.',
+                  attribution: 'First-year member',
+                  featured: true,
+                },
+                {
+                  quote: 'Building HOMA in 110\u00B0F heat with people who get why the Simorgh matters \u2014 that\u2019s my happy place.',
+                  attribution: 'Art crew lead',
+                  featured: false,
+                },
+                {
+                  quote: 'My kids now ask every year: \u201CWhen do we go home to the desert?\u201D',
+                  attribution: 'Camp Alborz family',
+                  featured: false,
+                },
+              ].map((item, index) => (
+                <blockquote key={index} className={index === 0 ? '' : ''}>
+                  <p
+                    className={`font-accent italic leading-relaxed ${index === 0 ? 'text-xl md:text-2xl' : 'text-base md:text-lg'}`}
+                    style={{ color: 'var(--color-ink)', opacity: 0.85 }}
+                  >
+                    <span className="font-display text-3xl mr-1 not-italic" style={{ color: 'var(--color-gold-muted)' }} aria-hidden="true">&ldquo;</span>
+                    {item.quote}&rdquo;
                   </p>
-                </motion.div>
-              </motion.div>
-            ))}
-          </motion.div>
+                  <hr
+                    className="my-4 border-0 h-px w-16"
+                    style={{ backgroundColor: 'var(--color-warm-border)' }}
+                  />
+                  <footer className="text-caption text-xs tracking-widest uppercase" style={{ color: 'var(--color-gold)' }}>
+                    {item.attribution}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
 
-          <Reveal delay={0.2}>
+          <Reveal>
             <div className="text-center">
               <Link href="/apply" className="cta-primary cta-shimmer">
                 <span>Become Part of the Story</span>
