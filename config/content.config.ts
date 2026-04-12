@@ -667,7 +667,7 @@ export const contentConfig: ContentConfig = {
     taxInfo: {
       title: "Tax Deductible Donations",
       description: "Camp Alborz is a registered 501(c)(3) non-profit organization. All donations are tax-deductible to the full extent allowed by law.",
-      ein: undefined,
+      ein: "99-2125655",
     },
     donationForm: {
       title: "Pitch In",
@@ -710,7 +710,7 @@ export const contentConfig: ContentConfig = {
         ],
         icon: "heart",
         linkText: "Open Givebutter",
-        linkUrl: "https://givebutter.com/Alborz2025Fundraiser",
+        linkUrl: "https://givebutter.com/Alborz2025FundraiserFundraiser",
       },
       {
         method: "Givebutter · General Donations",
@@ -721,7 +721,7 @@ export const contentConfig: ContentConfig = {
         ],
         icon: "gift",
         linkText: "Donate on Givebutter",
-        linkUrl: "https://givebutter.com/Alborz2025",
+        linkUrl: "https://givebutter.com/Alborz2025Fundraiser",
       },
     ],
     gratitude: {
@@ -1046,7 +1046,7 @@ export const contentConfig: ContentConfig = {
           ],
           icon: "gift",
           linkText: "Open Givebutter",
-          linkUrl: "https://givebutter.com/Alborz2025",
+          linkUrl: "https://givebutter.com/Alborz2025Fundraiser",
         },
       ],
       resources: [
@@ -1060,7 +1060,7 @@ export const contentConfig: ContentConfig = {
           title: "Feeling generous?",
           description: "Alborz is now a 501c3—donations above dues keep the art cars roaring.",
           linkText: "Donate on Givebutter",
-          linkUrl: "https://givebutter.com/Alborz2025",
+          linkUrl: "https://givebutter.com/Alborz2025Fundraiser",
         },
       ],
       fundraisers: [

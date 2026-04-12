@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "MemberRole" AS ENUM ('ADMIN', 'MANAGER', 'MEMBER');
+CREATE TYPE "MemberRole" AS ENUM ('LEAD', 'MANAGER', 'MEMBER');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'NON_BINARY', 'OTHER', 'PREFER_NOT_TO_SAY');

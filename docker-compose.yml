@@ -46,8 +46,10 @@ services:
 
   db:
     image: postgres:16-alpine
-    ports:
-      - "5432:5432"
+    # Port only exposed to internal docker network (api service connects via db:5432)
+    # Uncomment the ports line below for local dev access:
+    # ports:
+    #   - "5432:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-campalborz}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-campalborz}
